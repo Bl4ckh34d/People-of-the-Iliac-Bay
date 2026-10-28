@@ -17,7 +17,7 @@ internal static class Program
             ("occupied task or action rejects atomic care without writes", OccupiedWorkRejects),
             ("blocked care retry admits only at exact retry boundary", BlockedRetryBoundary),
             ("duplicate atomic admission changes neither ledger", DuplicateAdmissionIsNoOp),
-            ("legacy care marker is conservative and current marker survives restore", LegacyMarkerMigration),
+            ("current care marker survives restore and obsolete schema is rejected", CurrentMarkerAndObsoleteSchema),
             ("accepted treatment marker survives blocking but resets for a new episode", MarkerEpisodeLifecycle),
             ("fresh revision-one care cannot restore an accepted treatment marker", FreshMarkerRejected)
         };
@@ -134,7 +134,7 @@ internal static class Program
         Equal(beforeTasks, TasksJson(store)); Equal(beforeCare, CareJson(store));
     }
 
-    private static void LegacyMarkerMigration()
+    private static void CurrentMarkerAndObsoleteSchema()
     {
         string owner; NpcHealthCareRecord care;
         var store = ReadyCare(out owner, out care);
@@ -144,19 +144,15 @@ internal static class Program
         var currentRestored = new WorldStateStore(10);
         currentRestored.Restore(current);
         True(currentRestored.ReadNpcHealthCare(owner).HasAcceptedTreatment,
-            "schema 52 restore lost accepted treatment marker");
+            "current restore lost accepted treatment marker");
 
-        // Schema 51 never serialized this marker. Even a future field supplied on a
-        // downgraded fixture cannot prove historical acceptance.
+        // Disposable development saves require the current schema. A copied
+        // current marker cannot make an obsolete save eligible for restore.
         current.Version = 51;
-        current.ConversationCueArchive = null;
-        current.NpcExperienceInbox = NpcExperienceInbox.Create();
-        current.NpcExperienceInbox.Version = 4;
-        var legacyRestored = new WorldStateStore(11);
-        legacyRestored.Restore(current);
-        True(!legacyRestored.ReadNpcHealthCare(owner).HasAcceptedTreatment,
-            "schema 51 care incorrectly inferred accepted treatment from task or revision");
-        Equal(task.Id, legacyRestored.ReadNpcHealthCare(owner).TaskId);
+        bool rejected = false;
+        try { new WorldStateStore(11).Restore(current); }
+        catch (ArgumentException) { rejected = true; }
+        True(rejected, "obsolete save schema was accepted");
     }
 
     private static void MarkerEpisodeLifecycle()

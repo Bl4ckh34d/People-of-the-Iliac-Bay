@@ -147,12 +147,10 @@ namespace PeopleOfTheIliacBay.Core
         private static List<HouseholdDayPlan> CopyHouseholdDays(WorldState source,WorldState copied)
         {
             var result=new List<HouseholdDayPlan>();
-            if(source.Version<66)return result;
             Require(source.HouseholdDays!=null && source.HouseholdDays.Count<=100000,"Missing or unbounded household days.");
             var keys=new HashSet<string>(StringComparer.Ordinal);
             foreach(var record in source.HouseholdDays)
             {
-                Require(source.Version>=67 || record!=null && !record.JointSuppressed,"Older schema contains future joint suppression.");
                 var plan=HouseholdDayPlan.Copy(record);
                 Require(keys.Add(plan.SettlementId+":"+plan.HomeKey),"Duplicate household day owner.");
                 var town=copied.Settlements.Find(t=>t.SettlementId==plan.SettlementId);

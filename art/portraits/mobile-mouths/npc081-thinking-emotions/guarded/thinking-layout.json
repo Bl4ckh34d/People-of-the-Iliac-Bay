@@ -1,0 +1,25 @@
+{
+  "emotionId": "guarded",
+  "referenceUpperFile": "eyes/guarded/open.png",
+  "browSourceFile": "eyes/guarded/open.png",
+  "halfSourceFile": "eyes/guarded/half.png",
+  "closedSourceFile": "eyes/guarded/closed.png",
+  "halfLidRegions": [
+    {
+      "x": 18,
+      "y": 25,
+      "width": 11,
+      "height": 2
+    },
+    {
+      "x": 36,
+      "y": 25,
+      "width": 11,
+      "height": 2
+    }
+  ],
+  "sourceSha256": "3cc1a5f39295fa9b28ef72744418a2b3cdeea8320f9fc5b295c8b0c9584156dc",
+  "referenceSha256": "7babbb3f441a4e319acdfaa4c12975d1ffefabd63715a1aad694fc3eda452e36",
+  "candidateOnly": true,
+  "rationale": "Provisional from npc081 portrait-specific neutral band y25..26. Inspected all six mood phase crops; selected band remains above visible iris/sclera. Sad/afraid brows approach the strip; parent-native review required. Applies to guarded only after inspecting its source phase RGB; not an approval to build or publish."
+}

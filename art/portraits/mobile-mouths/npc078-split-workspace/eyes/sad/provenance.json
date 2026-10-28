@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "createdUtc": "2026-10-21T21:14:25.129Z",
+  "portraitRecord": 78,
+  "bank": "TFAC00I0.RCI",
+  "emotion": "sad",
+  "part": "eyes",
+  "imageGenCalls": 1,
+  "tool": "built-in image_gen",
+  "prompt": "Create exactly one raw SAD EYES atlas for this specific native 64x35 pixel-art portrait half. Preserve input canvas size, 2-column by 2-row grid, cell boundaries, original framing, pixel scale, face geometry, hair, forehead, cheeks, skin colors, soft muted brown palette, and edges. Each full cell stays a complete upper face crop at the same scale. No captions, letters, labels, borders, added objects, tears, makeup, or background changes. The four row-major cells are OPEN, HALF-CLOSED, CLOSED, OPEN-repeat. Keep the same face and gaze in every cell: pupils look gently downward, low-energy and sad, not alarmed. Show sadness through subtle raised inner brows and drooping upper lids; avoid wide or startled eyes. Keep iris width, horizontal position, white areas, catchlight, and stationary lid crease brightness stable across phases; blink by covering the same eyeballs vertically, never shrinking or moving irises sideways. Keep brows and their soft shade consistent in all four cells. Keep pixels crisp and softly shaded like the source, no blur, no harsh contrast, no anatomy drift. The repeated OPEN cell must match the first OPEN cell.",
+  "promptSha256": "6f7fe13ed00e894642a334e07cc6bc7ee47091dc3cda826318bcb269462d142c",
+  "sourcePortrait": {
+    "path": "original.png",
+    "width": 64,
+    "height": 64,
+    "bytes": 3442,
+    "sha256": "4cfab5dce8d40ff0246728c2c28922d9b5627cec9549f9b5252f2f601e4978ce"
+  },
+  "referenceGrid": {
+    "path": "eyes-reference-grid.png",
+    "width": 1024,
+    "height": 560,
+    "bytes": 87475,
+    "sha256": "770bcaf228993a243e7af873727e0ea24ee1788439afa29e5dfb66bed0581340"
+  },
+  "sourceHalf": {
+    "path": "source-upper.png",
+    "width": 64,
+    "height": 35,
+    "bytes": 1527,
+    "sha256": "c3a6864435906b99aac22f58bd30c06218030656df6346648a8db72579459503"
+  },
+  "grid": {
+    "columns": 2,
+    "rows": 2,
+    "rowMajor": [
+      "open",
+      "half-closed",
+      "closed",
+      "open-repeat"
+    ],
+    "inputCanvas": "1024x560",
+    "expectedCell": "512x280"
+  },
+  "rawImage": {
+    "path": "eyes\\sad\\raw.png",
+    "width": 1695,
+    "height": 928,
+    "bytes": 1264057,
+    "sha256": "5963add0f6e299217b3d85bf698f835680bffd204c707a2069a45e94e003b16e"
+  },
+  "imageGenOriginalPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-fb9b-7322-8190-74bf6fb54c9d\\exec-59c315ff-2537-408e-aeff-2abf27a7071b.png",
+  "visualInspection": [
+    "Downcast, low-energy sadness reads clearly; lids droop and inner brows lift subtly.",
+    "Generated OPEN repeat is close but not pixel-identical to OPEN.",
+    "Lid/brow crease has extra parallel strokes in places.",
+    "Raw output is 1695x928, not the 1024x560 reference size; exact cell pixel boundaries need parent review.",
+    "Raw atlas only; no slicing, resizing or composition performed."
+  ]
+}

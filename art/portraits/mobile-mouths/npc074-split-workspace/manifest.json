@@ -1,0 +1,1696 @@
+{
+  "schemaVersion": 2,
+  "portraitRecord": 74,
+  "bank": "TFAC00I0.RCI",
+  "status": "masked-half-prototype-visual-review-pending-not-installed",
+  "width": 64,
+  "height": 64,
+  "splitY": 35,
+  "original": "original.png",
+  "originalUpper": "source-upper.png",
+  "originalLower": "source-lower.png",
+  "eyeSets": [
+    {
+      "id": "neutral",
+      "label": "Neutral",
+      "phases": {
+        "open": {
+          "file": "eyes/neutral/open.png",
+          "difference": "eyes/neutral/open-diff.png",
+          "changedPixels": 0
+        },
+        "half": {
+          "file": "eyes/neutral/half.png",
+          "difference": "eyes/neutral/half-diff.png",
+          "changedPixels": 84,
+          "sha256": "d79ef726b8f798991c32a104d20e3a9208f233d1cbe6e54dad26c16a8516c96e",
+          "reviewedRepair20261023": {
+            "candidateSha256": "d79ef726b8f798991c32a104d20e3a9208f233d1cbe6e54dad26c16a8516c96e",
+            "previousSha256": "522e105e5db60b5ab6afd3fe7b1862f20a394f3a16e58e291162539d53dd3e03",
+            "masterSha256": "91b02fbe081db8b758f52c1fbc7705ee1fb13705ff00f9b1f2c419d67ba42bce",
+            "allowedSourceChangeRegions": [
+              [
+                14,
+                16,
+                31,
+                32
+              ],
+              [
+                33,
+                16,
+                51,
+                32
+              ]
+            ],
+            "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+          }
+        },
+        "closed": {
+          "file": "eyes/neutral/closed.png",
+          "difference": "eyes/neutral/closed-diff.png",
+          "changedPixels": 84,
+          "sha256": "9856fc271137f9b1cd6e382fcb81c4128c8701e10d07569602ba22645c57263b",
+          "reviewedRepair20261023": {
+            "candidateSha256": "9856fc271137f9b1cd6e382fcb81c4128c8701e10d07569602ba22645c57263b",
+            "previousSha256": "2d70bb5b7efd8da193933ce8b3a3741732bc0b431a61aac496aea685a82c8eea",
+            "masterSha256": "91b02fbe081db8b758f52c1fbc7705ee1fb13705ff00f9b1f2c419d67ba42bce",
+            "allowedSourceChangeRegions": [
+              [
+                14,
+                16,
+                31,
+                32
+              ],
+              [
+                33,
+                16,
+                51,
+                32
+              ]
+            ],
+            "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+          }
+        }
+      }
+    },
+    {
+      "id": "happy",
+      "label": "Fröhlich",
+      "phases": {
+        "open": {
+          "file": "eyes/happy/open.png",
+          "difference": "eyes/happy/open-diff.png",
+          "changedPixels": 558
+        },
+        "half": {
+          "file": "eyes/happy/half.png",
+          "difference": "eyes/happy/half-diff.png",
+          "changedPixels": 558,
+          "sha256": "d650e4ffd5eea0db6ce509860bedc719543f227c59c7ea4e94c21a561af2f74e",
+          "reviewedRepair20261023": {
+            "candidateSha256": "d650e4ffd5eea0db6ce509860bedc719543f227c59c7ea4e94c21a561af2f74e",
+            "previousSha256": "41e74dc37eb3402cf64b15b9e55b7734bb6334669fe58c65010bb70c05a3f34f",
+            "masterSha256": "2e19a4b882c77fa19f32ce6b558f164b3c589f5157f91abbfcc498dece6844ae",
+            "allowedSourceChangeRegions": [
+              [
+                14,
+                16,
+                31,
+                32
+              ],
+              [
+                33,
+                16,
+                51,
+                32
+              ]
+            ],
+            "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+          }
+        },
+        "closed": {
+          "file": "eyes/happy/closed.png",
+          "difference": "eyes/happy/closed-diff.png",
+          "changedPixels": 558,
+          "sha256": "ab73acbb95a8f0cb71c04053bb84152c40adfdd5a7640cf70f9c57815b72e08e",
+          "reviewedRepair20261023": {
+            "candidateSha256": "ab73acbb95a8f0cb71c04053bb84152c40adfdd5a7640cf70f9c57815b72e08e",
+            "previousSha256": "42a957a14aaf91bf0d214172ed10e4ea72ca53d0da2129d006c22d66a2661491",
+            "masterSha256": "2e19a4b882c77fa19f32ce6b558f164b3c589f5157f91abbfcc498dece6844ae",
+            "allowedSourceChangeRegions": [
+              [
+                14,
+                16,
+                31,
+                32
+              ],
+              [
+                33,
+                16,
+                51,
+                32
+              ]
+            ],
+            "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+          }
+        }
+      }
+    },
+    {
+      "id": "angry",
+      "label": "Wütend",
+      "phases": {
+        "open": {
+          "file": "eyes/angry/open.png",
+          "difference": "eyes/angry/open-diff.png",
+          "changedPixels": 562,
+          "sha256": "d6a3b1fe4ae4fc1dd29d2d6cca6e636ab87061d6dfac9e704b49266a059bcd93",
+          "reviewedRepair20261023": {
+            "candidateSha256": "d6a3b1fe4ae4fc1dd29d2d6cca6e636ab87061d6dfac9e704b49266a059bcd93",
+            "previousSha256": "ac7b280c45c80a72466d12031028582bd866043f8a655eb772b118d8768c5456",
+            "masterSha256": "d6a3b1fe4ae4fc1dd29d2d6cca6e636ab87061d6dfac9e704b49266a059bcd93",
+            "allowedSourceChangeRegions": [
+              [
+                14,
+                16,
+                31,
+                32
+              ],
+              [
+                33,
+                16,
+                51,
+                32
+              ],
+              [
+                30,
+                24,
+                34,
+                27
+              ]
+            ],
+            "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+          }
+        },
+        "half": {
+          "file": "eyes/angry/half.png",
+          "difference": "eyes/angry/half-diff.png",
+          "changedPixels": 562,
+          "sha256": "e67fc6b3b2842dcc45e994f5c4028453ed3d19037b39ccd10f89ae8d267444c4",
+          "reviewedRepair20261023": {
+            "candidateSha256": "e67fc6b3b2842dcc45e994f5c4028453ed3d19037b39ccd10f89ae8d267444c4",
+            "previousSha256": "b21826208c122504c360ad4adc941f2a127b8c0b6dfb8c25ced7a46e71f5c7cc",
+            "masterSha256": "d6a3b1fe4ae4fc1dd29d2d6cca6e636ab87061d6dfac9e704b49266a059bcd93",
+            "allowedSourceChangeRegions": [
+              [
+                14,
+                16,
+                31,
+                32
+              ],
+              [
+                33,
+                16,
+                51,
+                32
+              ],
+              [
+                30,
+                24,
+                34,
+                27
+              ]
+            ],
+            "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+          }
+        },
+        "closed": {
+          "file": "eyes/angry/closed.png",
+          "difference": "eyes/angry/closed-diff.png",
+          "changedPixels": 562,
+          "sha256": "ffc5461b9c979e2fd392906097ad7d826fe897bbeff8a8ad9e03ffeeacec61e3",
+          "reviewedRepair20261023": {
+            "candidateSha256": "ffc5461b9c979e2fd392906097ad7d826fe897bbeff8a8ad9e03ffeeacec61e3",
+            "previousSha256": "c9bae8f9cb41a1d1a9081afac20fa651deb89a964e064014547a671d7f090d39",
+            "masterSha256": "d6a3b1fe4ae4fc1dd29d2d6cca6e636ab87061d6dfac9e704b49266a059bcd93",
+            "allowedSourceChangeRegions": [
+              [
+                14,
+                16,
+                31,
+                32
+              ],
+              [
+                33,
+                16,
+                51,
+                32
+              ],
+              [
+                30,
+                24,
+                34,
+                27
+              ]
+            ],
+            "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+          }
+        }
+      }
+    },
+    {
+      "id": "sad",
+      "label": "Traurig",
+      "phases": {
+        "open": {
+          "file": "eyes/sad/open.png",
+          "difference": "eyes/sad/open-diff.png",
+          "changedPixels": 557
+        },
+        "half": {
+          "file": "eyes/sad/half.png",
+          "difference": "eyes/sad/half-diff.png",
+          "changedPixels": 559
+        },
+        "closed": {
+          "file": "eyes/sad/closed.png",
+          "difference": "eyes/sad/closed-diff.png",
+          "changedPixels": 559
+        }
+      }
+    },
+    {
+      "id": "afraid",
+      "label": "Ängstlich",
+      "phases": {
+        "open": {
+          "file": "eyes/afraid/open.png",
+          "difference": "eyes/afraid/open-diff.png",
+          "changedPixels": 554
+        },
+        "half": {
+          "file": "eyes/afraid/half.png",
+          "difference": "eyes/afraid/half-diff.png",
+          "changedPixels": 554,
+          "sha256": "bf97ca74e676c2bee8d62a2c6e4ef9f9b4a4ae9673f8e44bb11a5a4956e35936",
+          "reviewedRepair20261023": {
+            "candidateSha256": "bf97ca74e676c2bee8d62a2c6e4ef9f9b4a4ae9673f8e44bb11a5a4956e35936",
+            "previousSha256": "64f6f28cfbd933d9e56e4439105213946cd2bb5226ff563728ba1701a004665b",
+            "masterSha256": "0113a4ae2e874cd9e03f2e26c56096e5797c83777d8d08bf12fb295e6be35c13",
+            "allowedSourceChangeRegions": [
+              [
+                14,
+                16,
+                31,
+                32
+              ],
+              [
+                33,
+                16,
+                51,
+                32
+              ]
+            ],
+            "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+          }
+        },
+        "closed": {
+          "file": "eyes/afraid/closed.png",
+          "difference": "eyes/afraid/closed-diff.png",
+          "changedPixels": 555,
+          "sha256": "36f5410792a961dbf2542e8a7b9afa2f7eb6814048e62a4ba9444e3d6dd8915d",
+          "reviewedRepair20261023": {
+            "candidateSha256": "36f5410792a961dbf2542e8a7b9afa2f7eb6814048e62a4ba9444e3d6dd8915d",
+            "previousSha256": "95aeea67f876701ca49500bf21d63669a7b2f0b98e05cef0bc78aec8dff4b468",
+            "masterSha256": "0113a4ae2e874cd9e03f2e26c56096e5797c83777d8d08bf12fb295e6be35c13",
+            "allowedSourceChangeRegions": [
+              [
+                14,
+                16,
+                31,
+                32
+              ],
+              [
+                33,
+                16,
+                51,
+                32
+              ]
+            ],
+            "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+          }
+        }
+      }
+    },
+    {
+      "id": "guarded",
+      "label": "Skeptisch",
+      "phases": {
+        "open": {
+          "file": "eyes/guarded/open.png",
+          "difference": "eyes/guarded/open-diff.png",
+          "changedPixels": 558,
+          "sha256": "1380008666d6d98cf09bb5d5b8bde187511104881e23a8b5ed05912ec6ded9b8",
+          "reviewedRepair20261023": {
+            "candidateSha256": "1380008666d6d98cf09bb5d5b8bde187511104881e23a8b5ed05912ec6ded9b8",
+            "previousSha256": "6930816abafe920a0719ac77e626f1cd8e918e6036656938581f06046d9b24b6",
+            "masterSha256": "1380008666d6d98cf09bb5d5b8bde187511104881e23a8b5ed05912ec6ded9b8",
+            "allowedSourceChangeRegions": [
+              [
+                14,
+                16,
+                31,
+                32
+              ],
+              [
+                33,
+                16,
+                51,
+                32
+              ]
+            ],
+            "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+          }
+        },
+        "half": {
+          "file": "eyes/guarded/half.png",
+          "difference": "eyes/guarded/half-diff.png",
+          "changedPixels": 558,
+          "sha256": "aaf1f00b01a99913373555e92509d9bb022b6d4f510657aadc84d4bebfca4fa4",
+          "reviewedRepair20261023": {
+            "candidateSha256": "aaf1f00b01a99913373555e92509d9bb022b6d4f510657aadc84d4bebfca4fa4",
+            "previousSha256": "4df29c86a20e2dd780d700c75d4043c462eee4a28dbf0831f3a56666f5c03b0d",
+            "masterSha256": "1380008666d6d98cf09bb5d5b8bde187511104881e23a8b5ed05912ec6ded9b8",
+            "allowedSourceChangeRegions": [
+              [
+                14,
+                16,
+                31,
+                32
+              ],
+              [
+                33,
+                16,
+                51,
+                32
+              ]
+            ],
+            "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+          }
+        },
+        "closed": {
+          "file": "eyes/guarded/closed.png",
+          "difference": "eyes/guarded/closed-diff.png",
+          "changedPixels": 558,
+          "sha256": "5727f257ff34212f769352216276dec5f8ccb05aaa767c830905a3221f342d34",
+          "reviewedRepair20261023": {
+            "candidateSha256": "5727f257ff34212f769352216276dec5f8ccb05aaa767c830905a3221f342d34",
+            "previousSha256": "6d3823397d288464c7a6c01e10e89679b35945da741cdc8eeefaba10ce1eb08e",
+            "masterSha256": "1380008666d6d98cf09bb5d5b8bde187511104881e23a8b5ed05912ec6ded9b8",
+            "allowedSourceChangeRegions": [
+              [
+                14,
+                16,
+                31,
+                32
+              ],
+              [
+                33,
+                16,
+                51,
+                32
+              ]
+            ],
+            "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+          }
+        }
+      }
+    }
+  ],
+  "mouths": [
+    {
+      "shape": "A",
+      "file": "mouth/A.png",
+      "difference": "mouth/A-diff.png",
+      "changedPixels": 0
+    },
+    {
+      "shape": "B",
+      "file": "mouth/B.png",
+      "difference": "mouth/B-diff.png",
+      "changedPixels": 385
+    },
+    {
+      "shape": "C",
+      "file": "mouth/C.png",
+      "difference": "mouth/C-diff.png",
+      "changedPixels": 384
+    },
+    {
+      "shape": "D",
+      "file": "mouth/D.png",
+      "difference": "mouth/D-diff.png",
+      "changedPixels": 389
+    },
+    {
+      "shape": "E",
+      "file": "mouth/E.png",
+      "difference": "mouth/E-diff.png",
+      "changedPixels": 384
+    },
+    {
+      "shape": "F",
+      "file": "mouth/F.png",
+      "difference": "mouth/F-diff.png",
+      "changedPixels": 382
+    },
+    {
+      "shape": "G",
+      "file": "mouth/G.png",
+      "difference": "mouth/G-diff.png",
+      "changedPixels": 382
+    },
+    {
+      "shape": "H",
+      "file": "mouth/H.png",
+      "difference": "mouth/H-diff.png",
+      "changedPixels": 385
+    },
+    {
+      "shape": "X",
+      "file": "mouth/X.png",
+      "difference": "mouth/X-diff.png",
+      "changedPixels": 0
+    }
+  ],
+  "mouthSets": [
+    {
+      "id": "neutral",
+      "label": "Neutral",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "mouth/neutral/A.png",
+          "difference": "mouth/neutral/A-diff.png",
+          "changedPixels": 0,
+          "sha256": "c3a21e95349e2c1d6efd172d3195ab5d628bc71b7d801e29d1726b2d20b7dd0f"
+        },
+        {
+          "shape": "B",
+          "file": "mouth/neutral/B.png",
+          "difference": "mouth/neutral/B-diff.png",
+          "changedPixels": 385,
+          "sha256": "3e30113a7f92f890d7d371f1080fb201a539a8a2581cfa5cc585c2f8692929f5"
+        },
+        {
+          "shape": "C",
+          "file": "mouth/neutral/C.png",
+          "difference": "mouth/neutral/C-diff.png",
+          "changedPixels": 384,
+          "sha256": "0d7cc2865d1e975719daad20a993fa634ff4e4a02125830c39b14e22b8b2c419"
+        },
+        {
+          "shape": "D",
+          "file": "mouth/neutral/D.png",
+          "difference": "mouth/neutral/D-diff.png",
+          "changedPixels": 389,
+          "sha256": "f49ce9c40e3e7f63228db0c673160371b4eae56e45852c9986f8746241f39f60"
+        },
+        {
+          "shape": "E",
+          "file": "mouth/neutral/E.png",
+          "difference": "mouth/neutral/E-diff.png",
+          "changedPixels": 384,
+          "sha256": "1fe3f2f44e6bf7aa1a335a8ff961cf25ffbde47dba1d38d3148ba6abec42f51c"
+        },
+        {
+          "shape": "F",
+          "file": "mouth/neutral/F.png",
+          "difference": "mouth/neutral/F-diff.png",
+          "changedPixels": 382,
+          "sha256": "a4aac4a3ddaae9243bc413e13e4fa07562af3b18f5a2234b2e9acb48b6aa123f"
+        },
+        {
+          "shape": "G",
+          "file": "mouth/neutral/G.png",
+          "difference": "mouth/neutral/G-diff.png",
+          "changedPixels": 382,
+          "sha256": "9a5d8252815d9b78126544d38ae4e6a0002fc3c335ad5395e627a1b1d52bc2cb"
+        },
+        {
+          "shape": "H",
+          "file": "mouth/neutral/H.png",
+          "difference": "mouth/neutral/H-diff.png",
+          "changedPixels": 385,
+          "sha256": "0262db2498b74e1f320bf9c1f8079a527bdef029411be29c7b4bec34d7ec6080"
+        },
+        {
+          "shape": "X",
+          "file": "mouth/neutral/X.png",
+          "difference": "mouth/neutral/X-diff.png",
+          "changedPixels": 0,
+          "sha256": "c3a21e95349e2c1d6efd172d3195ab5d628bc71b7d801e29d1726b2d20b7dd0f"
+        }
+      ]
+    },
+    {
+      "id": "happy",
+      "label": "Fröhlich",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "mouth/happy/A.png",
+          "difference": "mouth/happy/A-diff.png",
+          "changedPixels": 389,
+          "sha256": "8c01c586ca0cab51c0981531f2cc68c0cf0fa6d4657bed15376dffbbcffdbc45"
+        },
+        {
+          "shape": "B",
+          "file": "mouth/happy/B.png",
+          "difference": "mouth/happy/B-diff.png",
+          "changedPixels": 391,
+          "sha256": "f89935be78860db22a992b15de1244a627a86c27b91eed69682311421ad7b90c"
+        },
+        {
+          "shape": "C",
+          "file": "mouth/happy/C.png",
+          "difference": "mouth/happy/C-diff.png",
+          "changedPixels": 392,
+          "sha256": "2ad0ef3c43dfbcc3636f04c222404f606b3212e54093e921dcfe976851c88594"
+        },
+        {
+          "shape": "D",
+          "file": "mouth/happy/D.png",
+          "difference": "mouth/happy/D-diff.png",
+          "changedPixels": 389,
+          "sha256": "1e8746d3c87583c831707324c52a6c0e9278824664e42c03236e5d004e168059"
+        },
+        {
+          "shape": "E",
+          "file": "mouth/happy/E.png",
+          "difference": "mouth/happy/E-diff.png",
+          "changedPixels": 391,
+          "sha256": "d83a85ad928660f86cf9c8235bdcdbd7dbe8ae5f783992e2e3c77ef44d76a610"
+        },
+        {
+          "shape": "F",
+          "file": "mouth/happy/F.png",
+          "difference": "mouth/happy/F-diff.png",
+          "changedPixels": 391,
+          "sha256": "b465de48cf5b0910d19ffcba413e12fa0dc4d546b8842973f15c786800069a05"
+        },
+        {
+          "shape": "G",
+          "file": "mouth/happy/G.png",
+          "difference": "mouth/happy/G-diff.png",
+          "changedPixels": 391,
+          "sha256": "c12a2a1653c7e7b420b53495156a2fff7fcac35e9a341f04b1e8f9330391c777"
+        },
+        {
+          "shape": "H",
+          "file": "mouth/happy/H.png",
+          "difference": "mouth/happy/H-diff.png",
+          "changedPixels": 392,
+          "sha256": "f2d911b24448f54e46e40a3775669bc315dfb74a238cd5fea6e7c094b5e44586"
+        },
+        {
+          "shape": "X",
+          "file": "mouth/happy/X.png",
+          "difference": "mouth/happy/X-diff.png",
+          "changedPixels": 389,
+          "sha256": "6acd15d2f204602c4047e34a7ad65342e331ad7b308af041a210da05c188102d"
+        }
+      ]
+    },
+    {
+      "id": "angry",
+      "label": "Wütend",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "mouth/angry/A.png",
+          "difference": "mouth/angry/A-diff.png",
+          "changedPixels": 392,
+          "sha256": "4d9b3b919159e0a947d51ba00ddc31b7ccb0a5bb953e778893489b42509ef65d"
+        },
+        {
+          "shape": "B",
+          "file": "mouth/angry/B.png",
+          "difference": "mouth/angry/B-diff.png",
+          "changedPixels": 392,
+          "sha256": "913415de59eb700cabf4ed8f3912a6a36dbb4fe9e451b4e14413ba8d7c70bac4"
+        },
+        {
+          "shape": "C",
+          "file": "mouth/angry/C.png",
+          "difference": "mouth/angry/C-diff.png",
+          "changedPixels": 392,
+          "sha256": "65013c1c76078367bd1cc8d79d002292acf561e4626f5feef546bc5e9568a6ee"
+        },
+        {
+          "shape": "D",
+          "file": "mouth/angry/D.png",
+          "difference": "mouth/angry/D-diff.png",
+          "changedPixels": 392,
+          "sha256": "5ab275e10fec6818e00ec05d6372288381f5a6aeab15361229ade23f4f935459"
+        },
+        {
+          "shape": "E",
+          "file": "mouth/angry/E.png",
+          "difference": "mouth/angry/E-diff.png",
+          "changedPixels": 392,
+          "sha256": "c18d8176e90f45c2298e54671dd675bb3d86134cca8004263ebc21442da51508"
+        },
+        {
+          "shape": "F",
+          "file": "mouth/angry/F.png",
+          "difference": "mouth/angry/F-diff.png",
+          "changedPixels": 392,
+          "sha256": "1f72f9c15e07e9aaa180a8f224489cad12877154b7e3550e5fdfbbef805e4c27"
+        },
+        {
+          "shape": "G",
+          "file": "mouth/angry/G.png",
+          "difference": "mouth/angry/G-diff.png",
+          "changedPixels": 392,
+          "sha256": "2ffc68c8b9c72e22dcf8783d0814d2da9b0b9e011e99189c81cede747ef7e6fa"
+        },
+        {
+          "shape": "H",
+          "file": "mouth/angry/H.png",
+          "difference": "mouth/angry/H-diff.png",
+          "changedPixels": 392,
+          "sha256": "15f45ab8b22c4c4808d25268c3af411e6da33a18f0493e9d03bc58bb1d85c505"
+        },
+        {
+          "shape": "X",
+          "file": "mouth/angry/X.png",
+          "difference": "mouth/angry/X-diff.png",
+          "changedPixels": 392,
+          "sha256": "eaad0b8953e91e194e6c63bce183897650e9cec78ba98440283b9c7b986a505f"
+        }
+      ]
+    },
+    {
+      "id": "sad",
+      "label": "Traurig",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "mouth/sad/A.png",
+          "difference": "mouth/sad/A-diff.png",
+          "changedPixels": 392,
+          "sha256": "d07b8886c9be43bf8afa5754d8cff7c8b02985465c9b70483d5925eb356d4bd0"
+        },
+        {
+          "shape": "B",
+          "file": "mouth/sad/B.png",
+          "difference": "mouth/sad/B-diff.png",
+          "changedPixels": 392,
+          "sha256": "3202d8a3ba934f5e90891e3b76f1bc51a6632528176323088901b6d111d0f82b"
+        },
+        {
+          "shape": "C",
+          "file": "mouth/sad/C.png",
+          "difference": "mouth/sad/C-diff.png",
+          "changedPixels": 392,
+          "sha256": "8d33dd3072a95c12dfff2203867b003940cd67654ca0cf979012e7f62434abf4"
+        },
+        {
+          "shape": "D",
+          "file": "mouth/sad/D.png",
+          "difference": "mouth/sad/D-diff.png",
+          "changedPixels": 392,
+          "sha256": "896858822d3090f55469a052b9527fb0c65842d031e2f2ac02ef18fd2db0e0dd"
+        },
+        {
+          "shape": "E",
+          "file": "mouth/sad/E.png",
+          "difference": "mouth/sad/E-diff.png",
+          "changedPixels": 392,
+          "sha256": "ceb3176f550ba9ed4d60e649c6ffa4452854694c3e850317a54871096169a2d6"
+        },
+        {
+          "shape": "F",
+          "file": "mouth/sad/F.png",
+          "difference": "mouth/sad/F-diff.png",
+          "changedPixels": 392,
+          "sha256": "48be8a617c1f01b61a2e480a36c7c5d5e15a6d121a7ee4c732a23697d4200b39"
+        },
+        {
+          "shape": "G",
+          "file": "mouth/sad/G.png",
+          "difference": "mouth/sad/G-diff.png",
+          "changedPixels": 392,
+          "sha256": "0d9e395e6ed7db7556b01ef0496f0f0841525e871f76f686fcd2a6f73ccc38c7"
+        },
+        {
+          "shape": "H",
+          "file": "mouth/sad/H.png",
+          "difference": "mouth/sad/H-diff.png",
+          "changedPixels": 392,
+          "sha256": "039de3bda56eba5e7dd947be2b40baab829459cf62846cc864413731379c2e5d"
+        },
+        {
+          "shape": "X",
+          "file": "mouth/sad/X.png",
+          "difference": "mouth/sad/X-diff.png",
+          "changedPixels": 392,
+          "sha256": "9a578e568d75512133b7b6ddadd7001dad34dd53000fb80182f75abc205150aa"
+        }
+      ]
+    },
+    {
+      "id": "afraid",
+      "label": "Ängstlich",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "mouth/afraid/A.png",
+          "difference": "mouth/afraid/A-diff.png",
+          "changedPixels": 391,
+          "sha256": "53ad5e0cf1bffd22e6b99b8e56148d3c6c6fe6b3f9dd8cd564539f02175ee25d"
+        },
+        {
+          "shape": "B",
+          "file": "mouth/afraid/B.png",
+          "difference": "mouth/afraid/B-diff.png",
+          "changedPixels": 392,
+          "sha256": "ffe76f17aef9ef978bae9fe5bdfb83e2a0e0bb48f242fb469ded7af5b6e9276e"
+        },
+        {
+          "shape": "C",
+          "file": "mouth/afraid/C.png",
+          "difference": "mouth/afraid/C-diff.png",
+          "changedPixels": 391,
+          "sha256": "c6f6cc26c8b5e5a7d81d2b3e9d5a2f7c108a46468395fcb97ee4834ddfe46db4"
+        },
+        {
+          "shape": "D",
+          "file": "mouth/afraid/D.png",
+          "difference": "mouth/afraid/D-diff.png",
+          "changedPixels": 392,
+          "sha256": "c5782ac3822697c782c221f15be65eee8a5d57ffc542d3d88b72532da073aee5"
+        },
+        {
+          "shape": "E",
+          "file": "mouth/afraid/E.png",
+          "difference": "mouth/afraid/E-diff.png",
+          "changedPixels": 392,
+          "sha256": "51a8a8f9f061b436f6b42e347360a8d5ccdca99fd37f5269280f9aab2538fd6e"
+        },
+        {
+          "shape": "F",
+          "file": "mouth/afraid/F.png",
+          "difference": "mouth/afraid/F-diff.png",
+          "changedPixels": 392,
+          "sha256": "79dc8cccc2a63b566a97fcd745d63af722ba7a98708567da42fec6abf0837961"
+        },
+        {
+          "shape": "G",
+          "file": "mouth/afraid/G.png",
+          "difference": "mouth/afraid/G-diff.png",
+          "changedPixels": 390,
+          "sha256": "2be8c7829bf6802708af61f61d4590597cebb79566c4229189cab170f2202521"
+        },
+        {
+          "shape": "H",
+          "file": "mouth/afraid/H.png",
+          "difference": "mouth/afraid/H-diff.png",
+          "changedPixels": 392,
+          "sha256": "7d21cb1c3a6799a38102f91a7547328e7a5753f8e49585596f2e2f59b58c11ee"
+        },
+        {
+          "shape": "X",
+          "file": "mouth/afraid/X.png",
+          "difference": "mouth/afraid/X-diff.png",
+          "changedPixels": 392,
+          "sha256": "14ea6b97860d44aa1f15ffbe5874d5cd421717f47c408345b71264d4d9befffd"
+        }
+      ]
+    },
+    {
+      "id": "guarded",
+      "label": "Skeptisch",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "mouth/guarded/A.png",
+          "difference": "mouth/guarded/A-diff.png",
+          "changedPixels": 390,
+          "sha256": "8a3f561f1161f32ef1cfcc3eaf7fbe304a120de5b16d71fcfbd70b63961264e3"
+        },
+        {
+          "shape": "B",
+          "file": "mouth/guarded/B.png",
+          "difference": "mouth/guarded/B-diff.png",
+          "changedPixels": 392,
+          "sha256": "80a650b76925356b02f29b70c2484484d6119ca8e5e319ebec5becd1fd1ede72"
+        },
+        {
+          "shape": "C",
+          "file": "mouth/guarded/C.png",
+          "difference": "mouth/guarded/C-diff.png",
+          "changedPixels": 390,
+          "sha256": "ba2d4e718ae68f459fa0b31965a6c5926e5cc2d2ad9bbdb6b43d784cc066df89"
+        },
+        {
+          "shape": "D",
+          "file": "mouth/guarded/D.png",
+          "difference": "mouth/guarded/D-diff.png",
+          "changedPixels": 391,
+          "sha256": "175db254d6cabee2c2657398452733cae29003908ac3b3189f1ddbdd2a1810ba"
+        },
+        {
+          "shape": "E",
+          "file": "mouth/guarded/E.png",
+          "difference": "mouth/guarded/E-diff.png",
+          "changedPixels": 392,
+          "sha256": "2cdc664e48ed5d7abb598884e649e0c977c70dff75c957f20d0095bb36fd3cb2"
+        },
+        {
+          "shape": "F",
+          "file": "mouth/guarded/F.png",
+          "difference": "mouth/guarded/F-diff.png",
+          "changedPixels": 390,
+          "sha256": "169eff95fe7ccb2777f241d79466aa35157361f38a0613ab69235d784adf470d"
+        },
+        {
+          "shape": "G",
+          "file": "mouth/guarded/G.png",
+          "difference": "mouth/guarded/G-diff.png",
+          "changedPixels": 392,
+          "sha256": "465c0237dd3088a52c7d5ba8928e0d3dd3baa9b528a6a2ac96eb1a188997dffc"
+        },
+        {
+          "shape": "H",
+          "file": "mouth/guarded/H.png",
+          "difference": "mouth/guarded/H-diff.png",
+          "changedPixels": 391,
+          "sha256": "65fdf4c42d25ac32687d306021d8f34bc15c8e0ad15623ca689d6c9e975cf475"
+        },
+        {
+          "shape": "X",
+          "file": "mouth/guarded/X.png",
+          "difference": "mouth/guarded/X-diff.png",
+          "changedPixels": 391,
+          "sha256": "72b8b0c92e07b3a16f99f1b213271f40baca010bf3b76cf0d8d8eae1cc33aeda"
+        }
+      ]
+    }
+  ],
+  "audio": "../sample.wav",
+  "timing": "../sample.visemes.json",
+  "visualAcceptance": "pending",
+  "browLockRows": [
+    16,
+    25
+  ],
+  "eyeRegions": [
+    {
+      "x": 14,
+      "y": 16,
+      "width": 17,
+      "height": 16
+    },
+    {
+      "x": 33,
+      "y": 16,
+      "width": 18,
+      "height": 16
+    }
+  ],
+  "eyeFeatureLocks": null,
+  "useOriginalFeaturePalette": false,
+  "thinkingEyeSetsByEmotion": {
+    "neutral": [
+      {
+        "id": "left",
+        "label": "Links",
+        "phases": {
+          "open": {
+            "file": "../npc074-thinking-emotions/neutral/attempt-horizontal-v2/eyes/thinking/left/open.png",
+            "sha256": "ad66d192f5a735d04d7516d778896372aab7f1c4ba3517a5f0681c58f7818a60"
+          },
+          "half": {
+            "file": "../npc074-thinking-emotions/neutral/attempt-horizontal-v2/eyes/thinking/left/half.png",
+            "sha256": "19317953f6d134ca449e841df6be4d82c5e7d33224c034bf03a5467a7a52bc26",
+            "changedPixels": 208,
+            "reviewedRepair20261023": {
+              "candidateSha256": "19317953f6d134ca449e841df6be4d82c5e7d33224c034bf03a5467a7a52bc26",
+              "previousSha256": "bbc10ba805a78bee4971a8ab90fdd621a43867029936465bdf6d3ce6fd470569",
+              "masterSha256": "91b02fbe081db8b758f52c1fbc7705ee1fb13705ff00f9b1f2c419d67ba42bce",
+              "allowedSourceChangeRegions": [
+                [
+                  14,
+                  16,
+                  31,
+                  32
+                ],
+                [
+                  33,
+                  16,
+                  51,
+                  32
+                ]
+              ],
+              "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+            }
+          },
+          "closed": {
+            "file": "../npc074-thinking-emotions/neutral/attempt-horizontal-v2/eyes/thinking/left/closed.png",
+            "sha256": "32e854c1f07b6cbe23b7d7bf0befdd1bc4ba63e13b583f2a906392ecd34bf546",
+            "changedPixels": 208,
+            "reviewedRepair20261023": {
+              "candidateSha256": "32e854c1f07b6cbe23b7d7bf0befdd1bc4ba63e13b583f2a906392ecd34bf546",
+              "previousSha256": "2d70bb5b7efd8da193933ce8b3a3741732bc0b431a61aac496aea685a82c8eea",
+              "masterSha256": "91b02fbe081db8b758f52c1fbc7705ee1fb13705ff00f9b1f2c419d67ba42bce",
+              "allowedSourceChangeRegions": [
+                [
+                  14,
+                  16,
+                  31,
+                  32
+                ],
+                [
+                  33,
+                  16,
+                  51,
+                  32
+                ]
+              ],
+              "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+            }
+          }
+        }
+      },
+      {
+        "id": "right",
+        "label": "Rechts",
+        "phases": {
+          "open": {
+            "file": "../npc074-thinking-emotions/neutral/attempt-horizontal-v2/eyes/thinking/right/open.png",
+            "sha256": "a6fe35afc5924f50d815741158838083d7a6b48fb132a2547453f9d3966ffd16"
+          },
+          "half": {
+            "file": "../npc074-thinking-emotions/neutral/attempt-horizontal-v2/eyes/thinking/right/half.png",
+            "sha256": "5e7fdbc26baee014498a9f0bcfaa517201833588db6897278c36a3e9aaf7c114",
+            "changedPixels": 207,
+            "reviewedRepair20261023": {
+              "candidateSha256": "5e7fdbc26baee014498a9f0bcfaa517201833588db6897278c36a3e9aaf7c114",
+              "previousSha256": "d6445663c5dba4c9d1a86cca92ab5b2a2a44c6c86582b304ec56f96cff112b1c",
+              "masterSha256": "91b02fbe081db8b758f52c1fbc7705ee1fb13705ff00f9b1f2c419d67ba42bce",
+              "allowedSourceChangeRegions": [
+                [
+                  14,
+                  16,
+                  31,
+                  32
+                ],
+                [
+                  33,
+                  16,
+                  51,
+                  32
+                ]
+              ],
+              "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+            }
+          },
+          "closed": {
+            "file": "../npc074-thinking-emotions/neutral/attempt-horizontal-v2/eyes/thinking/right/closed.png",
+            "sha256": "8d2e594ab9d6b458f474765bfb240bc235f8c32a3c2d72291edf8ce2339557b2",
+            "changedPixels": 207,
+            "reviewedRepair20261023": {
+              "candidateSha256": "8d2e594ab9d6b458f474765bfb240bc235f8c32a3c2d72291edf8ce2339557b2",
+              "previousSha256": "2d70bb5b7efd8da193933ce8b3a3741732bc0b431a61aac496aea685a82c8eea",
+              "masterSha256": "91b02fbe081db8b758f52c1fbc7705ee1fb13705ff00f9b1f2c419d67ba42bce",
+              "allowedSourceChangeRegions": [
+                [
+                  14,
+                  16,
+                  31,
+                  32
+                ],
+                [
+                  33,
+                  16,
+                  51,
+                  32
+                ]
+              ],
+              "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+            }
+          }
+        }
+      }
+    ],
+    "happy": [
+      {
+        "id": "left",
+        "label": "Links",
+        "phases": {
+          "open": {
+            "file": "../npc074-thinking-emotions/happy/attempt-horizontal-v2/eyes/thinking/left/open.png",
+            "sha256": "0126c2067554dea4f0b30b37556907614fe9982b1842468aecb6bcb440151006"
+          },
+          "half": {
+            "file": "../npc074-thinking-emotions/happy/attempt-horizontal-v2/eyes/thinking/left/half.png",
+            "sha256": "c82013b5f447243a84c8f77eee77f51d2722e911fdca34b8c45031366817bd88",
+            "changedPixels": 559,
+            "reviewedRepair20261023": {
+              "candidateSha256": "c82013b5f447243a84c8f77eee77f51d2722e911fdca34b8c45031366817bd88",
+              "previousSha256": "ac96c98ef14f4f601250b22d3576c9844920c57d526c749845d468a259332881",
+              "masterSha256": "2e19a4b882c77fa19f32ce6b558f164b3c589f5157f91abbfcc498dece6844ae",
+              "allowedSourceChangeRegions": [
+                [
+                  14,
+                  16,
+                  31,
+                  32
+                ],
+                [
+                  33,
+                  16,
+                  51,
+                  32
+                ]
+              ],
+              "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+            }
+          },
+          "closed": {
+            "file": "../npc074-thinking-emotions/happy/attempt-horizontal-v2/eyes/thinking/left/closed.png",
+            "sha256": "af01d54ded0acdfde02e3da141ea51b4c509e4a2b47c5773b1952d5e1c181140",
+            "changedPixels": 559,
+            "reviewedRepair20261023": {
+              "candidateSha256": "af01d54ded0acdfde02e3da141ea51b4c509e4a2b47c5773b1952d5e1c181140",
+              "previousSha256": "42a957a14aaf91bf0d214172ed10e4ea72ca53d0da2129d006c22d66a2661491",
+              "masterSha256": "2e19a4b882c77fa19f32ce6b558f164b3c589f5157f91abbfcc498dece6844ae",
+              "allowedSourceChangeRegions": [
+                [
+                  14,
+                  16,
+                  31,
+                  32
+                ],
+                [
+                  33,
+                  16,
+                  51,
+                  32
+                ]
+              ],
+              "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+            }
+          }
+        }
+      },
+      {
+        "id": "right",
+        "label": "Rechts",
+        "phases": {
+          "open": {
+            "file": "../npc074-thinking-emotions/happy/attempt-horizontal-v2/eyes/thinking/right/open.png",
+            "sha256": "469bc420db076bb238be78ffac83674034aa2e47b0ed9181f5fee4872909d4bd"
+          },
+          "half": {
+            "file": "../npc074-thinking-emotions/happy/attempt-horizontal-v2/eyes/thinking/right/half.png",
+            "sha256": "33fe3f59e6587fb21fc72f9515cc813288181103adf7d372f7482458eda617e9",
+            "changedPixels": 559,
+            "reviewedRepair20261023": {
+              "candidateSha256": "33fe3f59e6587fb21fc72f9515cc813288181103adf7d372f7482458eda617e9",
+              "previousSha256": "33d8b94b44f90ca9c078866c66d7717a4edf70bd0a01e97280e7f060ac374e7f",
+              "masterSha256": "2e19a4b882c77fa19f32ce6b558f164b3c589f5157f91abbfcc498dece6844ae",
+              "allowedSourceChangeRegions": [
+                [
+                  14,
+                  16,
+                  31,
+                  32
+                ],
+                [
+                  33,
+                  16,
+                  51,
+                  32
+                ]
+              ],
+              "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+            }
+          },
+          "closed": {
+            "file": "../npc074-thinking-emotions/happy/attempt-horizontal-v2/eyes/thinking/right/closed.png",
+            "sha256": "131b8ba90acf18e27447c23fca4e691f28c9033e396aab59c7b209aa232fd06a",
+            "changedPixels": 559,
+            "reviewedRepair20261023": {
+              "candidateSha256": "131b8ba90acf18e27447c23fca4e691f28c9033e396aab59c7b209aa232fd06a",
+              "previousSha256": "42a957a14aaf91bf0d214172ed10e4ea72ca53d0da2129d006c22d66a2661491",
+              "masterSha256": "2e19a4b882c77fa19f32ce6b558f164b3c589f5157f91abbfcc498dece6844ae",
+              "allowedSourceChangeRegions": [
+                [
+                  14,
+                  16,
+                  31,
+                  32
+                ],
+                [
+                  33,
+                  16,
+                  51,
+                  32
+                ]
+              ],
+              "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+            }
+          }
+        }
+      }
+    ],
+    "angry": [
+      {
+        "id": "left",
+        "label": "Links",
+        "phases": {
+          "open": {
+            "file": "../npc074-thinking-emotions/angry/attempt-horizontal-v3/eyes/thinking/left/open.png",
+            "sha256": "74063b09841618b9769fe915910ceb7d606e80fecc5deaf1b41d588bab9d5613",
+            "changedPixels": 563,
+            "reviewedRepair20261023": {
+              "candidateSha256": "74063b09841618b9769fe915910ceb7d606e80fecc5deaf1b41d588bab9d5613",
+              "previousSha256": "67c1eb2c184a2cdbee7abc3f802a44ab4c68a9720ae6f85760fef8e15ae753bb",
+              "masterSha256": "d6a3b1fe4ae4fc1dd29d2d6cca6e636ab87061d6dfac9e704b49266a059bcd93",
+              "allowedSourceChangeRegions": [
+                [
+                  14,
+                  16,
+                  31,
+                  32
+                ],
+                [
+                  33,
+                  16,
+                  51,
+                  32
+                ],
+                [
+                  30,
+                  24,
+                  34,
+                  27
+                ]
+              ],
+              "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+            }
+          },
+          "half": {
+            "file": "../npc074-thinking-emotions/angry/attempt-horizontal-v3/eyes/thinking/left/half.png",
+            "sha256": "d2aed3f399bb694dd2c50888543c6f880be56137c8810d287c6c274c3b70017c",
+            "changedPixels": 563,
+            "reviewedRepair20261023": {
+              "candidateSha256": "d2aed3f399bb694dd2c50888543c6f880be56137c8810d287c6c274c3b70017c",
+              "previousSha256": "850d8f9958024c32bf4fcba99d8579aa9934f2b2284671730eb1b46537cc32f7",
+              "masterSha256": "d6a3b1fe4ae4fc1dd29d2d6cca6e636ab87061d6dfac9e704b49266a059bcd93",
+              "allowedSourceChangeRegions": [
+                [
+                  14,
+                  16,
+                  31,
+                  32
+                ],
+                [
+                  33,
+                  16,
+                  51,
+                  32
+                ],
+                [
+                  30,
+                  24,
+                  34,
+                  27
+                ]
+              ],
+              "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+            }
+          },
+          "closed": {
+            "file": "../npc074-thinking-emotions/angry/attempt-horizontal-v3/eyes/thinking/left/closed.png",
+            "sha256": "6200e423eda82f2798a5ce103fef88a4cef16c2c96a4d28d2bbf7e9c6c2ded16",
+            "changedPixels": 563,
+            "reviewedRepair20261023": {
+              "candidateSha256": "6200e423eda82f2798a5ce103fef88a4cef16c2c96a4d28d2bbf7e9c6c2ded16",
+              "previousSha256": "c9bae8f9cb41a1d1a9081afac20fa651deb89a964e064014547a671d7f090d39",
+              "masterSha256": "d6a3b1fe4ae4fc1dd29d2d6cca6e636ab87061d6dfac9e704b49266a059bcd93",
+              "allowedSourceChangeRegions": [
+                [
+                  14,
+                  16,
+                  31,
+                  32
+                ],
+                [
+                  33,
+                  16,
+                  51,
+                  32
+                ],
+                [
+                  30,
+                  24,
+                  34,
+                  27
+                ]
+              ],
+              "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+            }
+          }
+        }
+      },
+      {
+        "id": "right",
+        "label": "Rechts",
+        "phases": {
+          "open": {
+            "file": "../npc074-thinking-emotions/angry/attempt-horizontal-v3/eyes/thinking/right/open.png",
+            "sha256": "90a3b3d10c7690bd34c28f8a0ff37c9daed711fed85a947b41bad2ac90d93551",
+            "changedPixels": 560,
+            "reviewedRepair20261023": {
+              "candidateSha256": "90a3b3d10c7690bd34c28f8a0ff37c9daed711fed85a947b41bad2ac90d93551",
+              "previousSha256": "1a500448ee092a8593e89e97e18af74e8bc64c0f1ef69d2eabd7eb85abda5a5f",
+              "masterSha256": "d6a3b1fe4ae4fc1dd29d2d6cca6e636ab87061d6dfac9e704b49266a059bcd93",
+              "allowedSourceChangeRegions": [
+                [
+                  14,
+                  16,
+                  31,
+                  32
+                ],
+                [
+                  33,
+                  16,
+                  51,
+                  32
+                ],
+                [
+                  30,
+                  24,
+                  34,
+                  27
+                ]
+              ],
+              "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+            }
+          },
+          "half": {
+            "file": "../npc074-thinking-emotions/angry/attempt-horizontal-v3/eyes/thinking/right/half.png",
+            "sha256": "84b818209b1730c5fc728ffafc74a58c5d4b01235075c9a2c93630a7788aecf4",
+            "changedPixels": 560,
+            "reviewedRepair20261023": {
+              "candidateSha256": "84b818209b1730c5fc728ffafc74a58c5d4b01235075c9a2c93630a7788aecf4",
+              "previousSha256": "3032f04f6fd8f27e993913aaf03b8205c5f315b20bd9a58096f01e99ff45a44a",
+              "masterSha256": "d6a3b1fe4ae4fc1dd29d2d6cca6e636ab87061d6dfac9e704b49266a059bcd93",
+              "allowedSourceChangeRegions": [
+                [
+                  14,
+                  16,
+                  31,
+                  32
+                ],
+                [
+                  33,
+                  16,
+                  51,
+                  32
+                ],
+                [
+                  30,
+                  24,
+                  34,
+                  27
+                ]
+              ],
+              "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+            }
+          },
+          "closed": {
+            "file": "../npc074-thinking-emotions/angry/attempt-horizontal-v3/eyes/thinking/right/closed.png",
+            "sha256": "dc7af1231cad323b872db718fb27e05371eec678663ef2b3f591d8b69159a0eb",
+            "changedPixels": 560,
+            "reviewedRepair20261023": {
+              "candidateSha256": "dc7af1231cad323b872db718fb27e05371eec678663ef2b3f591d8b69159a0eb",
+              "previousSha256": "c9bae8f9cb41a1d1a9081afac20fa651deb89a964e064014547a671d7f090d39",
+              "masterSha256": "d6a3b1fe4ae4fc1dd29d2d6cca6e636ab87061d6dfac9e704b49266a059bcd93",
+              "allowedSourceChangeRegions": [
+                [
+                  14,
+                  16,
+                  31,
+                  32
+                ],
+                [
+                  33,
+                  16,
+                  51,
+                  32
+                ],
+                [
+                  30,
+                  24,
+                  34,
+                  27
+                ]
+              ],
+              "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+            }
+          }
+        }
+      }
+    ],
+    "sad": [
+      {
+        "id": "left",
+        "label": "Links",
+        "phases": {
+          "open": {
+            "file": "../npc074-thinking-emotions/sad/attempt-horizontal-v1/eyes/thinking/left/open.png",
+            "sha256": "a1f5e7ddbabfb2f01e0e319d39fc7b9f18d13db22da96fc2fefed8ecec898bed"
+          },
+          "half": {
+            "file": "../npc074-thinking-emotions/sad/attempt-horizontal-v1/eyes/thinking/left/half.png",
+            "sha256": "1376b9a613e21965467e04eae0cbaee4b0f61216a11c18c91e676121514a0711"
+          },
+          "closed": {
+            "file": "../npc074-thinking-emotions/sad/attempt-horizontal-v1/eyes/thinking/left/closed.png",
+            "sha256": "1f0c20efc9986d0244ef6224f3724c5dd2590eb634b855b0a37b27e5c0d1084c"
+          }
+        }
+      },
+      {
+        "id": "right",
+        "label": "Rechts",
+        "phases": {
+          "open": {
+            "file": "../npc074-thinking-emotions/sad/attempt-horizontal-v1/eyes/thinking/right/open.png",
+            "sha256": "30bc2cc7d4e5a20945e7b6436c176d672f02573d62c394a05872da8658b5bdbd"
+          },
+          "half": {
+            "file": "../npc074-thinking-emotions/sad/attempt-horizontal-v1/eyes/thinking/right/half.png",
+            "sha256": "5b65fd88deb938ddcb5ed7e26cb7071ee0c4324f5829dea45b62b0d51b341ed8"
+          },
+          "closed": {
+            "file": "../npc074-thinking-emotions/sad/attempt-horizontal-v1/eyes/thinking/right/closed.png",
+            "sha256": "1f0c20efc9986d0244ef6224f3724c5dd2590eb634b855b0a37b27e5c0d1084c"
+          }
+        }
+      }
+    ],
+    "afraid": [
+      {
+        "id": "left",
+        "label": "Links",
+        "phases": {
+          "open": {
+            "file": "../npc074-thinking-emotions/afraid/attempt-horizontal-v2/eyes/thinking/left/open.png",
+            "sha256": "6a5d19a8c63ddccb0595cb907dc9c31fd308b87fb8fa4162667fa63687455ccd"
+          },
+          "half": {
+            "file": "../npc074-thinking-emotions/afraid/attempt-horizontal-v2/eyes/thinking/left/half.png",
+            "sha256": "c5e8f32362de49a31788b7c26ad0b154215aaa3ef45cd00c073fd40dd0aa3ba1",
+            "changedPixels": 557,
+            "reviewedRepair20261023": {
+              "candidateSha256": "c5e8f32362de49a31788b7c26ad0b154215aaa3ef45cd00c073fd40dd0aa3ba1",
+              "previousSha256": "39829e2f6864f5084f2468c5772e85f8acb6a9f193975189b6f46ca4e6de32ec",
+              "masterSha256": "0113a4ae2e874cd9e03f2e26c56096e5797c83777d8d08bf12fb295e6be35c13",
+              "allowedSourceChangeRegions": [
+                [
+                  14,
+                  16,
+                  31,
+                  32
+                ],
+                [
+                  33,
+                  16,
+                  51,
+                  32
+                ]
+              ],
+              "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+            }
+          },
+          "closed": {
+            "file": "../npc074-thinking-emotions/afraid/attempt-horizontal-v2/eyes/thinking/left/closed.png",
+            "sha256": "d4d1b09bb82b75ceb88b35a8bd28415717396898f37085c5be84dac6c0add3cc",
+            "changedPixels": 557,
+            "reviewedRepair20261023": {
+              "candidateSha256": "d4d1b09bb82b75ceb88b35a8bd28415717396898f37085c5be84dac6c0add3cc",
+              "previousSha256": "95aeea67f876701ca49500bf21d63669a7b2f0b98e05cef0bc78aec8dff4b468",
+              "masterSha256": "0113a4ae2e874cd9e03f2e26c56096e5797c83777d8d08bf12fb295e6be35c13",
+              "allowedSourceChangeRegions": [
+                [
+                  14,
+                  16,
+                  31,
+                  32
+                ],
+                [
+                  33,
+                  16,
+                  51,
+                  32
+                ]
+              ],
+              "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+            }
+          }
+        }
+      },
+      {
+        "id": "right",
+        "label": "Rechts",
+        "phases": {
+          "open": {
+            "file": "../npc074-thinking-emotions/afraid/attempt-horizontal-v2/eyes/thinking/right/open.png",
+            "sha256": "745c71da54dccbfd97ba0f5a10a5ebba7d35a80e88f84dffccfda73477304a99"
+          },
+          "half": {
+            "file": "../npc074-thinking-emotions/afraid/attempt-horizontal-v2/eyes/thinking/right/half.png",
+            "sha256": "eac6f81d16bc35f0cd086e422c2a5e6aa9e8ffaa917224ede11a768df4f14654",
+            "changedPixels": 557,
+            "reviewedRepair20261023": {
+              "candidateSha256": "eac6f81d16bc35f0cd086e422c2a5e6aa9e8ffaa917224ede11a768df4f14654",
+              "previousSha256": "b83f589dc3ba574d6fbba577806be27a6513ea90c65cbe1d47b582b9694472d2",
+              "masterSha256": "0113a4ae2e874cd9e03f2e26c56096e5797c83777d8d08bf12fb295e6be35c13",
+              "allowedSourceChangeRegions": [
+                [
+                  14,
+                  16,
+                  31,
+                  32
+                ],
+                [
+                  33,
+                  16,
+                  51,
+                  32
+                ]
+              ],
+              "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+            }
+          },
+          "closed": {
+            "file": "../npc074-thinking-emotions/afraid/attempt-horizontal-v2/eyes/thinking/right/closed.png",
+            "sha256": "fdbebe932f8ca8a9421c096886e8ced0e0b400e25e98fe5aa01d3675e331296b",
+            "changedPixels": 557,
+            "reviewedRepair20261023": {
+              "candidateSha256": "fdbebe932f8ca8a9421c096886e8ced0e0b400e25e98fe5aa01d3675e331296b",
+              "previousSha256": "95aeea67f876701ca49500bf21d63669a7b2f0b98e05cef0bc78aec8dff4b468",
+              "masterSha256": "0113a4ae2e874cd9e03f2e26c56096e5797c83777d8d08bf12fb295e6be35c13",
+              "allowedSourceChangeRegions": [
+                [
+                  14,
+                  16,
+                  31,
+                  32
+                ],
+                [
+                  33,
+                  16,
+                  51,
+                  32
+                ]
+              ],
+              "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+            }
+          }
+        }
+      }
+    ],
+    "guarded": [
+      {
+        "id": "left",
+        "label": "Links",
+        "phases": {
+          "open": {
+            "file": "../npc074-thinking-emotions/guarded/attempt-horizontal-v2/eyes/thinking/left/open.png",
+            "sha256": "c974022136d35a46dd7ed6660e0c4dfb7af1a7228899d5e30490394c9dede501",
+            "changedPixels": 558,
+            "reviewedRepair20261023": {
+              "candidateSha256": "c974022136d35a46dd7ed6660e0c4dfb7af1a7228899d5e30490394c9dede501",
+              "previousSha256": "539a1667ab83a30c850ea82d5f6aab2423953ca84ed75e614c4358a26539f819",
+              "masterSha256": "1380008666d6d98cf09bb5d5b8bde187511104881e23a8b5ed05912ec6ded9b8",
+              "allowedSourceChangeRegions": [
+                [
+                  14,
+                  16,
+                  31,
+                  32
+                ],
+                [
+                  33,
+                  16,
+                  51,
+                  32
+                ]
+              ],
+              "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+            }
+          },
+          "half": {
+            "file": "../npc074-thinking-emotions/guarded/attempt-horizontal-v2/eyes/thinking/left/half.png",
+            "sha256": "275c7ce181bca3f674a425e120be4614ded39be6927d020322b17c8e754b9b4b",
+            "changedPixels": 558,
+            "reviewedRepair20261023": {
+              "candidateSha256": "275c7ce181bca3f674a425e120be4614ded39be6927d020322b17c8e754b9b4b",
+              "previousSha256": "c1e6d381cda0808c7f53f639dea369e80b07ac0958033b76e0f078e39023bb2b",
+              "masterSha256": "1380008666d6d98cf09bb5d5b8bde187511104881e23a8b5ed05912ec6ded9b8",
+              "allowedSourceChangeRegions": [
+                [
+                  14,
+                  16,
+                  31,
+                  32
+                ],
+                [
+                  33,
+                  16,
+                  51,
+                  32
+                ]
+              ],
+              "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+            }
+          },
+          "closed": {
+            "file": "../npc074-thinking-emotions/guarded/attempt-horizontal-v2/eyes/thinking/left/closed.png",
+            "sha256": "4aafbed2ffba19c02a87b215f54b83297ae6269a1efcbb04a0b16b4dc5b59ea9",
+            "changedPixels": 558,
+            "reviewedRepair20261023": {
+              "candidateSha256": "4aafbed2ffba19c02a87b215f54b83297ae6269a1efcbb04a0b16b4dc5b59ea9",
+              "previousSha256": "6d3823397d288464c7a6c01e10e89679b35945da741cdc8eeefaba10ce1eb08e",
+              "masterSha256": "1380008666d6d98cf09bb5d5b8bde187511104881e23a8b5ed05912ec6ded9b8",
+              "allowedSourceChangeRegions": [
+                [
+                  14,
+                  16,
+                  31,
+                  32
+                ],
+                [
+                  33,
+                  16,
+                  51,
+                  32
+                ]
+              ],
+              "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+            }
+          }
+        }
+      },
+      {
+        "id": "right",
+        "label": "Rechts",
+        "phases": {
+          "open": {
+            "file": "../npc074-thinking-emotions/guarded/attempt-horizontal-v2/eyes/thinking/right/open.png",
+            "sha256": "303f4dedddaf71466d23c02a4bb4c1ba906b30523b78ea49efed4634affed660",
+            "changedPixels": 558,
+            "reviewedRepair20261023": {
+              "candidateSha256": "303f4dedddaf71466d23c02a4bb4c1ba906b30523b78ea49efed4634affed660",
+              "previousSha256": "9c8a51fbd0b68bf201f25beba3931ca6edea9c99edbb2e8e74f74807b808cc75",
+              "masterSha256": "1380008666d6d98cf09bb5d5b8bde187511104881e23a8b5ed05912ec6ded9b8",
+              "allowedSourceChangeRegions": [
+                [
+                  14,
+                  16,
+                  31,
+                  32
+                ],
+                [
+                  33,
+                  16,
+                  51,
+                  32
+                ]
+              ],
+              "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+            }
+          },
+          "half": {
+            "file": "../npc074-thinking-emotions/guarded/attempt-horizontal-v2/eyes/thinking/right/half.png",
+            "sha256": "3054b652eed83d9838b6a188cd920bfcbb4a4938e9544995dccb23a351609bf4",
+            "changedPixels": 558,
+            "reviewedRepair20261023": {
+              "candidateSha256": "3054b652eed83d9838b6a188cd920bfcbb4a4938e9544995dccb23a351609bf4",
+              "previousSha256": "e86626a8b8a75364c1ed3057ae610bc54b2fccc008febf67b4700c632169715c",
+              "masterSha256": "1380008666d6d98cf09bb5d5b8bde187511104881e23a8b5ed05912ec6ded9b8",
+              "allowedSourceChangeRegions": [
+                [
+                  14,
+                  16,
+                  31,
+                  32
+                ],
+                [
+                  33,
+                  16,
+                  51,
+                  32
+                ]
+              ],
+              "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+            }
+          },
+          "closed": {
+            "file": "../npc074-thinking-emotions/guarded/attempt-horizontal-v2/eyes/thinking/right/closed.png",
+            "sha256": "16d3e084f95e4f7134e4e4f6ed8732243f384f2d1f4d4c4a4441eb726e9d3837",
+            "changedPixels": 558,
+            "reviewedRepair20261023": {
+              "candidateSha256": "16d3e084f95e4f7134e4e4f6ed8732243f384f2d1f4d4c4a4441eb726e9d3837",
+              "previousSha256": "6d3823397d288464c7a6c01e10e89679b35945da741cdc8eeefaba10ce1eb08e",
+              "masterSha256": "1380008666d6d98cf09bb5d5b8bde187511104881e23a8b5ed05912ec6ded9b8",
+              "allowedSourceChangeRegions": [
+                [
+                  14,
+                  16,
+                  31,
+                  32
+                ],
+                [
+                  33,
+                  16,
+                  51,
+                  32
+                ]
+              ],
+              "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+            }
+          }
+        }
+      }
+    ]
+  },
+  "thinkingVisualAcceptance": "parent-reviewed-user-review-pending",
+  "parentReviewedRepairs": {
+    "stable-blinks-and-brows-20261023": {
+      "moods": [
+        "neutral",
+        "happy",
+        "angry",
+        "afraid",
+        "guarded"
+      ],
+      "masterHashes": {
+        "neutral": "91b02fbe081db8b758f52c1fbc7705ee1fb13705ff00f9b1f2c419d67ba42bce",
+        "happy": "2e19a4b882c77fa19f32ce6b558f164b3c589f5157f91abbfcc498dece6844ae",
+        "angry": "d6a3b1fe4ae4fc1dd29d2d6cca6e636ab87061d6dfac9e704b49266a059bcd93",
+        "afraid": "0113a4ae2e874cd9e03f2e26c56096e5797c83777d8d08bf12fb295e6be35c13",
+        "guarded": "1380008666d6d98cf09bb5d5b8bde187511104881e23a8b5ed05912ec6ded9b8"
+      },
+      "scope": "Only listed eye frames and their playback reviewed; complete portrait acceptance remains pending.",
+      "reviewEvidence": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\npc074-parent-review\\review.md"
+    }
+  }
+}

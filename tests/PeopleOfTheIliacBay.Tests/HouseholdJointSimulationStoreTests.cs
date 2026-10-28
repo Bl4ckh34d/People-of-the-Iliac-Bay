@@ -198,12 +198,6 @@ namespace PeopleOfTheIliacBay.Tests
                 bad=store.Snapshot();bad.HouseholdJointProgress[0].ObservedAt++;
                 Check.Throws<ArgumentException>(()=>restored.Restore(bad));
             }));
-            cases.Add(("Schema71 adds no inferred projection and rejects future simulation fields",()=>{
-                var store=Prepared(out var plan,out _);double at=Departure(plan);Begin(store,plan,at);
-                var saved=store.Snapshot();saved.Version=71;var restored=new WorldStateStore(0);
-                Check.Throws<ArgumentException>(()=>restored.Restore(saved));Ledger(saved).Clear();restored.Restore(saved);
-                Check.True(Read(restored)==null);Check.True(restored.GetHouseholdJointMovement(2,7)!=null);
-            }));
             cases.Add(("Either parent's required appointment prevents handing leisure to simulation",()=>{
                 foreach(string id in new[]{"mother","father"})
                 {

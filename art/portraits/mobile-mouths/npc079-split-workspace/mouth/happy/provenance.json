@@ -1,0 +1,42 @@
+{
+  "portraitRecord": 79,
+  "bank": "TFAC00I0.RCI",
+  "emotion": "happy",
+  "asset": "lower-half speech-mouth atlas",
+  "generator": "built-in image_gen",
+  "generation_count": 1,
+  "source": {
+    "path": "art/portraits/mobile-mouths/npc079-split-workspace/mouth-reference-grid.png",
+    "sha256": "51B7D166C01001213D48E19BE135F463E41B6A9892DA5ABE9C686CF1AE53CA2A",
+    "dimensions_px": [1536, 696]
+  },
+  "original_identity_reference": {
+    "path": "art/portraits/mobile-mouths/npc079-split-workspace/original.png",
+    "sha256": "70B1B52DF73159543AFD5776EAE7565BFD3619FD31BC5FD90AF674E42520D460",
+    "dimensions_px": [64, 64]
+  },
+  "generated": {
+    "path": "C:/Users/Daniel/.codex/generated_images/01a15fde-8b98-7181-a1df-84e7b766303c/exec-feac1e62-deeb-4b0d-aa43-37d1f629bc8b.png",
+    "sha256": "773C053EFE1689C798DFEC7057DD0A655335C501E567B64580D84AA1E4EDE973",
+    "dimensions_px": [1863, 844]
+  },
+  "output": {
+    "path": "art/portraits/mobile-mouths/npc079-split-workspace/mouth/happy/raw.png",
+    "sha256": "773C053EFE1689C798DFEC7057DD0A655335C501E567B64580D84AA1E4EDE973",
+    "dimensions_px": [1863, 844],
+    "copied_unaltered": true
+  },
+  "grid": {
+    "rows": 3,
+    "columns": 3,
+    "row_major_order": ["A", "B", "C", "D", "E", "F", "G", "H", "X"],
+    "native_cell_dimensions_px": [64, 29],
+    "mouth_region_native": {"x": 22, "y": 39, "width": 20, "height": 13},
+    "closed_pose_letters": ["A", "X"]
+  },
+  "prompt": "Create one complete HAPPY speech-mouth 3x3 atlas by editing Image 1, the supplied NPC 79 mouth reference grid. Preserve this exact woman, dark hair edges, tan skin, nose, philtrum, jaw, chin, neck, head framing, soft muted original palette, and pixel texture. Keep each lower-half cell at same native 64x29 geometry enlarged 8x; preserve full equal-cell 3x3 layout. Change only the small original mouth/lips. Row-major letters A B C / D E F / G H X. Make happiness clear through friendly gently lifted mouth corners and subtle warmth, with no giant grin. A and X must be closed-mouth small relaxed smiles. The other seven poses show distinct but modest speech shapes: light lip contact, narrow smile opening, small soft vowel opening, medium vertical vowel, compact rounded vowel, restrained teeth/lip contact, slightly wider natural opening, and another rounded vowel. Keep lips close to original size and anatomy in every cell; use only small natural teeth glimpses where needed, never bright white slabs. Preserve original muted reds and flesh shading; keep crisp soft native-scale pixel blocks without hard black outlines or extra contrast. Do not change nose, face geometry, hair, neck, or background; no large mouth, teeth-heavy grin, blur, smoothing, sharpening, text, labels, or gutters. Output only full 3x3 atlas.",
+  "visual_review": {
+    "status": "raw generation; parent review pending",
+    "notes": "A and X appear closed, with friendly raised corners. Speech shapes are distinct. Several open poses look wider than source mouth at full-sheet view, and some pale teeth pixels look bright; verify 64x29 downsample before adoption. Output is 1863x844 rather than reference 1536x696. No resizing or postprocessing performed."
+  }
+}

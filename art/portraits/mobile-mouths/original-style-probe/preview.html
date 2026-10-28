@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="de">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Portrait 77 – Nähe zum Original prüfen</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,sans-serif;background:#19191e;color:#ede9df}body{margin:0}main{max-width:1200px;margin:auto;padding:28px}h1{font-size:27px}p{line-height:1.5;color:#bdb9b3;max-width:1000px}.portraits{display:flex;gap:20px;flex-wrap:wrap}figure{margin:0;width:256px}canvas{width:256px;height:256px;image-rendering:pixelated;background:#302936}figcaption{margin-top:10px;line-height:1.4}small{display:block;color:#bdb9b3;margin-top:5px}#status{color:#b3d4b6}.error{color:#ff9999!important}
+</style>
+<main>
+<h1>Einzelbildtest · näher am Original</h1>
+<p>Ein fröhliches Einzelbild direkt vom Original. Kein ausgeschnittener Mund, keine aufgesetzten Augen, keine Animationsserie. Alle Vergleiche werden als vollständiges Portrait auf dieselben 64×64 Bildpunkte abgebildet.</p>
+<div class="portraits">
+<figure><canvas width="64" height="64" data-src="../tfac-077-original.png"></canvas><figcaption>Original<small>Maßstab, Farben und weiche Schattierung als Referenz.</small></figcaption></figure>
+<figure><canvas width="64" height="64" data-src="../tfac-077-full-frame-v5.png" data-cell="8"></canvas><figcaption>Freigegebene Mundserie<small>Ruhepose der früher akzeptierten Version.</small></figcaption></figure>
+<figure><canvas width="64" height="64" data-src="../npc077-emotions/v2/happy-open.png" data-cell="8"></canvas><figcaption>Verworfene Überarbeitung 2<small>Fröhlich; zu harte Kontraste und zu wenig Unterschied.</small></figcaption></figure>
+<figure><canvas width="64" height="64" data-src="happy-single.png"></canvas><figcaption>Neuer Einzelbildversuch<small>Direkt vom Original; noch nicht freigegeben.</small></figcaption></figure>
+</div>
+<p id="status" role="status">Lade Vergleich …</p>
+</main>
+<script type="module">
+const status=document.getElementById('status');
+try{
+await Promise.all([...document.querySelectorAll('canvas')].map(canvas=>new Promise((resolve,reject)=>{
+const image=new Image();image.onerror=()=>reject(Error('Bild fehlt: '+canvas.dataset.src));image.onload=()=>{const context=canvas.getContext('2d');context.imageSmoothingEnabled=false;if(canvas.dataset.cell!==undefined){const index=Number(canvas.dataset.cell),w=image.naturalWidth/3,h=image.naturalHeight/3;context.drawImage(image,index%3*w,Math.floor(index/3)*h,w,h,0,0,64,64)}else{context.drawImage(image,0,0,64,64)}canvas.dataset.loaded='true';resolve()};image.src=canvas.dataset.src;
+})));
+status.textContent='Vier vollständige Portraits geladen. Einzelbildtest, keine neue Animation und keine Installation.';
+}catch(error){status.textContent=error.message;status.classList.add('error')}
+</script>
+</html>

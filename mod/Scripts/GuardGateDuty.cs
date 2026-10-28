@@ -30,7 +30,6 @@ namespace PeopleOfTheIliacBay.DFU
             public double HoldInsideUntil;
             public SavedRoutePoint ObservedPost;
             public List<SavedRoutePoint> ReturnRoute;
-            public PreparedWall Wall;
         }
         private sealed class GateDutyPost
         {
@@ -115,6 +114,33 @@ namespace PeopleOfTheIliacBay.DFU
 
         private System.Collections.IEnumerator AdvanceGateDuty()
         {
+            double shiftTime = Now();
+            foreach (var post in gateDutyPosts)
+            {
+                var current = Roster.Guards.Find(g => g.Id == post.GuardId);
+                if(current!=null && HauntingShelterNow(shiftTime) && current.Refuge!=null)
+                {post.GuardId=null;continue;}
+                if (current != null && (!GuardShifts.OnDuty(current, shiftTime) || HauntingShelterNow(shiftTime)) && current.Duty == GuardDuty.Posted)
+                {
+                    bool relieved = false;
+                    yield return ReturnRelievedGateGuard(current, value => relieved = value);
+                    if (relieved) post.GuardId = null;
+                }
+            }
+            foreach (var pair in gateDutyPairs)
+            {
+                var current = Roster.Guards.Find(g => g.Id == pair.GuardId);
+                // The outgoing exterior guard must complete its pre-close return.
+                if (current != null && (!GuardShifts.OnDuty(current, shiftTime) || HauntingShelterNow(shiftTime)) &&
+                    current.PostRecall == null && !AtPoint(current.Post, pair.Outside) &&
+                    (current.Duty == GuardDuty.Posted || current.Refuge != null))
+                {
+                    bool relieved = current.Refuge != null;
+                    if (!relieved) yield return ReturnRelievedGateGuard(current, value => relieved = value);
+                    if (relieved) pair.GuardId = null;
+                }
+            }
+            if(HauntingShelterNow(Now()))yield break;
             var assigned = new HashSet<string>(StringComparer.Ordinal);
             foreach (var post in gateDutyPosts) if (post.GuardId != null) assigned.Add(post.GuardId);
             foreach (var pair in gateDutyPairs) if (pair.GuardId != null) assigned.Add(pair.GuardId);
@@ -175,9 +201,8 @@ namespace PeopleOfTheIliacBay.DFU
                 daySeconds=now-dayStart;
                 duskAt=dayStart+DaggerfallDateTime.DuskHour*3600;
                 double recallAt=duskAt-returnTravelSeconds-60;
-                if(guard.PostRecall==null || guard.PostRecall.WallDuty==null)
+                if(guard.PostRecall==null)
                 {
-                    yield return PrepareWallPatrol(pair,guard);
                     now=Now();
                     ArmGateRecall(guard,pair,now);
                     dayStart=Math.Floor(now/86400)*86400;daySeconds=now-dayStart;
@@ -248,14 +273,14 @@ namespace PeopleOfTheIliacBay.DFU
             var used = new HashSet<string>(StringComparer.Ordinal);
             foreach (var pair in gateDutyPairs)
             {
-                var guard = Roster.Guards.Find(g => g.IsAlive && !used.Contains(g.Id) && !Roster.IsOnPatrol(g.Id) &&
+                var guard = Roster.Guards.Find(g => GuardShifts.OnDuty(g, Now()) && !used.Contains(g.Id) && !Roster.IsOnPatrol(g.Id) &&
                     (AtPoint(g.Post, pair.ReturnInside) || AtPoint(g.Post, pair.Outside)));
                 if (guard == null) continue;
                 pair.GuardId = guard.Id; used.Add(guard.Id);
             }
             foreach (var post in gateDutyPosts)
             {
-                var guard = Roster.Guards.Find(g=>g.IsAlive && !used.Contains(g.Id) && !Roster.IsOnPatrol(g.Id) && AtPoint(g.Post,post.Point));
+                var guard = Roster.Guards.Find(g=>GuardShifts.OnDuty(g, Now()) && !used.Contains(g.Id) && !Roster.IsOnPatrol(g.Id) && AtPoint(g.Post,post.Point));
                 if(guard==null) continue;
                 post.GuardId=guard.Id; used.Add(guard.Id);
             }
@@ -276,10 +301,41 @@ namespace PeopleOfTheIliacBay.DFU
             }
         }
 
+        private System.Collections.IEnumerator ReturnRelievedGateGuard(GuardRecord guard,Action<bool> complete)
+        {
+            var source = guard.Post;
+            var destinations=new List<SavedRoutePoint>();
+            if(guard.ReliefPost!=null)destinations.Add(guard.ReliefPost);
+            foreach(var point in publicPostSites)
+                if(!AtPoint(source,point) && !Roster.Guards.Exists(g=>g.Id!=guard.Id && g.IsAlive &&
+                    (Gap(g.Post,point)<.8 || g.ReliefPost!=null && Gap(g.ReliefPost,point)<.8)))destinations.Add(point);
+            destinations.Sort((a,b)=> {
+                bool ownA=guard.ReliefPost!=null && AtPoint(a,guard.ReliefPost),ownB=guard.ReliefPost!=null && AtPoint(b,guard.ReliefPost);
+                return ownA!=ownB ? ownA ? -1 : 1 : Gap(source,a).CompareTo(Gap(source,b));
+            });
+            foreach(var destination in destinations)
+            {
+                if(AtPoint(source,destination))continue;
+                var route = new TownGeometry.RouteResult();
+                yield return ReadGateRoute(source,destination,route);
+                if(!guard.IsAlive || guard.Duty!=GuardDuty.Posted || GuardShifts.OnDuty(guard,Now()) && !HauntingShelterNow(Now()) || !AtPoint(source,guard.Post))yield break;
+                if(route.Points==null || route.Points.Count<2)continue;
+                bool moved=false;
+                try
+                {
+                    Roster.MovePost(guard.Id,route.Points,Now(),1.3,DaggerfallUnity.Instance.WorldTime.TimeScale);
+                    guard.ReliefPost=new SavedRoutePoint{X=destination.X,Z=destination.Z};
+                    InvalidateGateApproaches();complete(true);moved=true;
+                }
+                catch(ArgumentException) { }
+                if(moved)yield break;
+            }
+        }
+
         private System.Collections.IEnumerator SelectGateGuard(GateDutyPair pair,HashSet<string> assigned,Action<GuardRecord> complete)
         {
-            if(!IsVanillaGateOpen(pair.Gate,Now())) yield break;
-            if(pair.ReturnRoute==null)
+            bool gateOpen=IsVanillaGateOpen(pair.Gate,Now());
+            if(pair.ReturnRoute==null && gateOpen)
             {
                 var prepared=new TownGeometry.RouteResult();
                 yield return ReadGateRoute(pair.Outside,pair.ReturnInside,prepared);
@@ -287,21 +343,21 @@ namespace PeopleOfTheIliacBay.DFU
                 pair.ReturnRoute=prepared.Points;
             }
             double now=Now(),dayStart=Math.Floor(Now()/86400)*86400;
-            double returnTravel=RouteLength(pair.ReturnRoute)*DaggerfallUnity.Instance.WorldTime.TimeScale/1.3;
-            bool outside=now-dayStart>=DaggerfallDateTime.DawnHour*3600 &&
+            double returnTravel=pair.ReturnRoute==null ? double.PositiveInfinity :
+                RouteLength(pair.ReturnRoute)*DaggerfallUnity.Instance.WorldTime.TimeScale/1.3;
+            bool outside=gateOpen && now-dayStart>=DaggerfallDateTime.DawnHour*3600 &&
                 dayStart+DaggerfallDateTime.DuskHour*3600-now>returnTravel+60;
             var target=outside ? pair.Outside : pair.ReturnInside;
             foreach(var guard in GateCandidates(assigned,target))
             {
                 var source=guard.Post;var prepared=new TownGeometry.RouteResult();
                 yield return ReadGateRoute(source,target,prepared);
-                if(outside) yield return PrepareWallPatrol(pair,guard);
                 now=Now();
                 if(prepared.Points==null || prepared.Points.Count<2 || !EligibleGateGuard(guard,assigned) ||
-                    !AtPoint(source,guard.Post) || !IsVanillaGateOpen(pair.Gate,now)) continue;
+                    !AtPoint(source,guard.Post) || outside && !IsVanillaGateOpen(pair.Gate,now)) continue;
                 double arrival=now+RouteLength(prepared.Points)*DaggerfallUnity.Instance.WorldTime.TimeScale/1.3;
                 // A late preparation waits for a fresh cycle with an inside target.
-                if(arrival>dayStart+DaggerfallDateTime.DuskHour*3600 ||
+                if(outside && arrival>dayStart+DaggerfallDateTime.DuskHour*3600 ||
                     outside && arrival+returnTravel+60>dayStart+DaggerfallDateTime.DuskHour*3600) yield break;
                 bool moved=false;
                 try {Roster.MovePost(guard.Id,prepared.Points,now,1.3,DaggerfallUnity.Instance.WorldTime.TimeScale);moved=true;}
@@ -331,8 +387,9 @@ namespace PeopleOfTheIliacBay.DFU
             return candidates;
         }
         private bool EligibleGateGuard(GuardRecord guard,HashSet<string> assigned)
-        { return guard.IsAlive && guard.Duty==GuardDuty.Posted && guard.Interior==null && guard.Refuge==null &&
-            guard.IncidentId==null && !Roster.IsOnPatrol(guard.Id) && !assigned.Contains(guard.Id); }
+        { return GuardShifts.OnDuty(guard,Now()) && guard.Duty==GuardDuty.Posted && guard.Interior==null && guard.Refuge==null &&
+            guard.IncidentId==null && !Roster.IsOnPatrol(guard.Id) && !assigned.Contains(guard.Id) &&
+            !patrolTemplates.Exists(p=>p.LeaderId==guard.Id || p.FollowerId==guard.Id); }
 
         private bool TryGateRoute(SavedRoutePoint from,SavedRoutePoint to,out List<SavedRoutePoint> route)
         {

@@ -10,7 +10,7 @@ namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class StreetPopulation
     {
-        private readonly Dictionary<int,TavernRoomSurvey.Result> bankCounters=new Dictionary<int,TavernRoomSurvey.Result>();
+        private readonly Dictionary<int,TavernBedSurvey.Result> bankCounters=new Dictionary<int,TavernBedSurvey.Result>();
         private readonly Dictionary<string,PhysicalShopVisit> bankVisitors=new Dictionary<string,PhysicalShopVisit>();
         private IEnumerator bankCounterSurvey;
 
@@ -22,21 +22,21 @@ namespace PeopleOfTheIliacBay.DFU
             (bankCounterSurvey as IDisposable)?.Dispose();bankCounterSurvey=null;
         }
 
-        private bool TryBankCounter(int key,out TavernRoomSurvey.Result result)
+        private bool TryBankCounter(int key,out TavernBedSurvey.Result result)
         {
             if(bankCounters.TryGetValue(key,out result))return result.ReceptionRoute!=null && result.KeeperHash.HasValue;
             if(bankCounterSurvey!=null)return false;
             StaticDoor door;if(!ReadBuildingActionDoor(key,null,out door))return false;
-            var pending=new TavernRoomSurvey.Result();bankCounters[key]=pending;
+            var pending=new TavernBedSurvey.Result();bankCounters[key]=pending;
             var owner=directory;var store=worldStore;var epoch=store.CaptureNpcVitalsWriteEpoch();
-            bankCounterSurvey=TavernRoomSurvey.ReadServiceSteps(owner.transform,door,owner.LocationData.Climate.ClimateType,
+            bankCounterSurvey=TavernBedSurvey.ReadServiceSteps(owner.transform,door,owner.LocationData.Climate.ClimateType,
                 pending,()=>this && directory==owner && worldStore==store && store.IsNpcVitalsWriteEpochCurrent(epoch),bank:true);
             return false;
         }
 
         private bool BeginBankCounterVisit(Plan plan,ResidentActor actor,NpcCashVisit visit,double now)
         {
-            TavernRoomSurvey.Result counter;
+            TavernBedSurvey.Result counter;
             if(!TryBankCounter(visit.ProviderKey,out counter))return false;
             visit.ClerkHash=counter.KeeperHash.Value;
             visit.CounterJourney=NpcCashVisit.CreateCounterJourney(plan.Resident.Id,population.SettlementId,visit.ProviderKey,now,

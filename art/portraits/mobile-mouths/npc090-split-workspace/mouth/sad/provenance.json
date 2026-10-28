@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T04:13:10.2650674Z",
+    "portraitRecord":  90,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "sad",
+    "prompt":  "Use case: stylized-concept\nAsset type: Daggerfall Unity NPC portrait mouth atlas, common090 sad emotion\nPrimary request: Edit the supplied single 3-by-3 source grid into the sad speech-mouth atlas. The reference already has nine identical copies of the native lower portrait half. Preserve exactly the same overall canvas aspect, nine equal borderless cells, framing and pixel scale. Cell order is row-major: A B C / D E F / G H X. Each cell contains only the lower 64x29 half enlarged nearest-neighbor 8x. Do not output a full face or change the grid.\nSubject: same adult woman\u0027s lower face, same mouth placement and original restrained expression. Keep the mood quietly sad in every pose with only a slight soft downturn at the corners where compatible with articulation. Closed A must be a gentle restrained frown, never pouty or exaggerated. Keep nose base, chin, jaw, hair, neck, background and head scale fixed.\nStyle/medium: original low-resolution retro game pixel portrait. Match the source\u0027s pixel clusters, block edges, texture, low contrast and muted tones.\nColor palette: original muted tan/brown skin with soft shading; original dark brown lips. Match source colors closely. Teeth may use only subdued warm ivory; mouth cavity only restrained dark brown. No lipstick red, orange skin fringe, blue-gray tint, bright high-contrast teeth or black cavity.\nRhubarb pose definitions, use these exact meanings:\nA = closed, gently pressed lips for P/B/M; preserve closed lip shape with subtle sad corners.\nB = narrow opening with nearly together teeth for consonants and EE.\nC = medium opening, unrounded for EH/AE.\nD = wide open AA.\nE = slightly rounded AO/ER, no wider than C.\nF = puckered rounded UW/OW/W.\nG = upper teeth touching the lower lip for F/V.\nH = tongue raised behind the upper teeth for L, opening between C and D.\nX = relaxed closed idle mouth.\nConstraints: Keep every mouth at the original lip scale and in the same central location. Change only mouth/lips and oral interior within that feature; preserve skin hue and face exactly. Keep A/X closed. Do not duplicate poses: each must clearly match its definition and remain compatible with sadness. Add teeth only in B/C/D/E/G/H when required; add tongue only for H; F is rounded pout with no teeth. No misplaced full-face imagery, no cell labels, borders, lines, gutters, padding, text, smoothing, blur, anti-aliasing, lighting shifts or new objects. Preserve exact 3x3 layout and native pixel-art character.\n",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161cc-8e12-73a1-b0d8-dc91163e069c as C:\\Users\\Daniel\\.codex\\generated_images\\01a161cc-8e12-73a1-b0d8-dc91163e069c\\exec-de2a10e3-ae8f-4b2b-b448-76f0bc4c118b.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161cc-8e12-73a1-b0d8-dc91163e069c\\exec-de2a10e3-ae8f-4b2b-b448-76f0bc4c118b.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "b8b0a0da8a68fea050774dbe95633fcb561aa0d4a4b316a787b9831b46247489",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "6d0e071a4214165c5ddd1c2776549d45f2ec9da101b32701771a203ab73c1de2",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161cc-8e12-73a1-b0d8-dc91163e069c\\exec-de2a10e3-ae8f-4b2b-b448-76f0bc4c118b.png",
+                      "sha256":  "eb2aa5135620e6ee00341cf444c83152ce792fd4377f340e13496676ec9054df",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/sad/raw.png",
+                "sha256":  "eb2aa5135620e6ee00341cf444c83152ce792fd4377f340e13496676ec9054df",
+                "width":  1863,
+                "height":  844
+            }
+}

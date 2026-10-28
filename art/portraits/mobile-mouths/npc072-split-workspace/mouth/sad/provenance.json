@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T09:24:21.9239851Z",
+    "portraitRecord":  72,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "sad",
+    "prompt":  "Create one pixel-art mouth atlas for common portrait NPC072 in the sad expression. Use the attached exact 3x3 mouth reference grid as the source for identity, original lip scale and center, jaw, nose, neck, hair, background registration, and soft brown/terracotta palette. Return exactly nine equal cells as a 3-column by 3-row atlas, overall aspect ratio 64:29, with complete 64x29 lower-half crops in every cell. No labels, gutters, borders, blank space, extra panels, zooms, or face-only closeups.\n\nRow-major cells are A B C / D E F / G H X. Apply these actual Rhubarb mouth shapes:\n- A: pressured closed P/B/M.\n- B: narrow opening, teeth nearly together, consonants/EE.\n- C: medium unrounded EH/AE.\n- D: wide AA.\n- E: slightly rounded AO/ER, no wider than C.\n- F: puckered UW/OW/W.\n- G: upper teeth touching lower lip, F/V.\n- H: tongue raised behind upper teeth for L, opening between C and D.\n- X: relaxed closed idle.\n\nKeep sad expression restrained and consistent across shapes: gently lowered mouth corners and soft lip tension, without severe frown or complete smile. Keep original lip size, location, soft terracotta/brown hue, facial proportions, and all surrounding lower-half registration. Teeth must use muted neutral ivory/gray distinct from skin, with modest cavity contrast. Tongue must remain subtle and anatomically placed behind upper teeth.\n\nDo not use lipstick red, bright white shiny teeth, warm skin-colored teeth, tooth gaps, exaggerated frown, large surrounding skin changes, or new colors. Do not change jaw, nose, neck, hair, background, crop, or face identity. Preserve crisp native pixel style, no blur, smoothing, antialiasing, resampling, or vector shapes.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-a3ad0fd8-fea2-4c70-ac55-edf4cd2d06b1.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-a3ad0fd8-fea2-4c70-ac55-edf4cd2d06b1.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "4af6922ef7f8345a11ae8418761144f64dcaaa8b836f461486a2fb206cbebd85",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "439016eece9c19baa01534109a73a9de37ac5555ae9f7e4d5bbbcdc6fbcbe550",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-a3ad0fd8-fea2-4c70-ac55-edf4cd2d06b1.png",
+                      "sha256":  "40b8f4ed96065c0b0527db83a6cc984ca2e48075e99325a91d628ca6990a8093",
+                      "width":  1862,
+                      "height":  845
+                  },
+    "raw":  {
+                "path":  "mouth/sad/raw.png",
+                "sha256":  "40b8f4ed96065c0b0527db83a6cc984ca2e48075e99325a91d628ca6990a8093",
+                "width":  1862,
+                "height":  845
+            }
+}

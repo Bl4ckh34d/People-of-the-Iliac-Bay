@@ -76,7 +76,7 @@ namespace PeopleOfTheIliacBay.Core
     [Serializable]
     public sealed class NpcServiceContractState
     {
-        public const int VersionCurrent = 2;
+        public const int VersionCurrent = 3;
         public int Version = VersionCurrent;
         public string ContractId;
         public string PayerId;
@@ -100,14 +100,7 @@ namespace PeopleOfTheIliacBay.Core
         public double BlockEndAt;
         public double LastServiceUpdateAt;
         public double SettlementRecordedAt = -1;
-        public double EligibleServiceSeconds;
-        public double CurrentBlockEligibleSeconds;
-        public int CurrentBlockEarnedGold;
-        public int CurrentBlockReleasedGold;
         public int FundedGold;
-        public int EscrowGold;
-        public int EarnedGold;
-        public int ReleasedGold;
         public int RefundedGold;
         public List<string> AuthorizationReceiptIds = new List<string>();
         public List<NpcServiceTransferReceiptState> TransferReceipts = new List<NpcServiceTransferReceiptState>();

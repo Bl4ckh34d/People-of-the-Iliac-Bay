@@ -170,8 +170,10 @@ namespace PeopleOfTheIliacBay.Core
         {
             if(!DefenseId(id)) return false;
             if(guard) { var roster=world.Garrisons.Find(g=>g.SettlementId==settlement); return roster!=null && roster.Guards.Exists(g=>g.Id==id && (!living || g.IsAlive)); }
-            var town=world.Settlements.Find(t=>t.SettlementId==settlement);
-            if(town!=null && town.Households.Exists(h=>h.Residents.Exists(r=>r.Id==id && (!living || r.IsAlive)))) return true;
+            // A physically observed visitor keeps its real origin identity.
+            // The existing resolver requires a recorded visit to this settlement.
+            var resident=ResolveResident(world,settlement,id);
+            if(resident!=null && (!living || resident.IsAlive))return true;
             return world.NativePeople.Exists(p=>p.SettlementId==settlement && p.Id==id && (!living || p.IsAlive));
         }
         private static bool RecentDefenseWitness(DefenseCombatant c,DefenseDeath d,DefenseWitness w)

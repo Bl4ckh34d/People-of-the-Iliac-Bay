@@ -51,9 +51,9 @@ internal static class Program
             bool aborted = false;
             try { while (scan.MoveNext()) { } } catch (InvalidOperationException) { aborted = true; }
             Require(aborted, "Restore allowed census to mix save branches");
-            store.RegisterLodging(1, 4, new[] { new LodgingRoom { Id = "room-a", Beds = new System.Collections.Generic.List<string> { "bed-a" } } });
+            store.RegisterLodgingBeds(1, 4, new[] { new LodgingBed { Id = "bed-a" } });
             Require(store.TryBookLodging(1, 4, "booking", "guest", 2, false, 1, 10, 20), "Fixture booking failed");
-            Require(store.ReadActorCensusClaims(15).Any(c => c != null && c.Identity == "guest" && c.Bed == "1:4:room:room-a"), "Current booking omitted");
+            Require(store.ReadActorCensusClaims(15).Any(c => c != null && c.Identity == "guest" && c.Bed == "1:4:bed-a"), "Current booking omitted");
             Require(!store.ReadActorCensusClaims(20).Any(c => c != null && c.Identity == "guest"), "Expired booking reported as current");
             Console.WriteLine("PASS actor census: identity, duplicate sprites, collisions, detached records, caps, provider order, reload keys, unknowns, read-only claims");
             return 0;

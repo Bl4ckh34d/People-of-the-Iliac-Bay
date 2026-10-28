@@ -1,0 +1,52 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T06:48:39.3548884Z",
+    "purpose":  "thinking-eye raw generation; standard helper receipt retained unchanged",
+    "emotionId":  "guarded",
+    "referenceSource":  {
+                            "file":  "eyes/guarded/open.png",
+                            "sha256":  "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6",
+                            "width":  64,
+                            "height":  35
+                        },
+    "portraitRecord":  77,
+    "bank":  "TFAC00I0.RCI",
+    "actualReference":  {
+                            "path":  "../../thinking-reference-grid.png",
+                            "absolutePath":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-thinking-emotions\\guarded\\attempt-natural-lids-v2\\thinking-reference-grid.png",
+                            "sha256":  "302e6b4c3fd45c530972de5a4dcccb178d397912056d225231120219043827c4",
+                            "width":  1536,
+                            "height":  840
+                        },
+    "actualArguments":  {
+                            "path":  "arguments.json",
+                            "sourcePath":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait077-natural-lids-guarded-v2-arguments.json",
+                            "sha256":  "456505d78d9c36faded35a903cf7ea71f7b9356d72f21f933b8fc273127eb028",
+                            "referencedImagePath":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-thinking-emotions\\guarded\\attempt-natural-lids-v2\\thinking-reference-grid.png",
+                            "normalizedReferencedImagePath":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-thinking-emotions\\guarded\\attempt-natural-lids-v2\\thinking-reference-grid.png",
+                            "transparentBackground":  false,
+                            "numLastImagesToInclude":  null
+                        },
+    "actualRequest":  {
+                          "path":  "request.json",
+                          "sourcePath":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait077-natural-lids-guarded-v2-request.json",
+                          "sha256":  "fa7b5d737f0254e4c125665c93caabd0ead3d73cfa6c6f6309b36588e362b8e1"
+                      },
+    "helperStage":  {
+                        "portraitRoot":  "C:\\Users\\Daniel\\AppData\\Local\\Temp\\portrait-thinking-stage-02afda795665439db7fab3ea911bf65f",
+                        "part":  "eyes",
+                        "emotion":  "neutral",
+                        "referencePath":  "eyes-reference-grid.png",
+                        "referenceSha256":  "302e6b4c3fd45c530972de5a4dcccb178d397912056d225231120219043827c4",
+                        "sourceOriginalSha256":  "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+                        "provenance":  "provenance.json"
+                    },
+    "transferred":  {
+                        "rawPath":  "raw.png",
+                        "rawSha256":  "0dabd64bd624683a1725ccedc67e549015f771334d1ff6f45d739251fb1ee709",
+                        "rawSize":  "1695x928",
+                        "helperProvenancePath":  "provenance.json",
+                        "savedReferencePath":  "eyes-reference-grid.png"
+                    },
+    "helperProvenanceNote":  "provenance.json is the unchanged SavePortraitRawOutput receipt from the isolated helper stage. Its eyes/neutral labels and eyes-reference-grid.png path describe that stage; this wrapper maps those bytes to eyes/thinking and the actual thinking grid."
+}

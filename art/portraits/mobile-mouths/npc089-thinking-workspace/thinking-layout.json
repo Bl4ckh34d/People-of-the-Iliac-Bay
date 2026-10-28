@@ -1,0 +1,20 @@
+{
+  "status": "provisional-parent-native-inspection-required",
+  "halfLidRegions": [
+    {
+      "x": 12,
+      "y": 20,
+      "width": 19,
+      "height": 1
+    },
+    {
+      "x": 34,
+      "y": 20,
+      "width": 20,
+      "height": 1
+    }
+  ],
+  "sourceSha256": "ff6db931146aa84fe2260b0daba0269a20455b1dcbb61e232e011a87291b4b5f",
+  "referenceSha256": "77fa72981ee49f6fdbcd1ebea6e1c25f9fdac3a83ad043cebc6d11dd6c455c27",
+  "rationale": "Provisional face-specific upper-lid bands from the source-only preflight. These bands are inputs for parent review, not approval of a gaze or eyelid design. Inspect the selected 3x3 gaze atlas at native scale. Keep iris and sclera movement readable; do not freeze too much eyelid area. Reduce or move bands if they cover gaze pixels needed for clear direction. Do not extend across full eye boxes or neutral-center iris."
+}

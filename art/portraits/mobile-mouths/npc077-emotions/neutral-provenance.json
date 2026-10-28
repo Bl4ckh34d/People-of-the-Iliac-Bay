@@ -1,0 +1,65 @@
+{
+  "emotion": "neutral",
+  "generator": "built-in image_gen",
+  "status": "prototype; user-review-pending; not installed",
+  "source": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\tfac-077-full-frame-v5.png",
+    "sha256": "D2BD017E7773336DE704BF3E4C935AB1EF7D0FC84DD4BBC551A61E22AF322223"
+  },
+  "atlas": {
+    "dimensions": "1254×1254 square; 3×3",
+    "order": "Row-major: A B C / D E F / G H X",
+    "visemes": {
+      "A": "closed lips for M/B/P",
+      "B": "narrow consonant opening, slight teeth",
+      "C": "medium EH opening",
+      "D": "moderately open AH",
+      "E": "rounded OH",
+      "F": "small OO/W",
+      "G": "upper teeth touching lower lip, F/V",
+      "H": "subtle raised tongue behind upper teeth, L",
+      "X": "relaxed closed mouth"
+    }
+  },
+  "generationCount": 2,
+  "phases": [
+    {
+      "phase": "open",
+      "mode": "copied approved source exactly",
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\tfac-077-full-frame-v5.png",
+      "output": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\neutral-open.png",
+        "width": 1254,
+        "height": 1254,
+        "sha256": "D2BD017E7773336DE704BF3E4C935AB1EF7D0FC84DD4BBC551A61E22AF322223"
+      },
+      "prompt": null
+    },
+    {
+      "phase": "half",
+      "mode": "generated",
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\tfac-077-full-frame-v5.png",
+      "generatedOriginal": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-5744-7b43-9b03-e8cced819bb7\\exec-0c6b457b-09aa-4abf-841f-7a984267685a.png",
+      "output": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\neutral-half.png",
+        "width": 1254,
+        "height": 1254,
+        "sha256": "CC16E0BBB2A30046C3F457E3337103EE3F24D8CD17DECA1850D89A216D2830B6"
+      },
+      "prompt": "Edit the referenced complete pixel-art portrait atlas for the HALF blink phase of the neutral emotion. Preserve the exact square 3×3 grid, tile boundaries, each whole portrait, identity, hair, colors, face framing, neutral eyebrows, mouth scale, and every mouth pose in its current cell. Row-major mouths must stay exactly matched to their current cells: A closed lips; B narrow consonant opening with slight teeth; C medium EH; D moderate AH; E rounded OH; F small OO/W; G upper teeth touching lower lip for F/V; H subtle raised tongue behind upper teeth for L; X relaxed closed. Change only the eyelids: in all 9 cells, lower the upper eyelids so they cover roughly half of each visible iris. Keep the eyebrows fully unchanged. Keep all nine mouth poses unchanged and useful for speech. No crop, no resize, no mouth edits, no rearrangement, no expression change, no text, no border, no gutter changes, no added objects. Return one complete 3×3 atlas at the same square dimensions and alignment."
+    },
+    {
+      "phase": "closed",
+      "mode": "generated",
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\tfac-077-full-frame-v5.png",
+      "generatedOriginal": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-5744-7b43-9b03-e8cced819bb7\\exec-b142d6c0-e2c2-4344-bc1f-586a1c9d3aba.png",
+      "output": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\neutral-closed.png",
+        "width": 1254,
+        "height": 1254,
+        "sha256": "12D4F2B08D982E701D2F7DBE4506DB1C53C298B717904E5D8836D09D339F2BDA"
+      },
+      "prompt": "Edit the referenced complete pixel-art portrait atlas for the CLOSED blink phase of the neutral emotion. Preserve the exact square 3×3 grid, tile boundaries, each whole portrait, identity, hair, colors, face framing, neutral eyebrows, mouth scale, and every mouth pose in its current cell. Row-major mouths must stay exactly matched to their current cells: A closed lips; B narrow consonant opening with slight teeth; C medium EH; D moderate AH; E rounded OH; F small OO/W; G upper teeth touching lower lip for F/V; H subtle raised tongue behind upper teeth for L; X relaxed closed. Change only the eyelids: in all 9 cells, fully shut both eyes, with eyelids covering the eyes and no visible iris or sclera. Keep the eyebrows fully unchanged. Keep all nine mouth poses unchanged and useful for speech, including open speech mouths while eyes are shut. No crop, no resize, no mouth edits, no rearrangement, no expression change, no text, no border, no gutter changes, no added objects. Return one complete 3×3 atlas at the same square dimensions and alignment."
+    }
+  ]
+}

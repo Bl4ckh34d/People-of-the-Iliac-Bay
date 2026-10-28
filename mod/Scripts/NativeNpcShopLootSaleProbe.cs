@@ -22,7 +22,7 @@ namespace PeopleOfTheIliacBay.DFU
         {
             var game = GameManager.Instance;
             Require(Array.IndexOf(Environment.GetCommandLineArgs(), "-peopleoftheiliacbay-shop-loot-sale-probe") >= 0 &&
-                expectedCharacter != null && expectedCharacter.StartsWith("PeopleOfTheIliacBayTest-", StringComparison.Ordinal) &&
+                expectedCharacter != null && NativeProbeText.IsTestCharacter(expectedCharacter) &&
                 game.PlayerEntity.Name == expectedCharacter && streets && streets.Ready && game.PlayerEnterExit.IsPlayerInsideOpenShop,
                 "Loot-sale probe requires its owned character, explicit flag, and an open native shop.");
 

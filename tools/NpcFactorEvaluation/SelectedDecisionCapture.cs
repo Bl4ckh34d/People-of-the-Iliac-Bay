@@ -83,7 +83,7 @@ namespace PeopleOfTheIliacBay.NpcFactorEvaluation
 
         /// <summary>
         /// Variant for a caller that owns production fixture builders. Factory must return the
-        /// current LocalDecisionWillingness request for each frozen row, with its validated proposal.
+        /// current LocalActionWillingness request for each frozen row, with its validated proposal.
         /// </summary>
         internal static IReadOnlyList<SelectedDecisionCaptureCase> PrepareDecisions(string suitePath,
             string outDirectory, Func<string, string, string, string, NpcDecisionRequest> productionRequestFactory)
@@ -209,7 +209,7 @@ namespace PeopleOfTheIliacBay.NpcFactorEvaluation
             string factor, string oracle, NpcDecisionRequest request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-            if (request.Purpose != LocalDecisionWillingness.Purpose || request.Options.Count != 2 ||
+            if (request.Purpose != LocalActionWillingness.Purpose || request.Options.Count != 2 ||
                 request.Options[0].Id != "ACCEPT" || request.Options[1].Id != "DECLINE" ||
                 request.Options[0].Description != "The NPC agrees to the exact listed action proposal." ||
                 request.Options[1].Description != "The NPC does not agree to the exact listed action proposal." ||
@@ -348,7 +348,7 @@ namespace PeopleOfTheIliacBay.NpcFactorEvaluation
                     ? "If someone threatened you to wait here for ten minutes, what would you do?"
                     : "Wait here for ten minutes, or I will hurt you.";
 
-            var proposal = new LocalDecisionWillingnessProposal(new[]
+            var proposal = new LocalActionWillingnessProposal(new[]
             {
                 new NpcActionDecision
                 {
@@ -372,7 +372,7 @@ namespace PeopleOfTheIliacBay.NpcFactorEvaluation
                     }
                 }
             });
-            return LocalDecisionWillingness.Build(snapshot, turn, new ConversationContextTurn[0], null, proposal);
+            return LocalActionWillingness.Build(snapshot, turn, new ConversationContextTurn[0], null, proposal);
         }
 
         private static void AddFundedActiveService(WorldStateStore store, string owner, string contractId,
@@ -388,13 +388,17 @@ namespace PeopleOfTheIliacBay.NpcFactorEvaluation
                 home => home == "home:selected-d3", (id, category, revision) => true,
                 (id, revision, kind, start, end) => true, out NpcServiceContractTerms terms))
                 throw new InvalidDataException("Synthetic funded service terms failed validation.");
+            if(store.ReadNpcInventory(owner)==null && !store.InitializeNpcInventory(owner,0,Array.Empty<NpcInventoryItem>()))
+                throw new InvalidDataException("Synthetic service wallet initialization failed.");
+            var wallet=store.ReadNpcInventory(owner);
+            var paymentCredit=new NpcInventoryUpdate {PersonId=owner,ExpectedRevision=wallet.Revision,
+                WalletGold=wallet.WalletGold+120,Items=wallet.Items};
             var funding = NpcServiceTransferReceipt.Create("receipt:" + contractId, contractId,
-                NpcServiceTransferKind.Funding, payer, "contract:" + contractId + ":escrow", 120, acceptedAt);
+                NpcServiceTransferKind.Funding, payer, owner, 120, acceptedAt);
             if (!NpcServiceContractLedger.TryReserve(ticket.SourceLedger, ticket.ExpectedLedgerRevision,
                 terms, funding, out NpcServiceContractLedger reserved))
                 throw new InvalidDataException("Synthetic funded service reservation failed.");
-            if (!store.TryCommitNpcServiceContracts(ticket, reserved, new List<NpcServiceTransferReceipt> { funding },
-                new List<NpcServiceRenewalAuthorization>(), out string error))
+            if (!store.TryCommitNpcServiceSettlement(ticket,reserved,paymentCredit,new[]{funding},out string error))
                 throw new InvalidDataException("Synthetic funded service ledger commit failed: " + error);
             ticket = store.CaptureNpcServiceContractWriteTicket();
             NpcServiceContract activeSource = ticket.SourceLedger.Read(contractId);
@@ -409,7 +413,7 @@ namespace PeopleOfTheIliacBay.NpcFactorEvaluation
         private static string BlockedReason(string pairId)
         {
             if (pairId == "D3-B05-unknown-attribution")
-                return "LocalDecisionWillingness receives current turn, attributed conversation history, and captured snapshot, but no event-source attribution receipt. Pair requires unknown/known event attribution and cannot be represented without invented evidence.";
+                return "LocalActionWillingness receives current turn, attributed conversation history, and captured snapshot, but no event-source attribution receipt. Pair requires unknown/known event attribution and cannot be represented without invented evidence.";
             return "Production inputs are unavailable for this frozen case.";
         }
 
@@ -482,8 +486,8 @@ namespace PeopleOfTheIliacBay.NpcFactorEvaluation
             }
             AddCurrentHash(result, repoRoot, "tools/NpcFactorEvaluation/SelectedDecisionCapture.cs");
             AddCurrentHash(result, repoRoot, "tools/NpcFactorEvaluation/NpcFactorEvaluation.csproj");
-            AddCurrentHash(result, repoRoot, "mod/Scripts/LocalDecisionWillingness.cs");
-            AddCurrentHash(result, repoRoot, "mod/Scripts/LocalDecisionWire.cs");
+            AddCurrentHash(result, repoRoot, "mod/Scripts/LocalActionWillingness.cs");
+            AddCurrentHash(result, repoRoot, "tools/archived/DecisionDiagnostics/LocalDecisionWire.cs");
             return result;
         }
 

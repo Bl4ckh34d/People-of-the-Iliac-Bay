@@ -29,7 +29,7 @@ namespace PeopleOfTheIliacBay.DFU
             bool modulesOnly=Environment.GetEnvironmentVariable("POTIB_NAVMESH_MODULES_ONLY")=="1" ||
                 Environment.GetEnvironmentVariable("POTIB_NAVMESH_TEMPLATES_ONLY")=="1";
             if(!flag || !modulesOnly || !game || !game.PlayerEnterExit || !game.StreamingWorld || !game.PlayerGPS || game.PlayerEntity==null ||
-                !game.PlayerEntity.Name.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal))
+                !NativeProbeText.IsTestCharacter(game.PlayerEntity.Name))
                 throw new InvalidOperationException("Interior module probe requires its owned fixture and modules-only loader flag.");
             var source=game.PlayerEnterExit.Interior;
             var directory=game.StreamingWorld.GetCurrentBuildingDirectory();

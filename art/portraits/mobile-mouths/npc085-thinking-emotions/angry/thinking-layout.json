@@ -1,0 +1,197 @@
+{
+  "schemaVersion": 1,
+  "emotionId": "angry",
+  "referenceUpperFile": "eyes/angry/open.png",
+  "browSourceFile": "eyes/angry/open.png",
+  "halfSourceFile": "eyes/angry/half.png",
+  "closedSourceFile": "eyes/angry/closed.png",
+  "halfLidRegions": [
+    {
+      "x": 15,
+      "y": 21,
+      "width": 15,
+      "height": 1
+    },
+    {
+      "x": 34,
+      "y": 21,
+      "width": 16,
+      "height": 1
+    }
+  ],
+  "calibrationStatus": "provisional-source-only-not-generation-approved",
+  "calibrationMethod": "Native 64x35 same-emotion open/half/closed source comparison; candidate row selected from visible upper-lid position, with row-wise RGB difference counts recorded as evidence, not treated as an exact mask.",
+  "browLockEndYCurrentLayout": 17,
+  "uncertainty": [
+    "One-row band is provisional from same-emotion native source open/half/closed comparison; verify it stays above retained iris/glint in every gaze cell before generation/build."
+  ],
+  "sourcePhaseHashes": {
+    "open": "d770a90380f50c510d8838e9f02a1aa752daaad3d8880d80ad5f6edb5bca23f3",
+    "half": "22778786041a14e6a659a1572f55a657f2d5f8c83a16aa9d944dbb3bf30b6920",
+    "closed": "be7c4cd665b57bb2e9de70e8afd848cd09b6dc0545ffa06a9d05753149853a32"
+  },
+  "nativeRowEvidence": [
+    {
+      "eye": "left",
+      "rows": [
+        {
+          "y": 11,
+          "openHalfChanged": 0
+        },
+        {
+          "y": 12,
+          "openHalfChanged": 0
+        },
+        {
+          "y": 13,
+          "openHalfChanged": 0
+        },
+        {
+          "y": 14,
+          "openHalfChanged": 0
+        },
+        {
+          "y": 15,
+          "openHalfChanged": 0
+        },
+        {
+          "y": 16,
+          "openHalfChanged": 0
+        },
+        {
+          "y": 17,
+          "openHalfChanged": 0
+        },
+        {
+          "y": 18,
+          "openHalfChanged": 17
+        },
+        {
+          "y": 19,
+          "openHalfChanged": 17
+        },
+        {
+          "y": 20,
+          "openHalfChanged": 16
+        },
+        {
+          "y": 21,
+          "openHalfChanged": 17
+        },
+        {
+          "y": 22,
+          "openHalfChanged": 17
+        },
+        {
+          "y": 23,
+          "openHalfChanged": 16
+        },
+        {
+          "y": 24,
+          "openHalfChanged": 17
+        },
+        {
+          "y": 25,
+          "openHalfChanged": 13
+        },
+        {
+          "y": 26,
+          "openHalfChanged": 16
+        },
+        {
+          "y": 27,
+          "openHalfChanged": 16
+        },
+        {
+          "y": 28,
+          "openHalfChanged": 16
+        },
+        {
+          "y": 29,
+          "openHalfChanged": 12
+        }
+      ]
+    },
+    {
+      "eye": "right",
+      "rows": [
+        {
+          "y": 11,
+          "openHalfChanged": 0
+        },
+        {
+          "y": 12,
+          "openHalfChanged": 0
+        },
+        {
+          "y": 13,
+          "openHalfChanged": 0
+        },
+        {
+          "y": 14,
+          "openHalfChanged": 0
+        },
+        {
+          "y": 15,
+          "openHalfChanged": 0
+        },
+        {
+          "y": 16,
+          "openHalfChanged": 0
+        },
+        {
+          "y": 17,
+          "openHalfChanged": 0
+        },
+        {
+          "y": 18,
+          "openHalfChanged": 18
+        },
+        {
+          "y": 19,
+          "openHalfChanged": 18
+        },
+        {
+          "y": 20,
+          "openHalfChanged": 17
+        },
+        {
+          "y": 21,
+          "openHalfChanged": 18
+        },
+        {
+          "y": 22,
+          "openHalfChanged": 17
+        },
+        {
+          "y": 23,
+          "openHalfChanged": 17
+        },
+        {
+          "y": 24,
+          "openHalfChanged": 17
+        },
+        {
+          "y": 25,
+          "openHalfChanged": 16
+        },
+        {
+          "y": 26,
+          "openHalfChanged": 17
+        },
+        {
+          "y": 27,
+          "openHalfChanged": 16
+        },
+        {
+          "y": 28,
+          "openHalfChanged": 17
+        },
+        {
+          "y": 29,
+          "openHalfChanged": 13
+        }
+      ]
+    }
+  ]
+}

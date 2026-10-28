@@ -1,0 +1,25 @@
+{
+  "emotionId": "afraid",
+  "referenceUpperFile": "eyes/afraid/open.png",
+  "browSourceFile": "eyes/afraid/open.png",
+  "halfSourceFile": "eyes/afraid/half.png",
+  "closedSourceFile": "eyes/afraid/closed.png",
+  "halfLidRegions": [
+    {
+      "x": 18,
+      "y": 24,
+      "width": 11,
+      "height": 2
+    },
+    {
+      "x": 36,
+      "y": 24,
+      "width": 11,
+      "height": 2
+    }
+  ],
+  "sourceSha256": "56e245ef622dfa895f1f53ea6b1639aa6bdc91835faa90d41e5613a1be6b77ec",
+  "referenceSha256": "4c7af707c84ec86dda267a05bd08cb13526583a55f0e860444ee78ed845fe514",
+  "candidateOnly": true,
+  "rationale": "Provisional from npc080 portrait-specific candidate y24..25. Inspected all six mood phase crops; selected band is the narrow skin/lid strip above retained eye colors. Parent must check composed atlas before use. Applies to afraid only after inspecting its source phase RGB; not an approval to build or publish."
+}

@@ -26,7 +26,7 @@ namespace PeopleOfTheIliacBay.DFU
         private const BindingFlags Members = BindingFlags.Instance | BindingFlags.Static |
             BindingFlags.Public | BindingFlags.NonPublic;
         private const string RunFlag = "-peopleoftheiliacbay-npc-identity-integration-probe";
-        private const string OwnedCharacter = "PeopleOfTheIliacBayTest-9a5f197b";
+        private const string OwnedCharacter = "Hakon Ironhand";
         private const string BaselineSave = "People - Gothway Garden";
         private const string ControlledFixtureSource = "controlled-detached-pre-conversation-native-health-fixture";
 

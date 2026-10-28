@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T16:06:18.0129296Z",
+    "portraitRecord":  72,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "happy",
+    "prompt":  "Edit the attached reference as one precisely registered pixel-art blink atlas for NPC072 HAPPY. This exact 2x2 reference contains four identical copies of the CURRENT HAPPY OPEN upper portrait. Preserve that exact woman, expression, face size, iris size and location, colors and framing. Output exactly 2 columns by2 rows of complete64x35 upper-half portrait cells (overall64:35 aspect), no labels, margins, gutters, extra face or neck.\n\nRow-major targets: TOP LEFT=the reference OPEN unchanged; TOP RIGHT=HALF CLOSED; BOTTOM LEFT=FULLY CLOSED; BOTTOM RIGHT=the same original OPEN unchanged. The only animation is the UPPER EYELID moving DOWN over the SAME stationary eyeball. The lower eyelid, its contour, eye sockets, cheek shadows, nose bridge, current emotion-specific brows and forehead DO NOT MOVE. Do not lift the lower lid/cheek to make a blink. Do not translate an entire eye, iris or pupil downward in HALF. Visible iris pixels must stay on the same baseline and columns as OPEN, merely partly covered by the descending upper lid. Native eye detail is around rows21–23, lower contour near24; cheeks25–27 remain identical. In CLOSED the upper lid meets that SAME stationary lower contour; no vertically relocated crease or bright eyelid stripe. Retain the exact current brow master continuously; no detached, split, doubled or thickened brow.\n\nKeep compact stepped pixel-cluster golden/olive irises and tiny muted source glints, no round high-resolution circles, no rectangular iris blocks, no broad white sclera bands. Keep the source\u0027s soft brown/ochre/tan palette and low contrast. No new bright eye flashes, pale under-eye rectangles, darker mask borders, smoothing, sharper outlines or changed skin. Every cell has identical hair, head geometry, nose and background. Upper-lid-only closure with zero eyeball bounce is more important than making the halfway eye look dramatically different.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb as C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-48394fa6-037d-4ad6-8d79-c2144293fcdd.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-48394fa6-037d-4ad6-8d79-c2144293fcdd.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "4af6922ef7f8345a11ae8418761144f64dcaaa8b836f461486a2fb206cbebd85",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "589932aa9d48ca7ed86639ba1fdf2aae4649a27da051fb13bfd9825e6c263e25",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-48394fa6-037d-4ad6-8d79-c2144293fcdd.png",
+                      "sha256":  "5823d91c29d422fa335c0a82a5e8a3c0d4c5c4d103b0e1f55b43c7aee56b4137",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/happy/raw.png",
+                "sha256":  "5823d91c29d422fa335c0a82a5e8a3c0d4c5c4d103b0e1f55b43c7aee56b4137",
+                "width":  1695,
+                "height":  928
+            }
+}

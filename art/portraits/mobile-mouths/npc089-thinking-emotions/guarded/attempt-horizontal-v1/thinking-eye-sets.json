@@ -1,0 +1,488 @@
+﻿{
+    "schemaVersion":  1,
+    "portraitRecord":  89,
+    "bank":  "TFAC00I0.RCI",
+    "thinkingEyeSets":  [
+                            {
+                                "id":  "left",
+                                "label":  "Left",
+                                "phases":  {
+                                               "open":  {
+                                                            "file":  "eyes/thinking/left/open.png",
+                                                            "sha256":  "f177f8ea567b308fd6a3e7e6ccf25641a171a062b9807ef113fc23fec9c4cbaa",
+                                                            "sourceFiles":  [
+                                                                                "eyes/thinking/raw.png",
+                                                                                "eyes/guarded/open.png"
+                                                                            ],
+                                                            "sourceHashes":  [
+                                                                                 {
+                                                                                     "file":  "original.png",
+                                                                                     "sha256":  "ff6db931146aa84fe2260b0daba0269a20455b1dcbb61e232e011a87291b4b5f"
+                                                                                 },
+                                                                                 {
+                                                                                     "file":  "eyes/thinking/raw.png",
+                                                                                     "sha256":  "83a75aacbc828ed4f7f71af97d70e96ddb3f67316fe6ab869ad0ee0248c780e3"
+                                                                                 },
+                                                                                 {
+                                                                                     "file":  "eyes/guarded/open.png",
+                                                                                     "sha256":  "50f728cbf0927c6572847096c447ab377c6b83d10152b6e01bc33d47ca76e154"
+                                                                                 }
+                                                                             ],
+                                                            "sourceSha256":  "ff6db931146aa84fe2260b0daba0269a20455b1dcbb61e232e011a87291b4b5f",
+                                                            "geometry":  {
+                                                                             "width":  64,
+                                                                             "height":  35,
+                                                                             "splitY":  35,
+                                                                             "cellRow":  0,
+                                                                             "cellColumn":  0,
+                                                                             "cellIndex":  0,
+                                                                             "eyeRegions":  [
+                                                                                                {
+                                                                                                    "x":  12,
+                                                                                                    "y":  12,
+                                                                                                    "width":  19,
+                                                                                                    "height":  19
+                                                                                                },
+                                                                                                {
+                                                                                                    "x":  34,
+                                                                                                    "y":  12,
+                                                                                                    "width":  20,
+                                                                                                    "height":  19
+                                                                                                }
+                                                                                            ],
+                                                                             "halfLidRegions":  {
+
+                                                                                                },
+                                                                             "halfLidOffset":  0,
+                                                                             "browLockEndY":  18,
+                                                                             "nearestNeighbor":  true
+                                                                         },
+                                                            "checks":  {
+                                                                           "outsideMaskChangedPixels":  0,
+                                                                           "browLockPixels":  273,
+                                                                           "halfLidOverlayPixels":  0,
+                                                                           "closedEyePixels":  0,
+                                                                           "halfLidOffset":  0
+                                                                       }
+                                                        },
+                                               "half":  {
+                                                            "file":  "eyes/thinking/left/half.png",
+                                                            "sha256":  "1b99e0b0d940812e03bdd62ab15fd8f2b28b2f67989760e42675aeab6fa0a19f",
+                                                            "sourceFiles":  [
+                                                                                "eyes/thinking/raw.png",
+                                                                                "eyes/guarded/open.png"
+                                                                            ],
+                                                            "sourceHashes":  [
+                                                                                 {
+                                                                                     "file":  "original.png",
+                                                                                     "sha256":  "ff6db931146aa84fe2260b0daba0269a20455b1dcbb61e232e011a87291b4b5f"
+                                                                                 },
+                                                                                 {
+                                                                                     "file":  "eyes/thinking/raw.png",
+                                                                                     "sha256":  "83a75aacbc828ed4f7f71af97d70e96ddb3f67316fe6ab869ad0ee0248c780e3"
+                                                                                 },
+                                                                                 {
+                                                                                     "file":  "eyes/guarded/open.png",
+                                                                                     "sha256":  "50f728cbf0927c6572847096c447ab377c6b83d10152b6e01bc33d47ca76e154"
+                                                                                 }
+                                                                             ],
+                                                            "sourceSha256":  "ff6db931146aa84fe2260b0daba0269a20455b1dcbb61e232e011a87291b4b5f",
+                                                            "geometry":  {
+                                                                             "width":  64,
+                                                                             "height":  35,
+                                                                             "splitY":  35,
+                                                                             "cellRow":  1,
+                                                                             "cellColumn":  0,
+                                                                             "cellIndex":  2,
+                                                                             "eyeRegions":  [
+                                                                                                {
+                                                                                                    "x":  12,
+                                                                                                    "y":  12,
+                                                                                                    "width":  19,
+                                                                                                    "height":  19
+                                                                                                },
+                                                                                                {
+                                                                                                    "x":  34,
+                                                                                                    "y":  12,
+                                                                                                    "width":  20,
+                                                                                                    "height":  19
+                                                                                                }
+                                                                                            ],
+                                                                             "halfLidRegions":  {
+
+                                                                                                },
+                                                                             "halfLidOffset":  0,
+                                                                             "browLockEndY":  18,
+                                                                             "nearestNeighbor":  true
+                                                                         },
+                                                            "checks":  {
+                                                                           "outsideMaskChangedPixels":  0,
+                                                                           "browLockPixels":  273,
+                                                                           "halfLidOverlayPixels":  0,
+                                                                           "closedEyePixels":  0,
+                                                                           "halfLidOffset":  0
+                                                                       }
+                                                        },
+                                               "closed":  {
+                                                              "file":  "eyes/thinking/left/closed.png",
+                                                              "sha256":  "1b44bb6b2bd0aaad837f2c03e57bafeaa54466e8911590a192dfb8b26253fdab",
+                                                              "sourceFiles":  [
+                                                                                  "eyes/guarded/closed.png",
+                                                                                  "eyes/guarded/open.png"
+                                                                              ],
+                                                              "sourceHashes":  [
+                                                                                   {
+                                                                                       "file":  "original.png",
+                                                                                       "sha256":  "ff6db931146aa84fe2260b0daba0269a20455b1dcbb61e232e011a87291b4b5f"
+                                                                                   },
+                                                                                   {
+                                                                                       "file":  "eyes/guarded/open.png",
+                                                                                       "sha256":  "50f728cbf0927c6572847096c447ab377c6b83d10152b6e01bc33d47ca76e154"
+                                                                                   },
+                                                                                   {
+                                                                                       "file":  "eyes/guarded/closed.png",
+                                                                                       "sha256":  "1b44bb6b2bd0aaad837f2c03e57bafeaa54466e8911590a192dfb8b26253fdab"
+                                                                                   }
+                                                                               ],
+                                                              "sourceSha256":  "ff6db931146aa84fe2260b0daba0269a20455b1dcbb61e232e011a87291b4b5f",
+                                                              "geometry":  {
+                                                                               "width":  64,
+                                                                               "height":  35,
+                                                                               "splitY":  35,
+                                                                               "cellRow":  null,
+                                                                               "cellColumn":  null,
+                                                                               "cellIndex":  -1,
+                                                                               "eyeRegions":  [
+                                                                                                  {
+                                                                                                      "x":  12,
+                                                                                                      "y":  12,
+                                                                                                      "width":  19,
+                                                                                                      "height":  19
+                                                                                                  },
+                                                                                                  {
+                                                                                                      "x":  34,
+                                                                                                      "y":  12,
+                                                                                                      "width":  20,
+                                                                                                      "height":  19
+                                                                                                  }
+                                                                                              ],
+                                                                               "halfLidRegions":  {
+
+                                                                                                  },
+                                                                               "halfLidOffset":  0,
+                                                                               "browLockEndY":  18,
+                                                                               "nearestNeighbor":  true
+                                                                           },
+                                                              "checks":  {
+                                                                             "outsideMaskChangedPixels":  0,
+                                                                             "browLockPixels":  273,
+                                                                             "halfLidOverlayPixels":  0,
+                                                                             "closedEyePixels":  468,
+                                                                             "halfLidOffset":  0
+                                                                         }
+                                                          }
+                                           }
+                            },
+                            {
+                                "id":  "right",
+                                "label":  "Right",
+                                "phases":  {
+                                               "open":  {
+                                                            "file":  "eyes/thinking/right/open.png",
+                                                            "sha256":  "91475e78aba0e4dd5638e233b8f3e165827ed13bad3f548f416e684ebda2dd4f",
+                                                            "sourceFiles":  [
+                                                                                "eyes/thinking/raw.png",
+                                                                                "eyes/guarded/open.png"
+                                                                            ],
+                                                            "sourceHashes":  [
+                                                                                 {
+                                                                                     "file":  "original.png",
+                                                                                     "sha256":  "ff6db931146aa84fe2260b0daba0269a20455b1dcbb61e232e011a87291b4b5f"
+                                                                                 },
+                                                                                 {
+                                                                                     "file":  "eyes/thinking/raw.png",
+                                                                                     "sha256":  "83a75aacbc828ed4f7f71af97d70e96ddb3f67316fe6ab869ad0ee0248c780e3"
+                                                                                 },
+                                                                                 {
+                                                                                     "file":  "eyes/guarded/open.png",
+                                                                                     "sha256":  "50f728cbf0927c6572847096c447ab377c6b83d10152b6e01bc33d47ca76e154"
+                                                                                 }
+                                                                             ],
+                                                            "sourceSha256":  "ff6db931146aa84fe2260b0daba0269a20455b1dcbb61e232e011a87291b4b5f",
+                                                            "geometry":  {
+                                                                             "width":  64,
+                                                                             "height":  35,
+                                                                             "splitY":  35,
+                                                                             "cellRow":  0,
+                                                                             "cellColumn":  1,
+                                                                             "cellIndex":  1,
+                                                                             "eyeRegions":  [
+                                                                                                {
+                                                                                                    "x":  12,
+                                                                                                    "y":  12,
+                                                                                                    "width":  19,
+                                                                                                    "height":  19
+                                                                                                },
+                                                                                                {
+                                                                                                    "x":  34,
+                                                                                                    "y":  12,
+                                                                                                    "width":  20,
+                                                                                                    "height":  19
+                                                                                                }
+                                                                                            ],
+                                                                             "halfLidRegions":  {
+
+                                                                                                },
+                                                                             "halfLidOffset":  0,
+                                                                             "browLockEndY":  18,
+                                                                             "nearestNeighbor":  true
+                                                                         },
+                                                            "checks":  {
+                                                                           "outsideMaskChangedPixels":  0,
+                                                                           "browLockPixels":  273,
+                                                                           "halfLidOverlayPixels":  0,
+                                                                           "closedEyePixels":  0,
+                                                                           "halfLidOffset":  0
+                                                                       }
+                                                        },
+                                               "half":  {
+                                                            "file":  "eyes/thinking/right/half.png",
+                                                            "sha256":  "d40e7ff66056976d46218f1cdea9c41c56a00b1b5f4c78e13f848007cfc5cec3",
+                                                            "sourceFiles":  [
+                                                                                "eyes/thinking/raw.png",
+                                                                                "eyes/guarded/open.png"
+                                                                            ],
+                                                            "sourceHashes":  [
+                                                                                 {
+                                                                                     "file":  "original.png",
+                                                                                     "sha256":  "ff6db931146aa84fe2260b0daba0269a20455b1dcbb61e232e011a87291b4b5f"
+                                                                                 },
+                                                                                 {
+                                                                                     "file":  "eyes/thinking/raw.png",
+                                                                                     "sha256":  "83a75aacbc828ed4f7f71af97d70e96ddb3f67316fe6ab869ad0ee0248c780e3"
+                                                                                 },
+                                                                                 {
+                                                                                     "file":  "eyes/guarded/open.png",
+                                                                                     "sha256":  "50f728cbf0927c6572847096c447ab377c6b83d10152b6e01bc33d47ca76e154"
+                                                                                 }
+                                                                             ],
+                                                            "sourceSha256":  "ff6db931146aa84fe2260b0daba0269a20455b1dcbb61e232e011a87291b4b5f",
+                                                            "geometry":  {
+                                                                             "width":  64,
+                                                                             "height":  35,
+                                                                             "splitY":  35,
+                                                                             "cellRow":  1,
+                                                                             "cellColumn":  1,
+                                                                             "cellIndex":  3,
+                                                                             "eyeRegions":  [
+                                                                                                {
+                                                                                                    "x":  12,
+                                                                                                    "y":  12,
+                                                                                                    "width":  19,
+                                                                                                    "height":  19
+                                                                                                },
+                                                                                                {
+                                                                                                    "x":  34,
+                                                                                                    "y":  12,
+                                                                                                    "width":  20,
+                                                                                                    "height":  19
+                                                                                                }
+                                                                                            ],
+                                                                             "halfLidRegions":  {
+
+                                                                                                },
+                                                                             "halfLidOffset":  0,
+                                                                             "browLockEndY":  18,
+                                                                             "nearestNeighbor":  true
+                                                                         },
+                                                            "checks":  {
+                                                                           "outsideMaskChangedPixels":  0,
+                                                                           "browLockPixels":  273,
+                                                                           "halfLidOverlayPixels":  0,
+                                                                           "closedEyePixels":  0,
+                                                                           "halfLidOffset":  0
+                                                                       }
+                                                        },
+                                               "closed":  {
+                                                              "file":  "eyes/thinking/right/closed.png",
+                                                              "sha256":  "1b44bb6b2bd0aaad837f2c03e57bafeaa54466e8911590a192dfb8b26253fdab",
+                                                              "sourceFiles":  [
+                                                                                  "eyes/guarded/closed.png",
+                                                                                  "eyes/guarded/open.png"
+                                                                              ],
+                                                              "sourceHashes":  [
+                                                                                   {
+                                                                                       "file":  "original.png",
+                                                                                       "sha256":  "ff6db931146aa84fe2260b0daba0269a20455b1dcbb61e232e011a87291b4b5f"
+                                                                                   },
+                                                                                   {
+                                                                                       "file":  "eyes/guarded/open.png",
+                                                                                       "sha256":  "50f728cbf0927c6572847096c447ab377c6b83d10152b6e01bc33d47ca76e154"
+                                                                                   },
+                                                                                   {
+                                                                                       "file":  "eyes/guarded/closed.png",
+                                                                                       "sha256":  "1b44bb6b2bd0aaad837f2c03e57bafeaa54466e8911590a192dfb8b26253fdab"
+                                                                                   }
+                                                                               ],
+                                                              "sourceSha256":  "ff6db931146aa84fe2260b0daba0269a20455b1dcbb61e232e011a87291b4b5f",
+                                                              "geometry":  {
+                                                                               "width":  64,
+                                                                               "height":  35,
+                                                                               "splitY":  35,
+                                                                               "cellRow":  null,
+                                                                               "cellColumn":  null,
+                                                                               "cellIndex":  -1,
+                                                                               "eyeRegions":  [
+                                                                                                  {
+                                                                                                      "x":  12,
+                                                                                                      "y":  12,
+                                                                                                      "width":  19,
+                                                                                                      "height":  19
+                                                                                                  },
+                                                                                                  {
+                                                                                                      "x":  34,
+                                                                                                      "y":  12,
+                                                                                                      "width":  20,
+                                                                                                      "height":  19
+                                                                                                  }
+                                                                                              ],
+                                                                               "halfLidRegions":  {
+
+                                                                                                  },
+                                                                               "halfLidOffset":  0,
+                                                                               "browLockEndY":  18,
+                                                                               "nearestNeighbor":  true
+                                                                           },
+                                                              "checks":  {
+                                                                             "outsideMaskChangedPixels":  0,
+                                                                             "browLockPixels":  273,
+                                                                             "halfLidOverlayPixels":  0,
+                                                                             "closedEyePixels":  468,
+                                                                             "halfLidOffset":  0
+                                                                         }
+                                                          }
+                                           }
+                            }
+                        ],
+    "source":  {
+                   "original":  "original.png",
+                   "sha256":  "ff6db931146aa84fe2260b0daba0269a20455b1dcbb61e232e011a87291b4b5f",
+                   "referenceGrid":  "thinking-reference-grid.png",
+                   "referenceSha256":  "f867dcca5e2f759e672917997a3ca3bab282c3f91fd4de567e0931409f722ef6",
+                   "rawAtlas":  "eyes/thinking/raw.png",
+                   "rawAtlasSha256":  "83a75aacbc828ed4f7f71af97d70e96ddb3f67316fe6ab869ad0ee0248c780e3",
+                   "referenceUpper":  {
+                                          "file":  "eyes/guarded/open.png",
+                                          "sha256":  "50f728cbf0927c6572847096c447ab377c6b83d10152b6e01bc33d47ca76e154"
+                                      },
+                   "browMaster":  {
+                                      "file":  "eyes/guarded/open.png",
+                                      "sha256":  "50f728cbf0927c6572847096c447ab377c6b83d10152b6e01bc33d47ca76e154"
+                                  },
+                   "halfLid":  {
+                                   "file":  "eyes/guarded/half.png",
+                                   "sha256":  "b56746322ff29ef87905ac60963e4c132247d33e7d918623b3ca31c3a4166d6b"
+                               },
+                   "closedEye":  {
+                                     "file":  "eyes/guarded/closed.png",
+                                     "sha256":  "1b44bb6b2bd0aaad837f2c03e57bafeaa54466e8911590a192dfb8b26253fdab"
+                                 }
+               },
+    "geometry":  {
+                     "width":  64,
+                     "height":  64,
+                     "splitY":  35,
+                     "frameWidth":  64,
+                     "frameHeight":  35,
+                     "eyeRegions":  [
+                                        {
+                                            "x":  12,
+                                            "y":  12,
+                                            "width":  19,
+                                            "height":  19
+                                        },
+                                        {
+                                            "x":  34,
+                                            "y":  12,
+                                            "width":  20,
+                                            "height":  19
+                                        }
+                                    ],
+                     "halfLidRegions":  [
+
+                                        ],
+                     "halfLidOffsetsByGaze":  {
+
+                                              },
+                     "browLockEndY":  18,
+                     "reference":  {
+                                       "width":  1024,
+                                       "height":  560,
+                                       "scale":  8,
+                                       "cells":  4,
+                                       "exactSourceCells":  true,
+                                       "columns":  2,
+                                       "rows":  2
+                                   },
+                     "rawAspect":  1.8265086206896552,
+                     "rawAspectTolerance":  0.01,
+                     "cellOrder":  [
+                                       "left",
+                                       "right"
+                                   ],
+                     "atlasColumns":  2,
+                     "atlasRows":  2
+                 },
+    "inputHashes":  [
+                        {
+                            "file":  "layout.json",
+                            "sha256":  "c853bf4691cb8ea87a6ddb8ee428fe5a11429bdc36a236ea51e7ad696a5e7a59"
+                        },
+                        {
+                            "file":  "thinking-layout.json",
+                            "sha256":  "ad2b54e1f417fd55c2d429d1c3314477ce7dbab1c4115f9ca27c71f2224685f5"
+                        },
+                        {
+                            "file":  "setup-provenance.json",
+                            "sha256":  "7fe5282f30389a1a3679093a2cb393be62842a50fd46cca1013a1f3a92c138c3"
+                        },
+                        {
+                            "file":  "original.png",
+                            "sha256":  "ff6db931146aa84fe2260b0daba0269a20455b1dcbb61e232e011a87291b4b5f"
+                        },
+                        {
+                            "file":  "thinking-reference-grid.png",
+                            "sha256":  "f867dcca5e2f759e672917997a3ca3bab282c3f91fd4de567e0931409f722ef6"
+                        },
+                        {
+                            "file":  "eyes/thinking/raw.png",
+                            "sha256":  "83a75aacbc828ed4f7f71af97d70e96ddb3f67316fe6ab869ad0ee0248c780e3"
+                        },
+                        {
+                            "file":  "eyes/guarded/open.png",
+                            "sha256":  "50f728cbf0927c6572847096c447ab377c6b83d10152b6e01bc33d47ca76e154"
+                        },
+                        {
+                            "file":  "eyes/guarded/half.png",
+                            "sha256":  "b56746322ff29ef87905ac60963e4c132247d33e7d918623b3ca31c3a4166d6b"
+                        },
+                        {
+                            "file":  "eyes/guarded/closed.png",
+                            "sha256":  "1b44bb6b2bd0aaad837f2c03e57bafeaa54466e8911590a192dfb8b26253fdab"
+                        }
+                    ],
+    "verification":  {
+                         "result":  "pixel-invariants-pass-not-visual-acceptance",
+                         "phaseCount":  6,
+                         "expectedPhaseCount":  6,
+                         "gazeSetCount":  2,
+                         "expectedGazeSetCount":  2,
+                         "sourceHashesUnchanged":  true,
+                         "referenceExact":  true,
+                         "outsideMaskChangedPixels":  0,
+                         "noExistingOutputsOverwritten":  true,
+                         "pixelComparisons":  13440
+                     },
+    "emotionId":  "guarded",
+    "gazeLayout":  "horizontal-pair"
+}

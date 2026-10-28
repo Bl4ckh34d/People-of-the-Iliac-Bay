@@ -21,7 +21,7 @@ namespace PeopleOfTheIliacBay.DFU
         private const BindingFlags Members = BindingFlags.Instance | BindingFlags.Static |
             BindingFlags.Public | BindingFlags.NonPublic;
         private const string RunFlag = "-peopleoftheiliacbay-conversation-mood-probe";
-        private const string OwnedCharacter = "PeopleOfTheIliacBayTest-9a5f197b";
+        private const string OwnedCharacter = "Hakon Ironhand";
         private const string BaselineSave = "People - Gothway Garden";
 
         private enum ReplyPhase { PassThrough, ObserveLive, ObserveFreeText, Control }
@@ -1211,7 +1211,7 @@ namespace PeopleOfTheIliacBay.DFU
             return SaveCheckpoint(game, character, evidence.CheckpointTitle);
         }
 
-        private static IEnumerator SaveCheckpoint(GameManager game, string character, string title)
+        internal static IEnumerator SaveCheckpoint(GameManager game, string character, string title)
         {
             game.SaveLoadManager.EnumerateSaves();
             Require(game.SaveLoadManager.FindSaveFolderByNames(character, title) < 0,

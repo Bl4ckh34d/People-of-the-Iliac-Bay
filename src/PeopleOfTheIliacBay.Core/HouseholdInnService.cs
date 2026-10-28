@@ -6,6 +6,8 @@ namespace PeopleOfTheIliacBay.Core
     [Serializable]
     public sealed class HouseholdInnServiceAdmission
     {
+        // Coarse service times retain purchases and visit duration without simulating interior steps.
+        internal const double CounterDelaySeconds=30,ExitDelaySeconds=30;
         public int ModelVersion=1,Revision,SimulationRevision;
         public string Id,HouseholdDayId,SourceFingerprint,Outcome="pending",FirstSeatId,SecondSeatId;
         public NpcInnServiceCatalog Catalog;
@@ -55,10 +57,12 @@ namespace PeopleOfTheIliacBay.Core
             bool paid=a!=null && b!=null && a.Outcome==NpcInnConsumptionOutcome.Purchased && b.Outcome==NpcInnConsumptionOutcome.Purchased;
             if(source.Outcome=="pending" && (a!=null || b!=null || source.Materialized))
                 throw new ArgumentException("Pending service cannot contain settled receipts or a physical handback.");
-            if(source.Outcome=="purchased" && !paid || source.Outcome=="refused" && (a==null || b==null || paid ||
-                source.FirstSeatId!=null || source.SecondSeatId!=null) || source.Outcome!="refused" &&
+            if(source.Materialized && source.Outcome!="refused" && source.FirstSeatId==null ||
+                source.Outcome=="purchased" && !paid || source.Outcome=="refused" && (a==null || b==null || paid ||
+                source.FirstSeatId!=null || source.SecondSeatId!=null) ||
+                (source.FirstSeatId!=null || source.SecondSeatId!=null) &&
                 !catalog.Pairs.Exists(p=>p.First.Id==source.FirstSeatId && p.Second.Id==source.SecondSeatId))
-                throw new ArgumentException("Household service lacks its exact pair or corresponding receipts.");
+                throw new ArgumentException("Household service has invalid assigned seats or corresponding receipts.");
             return new HouseholdInnServiceAdmission{ModelVersion=source.ModelVersion,Revision=source.Revision,
                 SimulationRevision=source.SimulationRevision,Id=source.Id,HouseholdDayId=source.HouseholdDayId,
                 SourceFingerprint=source.SourceFingerprint,Outcome=source.Outcome,FirstSeatId=source.FirstSeatId,SecondSeatId=source.SecondSeatId,
@@ -100,8 +104,8 @@ namespace PeopleOfTheIliacBay.Core
             if(registered==null)return null;
             bool keeperAlive;
             if(!KnownNpcIdentity(state,registered.KeeperId,out keeperAlive) || !keeperAlive)return null;
-            var current=existing==null?CreateHouseholdInnAdmission(plan,sim,registered,nativeTariff,canReservePair):HouseholdInnServiceAdmission.Copy(existing);
-            if(current==null || registered.Fingerprint!=current.Catalog.Fingerprint)return null;
+            var current=existing==null?CreateHouseholdInnAdmission(plan,sim,registered,nativeTariff):HouseholdInnServiceAdmission.Copy(existing);
+            if(current==null || !SameHouseholdServiceMenu(registered,current.Catalog))return null;
             if(existing!=null && sim.AdvancedThrough>current.ArrivalAt && sim.PauseReason==null)
             {
                 double shift=sim.AdvancedThrough-current.ArrivalAt;
@@ -127,13 +131,12 @@ namespace PeopleOfTheIliacBay.Core
             var a=ReadNpcInnServiceConsumption(current.FirstIdentity);var b=ReadNpcInnServiceConsumption(current.SecondIdentity);
             var firstQuote=QuoteHouseholdMenu(current,current.FirstIdentity,first,a);
             var secondQuote=QuoteHouseholdMenu(current,current.SecondIdentity,second,b);
-            string payerId=plan.JointInn.PayerId;
+            string payerId=HouseholdPayer(plan);
             var payer=payerId==null?null:IndexedNpcInventory(payerId);
             int needed=(a==null?firstQuote.PriceGold:0)+(b==null?secondQuote.PriceGold:0);
             bool available=HouseholdPaymentCanAdvance(current.FirstIdentity,a) && HouseholdPaymentCanAdvance(current.SecondIdentity,b) &&
                 (a==null || a.Outcome==NpcInnConsumptionOutcome.Purchased) && (b==null || b.Outcome==NpcInnConsumptionOutcome.Purchased);
-            bool affordable=available && (payerId!=null?payer!=null && payer.WalletGold>=needed:
-                (a!=null || first.WalletGold>=firstQuote.PriceGold) && (b!=null || second.WalletGold>=secondQuote.PriceGold));
+            bool affordable=available && payer!=null && payer.WalletGold>=needed;
             current.FirstReceipt=a??ProposeHouseholdMember(current.FirstIdentity,current.Catalog.KeeperId,current.CounterAt,firstQuote,
                 affordable,available && first.WalletGold<firstQuote.PriceGold);
             current.SecondReceipt=b??ProposeHouseholdMember(current.SecondIdentity,current.Catalog.KeeperId,current.CounterAt,secondQuote,
@@ -147,7 +150,7 @@ namespace PeopleOfTheIliacBay.Core
             if(!purchased)
             {
                 current.FirstSeatId=current.SecondSeatId=null;current.SeatedAt=current.EndsAt=current.CounterAt;
-                current.ReturnAt=current.CounterAt+RouteLength(current.Catalog.EntryToCounter)*HouseholdInteriorPace(plan);
+                current.ReturnAt=current.CounterAt+HouseholdInnServiceAdmission.ExitDelaySeconds;
             }
             if(now>=current.ReturnAt)current.ReleasedAt=current.ReturnAt;
             var validated=HouseholdInnServiceAdmission.Copy(current);
@@ -162,15 +165,8 @@ namespace PeopleOfTheIliacBay.Core
             if(affordable && needed>0)
             {
                 var updates=new List<NpcInventoryUpdate>();
-                if(payerId!=null)updates.Add(new NpcInventoryUpdate{PersonId=payerId,ExpectedRevision=payer.Revision,
+                updates.Add(new NpcInventoryUpdate{PersonId=payerId,ExpectedRevision=payer.Revision,
                     WalletGold=payer.WalletGold-needed,Items=CopyNpcInventory(payer).Items});
-                else
-                {
-                    if(a==null)updates.Add(new NpcInventoryUpdate{PersonId=first.PersonId,ExpectedRevision=first.Revision,
-                        WalletGold=first.WalletGold-firstQuote.PriceGold,Items=CopyNpcInventory(first).Items});
-                    if(b==null)updates.Add(new NpcInventoryUpdate{PersonId=second.PersonId,ExpectedRevision=second.Revision,
-                        WalletGold=second.WalletGold-secondQuote.PriceGold,Items=CopyNpcInventory(second).Items});
-                }
                 if(!CommitNpcInventoryTransaction("household-service:"+current.HouseholdDayId,updates))return HouseholdInnServiceAdmission.Copy(existing);
             }
             if(firstCursor!=null)PublishInnConsumptionCursor(IndexedInnConsumptionCursor(firstCursor.BuyerId),firstCursor);
@@ -184,36 +180,28 @@ namespace PeopleOfTheIliacBay.Core
         }
 
         private HouseholdInnServiceAdmission CreateHouseholdInnAdmission(HouseholdDayPlan plan,HouseholdJointSimulation sim,
-            NpcInnServiceCatalog catalog,Func<int,double,NpcInnServiceTariff> calendar,Func<NpcInnServiceCatalog,NpcInnServiceSeatPair,bool> canReservePair)
+            NpcInnServiceCatalog catalog,Func<int,double,NpcInnServiceTariff> calendar)
         {
-            double arrival=Math.Max(sim.AdvancedThrough,Math.Max(sim.StartedAt,sim.PhaseSince)),pace=HouseholdInteriorPace(plan);
-            double counter=arrival+RouteLength(catalog.EntryToCounter)*pace;
+            double arrival=Math.Max(sim.AdvancedThrough,Math.Max(sim.StartedAt,sim.PhaseSince));
+            double counter=arrival+HouseholdInnServiceAdmission.CounterDelaySeconds;
             var a=HouseholdServiceIdentity(plan,plan.First.ResidentId,arrival);
             var b=HouseholdServiceIdentity(plan,plan.Second.ResidentId,arrival);
             if(counter>=Math.Min(a.EndsAt,b.EndsAt))return null;
             var tariff=calendar(catalog.RegionIndex,counter);
-            // Quoting validates the native day/region/hours before admission.
             NpcInnServiceCatalog.Quote(catalog,0,counter,tariff);
-            foreach(var pair in catalog.Pairs)
-            {
-                if(canReservePair!=null && !canReservePair(catalog,pair))continue;
-                if(state.ObservedVisits.Exists(v=>v.SettlementId==catalog.SettlementId && v.BuildingKey==catalog.BuildingKey &&
-                    v.ResidentId!=plan.First.ResidentId && v.ResidentId!=plan.Second.ResidentId && v.EndsAt>arrival &&
-                    v.Legs.Exists(l=>l.SeatId==pair.First.Id || l.SeatId==pair.Second.Id)))continue;
-                double seated=counter+Math.Max(RouteLength(pair.FirstCounterToSeat),RouteLength(pair.SecondCounterToSeat))*pace;
-                double end=Math.Min(a.EndsAt,b.EndsAt);
-                if(seated>=end)continue;
-                double leave=end+Math.Max(RouteLength(pair.FirstSeatToEntry),RouteLength(pair.SecondSeatToEntry))*pace;
-                bool conflict=state.HouseholdInnServices.Exists(s=>s.Catalog.SettlementId==catalog.SettlementId && s.Catalog.BuildingKey==catalog.BuildingKey &&
-                    s.Outcome!="refused" && s.ArrivalAt<leave && arrival<(s.ReleasedAt??(s.Materialized?double.MaxValue:s.ReturnAt)) &&
-                    (s.FirstSeatId==pair.First.Id || s.FirstSeatId==pair.Second.Id || s.SecondSeatId==pair.First.Id || s.SecondSeatId==pair.Second.Id));
-                if(conflict)continue;
-                return HouseholdInnServiceAdmission.Copy(new HouseholdInnServiceAdmission{Id=plan.Id+":inn-service",HouseholdDayId=plan.Id,
-                    SourceFingerprint=sim.Base.SourceFingerprint,SimulationRevision=sim.Revision,Catalog=catalog,SourcePlan=plan,Tariff=tariff,
-                    FirstIdentity=a,SecondIdentity=b,FirstSeatId=pair.First.Id,SecondSeatId=pair.Second.Id,
-                    ArrivalAt=arrival,CounterAt=counter,SeatedAt=seated,EndsAt=end,ReturnAt=leave});
-            }
-            return null;
+            double end=Math.Min(a.EndsAt,b.EndsAt);
+            return HouseholdInnServiceAdmission.Copy(new HouseholdInnServiceAdmission{Id=plan.Id+":inn-service",HouseholdDayId=plan.Id,
+                SourceFingerprint=sim.Base.SourceFingerprint,SimulationRevision=sim.Revision,Catalog=catalog,SourcePlan=plan,Tariff=tariff,
+                FirstIdentity=a,SecondIdentity=b,ArrivalAt=arrival,CounterAt=counter,SeatedAt=counter,EndsAt=end,
+                ReturnAt=end+HouseholdInnServiceAdmission.ExitDelaySeconds});
+        }
+        private static bool SameHouseholdServiceMenu(NpcInnServiceCatalog a,NpcInnServiceCatalog b)
+        {
+            if(a.SettlementId!=b.SettlementId || a.BuildingKey!=b.BuildingKey || a.KeeperId!=b.KeeperId ||
+                a.RegionIndex!=b.RegionIndex || a.OpenMinute!=b.OpenMinute || a.CloseMinute!=b.CloseMinute)return false;
+            for(int i=0;i<11;i++)if(a.Menu[i].ProductName!=b.Menu[i].ProductName || a.Menu[i].Kind!=b.Menu[i].Kind ||
+                a.Menu[i].BasePriceGold!=b.Menu[i].BasePriceGold)return false;
+            return true;
         }
         private static NpcInnServiceIdentity HouseholdServiceIdentity(HouseholdDayPlan plan,string buyer,double arrival)
         {
@@ -246,9 +234,9 @@ namespace PeopleOfTheIliacBay.Core
         {
             var prices=new List<int>();for(int i=0;i<11;i++)prices.Add(NpcInnServiceCatalog.Quote(service.Catalog,i,service.CounterAt,service.Tariff).PriceGold);
             var resident=ResolveResident(identity.BuyerId);
-            int planned=PlannedHouseholdInnMenu(identity.HouseholdDayId,identity.BuyerId);
-            int index=prior!=null && prior.MenuIndex>=0?prior.MenuIndex:planned>=0?planned:
-                NpcInnConsumption.SelectMenuIndex(prices,wallet.WalletGold,resident.AppearanceSeed);
+            int budget=HouseholdInnCounterBudget(identity.HouseholdDayId,identity.BuyerId,wallet.WalletGold);
+            int index=prior!=null && prior.MenuIndex>=0?prior.MenuIndex:
+                NpcInnConsumption.SelectMenuIndex(prices,budget,resident.AppearanceSeed);
             return NpcInnServiceCatalog.Quote(service.Catalog,index,service.CounterAt,service.Tariff);
         }
         private static NpcInnConsumptionReceipt ProposeHouseholdMember(NpcInnServiceIdentity identity,string keeper,double now,
@@ -264,7 +252,7 @@ namespace PeopleOfTheIliacBay.Core
         }
         private static List<HouseholdInnServiceAdmission> CopyHouseholdInnServices(WorldState source,WorldState copied)
         {
-            var result=new List<HouseholdInnServiceAdmission>();if(source.Version<74)return result;
+            var result=new List<HouseholdInnServiceAdmission>();
             Require(source.HouseholdInnServices!=null && source.HouseholdInnServices.Count<=100000,"Missing or unbounded household service ledger.");
             var owners=new HashSet<string>(StringComparer.Ordinal);
             foreach(var value in source.HouseholdInnServices)
@@ -280,20 +268,18 @@ namespace PeopleOfTheIliacBay.Core
                 var sim=copied.HouseholdJointSimulations.Find(s=>s.Base.HouseholdDayId==item.HouseholdDayId);
                 Require(item.ReleasedAt.HasValue || sim!=null && sim.Base.SourceFingerprint==item.SourceFingerprint && sim.Revision>=item.SimulationRevision,
                     "Shared service lost its simulation owner.");
-                double pace=HouseholdInteriorPace(plan);
                 Require(CloseServiceTime(item.FirstIdentity.EndsAt,HouseholdServiceIdentity(plan,item.FirstIdentity.BuyerId,item.ArrivalAt).EndsAt) &&
                     CloseServiceTime(item.SecondIdentity.EndsAt,HouseholdServiceIdentity(plan,item.SecondIdentity.BuyerId,item.ArrivalAt).EndsAt) &&
-                    CloseServiceTime(item.CounterAt,item.ArrivalAt+RouteLength(item.Catalog.EntryToCounter)*pace),
+                    CloseServiceTime(item.CounterAt,item.ArrivalAt+HouseholdInnServiceAdmission.CounterDelaySeconds),
                     "Shared service chronology differs from canonical source routes.");
                 if(item.Outcome=="refused")Require(item.SeatedAt==item.CounterAt && item.EndsAt==item.CounterAt &&
-                    CloseServiceTime(item.ReturnAt,item.CounterAt+RouteLength(item.Catalog.EntryToCounter)*pace),"Invalid refused shared service return.");
+                    CloseServiceTime(item.ReturnAt,item.CounterAt+HouseholdInnServiceAdmission.ExitDelaySeconds),"Invalid refused shared service return.");
                 else
                 {
-                    var pair=item.Catalog.Pairs.Find(p=>p.First.Id==item.FirstSeatId && p.Second.Id==item.SecondSeatId);
-                    Require(CloseServiceTime(item.SeatedAt,item.CounterAt+Math.Max(RouteLength(pair.FirstCounterToSeat),RouteLength(pair.SecondCounterToSeat))*pace) &&
+                    Require(CloseServiceTime(item.SeatedAt,item.CounterAt) &&
                         item.EndsAt==Math.Min(item.FirstIdentity.EndsAt,item.SecondIdentity.EndsAt) &&
-                        CloseServiceTime(item.ReturnAt,item.EndsAt+Math.Max(RouteLength(pair.FirstSeatToEntry),RouteLength(pair.SecondSeatToEntry))*pace),
-                        "Invalid shared service dwell or egress chronology.");
+                        CloseServiceTime(item.ReturnAt,item.EndsAt+HouseholdInnServiceAdmission.ExitDelaySeconds),
+                        "Invalid coarse shared service dwell or departure chronology.");
                 }
                 foreach(var receipt in new[]{item.FirstReceipt,item.SecondReceipt})if(receipt!=null && receipt.Outcome==NpcInnConsumptionOutcome.Purchased)
                 {
@@ -303,7 +289,7 @@ namespace PeopleOfTheIliacBay.Core
                 }
                 foreach(var prior in result)
                     if(prior.Catalog.SettlementId==item.Catalog.SettlementId && prior.Catalog.BuildingKey==item.Catalog.BuildingKey &&
-                        prior.Outcome!="refused" && item.Outcome!="refused" && prior.ArrivalAt<(item.ReleasedAt??(item.Materialized?double.MaxValue:item.ReturnAt)) &&
+                        prior.Outcome!="refused" && item.Outcome!="refused" && prior.FirstSeatId!=null && item.FirstSeatId!=null && prior.ArrivalAt<(item.ReleasedAt??(item.Materialized?double.MaxValue:item.ReturnAt)) &&
                         item.ArrivalAt<(prior.ReleasedAt??(prior.Materialized?double.MaxValue:prior.ReturnAt)))
                         Require(prior.FirstSeatId!=item.FirstSeatId && prior.FirstSeatId!=item.SecondSeatId &&
                             prior.SecondSeatId!=item.FirstSeatId && prior.SecondSeatId!=item.SecondSeatId,"Overlapping shared service seat reservations.");

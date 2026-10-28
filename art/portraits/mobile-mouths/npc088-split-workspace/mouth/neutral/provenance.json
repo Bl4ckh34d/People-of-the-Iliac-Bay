@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T02:07:25.2760704Z",
+    "portraitRecord":  88,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "neutral",
+    "prompt":  "Use case: illustration-story\nAsset type: Daggerfall Unity NPC portrait speech-mouth atlas\nPrimary request: Create one clean 3-by-3 atlas of the same portrait\u0027s lower 64-by-29 face half, based only on the supplied mouth reference grid. The full canvas must preserve exact 64:29 aspect ratio and contain nine equal cells with no gutters or labels, each showing the complete lower half at the supplied 8x pixel-art scale. Row-major poses are A B C / D E F / G H X. Preserve lower face, nose, cheeks, chin, hair, neck and background alignment in every cell. Neutral A and X must reproduce original relaxed closed brown lips exactly.\nInput images: Image 1 is the only edit reference and supplies the exact face, crop, palette, lip scale, and native pixel-art anatomy.\nSubject: Same adult woman portrait, same facial identity, mouth centered at same native coordinates and same lip width and proportions as reference.\nStyle/medium: Muted pixel art with crisp native pixel clusters, matching reference scale and soft pixel-art shading.\nColor palette: Preserve warm muted tan skin and soft brown lips, softly blended pixel-art contrast. Teeth are restrained warm ivory. Mouth cavities are dark muted brown. No lipstick red, orange skin, bright white teeth blocks, or exaggerated contrast.\nConstraints: Keep content restricted to the full lower-half mouth reference crop in all nine cells; do not create or paste a full face. Change mouth pose only; preserve all other features and background. Keep original lip scale; do not widen face or mouth. Use these exact Rhubarb pose meanings:\nA: closed lightly pressured P/B/M lips.\nB: narrow horizontal opening, nearly together teeth, consonants/EE.\nC: medium relaxed unrounded EH/AE opening.\nD: wide vertical AA opening, larger than C.\nE: slightly rounded AO/ER opening, no wider than C.\nF: small forward pucker UW/OW/W; not tooth biting.\nG: upper teeth touching lower lip F/V; not a wide vowel or pucker.\nH: tongue raised behind upper teeth L, opening between C and D; tiny tongue may be invisible at native resolution.\nX: relaxed closed idle.\nKeep neutral emotional tension across all poses. No text, labels, borders, or added elements.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1615a-49e8-76f2-af60-baf02d290c32 as C:\\Users\\Daniel\\.codex\\generated_images\\01a1615a-49e8-76f2-af60-baf02d290c32\\exec-76efa06b-d64a-44e9-bdcd-41f3dbde0600.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1615a-49e8-76f2-af60-baf02d290c32\\exec-76efa06b-d64a-44e9-bdcd-41f3dbde0600.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "f2e18bec953ffba12224397a695b2f80ddda822519be1414696b593243bc864c",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "530927adf4a79396a3c9bc650a907262d3da5938423cd2f891d9b6296ae66997",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1615a-49e8-76f2-af60-baf02d290c32\\exec-76efa06b-d64a-44e9-bdcd-41f3dbde0600.png",
+                      "sha256":  "6dc24b7c0fa1d97ab66bbe842a348a3686489683ff871c99d048d257cce01337",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/neutral/raw.png",
+                "sha256":  "6dc24b7c0fa1d97ab66bbe842a348a3686489683ff871c99d048d257cce01337",
+                "width":  1863,
+                "height":  844
+            }
+}

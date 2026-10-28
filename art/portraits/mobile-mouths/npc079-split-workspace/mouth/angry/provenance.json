@@ -1,0 +1,22 @@
+{
+  "portraitId": 79,
+  "emotion": "angry",
+  "artifact": "mouth-atlas",
+  "grid": "3x3 row-major A B C / D E F / G H X",
+  "cellSize": "64x29",
+  "sourceReferences": [
+    {
+      "path": "mouth-reference-grid.png",
+      "sha256": "51b7d166c01001213d48e19be135f463e41b6a9892da5abe9c686cf1ae53ca2a"
+    },
+    {
+      "path": "original.png",
+      "sha256": "70b1b52df73159543afd5776eae7565bfd3619fd31bc5fd90af674e42520d460"
+    }
+  ],
+  "prompt": "Use case: stylized-concept\nAsset type: pixel-art angry viseme atlas for Daggerfall Unity portrait NPC 079\nInput images: Image 1 is the inspected exact NPC 079 3x3 neutral mouth reference grid; preserve its cell boundaries, lower-face crop, alignment and native proportions. Image 2 is the complete original 64x64 portrait; preserve identity and palette.\nPrimary request: make a 3x3 atlas of nine clearly distinct but natural angry speech mouth poses. Exact row-major order A B C / D E F / G H X. Each cell is a complete 64x29 lower-half crop at identical scale and alignment. No labels, borders, gutters or extra cells.\nEmotion: every pose reads restrained anger through tense lips and firm mouth corners. A and X are closed with tight, pressed lips and subtle downturned tension, never an exaggerated comic frown. B slightly parted and taut; C narrow speech opening; D natural open ah; E rounded tense opening; F open with a small suitable amount of upper teeth; G asymmetrically open with one firm corner; H rounded/pursed speech shape. Allow partial clenched teeth in some appropriate open shapes, varied across cues, but not permanent teeth-clenching.\nGeometry and style: preserve the source's small natural lip width, medium skin tone, soft muted brown-red lip palette, low-resolution fantasy pixel art, complete nose/jaw/neck/hair/background and original face geometry. Mouth shapes remain inside the portrait's native mouth area x=22..41, y=39..51; do not enlarge them. Sharp pixel clusters, soft palette, no blur.\nConstraints: change only lips, mouth opening and immediate corners; maintain all surrounding pixels and frame crop. No giant mouth, thick black outlines, cartoon rage, oversized frown, deep creases, red skin, altered hair/jaw/nose/neck, blur, smudging, text, watermark or artifacts.",
+  "output": {
+    "path": "raw.png",
+    "sha256": "ceb525f50ea9f6f9ac63edb8089eab7105cdf9676e4615ae5fcce0980a5c97c0"
+  }
+}

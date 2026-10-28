@@ -16,6 +16,140 @@ namespace PeopleOfTheIliacBay.Tests
         { return new List<SavedRoutePoint> { new SavedRoutePoint { X = from }, new SavedRoutePoint { X = to } }; }
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Haunting shelter interrupts exterior response from its actual position with surveyed home return",()=>{
+                foreach(double at in new[]{101d,105d,405d,102d})
+                {
+                    var roster=Roster(2);var guard=roster.Guards[0];
+                    roster.Dispatch("haunting-fixture",100,new Dictionary<string,List<SavedRoutePoint>>{{guard.Id,Route(0,4)}},1,1,1);
+                    roster.Advance(at);
+                    if(at==102)roster.Engage(guard.Id,at);
+                    var position=roster.Position(guard.Id,at);
+                    var plan=GuardRefugeJourney.Create(7,new[]{new GuardPoint3{X=position.X},new GuardPoint3{X=20}},
+                        new[]{new GuardPoint3(),new GuardPoint3{Z=5}},at,1,1);
+                    if(at!=102)Check.Throws<ArgumentException>(()=>roster.TakeRefuge(guard.Id,plan,at,Route(position.X,0)));
+                    plan.HauntingShelter=true;
+                    var invented=GuardRefugeJourney.Create(7,new[]{new GuardPoint3{X=position.X+1},new GuardPoint3{X=20}},
+                        new[]{new GuardPoint3(),new GuardPoint3{Z=5}},at,1,1);
+                    invented.HauntingShelter=true;
+                    Check.Throws<ArgumentException>(()=>roster.TakeRefuge(guard.Id,invented,at,Route(position.X,0)));
+                    roster.TakeRefuge(guard.Id,plan,at,Route(position.X,0));
+                    Check.Equal(GuardDuty.Refuge,guard.Duty);
+                    Check.True(guard.IncidentId==null && guard.Refuge.HauntingShelter);
+                    Check.Near(position.X,guard.Refuge.Exterior[0].X);
+                    Check.Near(0,guard.Refuge.ReturnExterior[guard.Refuge.ReturnExterior.Count-1].X);
+                    GuardRoster.CopyValidated(roster);
+                }
+            }));
+            cases.Add(("Wall trespass remains restricted through both shifts independently of haunting staffing",()=>{
+                Func<double,bool,bool> enforced=GuardShifts.WallTrespassEnforced;
+                Check.True(enforced(64799,false));
+                Check.True(enforced(64800,false));
+                Check.True(enforced(0,false));
+                Check.True(enforced(21599,false));
+                Check.True(enforced(21600,false));
+                Check.True(enforced(64800,true));
+            }));
+            cases.Add(("Multiple wall posts share real stair access without reserving the upper doorway",()=>{
+                var roster=Roster(2);
+                for(int i=0;i<2;i++)
+                {
+                    var journey=GuardRefugeJourney.Create(7,new[]{new GuardPoint3{X=i*10},new GuardPoint3{X=5}},
+                        new[]{new GuardPoint3(),new GuardPoint3{Y=6}},0,1,1);
+                    journey.WallDuty=true;journey.LowerDoorIndex=0;journey.UpperDoorIndex=1;
+                    journey.WallRoute=new List<GuardPoint3>{new GuardPoint3{X=5,Y=6},new GuardPoint3{X=20+i*20,Y=6}};
+                    roster.TakeRefuge(roster.Guards[i].Id,journey,0);
+                }
+                Check.Equal(2,GuardRoster.CopyValidated(roster).Guards.Count(g=>g.Refuge!=null));
+            }));
+            cases.Add(("Verified wall posts add two shifts without consuming ordinary patrol or gate coverage",()=>{
+                Check.Equal(128,GuardRoster.TargetWithWallSlots(48,4,0));
+                Check.Equal(256,GuardRoster.TargetWithWallSlots(48,4,64));
+                Check.Equal(1688,GuardRoster.TargetWithWallSlots(700,4,128));
+                Check.Throws<ArgumentException>(()=>GuardRoster.TargetWithWallSlots(48,4,129));
+            }));
+            cases.Add(("Unresolved Daggerfall haunting overrides every night guard role",()=>{
+                Check.True(GuardShifts.HauntingShelterRequired(1291010263,false,18*3600));
+                Check.True(GuardShifts.HauntingShelterRequired(1291010263,false,5*3600));
+                Check.True(!GuardShifts.HauntingShelterRequired(1291010263,false,6*3600));
+                Check.True(!GuardShifts.HauntingShelterRequired(1291010263,true,20*3600));
+                Check.True(!GuardShifts.HauntingShelterRequired(1,false,20*3600));
+            }));
+            cases.Add(("Wall watch traverses lower door interior upper door and elevated route both ways",()=>{
+                var journey=GuardRefugeJourney.Create(7,new[]{new GuardPoint3(),new GuardPoint3{X=10}},
+                    new[]{new GuardPoint3(),new GuardPoint3{Y=10}},100,1,1);
+                journey.WallDuty=true;journey.LowerDoorIndex=0;journey.UpperDoorIndex=1;
+                journey.WallRoute=new List<GuardPoint3>{new GuardPoint3{X=10,Y=10},new GuardPoint3{X=20,Y=10}};
+                Check.True(journey.ReleaseToReturnBy(200));
+                journey=GuardRefugeJourney.CopyValidated(journey);
+                Check.Equal(RefugePhase.Approaching,journey.Evaluate(105).Phase);
+                Check.Equal(RefugePhase.Entering,journey.Evaluate(115).Phase);
+                Check.Equal(RefugePhase.WallApproaching,journey.Evaluate(125).Phase);
+                Check.Equal(RefugePhase.WallPosted,journey.Evaluate(135).Phase);
+                Check.Near(10,journey.Evaluate(135).Position.Y);
+                Check.Equal(RefugePhase.WallReturning,journey.Evaluate(175).Phase);
+                Check.Equal(RefugePhase.Exiting,journey.Evaluate(185).Phase);
+                Check.Equal(RefugePhase.Returning,journey.Evaluate(195).Phase);
+                Check.Equal(RefugePhase.Complete,journey.Evaluate(200).Phase);
+                journey.UpperDoorIndex=0;
+                Check.Throws<ArgumentException>(()=>GuardRefugeJourney.CopyValidated(journey));
+            }));
+            cases.Add(("Patrol allocation gives meaningful proportional coverage while retaining town posts",()=>{
+                Check.Equal(0,GuardShifts.PatrolPairTarget(2,8));
+                Check.Equal(1,GuardShifts.PatrolPairTarget(3,8));
+                Check.Equal(2,GuardShifts.PatrolPairTarget(16,8));
+                Check.Equal(5,GuardShifts.PatrolPairTarget(32,8));
+                Check.Equal(8,GuardShifts.PatrolPairTarget(48,8));
+                Check.Equal(8,GuardShifts.PatrolPairTarget(700,8));
+                Check.Equal(2,GuardShifts.PatrolPairTarget(48,2));
+                Check.Equal(0,GuardShifts.PatrolPairTarget(48,0));
+            }));
+            cases.Add(("Guard shifts change at native dawn and dusk including the next day",()=>{
+                Check.Equal(GuardShift.Night,GuardShifts.At(21599));
+                Check.Equal(GuardShift.Day,GuardShifts.At(21600));
+                Check.Equal(GuardShift.Day,GuardShifts.At(64799));
+                Check.Equal(GuardShift.Night,GuardShifts.At(64800));
+                Check.Near(21600,GuardShifts.NextChange(0));
+                Check.Near(64800,GuardShifts.NextChange(21600));
+                Check.Near(108000,GuardShifts.NextChange(64800));
+            }));
+            cases.Add(("Guard bed rest leaves early enough to physically return for shift start",()=>{
+                var journey=GuardRefugeJourney.Create(7,new[] {new GuardPoint3(),new GuardPoint3 {X=10}},
+                    new[] {new GuardPoint3(),new GuardPoint3 {Z=8}},100,1,1);
+                journey.WallDuty=true;journey.RestBedRecord=3;
+                Check.True(journey.ReleaseToReturnBy(200));
+                Check.Near(182,journey.ReleasedAt.Value);
+                Check.Equal(RefugePhase.Returning,journey.Evaluate(199).Phase);
+                Check.Equal(RefugePhase.Complete,journey.Evaluate(200).Phase);
+                var shortRest=GuardRefugeJourney.Create(7,new[] {new GuardPoint3(),new GuardPoint3 {X=10}},
+                    new[] {new GuardPoint3(),new GuardPoint3 {Z=8}},100,1,1);
+                shortRest.WallDuty=true;shortRest.RestBedRecord=3;
+                Check.True(!shortRest.ReleaseToReturnBy(120));
+                Check.True(!shortRest.ReleasedAt.HasValue);
+            }));
+            cases.Add(("Guard shift membership persists and replacement inherits the dead guard shift",()=>{
+                var roster=Roster(6);
+                Check.Equal(3,roster.Guards.Count(g=>GuardShifts.OnDuty(g,12*3600)));
+                Check.Equal(3,roster.Guards.Count(g=>GuardShifts.OnDuty(g,0)));
+                roster.Guards[1].Shift=GuardShift.Day;
+                roster.Kill(roster.Guards[1].Id,1);
+                roster.Recruit(1+7*86400);
+                var restored=GuardRoster.CopyValidated(roster);
+                Check.Equal(GuardShift.Day,restored.Guards[6].Shift);
+                Check.Near(roster.Guards[1].ReliefPost.X,restored.Guards[6].ReliefPost.X);
+                Check.True(!GuardShifts.OnDuty(restored.Guards[1],12*3600));
+                restored.Guards[0].Shift=(GuardShift)99;
+                Check.Throws<ArgumentException>(()=>GuardRoster.CopyValidated(restored));
+            }));
+            cases.Add(("Assigning legacy guard shifts balances once without changing existing duty",()=>{
+                var roster=Roster(6);
+                foreach(var guard in roster.Guards)guard.Shift=GuardShift.Unassigned;
+                roster.AssignShifts();
+                var before=string.Join(",",roster.Guards.Select(g=>g.Shift));
+                roster.AssignShifts();
+                Check.Equal(before,string.Join(",",roster.Guards.Select(g=>g.Shift)));
+                Check.Equal(3,roster.Guards.Count(g=>g.Shift==GuardShift.Day));
+                Check.True(roster.Guards.All(g=>g.Duty==GuardDuty.Posted));
+            }));
             cases.Add(("Wall bed reservations share quarters but never the same bed",()=>{
                 var roster=Roster(3);
                 for(int i=0;i<3;i++) {
@@ -516,32 +650,32 @@ namespace PeopleOfTheIliacBay.Tests
                     foreach (int population in new[] { 0, 12, 39, 40, 181, 290, 1000, int.MaxValue })
                     {
                         int ordinary = GuardRoster.TargetCount(scale, population);
-                        Check.Equal(ordinary, GuardRoster.TargetWithGateSlots(ordinary, 0));
-                        Check.Equal(ordinary + 16, GuardRoster.TargetWithGateSlots(ordinary, 4));
+                        Check.Equal(2 * Math.Max(3, ordinary), GuardRoster.TargetWithGateSlots(ordinary, 0));
+                        Check.Equal(2 * (Math.Max(3, ordinary) + 16), GuardRoster.TargetWithGateSlots(ordinary, 4));
                     }
-                Check.Equal(64, GuardRoster.TargetWithGateSlots(GuardRoster.TargetCount(SettlementScale.City, 290), 4));
+                Check.Equal(128, GuardRoster.TargetWithGateSlots(GuardRoster.TargetCount(SettlementScale.City, 290), 4));
                 Check.Throws<ArgumentException>(() => GuardRoster.TargetWithGateSlots(700, -1));
                 Check.Throws<ArgumentException>(() => GuardRoster.TargetWithGateSlots(700, GuardRoster.MaximumGateCount + 1));
             }));
             cases.Add(("Old guard roster expansion preserves deaths injuries and identities without repeated growth", () => {
                 var roster = Roster(24); string dead = roster.Guards[0].Id, injured = roster.Guards[1].Id;
                 roster.Kill(dead, 100); roster.Guards[1].HealthFraction = 0.4;
-                var posts = Enumerable.Range(0, 64).Select(i => new SavedRoutePoint { X = i * 10 }).ToList();
+                var posts = Enumerable.Range(0, 128).Select(i => new SavedRoutePoint { X = i * 10 }).ToList();
                 int target = GuardRoster.TargetWithGateSlots(GuardRoster.TargetCount(SettlementScale.City, 290), 4);
-                Check.Equal(40, roster.IncreaseTarget(target, posts));
+                Check.Equal(104, roster.IncreaseTarget(target, posts));
                 var options = new JsonSerializerOptions { IncludeFields = true };
                 var restored = GuardRoster.CopyValidated(JsonSerializer.Deserialize<GuardRoster>(JsonSerializer.Serialize(roster, options), options));
                 Check.Equal(0, restored.IncreaseTarget(target, posts));
-                Check.Equal(64, restored.Target); Check.Equal(64, restored.Guards.Count);
-                Check.Equal(63, restored.Guards.Count(g => g.IsAlive));
+                Check.Equal(128, restored.Target); Check.Equal(128, restored.Guards.Count);
+                Check.Equal(127, restored.Guards.Count(g => g.IsAlive));
                 Check.True(!restored.Guards.Find(g => g.Id == dead).IsAlive);
                 Check.Near(0.4, restored.Guards.Find(g => g.Id == injured).HealthFraction);
-                Check.Equal(64, restored.Guards.Select(g => g.Id).Distinct().Count());
+                Check.Equal(128, restored.Guards.Select(g => g.Id).Distinct().Count());
             }));
             cases.Add(("Large doubled roster with gate extras validates and restores above old cap", () => {
                 int target = GuardRoster.TargetWithGateSlots(GuardRoster.TargetCount(SettlementScale.City, int.MaxValue), 4);
                 var roster = Roster(target);
-                Check.Equal(716, GuardRoster.CopyValidated(roster).Target);
+                Check.Equal(1432, GuardRoster.CopyValidated(roster).Target);
                 Check.Throws<ArgumentException>(() => Roster(GuardRoster.MaximumTarget + 1));
             }));
             cases.Add(("Roster has permanent unique deterministic identities", () => {
@@ -602,11 +736,6 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.Throws<ArgumentException>(() => GuardRoster.CopyValidated(roster));
                 roster.Guards[0].SearchUntil = 900; roster.Guards[0].Route[0].X = 20;
                 Check.Throws<ArgumentException>(() => GuardRoster.CopyValidated(roster));
-            }));
-            cases.Add(("Schema five migrates without inventing garrisons", () => {
-                var store = new WorldStateStore(42); store.GetOrCreate(1, new[] { 1 });
-                var older = store.Snapshot(); older.Version = 5; older.Garrisons = null;
-                store.Restore(older); Check.Equal(new WorldState().Version, store.Snapshot().Version); Check.Equal(0, store.Snapshot().Garrisons.Count);
             }));
             cases.Add(("Bad guard routes reject transactionally without partial dispatch", () => {
                 var roster = Roster();

@@ -41,8 +41,7 @@ internal static class Program
     private static AdultDailyItineraryRequest Request(int points,bool impossible)
     {
         var request=new AdultDailyItineraryRequest{HomeBuildingKey=0,DepartureAt=9*3600,
-            LatestHomeAt=impossible?9*3600+60:19*3600,MinimumAwaySeconds=30,
-            MinimumStops=3,MaximumStops=5,Seed=123};
+            LatestHomeAt=impossible?9*3600+60:19*3600,Seed=123};
         for(int key=1;key<=6;key++)request.Options.Add(new AdultDailyItineraryOption{BuildingKey=key,
             Purpose=ResidentVisitPurpose.Shop,OpenMinute=9*60,CloseMinute=18*60,
             MinimumDwellSeconds=20*60,MaximumDwellSeconds=60*60});

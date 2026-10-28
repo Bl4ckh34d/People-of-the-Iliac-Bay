@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T06:53:10.9055834Z",
+    "portraitRecord":  77,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Use case: precise-object-edit\nAsset type: DFU NPC pixel-art eye atlas\nPrimary request: Edit the supplied 3x3 reference atlas of this same woman into nine natural, clearly distinct gaze directions. Keep her afraid/worried expression in every cell, with her lifted, tense worried brows intact. Each cell is the complete upper face, 64:35 aspect, with identical framing. Return only one 3x3 atlas.\nInput image: Image 1 is the sole reference. It is the exact inspected 3x3 grid made from this portrait\u0027s own afraid open-eye source.\nDirection order: top-left=up-left, top-center=up, top-right=up-right; middle-left=left, middle-center=center, middle-right=right; bottom-left=down-left, bottom-center=down, bottom-right=down-right. Both eyes point together. Diagonal cells must visibly combine horizontal and vertical gaze; do not repeat left, center, or right.\nEye anatomy: Keep each pupil and compact iris fully inside the eye opening. For upward gaze, naturally raise the upper lid enough to make room for the higher iris; do not hold a fixed narrow slit while pushing iris through lid. Let the lid contour follow gaze while preserving eye corners and spacing. For downward gaze, lower gaze within a naturally lowered upper lid and let lid cover iris as needed. Keep iris scale coherent across all cells. Do not move brow or whole socket to fake gaze.\nIdentity and expression: Preserve this exact face, hair, skin, pixel lattice, palette, crop and fearful/worried brow tension. Do not neutralize brows or turn expression sad. Middle-center must match supplied source exactly. Keep everything outside eye features unchanged.\nStyle and constraints: Low-resolution softly shaded pixel art. Retain compact muted violet-gray irises, small pupils, tiny restrained highlights, warm subdued sclera and original brown skin/hair palette. Keep original square pixels. No vector-round eyes, giant irises, huge white areas, new highlights, labels, borders, gutters, text, or extra content.\n\nEMOTION: preserve the supplied SAD, vulnerable/downcast brow expression in ALL nine cells. A sad person can look up without becoming neutral or startled. QUALITY CORRECTION FOR ALL NINE GAZES: each iris must have a naturally curved, softly shaded, stepped pixel-art contour, not a flat violet rectangle or square block. Keep a small dark pupil with restrained muted violet-gray iris shading. Include a tiny soft, low-contrast warm catchlight in each visible open eye; do not remove all catchlights, and do not create glaring white specular dots or broad shiny white crescents. BOTH eyes must have a continuous correctly placed upper eyelid and lower eyelid following their opening, especially the picture-left upper lid that was missing in the previous sad attempt. Iris/pupil stays inside the visible opening, naturally occluded at its edges. Do not substitute an eyebrow or skin shadow for an upper lid. No artificial rectangular boundaries or changed cheek/skin coloration. Keep the source palette soft and subdued. Review all nine gaze directions as a coherent anatomical set.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb as C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-991a1077-0e68-40d1-ac54-51c4204f4fba.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-991a1077-0e68-40d1-ac54-51c4204f4fba.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "84149e015f8c3e809035900d460f87fb677050154d66ecf375ab60af044e4d26",
+                          "width":  1536,
+                          "height":  840
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-991a1077-0e68-40d1-ac54-51c4204f4fba.png",
+                      "sha256":  "effbaf89523d10ce0cfcd90754ae0c937afab8adbba24f9924f4b6ec20ca845f",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "effbaf89523d10ce0cfcd90754ae0c937afab8adbba24f9924f4b6ec20ca845f",
+                "width":  1695,
+                "height":  928
+            }
+}

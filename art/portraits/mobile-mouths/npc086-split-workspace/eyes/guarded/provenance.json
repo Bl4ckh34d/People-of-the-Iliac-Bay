@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "createdUtc": "2026-10-22T01:17:34.7160806Z",
+  "portraitRecord": 86,
+  "bank": "TFAC00I0.RCI",
+  "part": "eyes",
+  "emotion": "guarded",
+  "prompt": "Edit the provided 2x2 pixel-art eye reference grid for the SAME portrait. This is a game animation atlas, not a new portrait. Preserve the exact canvas size, 2x2 layout, equal cell boundaries, pixel grid, face identity, hair, skin, framing and muted source palette. Each cell contains one copy of the same 64x35 upper portrait enlarged 8x with nearest-neighbor pixels. Modify only eyes, eyelids, eyebrows and their immediate orbital shadows inside the existing eye areas. Output row-major: open guarded/skeptical; half-closed guarded/skeptical; fully closed guarded/skeptical; repeat the exact same open guarded/skeptical pose from cell 1. Emotion is cautious appraisal: one brow subtly raised and the other slightly lowered, one upper lid a little more hooded than the other, a restrained sideways skeptical focus. Asymmetry clear but subtle, distinct from neutral and angry; no angry V. Preserve complete brows with both tips visible. Keep both pupils at identical horizontal positions and iris widths in all phases; animate lid coverage vertically only. Half-closed covers upper iris modestly without moving gaze or rounding/shrinking iris. Closed lids conceal all iris and sclera. Open cell 4 duplicates cell 1 exactly. Keep natural small pixel-art eyes and original soft brown/olive shading. Palette: softly muted warm tan/brown skin, brown irises, gentle olive-brown eye shadows. Keep highlights subdued. Do not redraw face, nose, hair, forehead, cheeks or background. Do not add text, labels, borders, smooth vector curves, blur, circles, orange skin, thick near-black brows, bright white flashes, or new skin patches.",
+  "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1612d-64fe-7be2-a882-c95bf1ade70e as C:\\Users\\Daniel\\.codex\\generated_images\\01a1612d-64fe-7be2-a882-c95bf1ade70e\\exec-78c3a134-10e0-48cb-9273-c44f39039339.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+  "generatedPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1612d-64fe-7be2-a882-c95bf1ade70e\\exec-78c3a134-10e0-48cb-9273-c44f39039339.png",
+  "sourceOriginal": {
+    "path": "original.png",
+    "sha256": "685cd0cb922554bb245a0431ee5f141aadbb8c740df7fb81d5a9cb03c888e99d",
+    "width": 64,
+    "height": 64
+  },
+  "referenceGrid": {
+    "path": "eyes-reference-grid.png",
+    "sha256": "88d48bc9b7d238b038ab8325a0b63ec197a9e2c0ca5047085ebb2529c6446c6c",
+    "width": 1024,
+    "height": 560
+  },
+  "generator": {
+    "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1612d-64fe-7be2-a882-c95bf1ade70e\\exec-78c3a134-10e0-48cb-9273-c44f39039339.png",
+    "sha256": "e8bf0a609d5d0b378400a738927a5284d1f717f32fa8d2ba9922cd8f12bc6b0b",
+    "width": 1695,
+    "height": 928
+  },
+  "raw": {
+    "path": "eyes/guarded/raw.png",
+    "sha256": "e8bf0a609d5d0b378400a738927a5284d1f717f32fa8d2ba9922cd8f12bc6b0b",
+    "width": 1695,
+    "height": 928
+  }
+}

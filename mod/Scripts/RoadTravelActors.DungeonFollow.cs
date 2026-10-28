@@ -21,11 +21,25 @@ namespace PeopleOfTheIliacBay.DFU
             public bool AwaitingNativeEntry;
             public int ResumeAfterFrame;
             public float SaveAt;
+            public double StalledSeconds;
+            public Vector3 LastProgress;
+            public List<NpcActionTarget> RecruitmentRoute;
+            public bool OriginTravelPreparationStarted;
+            public string DangerId;
+            public DaggerfallEntityBehaviour DangerTarget;
+            public float NextDangerSwingAt;
+            public bool DangerRetreating;
+            public string DangerMode;
         }
         private readonly Dictionary<string,DungeonFollower> dungeonFollowers=new Dictionary<string,DungeonFollower>();
 
         public bool OwnsDungeonFollow(string id)
-        {return id!=null && dungeonFollowers.ContainsKey(id);}
+        {
+            // An interior reload has no dungeon body/binding yet. The saved
+            // recovery still owns the person until its measured return ends.
+            return id!=null && (dungeonFollowers.ContainsKey(id) ||
+                source!=null && IsCompanionRecovering(source().ActiveNpcAction(id)));
+        }
 
         public ResidentActor FindDungeonCompanion(string id)
         {DungeonFollower binding;return id!=null && dungeonFollowers.TryGetValue(id,out binding)?binding.Actor:null;}
@@ -42,7 +56,7 @@ namespace PeopleOfTheIliacBay.DFU
         }
 
         private static double DungeonNow()
-        {var clock=DaggerfallUnity.Instance.WorldTime.Now;return clock.ToSeconds()+clock.Second-Math.Floor(clock.Second);}
+        {var clock=DaggerfallUnity.Instance.WorldTime.Now;return clock.ToSeconds()+(clock.Second-Math.Floor(clock.Second));}
 
         private static NpcActionTarget DungeonPoint(int map,Transform root,Vector3 world,bool inside)
         {
@@ -68,6 +82,7 @@ namespace PeopleOfTheIliacBay.DFU
             int map=entering?directory.MapID:dungeon.Summary.ID;
             if(directory.MapID!=map)return true;
             Transform root=entering?directory.transform:dungeon.transform;
+            if(leaving)CaptureRecoveringDungeonDeparture(store,now,map,root);
             StaticDoor door=args.StaticDoor;
             if(leaving)
             {
@@ -82,7 +97,7 @@ namespace PeopleOfTheIliacBay.DFU
             foreach(var candidate in store.PendingNpcActions())
             {
                 if(candidate.Kind!=NpcActionKind.Follow || candidate.Target.PersonId!="player" ||
-                    NpcActionExecutor.IsTerminal(candidate) || candidate.FollowTransition!=null)continue;
+                    NpcActionExecutor.IsTerminal(candidate) || candidate.FollowTransition!=null || IsCompanionRecovering(candidate))continue;
                 NpcServiceContract paidContract;
                 if(NpcPaidCompanionAction.IsPaidFollowJob(candidate) && !NpcPaidCompanionTravel.TryReadActiveTravel(store,candidate,now,out paidContract))continue;
                 DungeonFollower binding;dungeonFollowers.TryGetValue(candidate.ResidentId,out binding);
@@ -95,7 +110,13 @@ namespace PeopleOfTheIliacBay.DFU
                 var endpoint=StreetPopulation.FollowExteriorDoorGround(door);
                 var route=VerifiedDungeonDoorRoute(actor,actual,endpoint,root,map,!entering);
                 if(route==null)
-                {EndDungeonFollow(store,candidate,now,NpcActionObservation.Interrupted("No verified walking route reaches the native dungeon door."));continue;}
+                {
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DUNGEON_DOOR_ROUTE_REFUSED: person="+candidate.ResidentId+
+                        "; entering="+entering+"; distance="+Vector3.Distance(actual,endpoint)+"; height="+Mathf.Abs(actual.y-endpoint.y)+
+                        "; directApproachClear="+ClearNativeDoorApproach(actor,actual,endpoint)+
+                        "; navigationReady="+(NativeNavigationWorld.Current && NativeNavigationWorld.Current.Ready));
+                    EndDungeonFollow(store,candidate,now,NpcActionObservation.Interrupted("No verified walking route reaches the native dungeon door."));continue;
+                }
                 var job=candidate;
                 if(!store.SaveNpcActionPosition(job.Id,job.Revision,DungeonPoint(map,root,actual,!entering),false,now))continue;
                 job=store.ReadNpcAction(job.Id);
@@ -108,21 +129,30 @@ namespace PeopleOfTheIliacBay.DFU
                 // exterior deferral marker; retain paid action and contract unchanged.
                 if(job.PaidTravelHandoff!=null && !store.TryResumePaidTravel(job.Id,job.Revision,now))continue;
                 actor.CaptureState();
+                List<NpcActionTarget> originRoute=null;
+                if(entering && job.CompanionRecovery!=null && NpcFollowTransition.SameSpace(job.LastPosition,job.CompanionRecovery.RecruitmentOrigin))
+                {
+                    var origin=job.CompanionRecovery.RecruitmentOrigin;
+                    originRoute=MeasuredCompanionPath(actor,endpoint,root.TransformPoint(new Vector3((float)origin.X,(float)origin.Y,(float)origin.Z)),root,map,false);
+                }
                 dungeonFollowers[job.ResidentId]=new DungeonFollower {ActionId=job.Id,Actor=actor,MapId=map,
-                    Entrance=door,AwaitingNativeEntry=entering};
+                    Entrance=door,AwaitingNativeEntry=entering,RecruitmentRoute=originRoute};
             }
             return true;
         }
 
         private static List<NpcActionTarget> VerifiedDungeonDoorRoute(ResidentActor actor,Vector3 actual,Vector3 door,Transform root,int map,bool inside)
         {
+            const float maximumRouteMetres=32;
             var world=NativeNavigationWorld.Current;NavMeshHit start,end;
             // Dungeon exteriors can have no city NavMesh. The only fallback is
-            // the actual short, supported, collision-clear approach to this door.
-            if(!inside && Vector3.Distance(actual,door)<=4.5f && Mathf.Abs(actual.y-door.y)<=0.5f &&
+            // a fully measured, supported, collision-clear approach to this door.
+            // Use the same bounded reach as the mesh route: a follower normally
+            // trails a player who can activate the door from several metres away.
+            if(!inside && Vector3.Distance(actual,door)<=maximumRouteMetres && Mathf.Abs(actual.y-door.y)<=0.5f &&
                 ClearNativeDoorApproach(actor,actual,door))
                 return new List<NpcActionTarget> {DungeonPoint(map,root,actual,false),DungeonPoint(map,root,door,false)};
-            if(!world || !world.Ready || world.Scene!=(inside?"dungeon-":"city-")+map || Vector3.Distance(actual,door)>32 ||
+            if(!world || !world.Ready || world.Scene!=(inside?"dungeon-":"city-")+map || Vector3.Distance(actual,door)>maximumRouteMetres ||
                 !NavMesh.SamplePosition(actual,out start,0.4f,NavMesh.AllAreas) ||
                 !NavMesh.SamplePosition(door,out end,0.4f,NavMesh.AllAreas))return null;
             var path=new NavMeshPath();
@@ -182,6 +212,7 @@ namespace PeopleOfTheIliacBay.DFU
                 // objects while the bounded source route is temporarily unobserved.
                 if(streets)streets.ReleaseTransferredActor(binding.Actor);
                 paidCompanions.Remove(pair.Key);paidActions.Remove(pair.Key);retiredPaidCompanions.Remove(pair.Key);
+                fastTravelFollowers.Remove(pair.Key);
                 binding.Actor.TransferOwner(transform,navigation);binding.Actor.gameObject.SetActive(false);
             }
         }
@@ -216,6 +247,10 @@ namespace PeopleOfTheIliacBay.DFU
                 binding.ResumeAfterFrame=Time.frameCount+1;
                 if(binding.Actor){binding.Actor.TransferOwner(transform,navigation);binding.Actor.gameObject.SetActive(false);}
                 var job=store.ReadNpcAction(binding.ActionId);
+                if(job!=null && job.CompanionEnterprise!=null && job.CompanionEnterprise.Active &&
+                    job.CompanionEnterprise.Kind==NpcCompanionEnterpriseKind.DungeonCrawl)
+                {store.TryEndCompanionEnterprise(job.ResidentId,job.CompanionEnterprise.Id,now);job=store.ReadNpcAction(binding.ActionId);}
+                if(IsCompanionRecovering(job))continue;
                 if(job!=null && !NpcActionExecutor.IsTerminal(job) && job.FollowTransition==null)
                     EndDungeonFollow(store,job,now,NpcActionObservation.Interrupted("No verified source route reaches the native dungeon exit."));
             }
@@ -223,6 +258,7 @@ namespace PeopleOfTheIliacBay.DFU
 
         private void UpdateDungeonFollowers(WorldStateStore store,double now)
         {
+            AdvanceUnobservedDungeonRecoveries(store,now);
             var game=GameManager.Instance;bool inside=game.PlayerEnterExit.IsPlayerInsideDungeon;
             var dungeon=game.PlayerEnterExit.Dungeon;var directory=game.StreamingWorld.GetCurrentBuildingDirectory();
             if(inside && !dungeon || !inside && (game.IsPlayerInside || !directory))return;
@@ -230,16 +266,20 @@ namespace PeopleOfTheIliacBay.DFU
             Transform root=inside?dungeon.transform:directory.transform;
             foreach(var job in store.PendingNpcActions())
             {
-                if(job.Kind!=NpcActionKind.Follow || NpcActionExecutor.IsTerminal(job) || dungeonFollowers.ContainsKey(job.ResidentId))continue;
+                if(job.Kind!=NpcActionKind.Follow || NpcActionExecutor.IsTerminal(job) && !IsCompanionRecovering(job) || dungeonFollowers.ContainsKey(job.ResidentId))continue;
                 bool transit=job.FollowTransition!=null && (NpcFollowTransition.IsDungeonSpace(job.LastPosition) ||
                     NpcFollowTransition.IsDungeonSpace(job.FollowTransition.Destination));
-                if((transit || inside && NpcFollowTransition.IsDungeonSpace(job.LastPosition)) && job.LastPosition.SettlementId==map)
-                    dungeonFollowers[job.ResidentId]=new DungeonFollower {ActionId=job.Id,MapId=map,ResumeAfterFrame=Time.frameCount+1};
+                if(IsCompanionRecovering(job) || (transit || inside && NpcFollowTransition.IsDungeonSpace(job.LastPosition)) && job.LastPosition.SettlementId==map)
+                    dungeonFollowers[job.ResidentId]=new DungeonFollower {ActionId=job.Id,MapId=job.LastPosition.SettlementId,ResumeAfterFrame=Time.frameCount+1};
             }
             foreach(var pair in new List<KeyValuePair<string,DungeonFollower>>(dungeonFollowers))
             {
                 var binding=pair.Value;var job=store.ReadNpcAction(binding.ActionId);var actor=binding.Actor;
                 if(binding.AwaitingNativeEntry || Time.frameCount<=binding.ResumeAfterFrame)continue;
+                if(IsCompanionRecovering(job))
+                {UpdateCompanionRecovery(store,binding,job,now,inside,map,root);continue;}
+                if(job!=null && job.CompanionRecovery!=null && job.CompanionRecovery.Phase==NpcCompanionRecoveryPhase.ResumedRoutine)
+                {RemoveDungeonFollower(pair.Key);continue;}
                 if(binding.MapId!=map || job==null)
                 {
                     if(job!=null && !NpcActionExecutor.IsTerminal(job))EndDungeonFollow(store,job,now,
@@ -261,8 +301,8 @@ namespace PeopleOfTheIliacBay.DFU
                     RemoveDungeonFollower(pair.Key);continue;
                 }
                 var world=NativeNavigationWorld.Current;
-                if(inside && (!world || !world.Ready || world.Scene!="dungeon-"+map) ||
-                    game.StreamingWorld.IsInit || !game.StreamingWorld.IsReady || game.StreamingWorld.IsRepositioningPlayer)continue;
+                if(!NativeDungeonSceneReadiness.AllowsAdvance(inside,world && world.Ready && world.Scene=="dungeon-"+map,
+                    game.StreamingWorld.IsInit,game.StreamingWorld.IsReady,game.StreamingWorld.IsRepositioningPlayer))continue;
                 if(job.FollowTransition!=null)
                 {
                     bool returnedToSource=NpcFollowTransition.IsDungeonSpace(job.LastPosition)==inside;
@@ -275,10 +315,31 @@ namespace PeopleOfTheIliacBay.DFU
                     }
                     else if(now<job.FollowTransition.ArrivesAt || !TryDungeonLanding(inside,map,out landing))continue;
                     // Ordinary town residents return to their existing town plan;
-                    // paid exterior travelers return to their existing road owner.
+                    // paid or fast-travel followers return to their existing
+                    // road owner, including an unpaid agreed Follow.
                     NpcServiceContract contract;
                     bool paid=NpcPaidCompanionTravel.TryReadActiveTravel(store,job,now,out contract);
-                    if(!inside && !paid && (!streets || !streets.CanReceiveDungeonFollower(job.ResidentId,store,map)))continue;
+                    bool fastTravel=job.FastTravelFollowOwner && NpcCompanionFastTravel.CanFollow(store,job,now,true);
+                    if(!inside && !paid && !fastTravel && (!streets || !streets.CanReceiveDungeonFollower(job.ResidentId,store,map)))continue;
+                    if(inside && !returnedToSource && job.CompanionRecovery!=null)
+                    {
+                        // The synchronous native entry event precedes our loaded
+                        // dungeon mesh. Capture its real paired portal only after
+                        // scene readiness, before the follower becomes visible.
+                        Vector3 exitPoint;
+                        if(!TryActualInteriorEntrance(game.PlayerEnterExit.Dungeon,out exitPoint) ||
+                            !store.TryCaptureCompanionDungeonEntrance(job.Id,job.Revision,now,
+                                DungeonPoint(map,root,exitPoint,true),
+                                job.FollowTransition.SourceRoute[job.FollowTransition.SourceRoute.Count-1]))continue;
+                        job=store.ReadNpcAction(job.Id);
+                        if(binding.RecruitmentRoute!=null)
+                        {
+                            if(!store.TryCaptureCompanionRecruitmentRoute(job.Id,job.Revision,now,binding.RecruitmentRoute))continue;
+                        }
+                        else if(!binding.OriginTravelPreparationStarted)
+                        {binding.OriginTravelPreparationStarted=true;StartCoroutine(PrepareCompanionOriginTravel(store,binding));}
+                        job=store.ReadNpcAction(job.Id);
+                    }
                     if(returnedToSource ? !store.TryResumeNpcFollowSource(job.Id,job.Revision,now) :
                         !store.TryArriveNpcFollowTransition(job.Id,job.Revision,now,DungeonPoint(map,root,landing,inside)))continue;
                     job=store.ReadNpcAction(job.Id);
@@ -310,12 +371,29 @@ namespace PeopleOfTheIliacBay.DFU
                 if(actor.IsConversing || GameManager.IsGamePaused)continue;
                 var entity=actor.GetComponent<DaggerfallEntityBehaviour>();
                 if(entity && entity.Entity!=null && entity.Entity.IsParalyzed){actor.HoldPhysicalPosition();continue;}
-                var actual=actor.transform.position-Vector3.up;var player=game.PlayerMotor.transform.position-Vector3.up;
-                bool close=Vector3.Distance(actual,player)<=1.8f;
+                if(AdvanceDungeonDanger(store,binding,job,now))
+                {
+                    binding.StalledSeconds=0;binding.LastProgress=actor.transform.position-Vector3.up;
+                    if(Time.unscaledTime>=binding.SaveAt)
+                    {binding.SaveAt=Time.unscaledTime+0.5f;job=store.ReadNpcAction(job.Id);store.SaveNpcActionPosition(job.Id,job.Revision,
+                        DungeonPoint(map,root,actor.transform.position-Vector3.up,true),false,now);}
+                    continue;
+                }
+                var actual=actor.transform.position-Vector3.up;var player=NativeDungeonObserverGround.Read();
+                Vector3 lootTarget;
+                bool transferred;
+                bool looting=NativeCompanionLootClaims.TryLootOrApproach(store,actor,out lootTarget,out transferred);
+                if(looting)player=lootTarget;
+                // A committed native item transfer is useful progress while
+                // standing. Do not walk toward its raised billboard or count
+                // a long stack transfer as a failed walking route.
+                bool close=transferred;
+                var destination=transferred?actual:NativeDungeonFollowTarget.Resolve(actor,player,out close,looting);
                 // Fail closed: a rejected native path must not fall through to a
                 // direct crowd route through dungeon walls. Place's existing owner
                 // can still use its bounded, independently verified jump fallback.
-                actor.Place(actual,player-actual,standing:close,navigationDestination:close?actual:player);
+                actor.Place(actual,player-actual,standing:close,navigationDestination:destination);
+                ObserveDungeonFollowProgress(store,binding,job,now,close);
                 if(Time.unscaledTime>=binding.SaveAt)
                 {binding.SaveAt=Time.unscaledTime+0.5f;store.SaveNpcActionPosition(job.Id,job.Revision,
                     DungeonPoint(map,root,actor.transform.position-Vector3.up,true),false,now);}
@@ -342,11 +420,26 @@ namespace PeopleOfTheIliacBay.DFU
             if(!location || location.Summary.MapID!=map)return false;
             // Same authoritative door selection as StreamingWorld.PositionPlayerToDungeonExit.
             bool found=false;StaticDoor chosen=default(StaticDoor);float lowest=float.MaxValue;
-            foreach(var collection in location.StaticDoorCollections??new DaggerfallStaticDoors[0])
-                foreach(var door in collection.Doors??new StaticDoor[0])
+            foreach(var door in DaggerfallStaticDoors.FindDoorsInCollections(location.StaticDoorCollections??new DaggerfallStaticDoors[0],DoorTypes.DungeonEntrance))
                     if(door.doorType==DoorTypes.DungeonEntrance && DaggerfallStaticDoors.GetDoorPosition(door).y<lowest)
                     {lowest=DaggerfallStaticDoors.GetDoorPosition(door).y;chosen=door;found=true;}
-            return found && VerifiedDungeonFloor(StreetPopulation.FollowExteriorDoorGround(chosen),location.transform,out landing) && DungeonLandingClear(landing);
+            return found && VerifiedExteriorDungeonDoorFloor(chosen,out landing) && DungeonLandingClear(landing);
+        }
+
+        private static bool VerifiedExteriorDungeonDoorFloor(StaticDoor door,out Vector3 floor)
+        {
+            // Some native keep entrances have a model lower edge buried below
+            // terrain. A ray starting at that edge cannot see the actual ground.
+            // Project only the selected doorway's real vertical span, at its
+            // existing exterior offset; never substitute another entrance.
+            var bottom=StreetPopulation.FollowExteriorDoorGround(door);
+            if(VerifiedDungeonFloor(bottom,null,out floor))return true;
+            var top=door;top.centre+=Vector3.up*(Mathf.Abs(door.size.y)*0.5f);
+            float upper=DaggerfallStaticDoors.GetDoorPosition(top).y+0.5f;
+            var origin=new Vector3(bottom.x,upper,bottom.z);RaycastHit hit;floor=Vector3.zero;
+            if(upper<=bottom.y || !Physics.Raycast(origin,Vector3.down,out hit,upper-bottom.y+0.6f,~0,QueryTriggerInteraction.Ignore) ||
+                !hit.collider || NativeNavigationGeometry.IsDynamicNavigationBody(hit.collider) || hit.normal.y<0.7f)return false;
+            floor=hit.point;return true;
         }
 
         private static bool VerifiedDungeonFloor(Vector3 expected,Transform root,out Vector3 floor)
@@ -418,7 +511,7 @@ namespace PeopleOfTheIliacBay.DFU
                 var binding=pair.Value;var actor=binding.Actor;if(!actor)continue;actor.CaptureState();
                 var job=store.ReadNpcAction(binding.ActionId);
                 if(dungeon && actor.gameObject.activeInHierarchy && job!=null && job.FollowTransition==null && NpcFollowTransition.IsDungeonSpace(job.LastPosition))
-                    store.SaveNpcActionPosition(job.Id,job.Revision,DungeonPoint(binding.MapId,dungeon.transform,actor.transform.position-Vector3.up,true),false,DungeonNow());
+                    store.SaveNpcActionPosition(job.Id,job.Revision,DungeonPoint(binding.MapId,dungeon.transform,actor.transform.position-Vector3.up,true),job.ReturningToRoutine,DungeonNow());
             }
         }
     }

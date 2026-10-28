@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T14:05:31.6140799Z",
+    "portraitRecord":  75,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Create a native pixel-art 2x2 gaze atlas from the supplied exact reference grid. Preserve each complete original 64x35 upper crop, face framing, hair, face, sad expression, brow placement, narrow eyelid contours, palette, and pixel cluster style. Cell order: top-left LEFT OPEN, top-right RIGHT OPEN, bottom-left LEFT HALF, bottom-right RIGHT HALF. Only move gaze laterally. In both eyes, move the compact colored iris and dark pupil together toward the same canvas side by about one native pixel, with natural convergence; both eyes must track together. For each HALF frame, keep each iris and pupil at exactly the same horizontal placement as the matching LEFT or RIGHT OPEN frame above. Half must come only from the selected upper-lid occlusion lowering over the iris. Do not shift the iris or pupil when making half, do not enlarge the eye aperture, and do not reveal extra sclera. Preserve the source\u0027s small contained irises and restrained glints. No round vector eyes, no bright white bands, no added colors, no vertical gaze change. Keep brows fixed and preserve all outside-eye pixels as closely as possible.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-c76e1ac4-13aa-4a8f-9ad1-d5a024d23b2c.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-c76e1ac4-13aa-4a8f-9ad1-d5a024d23b2c.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "bb351d49308be4237afe11bb3ccdf9a30d4acf36985ba5eec4380b25e0acc4b1",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-c76e1ac4-13aa-4a8f-9ad1-d5a024d23b2c.png",
+                      "sha256":  "b6b4462d2e33d3ccbaeac18dafb1386d713c5eaf7853ea1d1bb6029a4816bebf",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "b6b4462d2e33d3ccbaeac18dafb1386d713c5eaf7853ea1d1bb6029a4816bebf",
+                "width":  1695,
+                "height":  928
+            }
+}

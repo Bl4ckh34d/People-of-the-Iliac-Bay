@@ -6,6 +6,7 @@ namespace PeopleOfTheIliacBay.Core
 {
     public enum SettlementScale { Hamlet, Town, City }
     public enum GuardDuty { Posted, Responding, Searching, Returning, Dead, Engaged, Refuge }
+    public enum GuardShift { Unassigned, Day, Night }
     [Serializable]
     public sealed class GuardEffectSnapshot
     {
@@ -22,6 +23,7 @@ namespace PeopleOfTheIliacBay.Core
         public string BowSupportGuardId;
         public bool IsAlive = true;
         public SavedRoutePoint Post, DeathPosition;
+        public SavedRoutePoint ReliefPost;
         public SavedRoutePoint EngagementPosition;
         public SavedRoutePoint LastSeenSuspect;
         public SavedRoutePoint ResponseOrigin;
@@ -34,8 +36,12 @@ namespace PeopleOfTheIliacBay.Core
         public double HealthFraction = 1;
         public GuardEffectSnapshot Effects;
         public GuardDuty Duty;
+        public GuardShift Shift;
         public List<SavedRoutePoint> Route = new List<SavedRoutePoint>();
         public double DepartedAt, ArrivesAt, SearchUntil, DiedAt;
+        // Brief physical inquiries freeze the current patrol phase without
+        // changing arrival evidence or extending the fixed search deadline.
+        public double SearchPauseUntil, SearchDelaySeconds;
         // A night-patrol guard keeps this through its physical return to post,
         // then begins its daytime wall-bed rest when a route is available.
         public double DayRestUntil;
@@ -85,60 +91,25 @@ namespace PeopleOfTheIliacBay.Core
         public List<GuardRecord> Guards = new List<GuardRecord>();
         public List<GuardReport> Reports = new List<GuardReport>();
         public List<GuardBuildingApproach> BuildingApproaches = new List<GuardBuildingApproach>();
-        internal static void MigrateTravelClock(GuardRoster roster, double now, double previousRate, double currentRate)
-        {
-            foreach (var guard in roster.Guards)
-            {
-                if (guard.Duty != GuardDuty.Responding && guard.Duty != GuardDuty.Returning) continue;
-                double oldArrival = guard.ArrivesAt;
-                var interval = ClockRateMigration.RescaleInterval(guard.DepartedAt, oldArrival, now, previousRate, currentRate);
-                guard.DepartedAt = interval.Start; guard.ArrivesAt = interval.End;
-                if (guard.Duty == GuardDuty.Returning) guard.SearchUntil = interval.Start;
-                if (guard.SearchUntil == oldArrival + 300) guard.SearchUntil = guard.ArrivesAt + 300;
-                foreach (var report in roster.Reports)
-                {
-                    var arrival = report.Arrivals.Find(item => item.GuardId == guard.Id);
-                    if (arrival != null && !arrival.Arrived) arrival.ScheduledAt = guard.ArrivesAt;
-                    if (report.FirstArrivalAt == oldArrival) report.FirstArrivalAt = guard.ArrivesAt;
-                }
-            }
-        }
-        internal static void MigratePatrolAndRefugeClock(GuardRoster roster, double now, double previousRate, double currentRate)
-        {
-            foreach (var patrol in roster.Patrols)
-                patrol.Plan.MigrateClockRate(now, previousRate, currentRate);
-            foreach (var guard in roster.Guards)
-            {
-                if (guard.Refuge != null) guard.Refuge.MigrateClockRate(now, previousRate, currentRate);
-                if (guard.PostRecall == null) continue;
-                var recall = guard.PostRecall;
-                if (recall.WallDuty != null)
-                {
-                    recall.WallDuty.MigrateClockRate(now, previousRate, currentRate);
-                    recall.DepartsAt = recall.WallDuty.StartsAt;
-                    recall.ArrivesAt = recall.DepartsAt + Length(recall.Route) * recall.WallDuty.SecondsPerMetre;
-                }
-                else if (now < recall.DepartsAt)
-                    recall.ArrivesAt = recall.DepartsAt + (recall.ArrivesAt - recall.DepartsAt) * currentRate / previousRate;
-                else if (now < recall.ArrivesAt)
-                {
-                    var interval = ClockRateMigration.RescaleInterval(recall.DepartsAt, recall.ArrivesAt, now,
-                        previousRate, currentRate);
-                    recall.DepartsAt = interval.Start; recall.ArrivesAt = interval.End;
-                }
-            }
-        }
         // Preserve the old quota's rounding before doubling. Gate duty is additional,
         // never a share deducted from ordinary town coverage.
         public const int MaximumBaseTarget = 700;
         public const int GateSlotsPerGate = 4;
         public const int MaximumGateCount = 256;
-        public const int MaximumTarget = MaximumBaseTarget + GateSlotsPerGate * MaximumGateCount;
+        public const int MaximumWallPosts = 128;
+        public const int MaximumTarget = 2 * (MaximumBaseTarget + GateSlotsPerGate * MaximumGateCount + MaximumWallPosts);
+        public static int TargetWithWallSlots(int baseTarget,int gates,int wallPosts)
+        {
+            Require(wallPosts>=0 && wallPosts<=MaximumWallPosts,"Invalid wall watch allocation.");
+            return TargetWithGateSlots(baseTarget,gates)+2*wallPosts;
+        }
         public static int TargetWithGateSlots(int baseTarget, int gates)
         {
             Require(baseTarget >= 0 && baseTarget <= MaximumBaseTarget && gates >= 0 && gates <= MaximumGateCount,
                 "Invalid gate garrison allocation.");
-            return baseTarget + gates * GateSlotsPerGate;
+            // Each shift retains the previous coverage. Even the smallest hamlet
+            // needs two patrollers and one fixed post when a safe circuit exists.
+            return 2 * (Math.Max(3, baseTarget) + gates * GateSlotsPerGate);
         }
         public static int TargetCount(SettlementScale scale, int residents)
         {
@@ -158,7 +129,8 @@ namespace PeopleOfTheIliacBay.Core
         {
             int identity = NextIdentity++;
             var guard = new GuardRecord { Id = string.Format(CultureInfo.InvariantCulture, "g:{0}:n:{1}", SettlementId, identity),
-                AppearanceSeed = StableSeed.Combine(Seed, (uint)SettlementId, (uint)identity, 0x67756172), Post = CopyPoint(post) };
+                AppearanceSeed = StableSeed.Combine(Seed, (uint)SettlementId, (uint)identity, 0x67756172),
+                Shift = identity % 2 == 0 ? GuardShift.Day : GuardShift.Night, Post = CopyPoint(post), ReliefPost = CopyPoint(post) };
             GuardArchery.EnsureLoadout(guard);
             return guard;
         }
@@ -249,6 +221,7 @@ namespace PeopleOfTheIliacBay.Core
                 var guard = candidates[i];
                 guard.Route = copies[guard.Id]; guard.IncidentId = incidentId;
                 guard.DayRestUntil=0;
+                guard.SearchPauseUntil=0;guard.SearchDelaySeconds=0;
                 guard.ResponseOrigin = CopyPoint(guard.Route[0]);
                 guard.ReturnPath = returns[guard.Id]; guard.ReturnRate = gameSecondsPerRealSecond / metresPerRealSecond;
                 InterruptPatrol(guard.Id, now);
@@ -270,6 +243,8 @@ namespace PeopleOfTheIliacBay.Core
             foreach (var guard in Guards)
             {
                 CancelInterruptedRecall(guard);
+                if(guard.Duty!=GuardDuty.Searching)
+                {guard.SearchPauseUntil=0;guard.SearchDelaySeconds=0;}
                 if (!guard.IsAlive) continue;
                 if (guard.Refuge != null)
                 {
@@ -412,7 +387,8 @@ namespace PeopleOfTheIliacBay.Core
             foreach (var guard in Guards)
                 if (!guard.IsAlive && guard.ReplacedById == null && now >= guard.DiedAt + 7 * 86400)
                 {
-                    var recruited = NewGuard(guard.Post); guard.ReplacedById = recruited.Id;
+                    var recruited = NewGuard(guard.Post); recruited.Shift = guard.Shift;
+                    recruited.ReliefPost = guard.ReliefPost == null ? null : CopyPoint(guard.ReliefPost); guard.ReplacedById = recruited.Id;
                     Guards.Add(recruited); LastRecruitment = now; return 1;
                 }
             return 0;
@@ -450,8 +426,11 @@ namespace PeopleOfTheIliacBay.Core
             foreach (var guard in source.Guards)
             {
                 Require(guard != null && !string.IsNullOrWhiteSpace(guard.Id) && ids.Add(guard.Id) && Enum.IsDefined(typeof(GuardDuty), guard.Duty) &&
+                    Enum.IsDefined(typeof(GuardShift), guard.Shift) &&
                     guard.IsAlive == (guard.Duty != GuardDuty.Dead) && Time(guard.DepartedAt) && Time(guard.ArrivesAt) &&
-                    Time(guard.SearchUntil) && Time(guard.DiedAt) && Time(guard.DayRestUntil), "Invalid guard identity or state.");
+                    Time(guard.SearchUntil) && Time(guard.DiedAt) && Time(guard.DayRestUntil) &&
+                    Time(guard.SearchPauseUntil) && Time(guard.SearchDelaySeconds) && guard.SearchDelaySeconds<=1800 &&
+                    (guard.SearchPauseUntil==0 ? guard.SearchDelaySeconds==0 : guard.SearchDelaySeconds>0), "Invalid guard identity or state.");
                 if (guard.IsAlive) alive++;
                 Require(guard.ArrowsRemaining>=0 && guard.ArrowsRemaining<=24 &&
                     (!guard.ArcheryAssigned || guard.HasBow || guard.ArrowsRemaining==0),"Invalid guard archery loadout.");
@@ -493,6 +472,10 @@ namespace PeopleOfTheIliacBay.Core
                     Require(searchUntil == (guard.DoorPursuit!=null ? guard.DoorPursuit.SearchUntil : investigation ? investigationUntil : guard.ArrivesAt + 300) &&
                         Distance(CopyPoint(guard.ResponseOrigin ?? guard.Post), route[0]) < 0.05 &&
                         (returnPath == null || Distance(returnPath[0], route[route.Count - 1]) < 0.05), "Invalid guard search deadline or route origin.");
+                Require(guard.Duty!=GuardDuty.Searching || guard.SearchPauseUntil==0 ||
+                    assignedReport!=null && assignedReport.HasCorpseInquiryWindow && guard.SearchPauseUntil<=searchUntil &&
+                    guard.SearchDelaySeconds<=guard.SearchPauseUntil-guard.ArrivesAt,
+                    "Inquiry hold exceeds its fixed case deadline.");
                 if (guard.Duty == GuardDuty.Returning)
                     Require(guard.DepartedAt == guard.SearchUntil && Distance(CopyPoint(guard.Post), route[route.Count - 1]) < 0.05, "Return route does not reach the assigned post.");
                 Require(guard.IsAlive == (guard.DeathPosition == null), "Guard death location disagrees with life state.");
@@ -512,7 +495,8 @@ namespace PeopleOfTheIliacBay.Core
                     Refuge = refuge, PostRecall=CopyPostRecall(guard.PostRecall),
                     Interior = CopyInterior(guard),
                     DoorPursuit = CopyDoorPursuit(guard),
-                    AppearanceSeed = guard.AppearanceSeed, IsAlive = guard.IsAlive, Post = CopyPoint(guard.Post), Duty = guard.Duty,
+                    AppearanceSeed = guard.AppearanceSeed, IsAlive = guard.IsAlive, Post = CopyPoint(guard.Post), Duty = guard.Duty, Shift = guard.Shift,
+                    ReliefPost = guard.ReliefPost == null ? null : CopyPoint(guard.ReliefPost),
                     DeathPosition = guard.DeathPosition == null ? null : CopyPoint(guard.DeathPosition),
                     HealthFraction = guard.HealthFraction,
                     EngagementPosition = guard.EngagementPosition == null ? null : CopyPoint(guard.EngagementPosition),
@@ -520,6 +504,7 @@ namespace PeopleOfTheIliacBay.Core
                     ResponseOrigin = guard.ResponseOrigin == null ? null : CopyPoint(guard.ResponseOrigin),
                     ReturnPath = returnPath, ReturnRate = guard.ReturnRate,
                     Route = route, DepartedAt = guard.DepartedAt, ArrivesAt = guard.ArrivesAt, SearchUntil = searchUntil, DiedAt = guard.DiedAt,
+                    SearchPauseUntil=guard.SearchPauseUntil,SearchDelaySeconds=guard.SearchDelaySeconds,
                     DayRestUntil = guard.DayRestUntil });
                 GuardArchery.EnsureLoadout(copy.Guards[copy.Guards.Count-1]);
             }

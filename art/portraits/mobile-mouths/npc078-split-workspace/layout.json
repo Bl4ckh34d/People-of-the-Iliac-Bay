@@ -1,0 +1,201 @@
+{
+  "portraitRecord": 78,
+  "width": 64,
+  "height": 64,
+  "splitY": 35,
+  "eyeRegions": [
+    {
+      "x": 14,
+      "y": 15,
+      "width": 17,
+      "height": 17
+    },
+    {
+      "x": 33,
+      "y": 15,
+      "width": 18,
+      "height": 17
+    }
+  ],
+  "mouthRegion": {
+    "x": 22,
+    "y": 39,
+    "width": 20,
+    "height": 13
+  },
+  "maskBoundsRationale": "Record 78 image inspected at native pixels and nearest-neighbor enlargement: each eye/brow cluster fits its own rectangle; mouth/lips fit the lower-half rectangle. No record-77-specific eye locks included.",
+  "sourceSelections": {
+    "eyes": {
+      "happy": {
+        "raw": "eyes/happy/raw-v2.png"
+      },
+      "angry": {
+        "raw": "eyes/angry/raw-v2.png"
+      },
+      "afraid": {
+        "raw": "eyes/afraid/raw-v2.png"
+      }
+    },
+    "mouths": {
+      "angry": {
+        "file": "mouth/angry/raw.png",
+        "provenance": "mouth/angry/provenance.json"
+      },
+      "happy": {
+        "file": "mouth/happy/remap-v1/derived-atlas.png",
+        "provenance": "mouth/happy/remap-v1/provenance.json"
+      }
+    }
+  },
+  "eyeFeatureLocks": [
+    {
+      "emotion": "afraid",
+      "phase": "open",
+      "x": 18,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "source-upper.png"
+    },
+    {
+      "emotion": "afraid",
+      "phase": "open",
+      "x": 36,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "source-upper.png"
+    },
+    {
+      "emotion": "afraid",
+      "phase": "half",
+      "x": 18,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "eyes/neutral/half.png"
+    },
+    {
+      "emotion": "afraid",
+      "phase": "half",
+      "x": 36,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "eyes/neutral/half.png"
+    },
+    {
+      "emotion": "afraid",
+      "phase": "closed",
+      "x": 18,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "eyes/neutral/closed.png"
+    },
+    {
+      "emotion": "afraid",
+      "phase": "closed",
+      "x": 36,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "eyes/neutral/closed.png"
+    },
+    {
+      "emotion": "angry",
+      "phase": "half",
+      "x": 16,
+      "y": 23,
+      "width": 14,
+      "height": 2
+    },
+    {
+      "emotion": "angry",
+      "phase": "half",
+      "x": 34,
+      "y": 23,
+      "width": 15,
+      "height": 2
+    },
+    {
+      "emotion": "angry",
+      "phase": "closed",
+      "x": 16,
+      "y": 23,
+      "width": 14,
+      "height": 2
+    },
+    {
+      "emotion": "angry",
+      "phase": "closed",
+      "x": 34,
+      "y": 23,
+      "width": 15,
+      "height": 2
+    },
+    {
+      "emotion": "happy",
+      "phase": "half",
+      "x": 18,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "eyes/neutral/half.png"
+    },
+    {
+      "emotion": "happy",
+      "phase": "half",
+      "x": 36,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "eyes/neutral/half.png"
+    },
+    {
+      "emotion": "happy",
+      "phase": "closed",
+      "x": 18,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "eyes/neutral/closed.png"
+    },
+    {
+      "emotion": "happy",
+      "phase": "closed",
+      "x": 36,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "eyes/neutral/closed.png"
+    }
+  ],
+  "featureLockRationale": "Fearful v2 brows are retained, but generated round irises cross the lower eyelid. Reuse the exact original open eyeballs and neutral matching lid phases. Angry V-brow tips extend below the general brow lock; preserve those tips through blinking. Happy half/closed eyelids reuse the stable neutral blink geometry; generated raised brows remain emotion-specific, avoiding upward eye jumps.",
+  "mouthSkinPalette": {
+    "angry": {
+      "minimumHue": 16,
+      "maximumHue": 48,
+      "anchors": [
+        {
+          "x": 20,
+          "y": 43
+        },
+        {
+          "x": 43,
+          "y": 43
+        },
+        {
+          "x": 24,
+          "y": 51
+        },
+        {
+          "x": 39,
+          "y": 51
+        }
+      ],
+      "rationale": "Inspected original skin points outside moving lips; match generated skin color cast only, preserving v3 lip colors and oral details."
+    }
+  },
+  "bank": "TFAC00I0.RCI"
+}

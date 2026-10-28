@@ -16,6 +16,7 @@ namespace PeopleOfTheIliacBay.DFU
         {
             if (!target || CombatReady || combatStart != null) return;
             if (!EnsureNativeTargetController(target)) return;
+            if (sleeping) sleeping.Wake();
             var guard = roster.Guards.Find(g => g.Id == GuardId);
             if (guard.Duty != GuardDuty.Engaged) roster.Engage(GuardId,now);
             DefenseTarget = target;
@@ -65,6 +66,11 @@ namespace PeopleOfTheIliacBay.DFU
         }
         private void LateUpdate()
         {
+            if(WallCombatActive && wallCombatTarget && !GameManager.IsGamePaused)
+            {
+                var wallSenses=GetComponent<EnemySenses>();
+                wallSenses.Target=wallCombatTarget;wallSenses.SecondaryTarget=null;
+            }
             if(CombatReady && !GameManager.IsGamePaused) TickGuardArchery();
             if (!DefenseTarget || !CombatReady || GameManager.IsGamePaused) return;
             var motor = GetComponent<EnemyMotor>(); var senses = GetComponent<EnemySenses>();

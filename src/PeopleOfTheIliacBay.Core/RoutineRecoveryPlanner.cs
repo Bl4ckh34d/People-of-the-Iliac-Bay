@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace PeopleOfTheIliacBay.Core
 {
     public enum RoutineRecoveryFailure
-    { None, Other, RequiredAppointmentUnreachable, HomeReturnUnavailable, ProtectedSleep }
+    { None, Other, RequiredAppointmentUnreachable, HomeReturnUnavailable }
 
     public static partial class RoutineRecoveryPlanner
     {
@@ -94,8 +94,8 @@ namespace PeopleOfTheIliacBay.Core
             if(settlementId<0||resident==null||!resident.IsAlive||resident.IsQuestProtected||resident.AgeGroup!=ResidentAgeGroup.Adult||
                 resident.NativeIdentity!=null&&resident.NativeIdentity.SettlementId!=settlementId||
                 routine==null||routine.ResidentId!=resident.Id||ordinary==null||day<0||wake<0||sleep>=1440||wake>=sleep||
-                !Finite(now)||!Finite(departAt)||now<dayStart+wake*60d||now>=dayStart+sleep*60d||departAt<now||
-                departAt>dayStart+sleep*60d||!Finite(secondsPerMetre)||secondsPerMetre<=0)return false;
+                !Finite(now)||!Finite(departAt)||now<dayStart||now>=dayStart+86400d||departAt<now||
+                departAt>=dayStart+86400d||!Finite(secondsPerMetre)||secondsPerMetre<=0)return false;
             try
             {
                 var graph=new Graph();
@@ -170,7 +170,7 @@ namespace PeopleOfTheIliacBay.Core
                         !Finite(booking.StartsAt)||!Finite(booking.EndsAt)||!Finite(booking.GraceSeconds)||booking.GraceSeconds<0||
                         booking.EndsAt<=booking.StartsAt||!Finite(leave)||leave<=booking.StartsAt||
                         booking.PatienceSeconds!=0&&(booking.PatienceSeconds<AppointmentTiming.MinimumPatienceSeconds||
-                            booking.PatienceSeconds>AppointmentTiming.MaximumPatienceSeconds)||leave>dayStart+sleep*60d)
+                            booking.PatienceSeconds>AppointmentTiming.MaximumPatienceSeconds))
                     {reason="A required appointment has no valid local time or venue.";return false;}
                     required.Add(new Candidate {Index=-1,Building=target,Point=point,Purpose=ResidentVisitPurpose.Social,
                         Enter=booking.StartsAt,Leave=leave,Booking=booking});
@@ -190,6 +190,9 @@ namespace PeopleOfTheIliacBay.Core
                     if(!included||leave<=now||joint&&skipJoint||excludedFamilyVisits!=null&&excludedFamilyVisits.Contains(index)||
                         originOutside&&origin==visit.TargetBuildingKey&&enter<=now&&now<leave)
                     {if(joint)result.HouseholdJointSkipped=true;else result.SkippedStopIndices.Add(index);continue;}
+                    // An interrupted errand is optional. Resume only shared family
+                    // commitments and fixed bookings, then take the measured way home.
+                    if (!joint) { result.SkippedStopIndices.Add(index); continue; }
                     optional.Add(new Candidate {Index=index,HouseholdJoint=joint,Building=visit.TargetBuildingKey,Purpose=visit.Purpose,Enter=enter,Leave=leave});
                 }
                 optional.Sort((a,b)=>a.Enter.CompareTo(b.Enter));int nextRequired=0,current=origin;double cursor=departAt;
@@ -229,7 +232,6 @@ namespace PeopleOfTheIliacBay.Core
                 if(!graph.Route(current,resident.HomeKey,out homeRoute,out homeDistance))
                 {reason="No verified home-return route remains.";failure=RoutineRecoveryFailure.HomeReturnUnavailable;return false;}
                 double homeAt=cursor+homeDistance*secondsPerMetre;
-                if(homeAt>dayStart+sleep*60d){reason="The measured home return no longer fits before sleep.";failure=RoutineRecoveryFailure.ProtectedSleep;return false;}
                 result.Legs.Add(new RoutineRecoveryLeg {BuildingKey=resident.HomeKey,ReturnsHome=true,WalkAt=cursor,
                     ArriveAt=homeAt,EnterAt=homeAt,LeaveAt=homeAt,Route=homeRoute});result.EndsAt=homeAt;
                 plan=RoutineRecoveryPlan.Copy(result);reason="A connected remaining-day continuation is ready.";failure=RoutineRecoveryFailure.None;return true;

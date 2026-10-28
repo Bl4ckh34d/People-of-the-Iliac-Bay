@@ -9,6 +9,7 @@ namespace PeopleOfTheIliacBay.Core
     {
         public string Id,Name;
         public int HomeSettlement,Race;
+        public int HomeKey=-1;
         public uint AppearanceSeed;
         public ResidentSex Sex;
         public bool IsAlive=true;
@@ -21,7 +22,10 @@ namespace PeopleOfTheIliacBay.Core
         public int SettlementId,TavernKey,Nights;
         public bool Walled;
         public double DesiredArrival,CommuteSeconds,AttemptedAt=-1;
+        public double NativeReturnSeconds,ReturnDepartureNotBefore;
         public TravelerAdmission Admission;
+        public TravelerDiversion Diversion;
+        public ResidentVisitPurpose Purpose;
         public List<SavedRoutePoint> Route=new List<SavedRoutePoint>();
     }
     public sealed partial class WorldStateStore
@@ -34,7 +38,7 @@ namespace PeopleOfTheIliacBay.Core
             foreach(var visit in state.TravelerVisits)
             {
                 if(visit.SettlementId!=settlementId) continue;
-                var journey=Journey(Traveler(visit.PersonId),visit);
+                var journey=TravelerReservedJourney(Traveler(visit.PersonId),visit);
                 if(journey.EntryAt<end && journey.ExitAt>start) result.Add(visit);
             }
             return result;
@@ -43,6 +47,30 @@ namespace PeopleOfTheIliacBay.Core
         { return state.TravelerVisits.FindAll(v=>v.SettlementId==settlementId); }
         public TravelerPerson Traveler(string id)
         { return state.Travelers.Find(p=>p.Id==id); }
+        public Resident TravelerOriginResident(string id)
+        {
+            var person=Traveler(id);
+            return person==null ? null : OriginResident(state,person);
+        }
+        public Household TravelerOriginHousehold(string id)
+        {
+            var person=Traveler(id);if(person==null || person.HomeKey<0) return null;
+            var town=state.Settlements.Find(t=>t.SettlementId==person.HomeSettlement);
+            return town==null ? null : town.Households.Find(h=>h.BuildingKey==person.HomeKey && h.Residents.Exists(r=>r.Id==id));
+        }
+        private static Resident OriginResident(WorldState world,TravelerPerson person)
+        {
+            if(person.HomeKey<0) return null;
+            var town=world.Settlements.Find(t=>t.SettlementId==person.HomeSettlement);
+            var home=town==null ? null : town.Households.Find(h=>h.BuildingKey==person.HomeKey);
+            return home==null ? null : home.Residents.Find(r=>r.Id==person.Id);
+        }
+        private static bool MatchingOrigin(WorldState world,TravelerPerson person)
+        {
+            var resident=OriginResident(world,person);
+            return resident!=null && resident.FullName==person.Name && resident.Race==person.Race && resident.Sex==person.Sex &&
+                resident.AppearanceSeed==person.AppearanceSeed && resident.IsAlive==person.IsAlive && resident.AgeGroup==ResidentAgeGroup.Adult;
+        }
         public string TravelerBed(string visitId,double now)
         {
             Require(DefenseTime(now),"Invalid traveler bed time.");
@@ -52,10 +80,7 @@ namespace PeopleOfTheIliacBay.Core
             var tavern=Lodging(visit.SettlementId,visit.TavernKey);
             var booking=tavern.Bookings.Find(b=>b.Id==visit.BookingId);
             if(booking==null || now<booking.StartsAt || now>=booking.EndsAt) return null;
-            var room=tavern.Rooms.Find(r=>r.Id==booking.RoomId);
-            string selected=null;
-            foreach(var bed in room.Beds) if(selected==null || StringComparer.Ordinal.Compare(bed,selected)<0) selected=bed;
-            return selected;
+            return booking.BedIds.Count==0 ? null : booking.BedIds[0];
         }
         public TravelerJourney TravelerJourneyFor(string visitId)
         {
@@ -71,11 +96,12 @@ namespace PeopleOfTheIliacBay.Core
             if(prior!=null)
             {
                 Require(prior.Name==copied.Name && prior.HomeSettlement==copied.HomeSettlement && prior.Race==copied.Race &&
-                    prior.AppearanceSeed==copied.AppearanceSeed && prior.Sex==copied.Sex,"Traveler identity changed.");
+                    prior.AppearanceSeed==copied.AppearanceSeed && prior.Sex==copied.Sex && prior.HomeKey==copied.HomeKey,"Traveler identity changed.");
                 return; // Idempotent registration must never revive a saved death.
             }
             foreach(var town in state.Settlements) foreach(var home in town.Households)
-                Require(!home.Residents.Exists(r=>r.Id==copied.Id),"Traveler duplicates resident identity.");
+                Require(!home.Residents.Exists(r=>r.Id==copied.Id) || MatchingOrigin(state,copied),"Traveler duplicates resident identity.");
+            Require(copied.HomeKey<0 || MatchingOrigin(state,copied),"Traveler lacks its reserved origin household.");
             Require(!state.NativePeople.Exists(p=>p.Id==copied.Id),"Traveler duplicates native identity.");
             state.Travelers.Add(copied);
         }
@@ -93,11 +119,12 @@ namespace PeopleOfTheIliacBay.Core
             var person=state.Travelers.Find(p=>p.Id==copy.PersonId);
             Require(person.IsAlive,"Dead traveler cannot start another visit.");
             var journey=Journey(person,copy);
+            Require(person.HomeKey<0 || !IsResidentAwayDuring(person.Id,journey.EntryAt,TravelerHomeAt(person,copy)),"Origin resident already has an overlapping journey.");
             foreach(var other in state.TravelerVisits)
             {
                 if(other.PersonId!=copy.PersonId) continue;
                 var otherJourney=Journey(person,other);
-                Require(journey.EntryAt>=otherJourney.ExitAt || otherJourney.EntryAt>=journey.ExitAt,"Traveler visits overlap.");
+                Require(journey.EntryAt>=TravelerVisitConflictUntil(person,other) || otherJourney.EntryAt>=TravelerVisitConflictUntil(person,copy),"Traveler visits overlap.");
             }
             state.TravelerVisits.Add(copy);
             TravelerVisitRevision++;
@@ -168,10 +195,14 @@ namespace PeopleOfTheIliacBay.Core
             Require(!state.AlarmIncidents.Exists(a=>a.VictimId==personId && a.StartedAt>now),"Traveler death precedes violence.");
             Require(!state.TravelerVisits.Exists(v=>v.PersonId==personId &&
                 v.Admission==TravelerAdmission.Admitted && v.AttemptedAt>now),"Traveler death precedes admission.");
-            person.IsAlive=false; person.DiedAt=now; return true;
+            person.IsAlive=false; person.DiedAt=now;
+            var origin=OriginResident(state,person);if(origin!=null) origin.IsAlive=false;
+            return true;
         }
         private static TravelerJourney Journey(TravelerPerson person,TravelerVisit visit)
         {
+            if(visit.Diversion!=null)
+                return DivertedTravelerJourney(person,visit);
             var route=new List<RoutePoint>(); foreach(var p in visit.Route) route.Add(new RoutePoint(p.X,p.Z));
             if(visit.Admission==TravelerAdmission.Refused)
                 return TravelerJourney.CreateRefused(person.AppearanceSeed,visit.DesiredArrival,visit.CommuteSeconds,visit.Walled,route,visit.AttemptedAt);
@@ -179,11 +210,12 @@ namespace PeopleOfTheIliacBay.Core
         }
         private static TravelerPerson CopyTraveler(TravelerPerson person)
         {
-            Require(person!=null && DefenseId(person.Id) && person.Id.StartsWith("traveler:",StringComparison.Ordinal) && DefenseId(person.Name) &&
+            Require(person!=null && DefenseId(person.Id) && (person.HomeKey>=0 || person.Id.StartsWith("traveler:",StringComparison.Ordinal)) && DefenseId(person.Name) &&
+                person.HomeKey>=-1 &&
                 person.HomeSettlement>=0 && person.Race>=0 && (person.Sex==ResidentSex.Male || person.Sex==ResidentSex.Female) &&
                 (person.IsAlive ? person.DiedAt==-1 : DefenseTime(person.DiedAt)),"Invalid traveler identity.");
             return new TravelerPerson { Id=person.Id,Name=person.Name,HomeSettlement=person.HomeSettlement,Race=person.Race,
-                AppearanceSeed=person.AppearanceSeed,Sex=person.Sex,IsAlive=person.IsAlive,DiedAt=person.DiedAt };
+                HomeKey=person.HomeKey,AppearanceSeed=person.AppearanceSeed,Sex=person.Sex,IsAlive=person.IsAlive,DiedAt=person.DiedAt };
         }
         private static TravelerVisit CopyTravelerVisit(TravelerVisit visit,WorldState world)
         {
@@ -195,18 +227,26 @@ namespace PeopleOfTheIliacBay.Core
             Require(person!=null && person.HomeSettlement!=visit.SettlementId,"Missing or local traveler.");
             var copy=new TravelerVisit { Id=visit.Id,PersonId=visit.PersonId,BookingId=visit.BookingId,SettlementId=visit.SettlementId,
                 TavernKey=visit.TavernKey,Nights=visit.Nights,Walled=visit.Walled,DesiredArrival=visit.DesiredArrival,
-                CommuteSeconds=visit.CommuteSeconds,AttemptedAt=visit.AttemptedAt,Admission=visit.Admission };
+                CommuteSeconds=visit.CommuteSeconds,AttemptedAt=visit.AttemptedAt,Admission=visit.Admission,Purpose=visit.Purpose,
+                NativeReturnSeconds=visit.NativeReturnSeconds,ReturnDepartureNotBefore=visit.ReturnDepartureNotBefore,
+                Diversion=CopyTravelerDiversion(visit.Diversion) };
+            Require(Enum.IsDefined(typeof(ResidentVisitPurpose),copy.Purpose),"Invalid traveler purpose.");
             foreach(var point in visit.Route)
             {
                 Require(point!=null && DefenseCoordinate(point.X) && DefenseCoordinate(point.Z),"Invalid traveler route coordinate.");
                 copy.Route.Add(new SavedRoutePoint { X=point.X,Z=point.Z });
             }
             var journey=Journey(person,copy);
+            Require(DefenseTime(copy.NativeReturnSeconds) && DefenseTime(copy.ReturnDepartureNotBefore) &&
+                (copy.ReturnDepartureNotBefore==0 || copy.NativeReturnSeconds>0 && copy.ReturnDepartureNotBefore>=journey.ExitAt) &&
+                DefenseTime(TravelerHomeAt(person,copy)),"Invalid native traveler return timing.");
             // Native JSON uses limited decimal precision. At calendar epochs near
             // 1e10 seconds, recomputing entry + commute can differ by ~0.00005s.
-            // Keep strict identity/room ownership while allowing sub-ms time loss.
-            Require(visit.Admission==TravelerAdmission.Pending ? visit.AttemptedAt==-1 && visit.BookingId==null :
-                DefenseTime(visit.AttemptedAt) && visit.AttemptedAt+0.001>=journey.CheckInAt,"Invalid traveler admission outcome.");
+            // Keep strict identity and exact-bed ownership while allowing sub-ms time loss.
+            Require(visit.Admission==TravelerAdmission.Pending ? visit.AttemptedAt==-1 && visit.BookingId==null && visit.Diversion==null :
+                DefenseTime(visit.AttemptedAt) && (visit.Diversion==null?visit.AttemptedAt+0.001>=journey.CheckInAt:
+                Math.Abs(visit.AttemptedAt-visit.Diversion.DecidedAt)<0.001),"Invalid traveler admission outcome.");
+            if(visit.Diversion!=null)ValidateTravelerDiversion(copy,person);
             if(visit.Admission==TravelerAdmission.Admitted)
             {
                 Require(person.IsAlive || person.DiedAt>=visit.AttemptedAt,"Traveler death precedes admission.");
@@ -214,7 +254,7 @@ namespace PeopleOfTheIliacBay.Core
                 var booking=tavern==null ? null : tavern.Bookings.Find(b=>b.Id==visit.BookingId);
                 Require(visit.BookingId=="traveler-booking:"+visit.Id && booking!=null && !booking.Player && booking.GuestId==person.Id &&
                     booking.HomeSettlement==person.HomeSettlement && booking.PartySize==1 && Math.Abs(booking.StartsAt-journey.CheckInAt)<0.001 &&
-                    Math.Abs(booking.EndsAt-journey.CheckOutAt)<0.001 && visit.AttemptedAt<journey.CheckOutAt,"Traveler lacks matching paid room.");
+                    Math.Abs(booking.EndsAt-journey.CheckOutAt)<0.001 && visit.AttemptedAt<journey.CheckOutAt,"Traveler lacks matching paid bed.");
             }
             else Require(visit.BookingId==null && !world.Lodgings.Exists(t=>t.Bookings.Exists(b=>b.Id=="traveler-booking:"+visit.Id)),
                 "Unadmitted traveler has a booking.");
@@ -223,18 +263,19 @@ namespace PeopleOfTheIliacBay.Core
         private static bool SameVisit(TravelerVisit a,TravelerVisit b)
         {
             if(a.PersonId!=b.PersonId || a.SettlementId!=b.SettlementId || a.TavernKey!=b.TavernKey || a.Nights!=b.Nights ||
-                a.Walled!=b.Walled || a.DesiredArrival!=b.DesiredArrival || a.CommuteSeconds!=b.CommuteSeconds || a.Route.Count!=b.Route.Count) return false;
+                a.Walled!=b.Walled || a.DesiredArrival!=b.DesiredArrival || a.CommuteSeconds!=b.CommuteSeconds ||
+                a.NativeReturnSeconds!=b.NativeReturnSeconds || a.Purpose!=b.Purpose || a.Route.Count!=b.Route.Count) return false;
             for(int i=0;i<a.Route.Count;i++) if(b.Route[i]==null || a.Route[i].X!=b.Route[i].X || a.Route[i].Z!=b.Route[i].Z) return false;
             return true;
         }
         private static void CopyTravelers(WorldState source,WorldState world,HashSet<string> identities)
         {
-            if(source.Version<9) return;
             Require(source.Travelers!=null && source.TravelerVisits!=null,"Missing traveler ledgers.");
             foreach(var person in source.Travelers)
             {
                 var copy=CopyTraveler(person);
-                Require(identities.Add(copy.Id) && !world.NativePeople.Exists(p=>p.Id==copy.Id),"Duplicate traveler identity.");
+                Require((identities.Add(copy.Id) && copy.HomeKey<0 || MatchingOrigin(world,copy)) &&
+                    !world.Travelers.Exists(p=>p.Id==copy.Id) && !world.NativePeople.Exists(p=>p.Id==copy.Id),"Duplicate traveler identity.");
                 world.Travelers.Add(copy);
             }
             var ids=new HashSet<string>();
@@ -246,7 +287,7 @@ namespace PeopleOfTheIliacBay.Core
                 {
                     if(other.PersonId!=copy.PersonId) continue;
                     var previous=Journey(person,other);
-                    Require(journey.EntryAt>=previous.ExitAt || previous.EntryAt>=journey.ExitAt,"Traveler visits overlap.");
+                    Require(journey.EntryAt>=TravelerVisitConflictUntil(person,other) || previous.EntryAt>=TravelerVisitConflictUntil(person,copy),"Traveler visits overlap.");
                 }
                 world.TravelerVisits.Add(copy);
             }

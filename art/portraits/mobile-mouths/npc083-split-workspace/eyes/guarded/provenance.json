@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "createdUtc": "2026-10-21T23:24:49.5322334Z",
+  "portraitRecord": 83,
+  "bank": "TFAC00I0.RCI",
+  "part": "eyes",
+  "emotion": "guarded",
+  "prompt": "Edit the supplied reference grid into one pixel-art eye atlas for the same female DFU portrait. Output exactly a 2x2 atlas, each cell full upper-half framing 64x35 pixels in the source's native composition, with no gutters: row-major open, half-closed, fully closed, repeated open. Preserve the original muted brown skin, brown hair/background, gray-blue irises, low soft contrast, pixel-art texture, framing, face and eye spacing. Emotion is skeptical/guarded: clearly attentive narrowed eyes, a slight asymmetry with one brow lifted and the other gently furrowed, restrained and questioning, not angry, not an angry V, and visibly more skeptical than neutral. Both brows must be completely visible in every cell and keep exactly the same shape, thickness, color, and position across all four cells. Keep both iris dimensions and horizontal positions identical across cells; only lids occlude the irises vertically, with no pupil shift, resizing, white flash, or extra eye whites. Closed cells show the same fixed brows above closed lids. Maintain original brow softness and brown color; no black brow bars, no added marks, no extra white, no red/orange skin halos, no photorealism, no labels, no borders, no other grid layouts. The supplied reference is a 2x2 repeated source-upper grid; use its cell layout as exact atlas structure.",
+  "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a160c7-5d26-7712-a755-f48a9dd0f80d as C:\\Users\\Daniel\\.codex\\generated_images\\01a160c7-5d26-7712-a755-f48a9dd0f80d\\exec-99b6dd56-36d9-4fbd-8515-7bb59384bb56.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+  "generatedPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c7-5d26-7712-a755-f48a9dd0f80d\\exec-99b6dd56-36d9-4fbd-8515-7bb59384bb56.png",
+  "sourceOriginal": {
+    "path": "original.png",
+    "sha256": "e46c900779f687610af7b821b988300b998aea48632c829537f88cb829b5acfb",
+    "width": 64,
+    "height": 64
+  },
+  "referenceGrid": {
+    "path": "eyes-reference-grid.png",
+    "sha256": "2744ee08ff7932c1ab5b295847612b1fafa442a2518db98dae88f5e84b392bd9",
+    "width": 1024,
+    "height": 560
+  },
+  "generator": {
+    "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c7-5d26-7712-a755-f48a9dd0f80d\\exec-99b6dd56-36d9-4fbd-8515-7bb59384bb56.png",
+    "sha256": "a357e1d63c89a54e88a5782b38ede30ca9c3f52d5600493164613f51592f5c84",
+    "width": 1695,
+    "height": 928
+  },
+  "raw": {
+    "path": "eyes/guarded/raw.png",
+    "sha256": "a357e1d63c89a54e88a5782b38ede30ca9c3f52d5600493164613f51592f5c84",
+    "width": 1695,
+    "height": 928
+  }
+}

@@ -27,7 +27,7 @@ namespace PeopleOfTheIliacBay.DFU
                     Environment.GetEnvironmentVariable("POTIB_NAVMESH_INTERIOR")=="263177" ||
                  residentId!=null && Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-action-probe")>=0);
             if((!explicitFlag && !roadmapFlag) || string.IsNullOrEmpty(expectedCharacter) ||
-                !expectedCharacter.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal))
+                !NativeProbeText.IsTestCharacter(expectedCharacter))
                 throw new InvalidOperationException("Seat task chain requires its owned native fixture flag.");
             var game=GameManager.Instance;
             if(!streets || game==null || game.PlayerEntity.Name!=expectedCharacter)

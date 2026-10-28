@@ -8,7 +8,6 @@ namespace PeopleOfTheIliacBay.Tests
     {
         public static void Add(List<(string Name, Action Body)> cases)
         {
-            cases.Add(("schema 37 native inbox defaults migrate to native outcome explicitly", LegacyDefaultsMigrate));
             cases.Add(("schema 35 to 37 rejects speech mask and impact-shaped inbox data", LegacyImpossibleFieldsReject));
             cases.Add(("current schema does not reinterpret missing origin as native", CurrentMissingOriginRejects));
             cases.Add(("legacy consumed row without required appraisal journal is rejected", MissingLegacyConsumedJournalRejects));

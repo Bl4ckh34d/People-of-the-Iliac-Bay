@@ -1,0 +1,530 @@
+{
+  "schemaVersion": 2,
+  "portraitRecord": 72,
+  "bank": "TFAC00I0.RCI",
+  "status": "masked-half-prototype-visual-review-pending-not-installed",
+  "width": 64,
+  "height": 64,
+  "splitY": 35,
+  "original": "original.png",
+  "originalUpper": "source-upper.png",
+  "originalLower": "source-lower.png",
+  "eyeSets": [
+    {
+      "id": "sad",
+      "label": "Traurig",
+      "phases": {
+        "open": {
+          "file": "eyes/sad/open.png",
+          "difference": "eyes/sad/open-diff.png",
+          "changedPixels": 525
+        },
+        "half": {
+          "file": "eyes/sad/half.png",
+          "difference": "eyes/sad/half-diff.png",
+          "changedPixels": 522
+        },
+        "closed": {
+          "file": "eyes/sad/closed.png",
+          "difference": "eyes/sad/closed-diff.png",
+          "changedPixels": 525
+        }
+      }
+    }
+  ],
+  "mouths": [
+    {
+      "shape": "A",
+      "file": "mouth/A.png",
+      "difference": "mouth/A-diff.png",
+      "changedPixels": 0
+    },
+    {
+      "shape": "B",
+      "file": "mouth/B.png",
+      "difference": "mouth/B-diff.png",
+      "changedPixels": 296
+    },
+    {
+      "shape": "C",
+      "file": "mouth/C.png",
+      "difference": "mouth/C-diff.png",
+      "changedPixels": 298
+    },
+    {
+      "shape": "D",
+      "file": "mouth/D.png",
+      "difference": "mouth/D-diff.png",
+      "changedPixels": 299
+    },
+    {
+      "shape": "E",
+      "file": "mouth/E.png",
+      "difference": "mouth/E-diff.png",
+      "changedPixels": 298
+    },
+    {
+      "shape": "F",
+      "file": "mouth/F.png",
+      "difference": "mouth/F-diff.png",
+      "changedPixels": 299
+    },
+    {
+      "shape": "G",
+      "file": "mouth/G.png",
+      "difference": "mouth/G-diff.png",
+      "changedPixels": 296
+    },
+    {
+      "shape": "H",
+      "file": "mouth/H.png",
+      "difference": "mouth/H-diff.png",
+      "changedPixels": 298
+    },
+    {
+      "shape": "X",
+      "file": "mouth/X.png",
+      "difference": "mouth/X-diff.png",
+      "changedPixels": 0
+    }
+  ],
+  "mouthSets": [
+    {
+      "id": "neutral",
+      "label": "Neutral",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/neutral/A.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/neutral/A-diff.png",
+          "changedPixels": 0,
+          "sha256": "ddfc2f9517095267164b4685d6cc6e324fe2df7f628f6a91504d91b156dbdd15"
+        },
+        {
+          "shape": "B",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/neutral/B.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/neutral/B-diff.png",
+          "changedPixels": 296,
+          "sha256": "fa95868c4bb3832dd3b4616920c4bdfd0caaa55e62534dabaec3209fbe228a90"
+        },
+        {
+          "shape": "C",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/neutral/C.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/neutral/C-diff.png",
+          "changedPixels": 298,
+          "sha256": "708d9fbda08162182b88066a2e90db11519ccbb9ba3d93b44467c408f9343dad"
+        },
+        {
+          "shape": "D",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/neutral/D.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/neutral/D-diff.png",
+          "changedPixels": 299,
+          "sha256": "5624f9e45ee6cfe80ec0ba686061c685b17123fd15ee0808f26af91da50e4d25"
+        },
+        {
+          "shape": "E",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/neutral/E.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/neutral/E-diff.png",
+          "changedPixels": 298,
+          "sha256": "c118f878e93ee04d51bd2691d2f203871abdcba6778a4b9ffe50b2b475396176"
+        },
+        {
+          "shape": "F",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/neutral/F.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/neutral/F-diff.png",
+          "changedPixels": 299,
+          "sha256": "c84f618e682bf32f28ae79ce6aeaf3071dfef9461d83843a5091fb4a0568918c"
+        },
+        {
+          "shape": "G",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/neutral/G.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/neutral/G-diff.png",
+          "changedPixels": 296,
+          "sha256": "3b90f642286c1591118fde4b0fdb8a4158cd49fab6a3ce0a6f026956e802be7a"
+        },
+        {
+          "shape": "H",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/neutral/H.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/neutral/H-diff.png",
+          "changedPixels": 298,
+          "sha256": "88cc2fe4b54dfe4f11a82a9e6e0b7451ff2fc7c7a9075c0894a34a8ad79200f1"
+        },
+        {
+          "shape": "X",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/neutral/X.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/neutral/X-diff.png",
+          "changedPixels": 0,
+          "sha256": "ddfc2f9517095267164b4685d6cc6e324fe2df7f628f6a91504d91b156dbdd15"
+        }
+      ]
+    },
+    {
+      "id": "happy",
+      "label": "Fröhlich",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/happy/A.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/happy/A-diff.png",
+          "changedPixels": 298,
+          "sha256": "4283d7ace2a34c5163bfffcf876523b16b79a3e8ffb31f6a68af50d3b6eeafe2"
+        },
+        {
+          "shape": "B",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/happy/B.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/happy/B-diff.png",
+          "changedPixels": 298,
+          "sha256": "727a381bee49373d860da0759fbad46788e44df272c39c78a1e0d15ae47ae360"
+        },
+        {
+          "shape": "C",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/happy/C.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/happy/C-diff.png",
+          "changedPixels": 298,
+          "sha256": "0cd0f4186e86d534aeefa3815fd0e8b5b2167d4486743391ecc19b50552b4de6"
+        },
+        {
+          "shape": "D",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/happy/D.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/happy/D-diff.png",
+          "changedPixels": 299,
+          "sha256": "8a3c44b3f713f45bec168fb9d3d03507b2af2afa6efc6dccfd20c6d4014d2acd"
+        },
+        {
+          "shape": "E",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/happy/E.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/happy/E-diff.png",
+          "changedPixels": 298,
+          "sha256": "a3aa959a4352b698f38609dc17c4f81fb9c55aa784bd30c9ab0b788ada7627db"
+        },
+        {
+          "shape": "F",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/happy/F.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/happy/F-diff.png",
+          "changedPixels": 299,
+          "sha256": "65ef5cf05f2831797abb6b616704ee441111dd40231a70e50691ba3e982ea17f"
+        },
+        {
+          "shape": "G",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/happy/G.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/happy/G-diff.png",
+          "changedPixels": 297,
+          "sha256": "b2df703d74e8c29e5c08f6dd78c4b40697172a251898aabb79db84e7d5633716"
+        },
+        {
+          "shape": "H",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/happy/H.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/happy/H-diff.png",
+          "changedPixels": 299,
+          "sha256": "cf40e60202e1af01175da7789840e3838448f1c8600ca3b950435c09ce510223"
+        },
+        {
+          "shape": "X",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/happy/X.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/happy/X-diff.png",
+          "changedPixels": 298,
+          "sha256": "e5f99d0a1bbea3eaaceb14b30ac6b67bf3a54aac402428e6b455863b6b0477f0"
+        }
+      ]
+    },
+    {
+      "id": "angry",
+      "label": "Wütend",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/angry/A.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/angry/A-diff.png",
+          "changedPixels": 299,
+          "sha256": "ce27ec711c69973c90db22d6720ca76342419d1c133b9d8ca02b5ffeed9f4d68"
+        },
+        {
+          "shape": "B",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/angry/B.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/angry/B-diff.png",
+          "changedPixels": 299,
+          "sha256": "6a8cdbd73e3b6b5fd98eb30d99502f38b2e66162b6574bd979e60ffd67cabc44"
+        },
+        {
+          "shape": "C",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/angry/C.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/angry/C-diff.png",
+          "changedPixels": 299,
+          "sha256": "7fb127df8a14bd10a898ef6e3ddab293beb357a9a090e27b47051865f256b52a"
+        },
+        {
+          "shape": "D",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/angry/D.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/angry/D-diff.png",
+          "changedPixels": 299,
+          "sha256": "ee2c9e50dec35108f2f32aae96b8ab8fc55645528595b75be65a5659b357d4a7"
+        },
+        {
+          "shape": "E",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/angry/E.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/angry/E-diff.png",
+          "changedPixels": 299,
+          "sha256": "02abd45d0d1078f7cfe9b027c217995c19385116703c037c368b092cc77f1f03"
+        },
+        {
+          "shape": "F",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/angry/F.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/angry/F-diff.png",
+          "changedPixels": 299,
+          "sha256": "121090b481e5c972a20cc39f6421565dad8e5716dc83b61e9b8bff8a29524c3a"
+        },
+        {
+          "shape": "G",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/angry/G.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/angry/G-diff.png",
+          "changedPixels": 299,
+          "sha256": "e641b5a54d48b7e96f3cbacc428c165230afc5cee3dc695d5779bc6a23fb8ef5"
+        },
+        {
+          "shape": "H",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/angry/H.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/angry/H-diff.png",
+          "changedPixels": 299,
+          "sha256": "3bc9bb645cbe80afd720cdf4b98929c1121b6d50ec30678770f544cc0d3df7c6"
+        },
+        {
+          "shape": "X",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/angry/X.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/angry/X-diff.png",
+          "changedPixels": 299,
+          "sha256": "e494b97e798009f243c0450c54a475d72d975918072797398e8f165cb306c22f"
+        }
+      ]
+    },
+    {
+      "id": "sad",
+      "label": "Traurig",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/sad/A.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/sad/A-diff.png",
+          "changedPixels": 299,
+          "sha256": "b920fdb6de6268dc60b9899b90cd9c6baf13655043f18c5d308ad12f0adc85d7"
+        },
+        {
+          "shape": "B",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/sad/B.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/sad/B-diff.png",
+          "changedPixels": 298,
+          "sha256": "90f609e42d29e86eef487efddf882a838d461ee0abe707b498698c3ba230b783"
+        },
+        {
+          "shape": "C",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/sad/C.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/sad/C-diff.png",
+          "changedPixels": 299,
+          "sha256": "4dfd58c9946c3daaec0444e46ca5e9ea29458fe14589d273b27338a0c9ab2fbe"
+        },
+        {
+          "shape": "D",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/sad/D.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/sad/D-diff.png",
+          "changedPixels": 299,
+          "sha256": "9c2ca0b1fc38f521f8f86b94820d20ca5f268919b7ecd026b6a7284dde1071a2"
+        },
+        {
+          "shape": "E",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/sad/E.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/sad/E-diff.png",
+          "changedPixels": 298,
+          "sha256": "73138f6fa3f038427459e475e3e9e7b57e8bae5d6511ab944a99e6a30e02c551"
+        },
+        {
+          "shape": "F",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/sad/F.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/sad/F-diff.png",
+          "changedPixels": 299,
+          "sha256": "dcc5d891d37a300543812703df55ae75b38a3376244ef66acf12fcc6ec894df8"
+        },
+        {
+          "shape": "G",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/sad/G.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/sad/G-diff.png",
+          "changedPixels": 299,
+          "sha256": "7d8f5bf17664b583b59f27d5e3109159af40927cbd8ced54ff788c7b8695e85e"
+        },
+        {
+          "shape": "H",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/sad/H.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/sad/H-diff.png",
+          "changedPixels": 299,
+          "sha256": "5573e137b1546a4273fd884e4ad86dd926e128f550b796ed21830f3c551df3e5"
+        },
+        {
+          "shape": "X",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/sad/X.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/sad/X-diff.png",
+          "changedPixels": 299,
+          "sha256": "6c3d74044e98aad81f96611a7df13e9a1933b2e41665aa316aa4dc56677c2b96"
+        }
+      ]
+    },
+    {
+      "id": "afraid",
+      "label": "Ängstlich",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/afraid/A.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/afraid/A-diff.png",
+          "changedPixels": 297,
+          "sha256": "3c056bf634c12ec0fbf9939e069a676b30d213a0110d40e5df2548814e1dc735"
+        },
+        {
+          "shape": "B",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/afraid/B.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/afraid/B-diff.png",
+          "changedPixels": 299,
+          "sha256": "e3430e55c0cc63bd00a5d4d06d8e1630270521d0cf863e87203ba5e973ca3f4d"
+        },
+        {
+          "shape": "C",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/afraid/C.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/afraid/C-diff.png",
+          "changedPixels": 296,
+          "sha256": "1a1544673024fefb652cf0b96509d87b79921e30d6c7aeeb809b9ec8761d5b95"
+        },
+        {
+          "shape": "D",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/afraid/D.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/afraid/D-diff.png",
+          "changedPixels": 299,
+          "sha256": "2728664eb2c843b2ef1b5c995df3209cc0ab72cba586ca02bb6672ef54a45db9"
+        },
+        {
+          "shape": "E",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/afraid/E.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/afraid/E-diff.png",
+          "changedPixels": 299,
+          "sha256": "438a0b9d43fcc1c8977667923968c3b96b1c7defaa7c3fd947d740112e868cb7"
+        },
+        {
+          "shape": "F",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/afraid/F.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/afraid/F-diff.png",
+          "changedPixels": 299,
+          "sha256": "cf16ab0751dea3c419e02db661a6d973db2a25771d7ff6e1b98119051dd1cd74"
+        },
+        {
+          "shape": "G",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/afraid/G.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/afraid/G-diff.png",
+          "changedPixels": 299,
+          "sha256": "dc71a376c5bbabc972cc6c0c578a02c67c5b36e826b6c00fe7a1d0dc243cb0ec"
+        },
+        {
+          "shape": "H",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/afraid/H.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/afraid/H-diff.png",
+          "changedPixels": 298,
+          "sha256": "f0968f6430a29500abec152178c745c3d21e7154aa526cf9daf2052682302f5d"
+        },
+        {
+          "shape": "X",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/afraid/X.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/afraid/X-diff.png",
+          "changedPixels": 298,
+          "sha256": "0379c5b3c49821095c76ad6932dc2e61701f85a0593af43ac75ec6afa4fedd93"
+        }
+      ]
+    },
+    {
+      "id": "guarded",
+      "label": "Skeptisch",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/guarded/A.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/guarded/A-diff.png",
+          "changedPixels": 299,
+          "sha256": "dee08665895964e194d6f23ba7b6a572bbebd2d374f62c22a3cd5ee16f8fb05b"
+        },
+        {
+          "shape": "B",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/guarded/B.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/guarded/B-diff.png",
+          "changedPixels": 299,
+          "sha256": "c8ef2e017eab3198a42bbac02ac01c6f648f068803bd45c231099b02eb6b9337"
+        },
+        {
+          "shape": "C",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/guarded/C.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/guarded/C-diff.png",
+          "changedPixels": 299,
+          "sha256": "0458f866eebb03c9393ea025fc695830edc7dcf37edc8dbba52ef94eea8ad791"
+        },
+        {
+          "shape": "D",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/guarded/D.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/guarded/D-diff.png",
+          "changedPixels": 299,
+          "sha256": "6b812034f1e865c9b5c4eb1cd489e38e8dba18cdf21137286a2cc4628f7a4de8"
+        },
+        {
+          "shape": "E",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/guarded/E.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/guarded/E-diff.png",
+          "changedPixels": 299,
+          "sha256": "1ff3b5935d735f0af465846c5315796d3df7aee0744e0ed9630bf4c44b71ce47"
+        },
+        {
+          "shape": "F",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/guarded/F.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/guarded/F-diff.png",
+          "changedPixels": 299,
+          "sha256": "9de892c30431e11c3773b58df4a9340ed2034c1f7e584d0da8498d72db3ecd47"
+        },
+        {
+          "shape": "G",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/guarded/G.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/guarded/G-diff.png",
+          "changedPixels": 299,
+          "sha256": "0dfd8f97e216aa58759f38529b5f087291e8a465c4649da18838ff3097b6e901"
+        },
+        {
+          "shape": "H",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/guarded/H.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/guarded/H-diff.png",
+          "changedPixels": 299,
+          "sha256": "705d22f53c80c2106ef83e7fcc8eee966b875baf9b39f643ace73069eff1e1f0"
+        },
+        {
+          "shape": "X",
+          "file": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/guarded/X.png",
+          "difference": "art/portraits/mobile-mouths/npc072-split-workspace/mouth/guarded/X-diff.png",
+          "changedPixels": 299,
+          "sha256": "dba7524822e1e8c9077c3ffd7a46118f5abda6ef51e7f1a5bdd7c630906730fc"
+        }
+      ]
+    }
+  ],
+  "audio": "../sample.wav",
+  "timing": "../sample.visemes.json",
+  "visualAcceptance": "pending",
+  "browLockRows": [
+    12,
+    19
+  ],
+  "eyeRegions": [
+    {
+      "x": 15,
+      "y": 12,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "x": 36,
+      "y": 12,
+      "width": 17,
+      "height": 16
+    }
+  ],
+  "eyeFeatureLocks": null,
+  "useOriginalFeaturePalette": false
+}

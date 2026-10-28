@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "createdUtc": "2026-10-22T07:03:38.840906+00:00",
+  "preparationTool": "source-only emotion preflight explicit copier",
+  "portraitRecord": 87,
+  "bank": "TFAC00I0.RCI",
+  "sourcePath": "art/portraits/mobile-mouths/npc087-split-workspace/original.png",
+  "sourceSha256": "b8851f9df69ee15e297ab3aa7e70025710d27bd2e84dd0ed46d7ff7e94ab7717",
+  "sourceWidth": 64,
+  "sourceHeight": 64,
+  "splitY": 35,
+  "layoutPath": "art/portraits/mobile-mouths/npc087-split-workspace/layout.json",
+  "layoutSha256": "b41b805db7437626d9b3eed070bfd58f314e5cfa76efd95e6f93d77b8a3bb611",
+  "selectedEmotion": "afraid",
+  "selectedPhaseSha256": {
+    "open": "f9fea7d597f00ce364549373fb7b0a7c341946f0413ecf9f40a5576e8dacdeec",
+    "half": "2f194f72c5dd36e1d6b6a9bec849c09b579a7eb166ffba6263fcfdc7c7bb0417",
+    "closed": "3e7357e3576f384999e2a681261c3a9bd53e711a44a609159a39866ddaf9381f"
+  },
+  "workspaceFiles": {
+    "original.png": "b8851f9df69ee15e297ab3aa7e70025710d27bd2e84dd0ed46d7ff7e94ab7717",
+    "source-upper.png": "561b366e2b916b7524fb43d1e933b2b7c51d446acb01b27c925b31878da38e65",
+    "source-lower.png": "3e5f88afe1fd31b5c007d4e1a6c652cee209afbf1269a53be5aeee3c7d9ae2d0",
+    "layout.json": "b41b805db7437626d9b3eed070bfd58f314e5cfa76efd95e6f93d77b8a3bb611",
+    "eyes/afraid/open.png": "f9fea7d597f00ce364549373fb7b0a7c341946f0413ecf9f40a5576e8dacdeec",
+    "eyes/afraid/half.png": "2f194f72c5dd36e1d6b6a9bec849c09b579a7eb166ffba6263fcfdc7c7bb0417",
+    "eyes/afraid/closed.png": "3e7357e3576f384999e2a681261c3a9bd53e711a44a609159a39866ddaf9381f"
+  },
+  "generatedExpressions": false,
+  "sourceCopyLedger": [
+    {
+      "file": "original.png",
+      "source": "art/portraits/mobile-mouths/npc087-split-workspace/original.png",
+      "sha256": "b8851f9df69ee15e297ab3aa7e70025710d27bd2e84dd0ed46d7ff7e94ab7717",
+      "copiedSha256": "b8851f9df69ee15e297ab3aa7e70025710d27bd2e84dd0ed46d7ff7e94ab7717",
+      "byteExact": true
+    },
+    {
+      "file": "source-upper.png",
+      "source": "art/portraits/mobile-mouths/npc087-split-workspace/source-upper.png",
+      "sha256": "561b366e2b916b7524fb43d1e933b2b7c51d446acb01b27c925b31878da38e65",
+      "copiedSha256": "561b366e2b916b7524fb43d1e933b2b7c51d446acb01b27c925b31878da38e65",
+      "byteExact": true
+    },
+    {
+      "file": "source-lower.png",
+      "source": "art/portraits/mobile-mouths/npc087-split-workspace/source-lower.png",
+      "sha256": "3e5f88afe1fd31b5c007d4e1a6c652cee209afbf1269a53be5aeee3c7d9ae2d0",
+      "copiedSha256": "3e5f88afe1fd31b5c007d4e1a6c652cee209afbf1269a53be5aeee3c7d9ae2d0",
+      "byteExact": true
+    },
+    {
+      "file": "layout.json",
+      "source": "art/portraits/mobile-mouths/npc087-split-workspace/layout.json",
+      "sha256": "b41b805db7437626d9b3eed070bfd58f314e5cfa76efd95e6f93d77b8a3bb611",
+      "copiedSha256": "b41b805db7437626d9b3eed070bfd58f314e5cfa76efd95e6f93d77b8a3bb611",
+      "byteExact": true
+    },
+    {
+      "file": "eyes/afraid/open.png",
+      "source": "art/portraits/mobile-mouths/npc087-split-workspace/eyes/afraid/open.png",
+      "sha256": "f9fea7d597f00ce364549373fb7b0a7c341946f0413ecf9f40a5576e8dacdeec",
+      "copiedSha256": "f9fea7d597f00ce364549373fb7b0a7c341946f0413ecf9f40a5576e8dacdeec",
+      "byteExact": true
+    },
+    {
+      "file": "eyes/afraid/half.png",
+      "source": "art/portraits/mobile-mouths/npc087-split-workspace/eyes/afraid/half.png",
+      "sha256": "2f194f72c5dd36e1d6b6a9bec849c09b579a7eb166ffba6263fcfdc7c7bb0417",
+      "copiedSha256": "2f194f72c5dd36e1d6b6a9bec849c09b579a7eb166ffba6263fcfdc7c7bb0417",
+      "byteExact": true
+    },
+    {
+      "file": "eyes/afraid/closed.png",
+      "source": "art/portraits/mobile-mouths/npc087-split-workspace/eyes/afraid/closed.png",
+      "sha256": "3e7357e3576f384999e2a681261c3a9bd53e711a44a609159a39866ddaf9381f",
+      "copiedSha256": "3e7357e3576f384999e2a681261c3a9bd53e711a44a609159a39866ddaf9381f",
+      "byteExact": true
+    }
+  ],
+  "note": "Fresh source-only copy from current split workspace. Only original/source-upper/source-lower/layout and the selected emotion open/half/closed frames were copied. No parent tree copy, gaze generation, assembly, catalog edit, or publication."
+}

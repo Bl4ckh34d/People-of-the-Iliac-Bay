@@ -18,7 +18,7 @@ namespace PeopleOfTheIliacBay.DFU
     internal static class ConversationActionMoodProbe
     {
         private const string RunFlag = "-peopleoftheiliacbay-conversation-action-mood-probe";
-        private const string OwnedCharacter = "PeopleOfTheIliacBayTest-9a5f197b";
+        private const string OwnedCharacter = "Hakon Ironhand";
         private const string BaselineSave = "People - Gothway Garden";
 
         private enum Phase { PassThrough, ObserveLive, Control }

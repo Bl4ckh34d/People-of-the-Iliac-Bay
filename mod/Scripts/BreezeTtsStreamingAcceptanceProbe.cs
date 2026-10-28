@@ -16,7 +16,7 @@ namespace PeopleOfTheIliacBay.DFU
     internal static class BreezeTtsStreamingAcceptanceProbe
     {
         internal const string RunFlag = "-peopleoftheiliacbay-tts-streaming-acceptance-probe";
-        private const string OwnedCharacter = "PeopleOfTheIliacBayTest-9a5f197b";
+        private const string OwnedCharacter = "Hakon Ironhand";
         private const string BaselineSave = "People - Gothway Garden";
         private const string FirstSentence = "The street is quiet tonight. ";
         private const string SecondSentence = "I will keep watch until dawn.";

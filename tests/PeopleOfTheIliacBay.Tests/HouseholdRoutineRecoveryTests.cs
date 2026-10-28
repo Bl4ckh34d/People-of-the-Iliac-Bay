@@ -55,7 +55,8 @@ namespace PeopleOfTheIliacBay.Tests
                 var request=HouseholdDayPlanTests.Request();
                 request.SecondRoutine=new ResidentRoutine{ResidentId="father",DestinationKey=-1};
                 var day=HouseholdDayPlanTests.Create(request);var recovery=Recover(request,day,"mother",8*3600,7);
-                Check.True(recovery.Legs.Exists(l=>l.OriginalStopIndex==0));Check.True(recovery.HouseholdDayId==day.Id);
+                Check.True(!recovery.Legs.Exists(l=>l.OriginalStopIndex>=0));Check.True(recovery.HouseholdDayId==day.Id);
+                Check.True(recovery.Legs[recovery.Legs.Count-1].ReturnsHome);
             }));
             cases.Add(("Moving a partner's exact point meeting invalidates family recovery",()=>{
                 var request=HouseholdDayAppointmentTests.SharedRequest();var day=HouseholdDayPlanTests.Create(request);
@@ -112,14 +113,14 @@ namespace PeopleOfTheIliacBay.Tests
                 recovery.CreatedAt=request.PlannedAt-1;
                 Check.Throws<ArgumentException>(()=>store.SaveRoutineRecovery(recovery));
             }));
-            cases.Add(("Legacy recovery on a dated family day loads but cannot override the family schedule",()=>{
+            cases.Add(("Ordinary recovery on a dated family day cannot override the family schedule",()=>{
                 var request=HouseholdDayAppointmentTests.SharedRequest();var day=HouseholdDayPlanTests.Create(request);
                 var resident=request.Household.Residents[0];var routine=request.FirstRoutine;double now=day.AbsoluteDay*86400d+17*3600;
                 Check.True(RoutineRecoveryPlanner.TryCreate(2,resident,routine,ResidentRoutineDay.Schedule(7,routine,360,1380),null,
                     day.AbsoluteDay,now,7,now,360,1380,30,out var legacy,out var reason),reason);
                 var store=HouseholdDayPlanTests.Store(request);store.SaveRoutineRecovery(legacy);
                 Check.True(store.TryPublishHouseholdDay(day,request.PlannedAt,out reason),reason);
-                var world=store.Snapshot();world.Version=67;store.Restore(world);
+                var world=store.Snapshot();store.Restore(world);
                 Check.True(store.HasRoutineRecovery("mother"));Check.True(store.GetHouseholdRoutineRecovery("mother",day.AbsoluteDay)==null);
                 Check.True(store.GetRoutineRecovery("mother",day.AbsoluteDay,legacy.RoutineFingerprint,legacy.AppointmentFingerprint)==null,
                     "legacy recovery must not override a current dated family plan");
@@ -162,15 +163,16 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.True(recovery.EndsAt>recovery.DepartAt);Check.Equal(Activity.Travel,recovery.Evaluate(recovery.DepartAt+1).Activity);
                 Check.Equal(7,recovery.Evaluate(recovery.EndsAt).BuildingKey);
             }));
-            cases.Add(("Family recovery retains retimed ordinary visits with their original identities",()=>{
+            cases.Add(("Family recovery skips ordinary errands while preserving joint family identity",()=>{
                 var request=HouseholdDayAppointmentTests.SharedRequest();var day=HouseholdDayPlanTests.Create(request);
                 var recovery=Recover(request,day,"father",8*3600,7);
                 var expected=HouseholdDayPlanner.Schedule(day,"father",request.SecondRoutine).ScheduledVisits(request.PlannedAt);
                 var actual=DailySchedule.ContinueDay(HouseholdDayPlanner.Schedule(day,"father",request.SecondRoutine),recovery).ScheduledVisits(request.PlannedAt);
-                Check.Equal(expected.Count,actual.Count);
-                for(int index=0;index<expected.Count;index++)
-                {Check.Equal(expected[index].VisitIndex,actual[index].VisitIndex);Check.Near(expected[index].EnterAt,actual[index].EnterAt);}
-                Check.True(actual[0].EnterAt>9*3600+300,"the father must keep his childcare-delayed departure");
+                Check.Equal(1,actual.Count);
+                Check.Equal(HouseholdDayPlanner.JointVisitIndex,actual[0].VisitIndex);
+                var joint=expected.Find(v=>v.VisitIndex==HouseholdDayPlanner.JointVisitIndex);
+                Check.Equal(HouseholdDayPlanner.JointVisitIndex,joint.VisitIndex);Check.Near(joint.EnterAt,actual[0].EnterAt);
+                Check.True(recovery.SkippedStopIndices.Count>0);
             }));
             cases.Add(("Joint recovery legs have a family identity rather than a fake appointment or ordinary stop",()=>{
                 var request=HouseholdDayAppointmentTests.SharedRequest();var day=HouseholdDayPlanTests.Create(request);

@@ -1,0 +1,53 @@
+{
+  "emotion": "angry",
+  "subject": "record77",
+  "generator": "built-in image_gen",
+  "generation_count": 1,
+  "inputs": [
+    {
+      "role": "edit-target",
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\mouth-reference-grid.png",
+      "sha256": "81B130639901DA518717B9B48B461C210CE9F9D8D1C7141CE409D46E542DD7DE",
+      "dimensions": "1536x696"
+    },
+    {
+      "role": "identity-palette-reference",
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\original.png",
+      "sha256": "4BBB1C9F6BEA7561D316FA6587A93FD0C9BCBFA3C9AA0992BB85B804AA213125",
+      "dimensions": "64x64"
+    }
+  ],
+  "generated": {
+    "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-bfa3-7821-8c10-1973507e5744\\exec-f1fa0aa0-1007-4b4c-88d2-e27d8b4a6885.png",
+    "sha256": "3176601DE1E8B4418C353724274637023C975E8AACDF1ABD8D6B4763C5838DB9",
+    "dimensions": "1863x844"
+  },
+  "output": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\mouth\\angry\\raw.png",
+    "sha256": "3176601DE1E8B4418C353724274637023C975E8AACDF1ABD8D6B4763C5838DB9",
+    "dimensions": "1863x844",
+    "aspect_ratio": 2.207346
+  },
+  "grid": {
+    "rows": 3,
+    "columns": 3,
+    "row_major_order": [
+      "A M/B/P closed",
+      "B narrow consonant",
+      "C medium EH",
+      "D moderate AH",
+      "E rounded OH",
+      "F small OO/W",
+      "G F/V",
+      "H L",
+      "X tense closed"
+    ],
+    "target_dimensions": "1536x696",
+    "target_aspect_ratio": 2.206897
+  },
+  "prompt": "Use case: stylized-concept\nAsset type: 3×3 grid of complete lower portrait halves for a retro pixel-art NPC\nPrimary request: Edit Image 1 into an ANGRY emotion mouth sheet. Preserve exact 3×3 layout, cell alignment, and aspect ratio; target is 1536×696. Each cell is one complete original 64×29 lower-face half enlarged 8×. Row-major order A B C / D E F / G H X. Make every mouth read as the same restrained anger through tense, compressed or slightly downturned corners and subtle nearby folds. Cell X has tightly pressed lips. Preserve each speech sound in A–H.\nInput images: Image 1 is the edit target and exact nine-cell speech-pose sheet. Image 2 is supporting identity and palette reference only; do not reproduce its upper face.\nComposition/framing: retain all nine complete lower-half portraits in a clean 3×3 sheet, no gutters, labels, borders, or text. Keep mouth at original scale, position, width, and anchor in every cell. Keep nose, chin, jaw, hair, neck, and original framing fixed.\nStyle/medium: match original soft, muted, low-contrast pixel art and skin shading. Use subtle pixel-level lip-corner tension; preserve natural lip color and soft contours.\nConstraints: A is fully lip-closed for M/B/P. B narrow consonant opening with slight teeth. C medium EH. D moderately open AH. E rounded OH. F small OO/W. G upper teeth touch lower lip for F/V. H raised tongue behind teeth for L. X is tightly pressed closed angry resting lips. Keep each corresponding mouth opening and pose recognizable. Do not widen, enlarge, shift, crop, or stretch mouths. Only emotion-appropriate lip corner tension and small nearby folds may change. Keep all other lower-half pixels and identity details as close to references as possible. No giant mouth, exaggerated teeth, yawning, tongue sticking out, hard black outline, increased contrast, changed skin palette, changed face geometry, altered nose/chin/neck/hair, extra objects, labels, gutters, or layout changes. Output only the complete 3×3 lower-half sheet.",
+  "visible_deviations": [
+    "Some open mouth shapes appear slightly wider than source reference; exact native anchors and mask acceptance remain parent-owned."
+  ],
+  "status": "prototype-user-review-pending-not-installed"
+}

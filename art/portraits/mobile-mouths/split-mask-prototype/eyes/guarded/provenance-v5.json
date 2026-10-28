@@ -1,0 +1,12 @@
+{
+  "generator": "built-in image_gen",
+  "revision": 5,
+  "emotion": "skeptical",
+  "source": "raw-v4.png",
+  "sourceSha256": "5852D82D022560FAB07276AF6C351AE8842160729D4039AA92B0898D36128245",
+  "output": "raw-v5.png",
+  "outputSha256": "81E0342A14FB11E7756687C500C4E922407C7B6A02389B67CD092D40AE4B1717",
+  "prompt": "Targeted repair of this exact existing 2x2 upper-face pixel-art animation sheet. In ALL four cells, repair ONLY the woman's eyebrow on the LEFT SIDE OF THE IMAGE (viewer's left, woman's right). Its OUTER LEFT HALF currently fades away and makes the eyebrow look chopped short. Restore a COMPLETE, continuous, naturally tapered eyebrow from outer temple toward the inner nose end. Extend/strengthen the missing outer LEFT tail by about TWO native portrait pixels, following the original woman's natural eyebrow footprint. Keep the currently skeptical raised arch and its inner end, but connect the outer half with clearly visible medium-brown soft pixels, not an abrupt cut, not invisible flesh color. The whole brow must read as one complete connected brow. Keep a soft natural taper at the far outer end. Do not turn it into a flat dark block or add a second eyebrow. Preserve every other feature, especially the other eyebrow, centered gaze, purple irises, eyelid phase in each cell, face shape, exact crop, hair, skin palette, background and layout. The same full eyebrow shape and placement in all four cells. Row-major phases: open, half closed, fully closed, duplicate open. Same soft low-resolution Daggerfall pixel-art style, no hard new outlines, no increased global contrast. Output the complete sheet with same framing, aspect ratio, cell order, no text, no labels or borders.",
+  "reason": "Outer viewer-left brow faded in generated source, resembling crop clipping.",
+  "status": "visual-review-pending"
+}

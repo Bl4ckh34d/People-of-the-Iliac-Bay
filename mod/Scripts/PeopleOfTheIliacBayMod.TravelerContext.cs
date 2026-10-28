@@ -7,7 +7,10 @@ namespace PeopleOfTheIliacBay.DFU
     public sealed partial class PeopleOfTheIliacBayMod
     {
         private string ManagedTravelerPlanContext(WorldStateStore activeStore,string personId,double now,int settlement)
-        {return TravelerConversationContext.PlannedActivity(activeStore,personId,settlement,now,ConversationBuildingName);}
+        {
+            string delayed=streets?streets.PendingTravelerDepartureContext(activeStore,personId,now):null;
+            return delayed??TravelerConversationContext.PlannedActivity(activeStore,personId,settlement,now,ConversationBuildingName);
+        }
 
         private string CurrentTravelerIdentityContext()
         {

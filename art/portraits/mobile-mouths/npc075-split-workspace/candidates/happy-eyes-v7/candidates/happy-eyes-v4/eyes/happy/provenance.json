@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T12:38:34.1092299Z",
+    "portraitRecord":  75,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "happy",
+    "prompt":  "Use case: illustration-story. Asset type: NPC075 happy-eye atlas. Use only the single supplied local original NPC075 upper-half reference grid.\n\nGenerate exactly one 2×2 atlas of four equal complete native 64×35 upper-face crops, canvas ratio64:35. No labels, gutters, dividers, borders, padding, extra rows, zooms, or extra panels. Exact row-major phase order OPEN / HALF / CLOSED / OPEN REPEAT.\n\nMake the HAPPY brows unmistakably warm and cheerful, clearly different from the flat neutral brows in the reference. Draw two connected, natural source-colored brow shapes with soft relaxed arcs: outer thirds rise gently toward the temples; inner ends stay smooth and unpinched, with no downward angry inner slant and no worried lifted inner peaks. Keep the brows coherent and same-shape/same-position in all four cells. Use warm smile-eye character with fine outer-corner creases, not a surprised expression.\n\nBlinking changes upper lids only. The upper lid descends from OPEN to HALF to CLOSED. Keep the lower lids at the exact same native row and shape in every phase. Keep cheeks, under-eye skin and face contour absolutely stationary; no cheek lift, puffing, squint-cheek motion, lower-lid raise, or vertical face movement. OPEN REPEAT must match OPEN. HALF preserves source aperture with upper lid covering most of the compact iris; CLOSED fully covers iris and sclera with continuous lid.\n\nPreserve exact NPC075 identity, original framing, dark center fringe and side hair, especially all fringe pixels in rows15–16. Keep compact amber-olive iris clusters and dark pupils in original forward alignment and source size. Preserve warm-brown source palette, native pixel clusters and muted contrast. Keep sclera dark and shaded, with only tiny warm glints; no cream-white horizontal bands, broad pale patches, bright flashes, enlarged eye whites or iris. Keep all edits inside existing eye/brow envelopes and never repaint hair. No angry V, no high surprised arches, no blur, gradients, vector smoothing, text, watermark, or extra subjects.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-b1e4e676-3c22-4c46-9808-7aa062e30a75.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-b1e4e676-3c22-4c46-9808-7aa062e30a75.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "e2e7919bfc72eb52738873b46bffa3a1eb3ca2b503bd62101ac973e8f30cd8b3",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-b1e4e676-3c22-4c46-9808-7aa062e30a75.png",
+                      "sha256":  "700ff649eadca442de9224bfe5eaa1ae8c4a61a9bb04d6305e49b469ddec259c",
+                      "width":  1696,
+                      "height":  927
+                  },
+    "raw":  {
+                "path":  "eyes/happy/raw.png",
+                "sha256":  "700ff649eadca442de9224bfe5eaa1ae8c4a61a9bb04d6305e49b469ddec259c",
+                "width":  1696,
+                "height":  927
+            }
+}

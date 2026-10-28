@@ -746,16 +746,7 @@ namespace PeopleOfTheIliacBay.Core
             var result = new List<AppointmentRecord>();
             foreach (var item in source.Appointments)
             {
-                var copy = ValidateAndCopyAppointment(validatedWorld, item, source.Version < 49);
-                if (source.Version < 49 && copy.OutcomeRecorded &&
-                    (copy.Status == "attended" || copy.Status == "player-absent"))
-                {
-                    NpcExperienceEvent evidence;
-                    copy.ExperienceProjection = NpcAppointmentExperience.TryCreate(copy, out evidence) &&
-                        HasExactAppointmentExperience(validatedWorld.NpcExperienceInbox, evidence)
-                        ? NpcAppointmentExperienceProjection.Projected
-                        : NpcAppointmentExperienceProjection.LegacyUnavailable;
-                }
+                var copy = ValidateAndCopyAppointment(validatedWorld, item);
                 Require(ids.Add(copy.Id), "Duplicate appointment ID.");
                 result.Add(copy);
             }

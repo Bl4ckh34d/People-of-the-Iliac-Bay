@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 82,
+  "emotion": "neutral",
+  "asset": "3x3 speech-viseme atlas",
+  "tool": "built-in image_gen",
+  "toolCallsForThisArtifact": 1,
+  "exactToolOutputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-5744-7b43-9b03-e8cced819bb7 as C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-5744-7b43-9b03-e8cced819bb7\\exec-7c1ae74f-d5f0-4718-9548-7cf6b24e3d0e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+  "prompt": "Use case: precise-object-edit\nAsset type: 3x3 speech-viseme atlas for a native 64x29 lower half of Daggerfall Unity portrait record 82\nInput images: Image 1 is mouth-reference-grid.png, an inspected 3x3 atlas of repeated crops from this exact portrait.\nPrimary request: Preserve the canvas, nine equal cells, alignment, crop and face. Return cells row-major A B C / D E F / G H X. Change only the mouth within each cell.\nStyle/medium: retain the source's muted, softly shaded native pixel-art palette, soft low contrast and pixel scale. Keep details crisp at native size, without blur, sharpening or thicker outlines.\nVisemes, natural and clearly distinct at the source mouth scale: A lips closed; B gently clenched with a small visible line of teeth; C slightly open; D wide open; E rounded open; F narrow pursed/protruding; G lower lip touching upper teeth; H small opening with tongue tip visible; X quiet closed rest.\nConstraints: same woman and identity, nose, cheeks, jaw, chin, neck, skin, hair, background, crop, scale and cell boundaries. Preserve the original soft brown skin palette. Do not make skin more orange/saturated, lips lipstick-red, teeth bright white or shadows blacker. New mouth interior/teeth/tongue only where a viseme needs them, kept small and subdued. Keep all non-mouth features unchanged. No text, labels, grid lines or watermark.",
+  "sourceOriginal": {
+    "path": "original.png",
+    "sha256": "37270c9eb3e1260c3774263d512bfd0bab8e144fef129b32a0f065c92aa48d26",
+    "dimensions": "64x64"
+  },
+  "reference": {
+    "path": "mouth-reference-grid.png",
+    "sha256": "8ea66062585e7c7159318ec4a9cf0f55485324ebfcbd412fdb6e841179667724",
+    "dimensions": "1536x696"
+  },
+  "generatedOutput": {
+    "exactSourcePath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-5744-7b43-9b03-e8cced819bb7\\exec-7c1ae74f-d5f0-4718-9548-7cf6b24e3d0e.png",
+    "sha256": "e191c795c90dfba3b1cfc006f58c5ce55450244378c6dc7da3e62db0676656dd",
+    "dimensions": "1863x844"
+  },
+  "savedRaw": {
+    "path": "mouth/neutral/raw.png",
+    "sha256": "e191c795c90dfba3b1cfc006f58c5ce55450244378c6dc7da3e62db0676656dd",
+    "dimensions": "1863x844",
+    "copiedUnmodified": true
+  },
+  "cellOrder": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "X"
+  ],
+  "visibleQualityLimits": [
+    "Visemes look distinct in the displayed atlas, but have not been checked at native pixel scale.",
+    "Skin/lip colors appear warmer and more orange/red than the muted source; visible teeth are bright relative to the original.",
+    "Neutral A and X are intended to be restored from the exact original during assembly."
+  ]
+}

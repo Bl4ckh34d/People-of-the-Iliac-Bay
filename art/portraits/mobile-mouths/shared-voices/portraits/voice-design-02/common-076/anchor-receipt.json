@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "portraitId": "common-076",
+  "profileId": "common-076-voice-design-02",
+  "profilePath": "work/portrait-female-voice-design-02/profiles/common-076.json",
+  "profileSha256": "ac9ba97a37d6f6a2b1eb8a98d3a318bf14b334747599cb613facf1ae1bcd7a59",
+  "attributes": {
+    "pitch": "a low alto register",
+    "timbre": "dark and chest-resonant",
+    "roughness": "slightly husky",
+    "breathiness": "with a clean firm tone and little breathiness",
+    "vocalFry": "without habitual vocal fry",
+    "pace": "a lightly brisk conversational pace"
+  },
+  "stableInstruction": "An adult woman speaking British English with a neutral southern English accent. Her distinctive voice has a low alto register; its timbre is dark and chest-resonant, slightly husky, with a clean firm tone and little breathiness, without habitual vocal fry. Use a lightly brisk conversational pace. Keep this individual vocal identity consistent; speak naturally, without caricature, shouting, or added vocal events.",
+  "seed": 1150452287,
+  "guidanceScale": 4.0,
+  "anchorText": "Good day. I have been in this town for many years. What brings you here today?",
+  "anchorRequestPurpose": "Breeze VoiceDesign without voice_ref; stable per-woman profile instruction and seed.",
+  "requestPayload": {
+    "model": "breeze",
+    "input": "Good day. I have been in this town for many years. What brings you here today?",
+    "response_format": "pcm",
+    "stream_format": "sse",
+    "options": {
+      "instruct": "An adult woman speaking British English with a neutral southern English accent. Her distinctive voice has a low alto register; its timbre is dark and chest-resonant, slightly husky, with a clean firm tone and little breathiness, without habitual vocal fry. Use a lightly brisk conversational pace. Keep this individual vocal identity consistent; speak naturally, without caricature, shouting, or added vocal events.",
+      "guidance_scale": 4.0,
+      "stream_lookahead_margin": 0,
+      "stream_chunk_policy": "grow",
+      "seed": 1150452287
+    }
+  },
+  "requestPayloadSha256": "3e6496cc83ac5897e224a5018ae51143fae2ad172771ffd3668f6edc6c315e69",
+  "referenceWav": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait-female-voice-design-02\\anchors\\common-076\\reference.wav",
+  "referenceSha256": "b5dfa46cdf631aaa89619a0c39ac078794ee6d776d3ed61e466a86ec601203c3",
+  "referenceRawWav": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait-female-voice-design-02\\anchors\\common-076\\reference.raw.wav",
+  "referenceRawSha256": "a983379444a1406bc633c68972bc23d0cc4dbb4cf966f617bf273c686a96597a",
+  "audioSampleRate": 24000,
+  "audioFrames": 86400,
+  "normalization": {
+    "schemaVersion": 1,
+    "normalizer": "pcm16-active-rms-v1",
+    "status": "normalized",
+    "targetActiveRmsDbfs": -20.0,
+    "peakCeilingDbfs": -3.0,
+    "maxBoostDb": 12.0,
+    "gateDbfs": -50.0,
+    "appliedGainDb": -0.9891771212880395,
+    "input": {
+      "sha256": "a983379444a1406bc633c68972bc23d0cc4dbb4cf966f617bf273c686a96597a",
+      "sampleRate": 24000,
+      "channels": 1,
+      "sampleWidthBytes": 2,
+      "frames": 86400,
+      "peakDbfs": -4.215311379706637,
+      "activeRmsDbfs": -19.010822878711963,
+      "activeFrames": 76320
+    },
+    "output": {
+      "sha256": "b5dfa46cdf631aaa89619a0c39ac078794ee6d776d3ed61e466a86ec601203c3",
+      "sampleRate": 24000,
+      "channels": 1,
+      "sampleWidthBytes": 2,
+      "frames": 86400,
+      "peakDbfs": -5.204513749597486,
+      "activeRmsDbfs": -19.88943612365667,
+      "activeFrames": 74400
+    }
+  },
+  "synthesis": {
+    "outputWav": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait-female-voice-design-02\\anchors\\common-076\\reference.raw.wav",
+    "pcmBytes": 172800,
+    "sampleRate": 24000,
+    "channels": 1,
+    "synthesisMs": 1865.972,
+    "firstAudioMs": 356.188,
+    "audioDeltaCount": 6,
+    "serverTiming": {
+      "ttft_ms": 334.784
+    }
+  }
+}

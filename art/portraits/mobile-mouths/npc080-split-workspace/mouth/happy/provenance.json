@@ -1,0 +1,52 @@
+{
+  "portraitRecord": 80,
+  "bank": "TFAC00I0.RCI",
+  "tool": "built-in image_gen",
+  "generatedUtc": "2026-10-21T22:04:07Z",
+  "sourceOriginal": {
+    "path": "original.png",
+    "sha256": "4EA9B975047475AE696146FBD02A9B005B16C4BAAB7E1C1E1C3651EE287F4B0B",
+    "dimensions": [
+      64,
+      64
+    ]
+  },
+  "asset": "happy mouth",
+  "output": {
+    "path": "mouth/happy/raw.png",
+    "sha256": "AE657B8D412DB2E183B7C21E3ADAA64B6E1745F726EC0DDC613CB7F2DDBBFCDA",
+    "dimensions": [
+      1863,
+      844
+    ],
+    "copiedByteIdentically": true
+  },
+  "references": [
+    {
+      "path": "mouth-reference-grid.png",
+      "role": "edit target and geometry/style reference",
+      "sha256": "360FBBCED7A02766A36B31374267AF4E8C05702708815D7720B030712A5BD435",
+      "dimensions": [
+        1536,
+        696
+      ]
+    },
+    {
+      "path": "original.png",
+      "role": "identity and palette reference",
+      "sha256": "4EA9B975047475AE696146FBD02A9B005B16C4BAAB7E1C1E1C3651EE287F4B0B",
+      "dimensions": [
+        64,
+        64
+      ]
+    }
+  ],
+  "nativeLayout": "3x3 row-major A B C / D E F / G H X; intended native cells 64x29; generated file keeps the 3x3 aspect and is not resampled.",
+  "prompt": "Use case: stylized-concept\nAsset type: native pixel-art NPC portrait speech atlas for Daggerfall Unity\nPrimary request: Edit the supplied 3x3 reference grid into one HAPPY mouth sheet for NPC portrait 080. Keep exact 3x3 layout; row-major cells A, B, C / D, E, F / G, H, X. Make all nine speech shapes clearly distinct and usable as A-H/X visemes, with small, natural mouth movement.\nInput images: Image 1 is the edit target and immutable layout/style reference: 3x3 grid of original lower-half portrait cells, each 64x29 native pixels enlarged 8x. Image 2 is the original complete 64x64 portrait and palette reference.\nSubject: same front-facing woman, same lower face, lips, nose, jaw, neck and hair from the supplied source.\nStyle/medium: crisp native-resolution pixel art using the original soft muted pixel palette and discrete pixel clusters. Keep pixel edges crisp; no blur, smoothing, sharpening, gradients or new texture.\nComposition/framing: preserve the full 3x3 atlas exactly; each cell remains one 64x29 lower half; no labels, extra margins, seams or cropping. Preserve the same head scale, face outline, nose placement, hair and neck in every cell.\nLighting/mood: warm friendly happiness conveyed by gentle raised lip corners and a relaxed, pleasant mouth. Keep A and X closed with a restrained friendly smile. Other phoneme shapes remain natural speech poses, not nine variants of a grin.\nColor palette: match the original muted rose-brown lip color and warm tan skin. Preserve the original skin and hair colors. No lipstick-red lips, no orange skin patches, no strong contrast or black outlines. Teeth, where a phoneme requires them, remain small and dim like the source palette.\nConstraints: preserve original lip size and anatomy; change only the mouth region. Make A-H and X distinguishable by mouth opening and lip form while keeping the mouth modest. Avoid giant grins and oversized teeth. Keep mouth shapes anatomically plausible and consistent with the same person.\nAvoid: bright white teeth, vivid red lipstick, orange or saturated skin, black contours, huge grin, oversized mouth, mouth shifting position, modified nose/jaw/hair/neck, smoothing, blur, cell resizing, or any layout change.",
+  "visualQa": "One built-in generation, no reroll. All nine cells show distinct closed, parted, rounded, or wider speech shapes; A and X are closed and friendly. Lip scale remains modest. Several phonemes show small bright teeth, most visible in the wider-open cells; they may be brighter than the original palette. Lips and mouth-adjacent skin look warmer/redder than source in some cells, so do not treat palette as passed. Nose, hair, jaw and neck remain aligned at atlas scale.",
+  "limitations": [
+    "Generated dimensions 1863x844 differ from reference 1536x696; raw file is preserved without resizing.",
+    "No native 64x29 sampling, mask composite, or user visual acceptance is included.",
+    "Teeth and warm mouth-region color need review after native downsampling."
+  ]
+}

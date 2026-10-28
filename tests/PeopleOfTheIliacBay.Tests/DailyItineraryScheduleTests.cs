@@ -99,10 +99,6 @@ namespace PeopleOfTheIliacBay.Tests
                 copied.Residents[0].Itinerary.ExitRoute[0].X = 123;
                 Check.Near(20, restored.GetRoutines(100).Residents[0].Itinerary.ExitRoute[0].X);
 
-                var legacy = snapshot; legacy.Version = 17;
-                restored.Restore(legacy);
-                Check.Equal(0, restored.GetRoutines(100).ItineraryVersion);
-                Check.True(restored.GetRoutines(100).Residents[0].Itinerary == null);
             }));
 
             cases.Add(("Itinerary validation rejects children, inns, malformed routes and next-day return", () =>

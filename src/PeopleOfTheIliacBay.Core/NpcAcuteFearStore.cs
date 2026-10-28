@@ -86,7 +86,6 @@ namespace PeopleOfTheIliacBay.Core
         private static List<NpcAcuteFearState> CopyNpcAcuteFears(WorldState source, WorldState validated)
         {
             var result = new List<NpcAcuteFearState>();
-            if (source.Version < 41) return result;
             Require(source.NpcAcuteFears != null, "Missing NPC acute-fear ledger.");
             var identities = new HashSet<string>(StringComparer.Ordinal);
             foreach (var saved in source.NpcAcuteFears)

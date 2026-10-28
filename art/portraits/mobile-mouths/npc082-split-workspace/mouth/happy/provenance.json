@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "portrait": "npc082",
+  "emotion": "happy",
+  "artifact": "mouth-3x3",
+  "tool": "built-in image_gen",
+  "toolCallCountForThisArtifact": 1,
+  "prompt": "Edit Image 1, the NPC082 lower-portrait 3×3 reference grid. Return one complete 3×3 atlas with nine equal cells, the same framing and no labels or borders. Each cell is the same complete original lower portrait half enlarged in the reference, not a mouth-only crop. Preserve identity, face shape, nose, cheeks, jaw, chin, hair edges, neck, clothing, background, native mouth position and original modest mouth size. Row-major speech poses: A closed friendly smile; B lightly parted with a small cream hint of upper teeth; C small open; D wider open for a strong vowel but still modest; E rounded vowel; F softly puckered; G upper teeth lightly meeting the lower lip; H a tiny tongue glimpse; X relaxed closed friendly smile. Keep nine shapes clearly distinct and readable while using natural restrained articulation. Make the closed shapes pleasantly warm, with only gently raised mouth corners, no large toothy grin. Preserve the source's muted soft pixel-art palette and pixel structure: do not add lipstick-red lips, orange skin patches, pure-white teeth, hard black outlines, harsh contrast, blur, or enlarged mouth geometry. Use subdued warm ivory for teeth and a small dark brown-red cavity only where the phoneme needs it. Hair, head and neck geometry remain exactly as in the reference. No other edits or text.",
+  "sourceOriginal": {
+    "path": "art/portraits/mobile-mouths/npc082-split-workspace/original.png",
+    "sha256": "37270c9eb3e1260c3774263d512bfd0bab8e144fef129b32a0f065c92aa48d26",
+    "dimensions": [
+      64,
+      64
+    ]
+  },
+  "referenceGrid": {
+    "path": "art/portraits/mobile-mouths/npc082-split-workspace/mouth-reference-grid.png",
+    "sha256": "8ea66062585e7c7159318ec4a9cf0f55485324ebfcbd412fdb6e841179667724",
+    "dimensions": [
+      1536,
+      696
+    ],
+    "expectedLayout": "3x3 A B C / D E F / G H X"
+  },
+  "exactOutputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-8b98-7181-a1df-84e7b766303c as C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-8b98-7181-a1df-84e7b766303c\\exec-0bef7dfa-965d-4ffe-aed9-af738ee08448.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+  "exactOutputPathParsedFromHint": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-8b98-7181-a1df-84e7b766303c\\exec-0bef7dfa-965d-4ffe-aed9-af738ee08448.png",
+  "savedRaw": {
+    "path": "art/portraits/mobile-mouths/npc082-split-workspace/mouth/happy/raw.png",
+    "copiedByteForByteFromExactOutputHint": true,
+    "resizedOrPostProcessed": false
+  },
+  "limitations": [
+    "Generated dimensions and native mouth palette require parent composition review; no user visual acceptance claimed."
+  ]
+}

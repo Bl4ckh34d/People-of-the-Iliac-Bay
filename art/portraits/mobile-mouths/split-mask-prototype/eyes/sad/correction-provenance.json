@@ -1,0 +1,38 @@
+{
+  "emotion": "sad",
+  "artifact": "corrected raw upper-eye 2x2 sheet",
+  "correctionOf": "eyes/sad/raw.png",
+  "prompt": "Use case: illustration-story\nAsset type: corrected pixel-art NPC portrait upper-eye 2x2 sheet\nPrimary request: Edit Image 1. Replace its too-wide, alarmed open-eye expression with clearly low-energy sadness. Image 2 is identity, palette, and native geometry reference.\nComposition: Preserve the same complete 2x2 upper-half sheet, same four cell boundaries, same framing, hairline, eye locations, and 1.82857 target aspect. No gutters, labels, or text.\nSubject and expression: Same woman in all cells. Open eyes look distinctly downward, with heavy drooping upper lids and slightly narrowed eye openings. Show soft sadness through gently lifted inner brow ends, not raised alarm brows. Keep gaze low and energy subdued. No big round eyes, no startled look, no fear.\nCell order, row-major: open downcast sad eyes; half blink covering about half the iris; fully closed blink hiding all iris and sclera; repeat the same open downcast sad eyes. Keep brow shape, height, and position identical across all four cells; only eyelid phase changes. Retain both readable brows in every cell, including closed blink.\nStyle: Preserve source native soft muted pixel-art palette, pixel scale, facial geometry, shading, proportions, and low contrast. Eyes must keep original size and anchor.\nConstraints: Correct expression only in the eye and brow areas. Keep face crop, forehead, hair, nose bridge, cheeks, skin, and every other feature unchanged. No full-face repaint, no face enlargement, no changed head angle, no thick black brows, no hard eyeliner, no harsh shadows, no sharpened edges, blur, airbrush, new objects, tears, text, watermark, crop, or margin. Output one complete 2x2 sheet.",
+  "sourcePaths": [
+    "art/portraits/mobile-mouths/split-mask-prototype/eyes/sad/raw.png",
+    "art/portraits/mobile-mouths/split-mask-prototype/original.png"
+  ],
+  "sourceSha256": {
+    "eyes/sad/raw.png": "7712E605EC631C65063FE46F229324268FB621B0099BEEE021AA1DC7BA6BB1CE",
+    "original.png": "4BBB1C9F6BEA7561D316FA6587A93FD0C9BCBFA3C9AA0992BB85B804AA213125"
+  },
+  "generatedPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-fb9b-7322-8190-74bf6fb54c9d\\exec-bc1f6b99-a441-41ef-979b-4df65afd26e9.png",
+  "generatedSha256": "3E61923122080E5DE8EC9F1F4DAD9F00DE6C684E8E65153BF3C71C3B73B89E53",
+  "outputPath": "art/portraits/mobile-mouths/split-mask-prototype/eyes/sad/raw-corrected.png",
+  "outputSha256": "3E61923122080E5DE8EC9F1F4DAD9F00DE6C684E8E65153BF3C71C3B73B89E53",
+  "dimensions": [
+    1695,
+    928
+  ],
+  "grid": [
+    2,
+    2
+  ],
+  "cellOrder": [
+    "open downcast sad",
+    "half blink",
+    "fully closed blink",
+    "repeat open downcast sad"
+  ],
+  "generationCalls": 1,
+  "generator": "built-in image_gen",
+  "visibleDeviations": [
+    "Brows and eye detail still vary slightly between cells; parent should align eyebrows across blink phases before consuming the sheet."
+  ],
+  "review": "pending"
+}

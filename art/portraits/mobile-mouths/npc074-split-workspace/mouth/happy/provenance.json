@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T10:29:55.3625077Z",
+    "portraitRecord":  74,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "happy",
+    "prompt":  "Use case: stylized-concept.\nAsset type: pixel-art NPC speech-mouth sprite sheet.\nPrimary request: Create one 3×3 atlas of this same source character\u0027s lower-face crops for a clearly happy emotion. The mouth should read as a warm, modest smile, visibly happier than neutral without a broad grin. Keep all nine poses faithful to their Rhubarb definitions while preserving a subtle happy mouth-corner expression.\nInput image: The single supplied image is the exact local mouth reference grid. It repeats the original lower halves for identity, framing, palette, and pixel scale.\nStyle/medium: Muted, soft pixel art. Preserve the original small muted pink lips, warm skin, light brown/blond hair, blue ornament/clothing edge, and soft native pixel clusters. Teeth, only where required, must be subdued gray-ivory, distinct from skin, never bright white. Use modest dark mouth interior.\nComposition/framing: Output exactly a 3×3 grid at overall 64:29 aspect ratio, with nine equal complete lower-face crops matching each reference cell. Row-major order A B C / D E F / G H X. No labels, text, gutters, borders, extra panels, full-face views, or zoomed feature crops.\nConstraints: Keep the original identity, nose, jaw, neck, hair, blue edge, background registration, lip scale and lip center fixed. Preserve the surrounding source face. The happy expression may lift the mouth corners slightly but must not replace or blur the requested phoneme.\nRhubarb mouth-shape definitions:\nA: Pressed closed lips with gentle pressure for P/B/M.\nB: Narrow horizontal opening with nearly together teeth for consonants and EE.\nC: Medium open mouth with relaxed unrounded lips for EH/AE.\nD: Wide vertical opening for AA, clearly larger than C.\nE: Slightly rounded lips with an opening no wider than C for AO/ER.\nF: Small forward puckered opening for UW/OW/W; not a tooth bite.\nG: Upper teeth touching the lower lip for F/V; not a wide open vowel.\nH: Tongue raised behind upper teeth, with opening between C and D, for long L; tongue may be invisible at native scale.\nX: Relaxed closed idle lips.\nAvoid: Huge grin, exaggerated corners, lipstick-red lips, bright white or skin-colored teeth, shiny highlights, tooth gaps, missing pose distinctions, stretched jaw, enlarged facial features, blur, gradients, vector shapes, labels, gutters, or changed background.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-b9c1e35a-fa51-4a01-9ed7-a875124233d5.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-b9c1e35a-fa51-4a01-9ed7-a875124233d5.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "fb9c8ade231ed63083cb2e8913d0227f84681dca1515de3e03a14898c767e061",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-b9c1e35a-fa51-4a01-9ed7-a875124233d5.png",
+                      "sha256":  "1aef088f1c3bf41a158ef249a09278a792e3c9b08d295ffc17c159d9419be45c",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/happy/raw.png",
+                "sha256":  "1aef088f1c3bf41a158ef249a09278a792e3c9b08d295ffc17c159d9419be45c",
+                "width":  1863,
+                "height":  844
+            }
+}

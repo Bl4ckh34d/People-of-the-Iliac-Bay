@@ -18,7 +18,7 @@ namespace PeopleOfTheIliacBay.DFU
     /// </summary>
     internal static class NpcExperienceCommitProbe
     {
-        private const string TransportProbeCharacter = "PeopleOfTheIliacBayTest-9a5f197b";
+        private const string TransportProbeCharacter = "Hakon Ironhand";
         private const string TransportProbeSave = "People - Gothway Garden";
 
         // Called by TownSmokeHarness only after it loads the exact owned fixture.

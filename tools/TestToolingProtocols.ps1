@@ -41,10 +41,15 @@ Assert-Check ($parseErrors.Count -eq 0) 'Town launcher does not parse.'
 $fixtureParameter=$townAst.ParamBlock.Parameters | Where-Object {$_.Name.VariablePath.UserPath -eq 'FixtureCharacter'}
 $fixtureAttribute=$fixtureParameter.Attributes | Where-Object {$_.TypeName.FullName -eq 'ValidateScript'}
 $fixtureValidator=$fixtureAttribute.PositionalArguments[0].ScriptBlock.GetScriptBlock()
-foreach($name in @('PeopleOfTheIliacBayTest-9a5f197b','PeopleOfTheIliacBayTest-00000000')) {
+foreach($name in @('Hakon Ironhand','PeopleOfTheIliacBayTest-00000000')) {
     Assert-Check ([bool]($name | ForEach-Object -Process $fixtureValidator)) 'Actual owned fixture name rejected.'
 }
-foreach($name in @('Player-9a5f197b','PeopleOfTheIliacBayTest-9a5f197','PeopleOfTheIliacBayTest-9a5f197bb','PeopleOfTheIliacBayTest-9A5F197B','PeopleOfTheIliacBayTest-9a5f197z')) {
+foreach($name in @('Player-9a5f197b','PeopleOfTheIliacBayTest-9a5f197','Hakon Ironhandb','PeopleOfTheIliacBayTest-9A5F197B','PeopleOfTheIliacBayTest-9a5f197z')) {
     Assert-Check (-not [bool]($name | ForEach-Object -Process $fixtureValidator)) 'Malformed or unowned fixture name admitted.'
 }
+$fighterSource=Get-Content -Raw (Join-Path $PSScriptRoot '..\mod\Scripts\FreshPreviewFighter.cs')
+Assert-Check ($fighterSource -match 'axe\.TemplateIndex\s*!=\s*\(int\)Weapons\.Battle_Axe') 'Fresh fighter verifies native weapon template identity through TemplateIndex.'
+Assert-Check ($fighterSource -notmatch 'axe\.GroupIndex\s*!=\s*\(int\)Weapons\.Battle_Axe') 'Fresh fighter incorrectly compares mapped GroupIndex with Weapons enum.'
+$townLauncherSource=Get-Content -Raw (Join-Path $PSScriptRoot 'TownTest.ps1')
+Assert-Check ($townLauncherSource -match '-peopleoftheiliacbay-fixture-character "''\s*\+\s*\$FixtureCharacter\s*\+\s*''"') 'Town launcher must quote fixture character names containing spaces.'
 Write-Output 'PASS typed receipt parsing, failure detection, cross-receipt rejection, and town acceptance negatives.'

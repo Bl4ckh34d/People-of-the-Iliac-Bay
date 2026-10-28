@@ -1,0 +1,17 @@
+{
+  "portrait": "TFAC-078",
+  "emotion": "afraid",
+  "asset": "eyes",
+  "raw": "art/portraits/mobile-mouths/npc078-split-workspace/eyes/afraid/raw.png",
+  "sourceGrid": "art\\portraits\\mobile-mouths\\npc078-split-workspace\\eyes-reference-grid.png",
+  "sourceGridSha256": "770bcaf228993a243e7af873727e0ea24ee1788439afa29e5dfb66bed0581340",
+  "generatedFileSha256": "fe0a64129a879eac109cc3150fd39a2f0099d715dac4c7e83e5299888f5bb3c0",
+  "dimensions": {
+    "height": 928,
+    "width": 1695
+  },
+  "tool": "built-in image_gen",
+  "generationMode": "single generation call; raw image copied unchanged",
+  "prompt": "Create one clean 2-by-2 sprite atlas of the SAME NPC face upper-half eyes from the supplied reference grid. Preserve exact cell framing, face identity, original pixel-art style, native palette, eye spacing, pupil direction, iris width, and complete brow visibility. Each equal cell is the original 64x35 upper-face half enlarged nearest-neighbor style; use row-major order: OPEN, HALF-CLOSED, CLOSED, OPEN (repeat the first open pose exactly in expression and gaze). Emotion is clearly AFRAID / alarmed: alert wide-open eyes with sharp focused attention and lightly raised tense brows, distinct from sad/downcast or pleading. Keep the fear restrained and believable at 64px portrait scale, not cartoonish. For blink cells, alter only lid coverage; keep pupils and iris anatomy stationary and same width across all four cells, with no horizontal pupil shift. Keep both brows fully inside each cell with breathing room, no clipping. Do not change nose, forehead, hair, skin palette, lighting, background, or framing. Do not add sweat, tears, props, text, separators, or new details. Output atlas only, exactly four equal cells in a 2x2 grid, no margins.",
+  "qa": "Inspected visually as a raw sheet. Atlas layout and expression present. Technical composition, native-scale readability, cell consistency and final masked animation are not verified."
+}

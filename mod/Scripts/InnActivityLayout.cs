@@ -32,7 +32,7 @@ namespace PeopleOfTheIliacBay.DFU
         {
             this.room=room;this.geometry=geometry;this.keeper=keeper;
             Seating=seating??FurnitureSeatCatalog.ForInterior(room);
-            publicBoundary=boundary??TavernRoomSurvey.PublicAreaBoundary(room);
+            publicBoundary=boundary??TavernBedSurvey.PublicAreaBoundary(room);
             entry=room.transform.InverseTransformPoint(geometry.EntryGround.Value);
             ReadCounter();
             if(customerDirection.sqrMagnitude<0.1f) customerDirection=KeeperApproaches.Count>0 ? KeeperApproaches[0]-keeper : entry-keeper;

@@ -28,9 +28,14 @@ namespace PeopleOfTheIliacBay.DFU
         private float bodiesAt;
         private readonly List<NavMeshDataInstance> instances=new List<NavMeshDataInstance>();
         private readonly List<NavMeshLinkInstance> links=new List<NavMeshLinkInstance>();
+        private NativeCityGateNavigation cityGates;
         public bool Ready {get{return instances.Count>0;}}
         public string Scene {get{return scene;}}
         public int ModuleCount {get{return instances.Count;}}
+        internal bool ClearCityGateStep(Vector3 from,Vector3 to)
+        {return cityGates==null || cityGates.ClearStep(from,to);}
+        internal bool ClearCityGatePath(Vector3[] corners)
+        {return cityGates==null || cityGates.ClearPath(corners);}
         public void Install(Mod source)
         {
             Current=this;mod=source;
@@ -79,6 +84,7 @@ namespace PeopleOfTheIliacBay.DFU
         }
         private void Update()
         {
+            if(cityGates!=null)cityGates.Refresh();
             if(Time.unscaledTime<checkAt)return;checkAt=Time.unscaledTime+0.5f;
             Transform root;string key;
             if(!Context(out root,out key)){Clear();owner=null;scene=null;variant=null;return;}
@@ -156,6 +162,13 @@ namespace PeopleOfTheIliacBay.DFU
                 if(scene.StartsWith("dungeon-",StringComparison.Ordinal) && templateAssembly)
                     foreach(var link in NativeDungeonNavigationSeams.Collect(owner))links.Add(NavMesh.AddLink(link));
                 else Connect(loaded);
+                if(scene.StartsWith("city-",StringComparison.Ordinal))
+                {
+                    var bounds=new Bounds(root.position,Vector3.zero);
+                    foreach(var block in root.GetComponentsInChildren<DaggerfallRMBBlock>())
+                        bounds.Encapsulate(block.transform.position+new Vector3(DaggerfallWorkshop.Utility.RMBLayout.RMBSide,0,DaggerfallWorkshop.Utility.RMBLayout.RMBSide)*0.5f);
+                    cityGates=new NativeCityGateNavigation(root,bounds.center);
+                }
                 Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_NAVMESH_LOADED: scene="+scene+"; modules="+instances.Count+"; links="+links.Count+
                     "; runtimeBake=false; reusableTemplates="+templateAssembly);
             }
@@ -201,6 +214,7 @@ namespace PeopleOfTheIliacBay.DFU
         }
         private void Clear()
         {
+            if(cityGates!=null){cityGates.Dispose();cityGates=null;}
             foreach(var link in links)if(link.valid)link.Remove();links.Clear();
             foreach(var instance in instances)if(instance.valid)instance.Remove();instances.Clear();
         }

@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "createdUtc": "2026-10-22T11:10:05.1212864Z",
+  "portraitRecord": 75,
+  "bank": "TFAC00I0.RCI",
+  "part": "eyes",
+  "emotion": "guarded",
+  "prompt": "Create a 2×2 pixel-art eye atlas for NPC075's guarded/skeptical expression, using the attached exact local candidate eyes-reference-grid.png as the sole reference. Preserve the source face identity, warm tan skin, textured brown hair and center fringe, muted amber-olive irises, and native soft brown pixel palette. Keep the same 64:35 crop and registration in each cell, no gutters, labels, borders, extra panels, or zooms. Row-major phases: OPEN / HALF-CLOSED / FULLY-CLOSED / OPEN REPEAT. The expression must read clearly skeptical and asymmetric, not near-neutral: viewer-left eyebrow distinctly raised with its complete outer end visible; viewer-right eyebrow lower/flatter; appraising slightly narrowed gaze. Maintain this same asymmetric brow shape across all four phases, with the repeated open pose matching the first open pose. Keep brows softly shaded in the original brown, not thick black outlines or heavy makeup; retain compact muted amber-olive irises and tiny subdued highlights, with natural narrow openings and the original subtle pixel cluster style. Close lids naturally and opaquely in half and closed phases without changing brow placement. Do not make a symmetric angry V, neutral arches, surprised wide eyes, enlarged round pupils, broad bright sclera, vivid glints, face repaint, or changes to hair/fringe outside the feature area. No text.",
+  "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-c41a67d1-56fe-41cd-af60-db7d549f09b7.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+  "generatedPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-c41a67d1-56fe-41cd-af60-db7d549f09b7.png",
+  "sourceOriginal": {
+    "path": "original.png",
+    "sha256": "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98",
+    "width": 64,
+    "height": 64
+  },
+  "referenceGrid": {
+    "path": "eyes-reference-grid.png",
+    "sha256": "e2e7919bfc72eb52738873b46bffa3a1eb3ca2b503bd62101ac973e8f30cd8b3",
+    "width": 1024,
+    "height": 560
+  },
+  "generator": {
+    "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-c41a67d1-56fe-41cd-af60-db7d549f09b7.png",
+    "sha256": "90ed1544079b79b0c66539aab2b94af1b78af669ac4e567131c887af9e685408",
+    "width": 1695,
+    "height": 928
+  },
+  "raw": {
+    "path": "eyes/guarded/raw.png",
+    "sha256": "90ed1544079b79b0c66539aab2b94af1b78af669ac4e567131c887af9e685408",
+    "width": 1695,
+    "height": 928
+  }
+}

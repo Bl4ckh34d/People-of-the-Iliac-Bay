@@ -18,7 +18,7 @@ namespace PeopleOfTheIliacBay.DFU
     internal static class CorpseResponseNativeProbe
     {
         private const BindingFlags Private=BindingFlags.Instance|BindingFlags.NonPublic;
-        private enum Case { NpcKiller,DeadNpcKiller,StaticWitness,MobileWitness,Unwitnessed }
+        internal enum Case { NpcKiller,DeadNpcKiller,StaticWitness,MobileWitness,Unwitnessed }
         internal static IEnumerator Run(PeopleOfTheIliacBayMod host,StreetPopulation streets,string character)
         {
             yield return RunCase(host,streets,character,Case.NpcKiller);
@@ -27,7 +27,7 @@ namespace PeopleOfTheIliacBay.DFU
             yield return RunCase(host,streets,character,Case.MobileWitness);
             yield return RunCase(host,streets,character,Case.Unwitnessed);
         }
-        private static IEnumerator RunCase(PeopleOfTheIliacBayMod host,StreetPopulation streets,string character,Case mode)
+        internal static IEnumerator RunCase(PeopleOfTheIliacBayMod host,StreetPopulation streets,string character,Case mode)
         {
             bool npcKiller=mode==Case.NpcKiller || mode==Case.DeadNpcKiller;
             bool naturalWitness=mode==Case.MobileWitness || npcKiller,staticWitness=mode==Case.StaticWitness;
@@ -92,28 +92,23 @@ namespace PeopleOfTheIliacBay.DFU
             StaticNPC fixedObserver=null;string witnessId=witness.Id;
             if(staticWitness)
             {
-                // Place a native custom static person on surveyed ground outside
-                // the old generic patrol, not beside the investigating guard.
-                List<SavedRoutePoint> baseline=null;
-                foreach(var offset in new[] {new Vector2(12,0),new Vector2(-12,0),new Vector2(0,12),new Vector2(0,-12)})
-                {
-                    var path=geometry.RouteBetweenPoints(site,new SavedRoutePoint{X=site.X+offset.x,Z=site.Z+offset.y});
-                    if(path.Count>=2){baseline=path;break;}
-                }
-                Require(baseline!=null,"No baseline corpse patrol for static witness fixture.");
+                // Use a reachable, visible position far enough away to require
+                // physical inquiry. Sparse NavMesh corners need not be nearby.
                 foreach(var approach in guards.Roster.BuildingApproaches)
                 foreach(var route in approach.Routes)
                 foreach(var point in route.Points)
                 {
                     if(fixedObserver)break;
-                    var spot=geometry.ScenePoint(new RoutePoint(point.X,point.Z));float distance=Vector3.Distance(ground,spot);
-                    if(distance<10 || distance>16 || baseline.Exists(p=>Vector3.Distance(spot,geometry.ScenePoint(new RoutePoint(p.X,p.Z)))<6))continue;
+                    var destination=geometry.ScenePoint(new RoutePoint(point.X,point.Z));
+                    var direction=destination-ground;if(direction.magnitude<6)continue;
+                    var spot=ground+direction.normalized*Mathf.Min(8,direction.magnitude);
+                    var local=directory.transform.InverseTransformPoint(spot);
                     var delta=spot-ground;game.PlayerMotor.transform.position=ground+delta.normalized*1.5f+Vector3.up;
                     if(!CivilianResponses.Sees(spot+Vector3.up,target.transform.position,20) ||
                         !CivilianResponses.Sees(spot+Vector3.up,game.PlayerMotor.transform.position,20) ||
-                        geometry.RouteBetweenPoints(site,point).Count<2)continue;
-                    string receiver;Vector3 contact;
-                    if(!guards.FindBodyReportGuard(spot+Vector3.up,true,out receiver,out contact))continue;
+                        geometry.RouteBetweenPoints(site,new SavedRoutePoint{X=local.x,Z=local.z}).Count<2)continue;
+                    // A stationary witness need not already see a guard: the
+                    // investigator must find and approach this person later.
                     var go=GameObjectHelper.CreateDaggerfallBillboardGameObject(182,0,directory.transform);
                     go.name="Controlled native static murder witness";go.transform.position=spot+Vector3.up;
                     fixedObserver=go.AddComponent<StaticNPC>();
@@ -122,8 +117,11 @@ namespace PeopleOfTheIliacBay.DFU
                         race=Races.Breton,gender=Genders.Male,nameBank=NameHelper.BankTypes.Breton,
                         billboardArchiveIndex=182,billboardRecordIndex=0});
                 }
-                Require(fixedObserver,"No surveyed static witness position away from generic patrol.");
+                Require(fixedObserver,"No reachable visible static witness position at inquiry distance.");
                 Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_STATIC_WITNESS_STAGE: body="+ground+"; witness="+fixedObserver.transform.position);
+                // This test adds a new native person after the ordinary scene
+                // survey. Let its existing 30-second refresh discover that body.
+                yield return new WaitForSecondsRealtime(31);
             }
             if(naturalWitness)
             {
@@ -135,8 +133,13 @@ namespace PeopleOfTheIliacBay.DFU
                     if(neighbor<0 || neighbor>=siteRoute.Count)continue;
                     var other=geometry.ScenePoint(new RoutePoint(siteRoute[neighbor].X,siteRoute[neighbor].Z));
                     var delta=other-ground;float length=delta.magnitude;lengths+=length.ToString("F2")+",";
-                    if(length<2 || length>8)continue;
-                    candidates++;var spot=other;
+                    if(length<2)continue;
+                    // NavMesh corners can be tens of metres apart. Place the
+                    // witness along the real segment, not only at its corners.
+                    var spot=ground+delta.normalized*Mathf.Min(4,length);
+                    var local=directory.transform.InverseTransformPoint(spot);
+                    if(geometry.RouteBetweenPoints(site,new SavedRoutePoint{X=local.x,Z=local.z}).Count<2)continue;
+                    candidates++;
                     game.PlayerMotor.transform.position=ground+delta.normalized*1.5f+Vector3.up;
                     if(!CivilianResponses.Sees(spot+Vector3.up,target.transform.position,20) ||
                         !CivilianResponses.Sees(spot+Vector3.up,game.PlayerMotor.transform.position,20))continue;
@@ -160,10 +163,15 @@ namespace PeopleOfTheIliacBay.DFU
                 }
             }
             DaggerfallEntityBehaviour killer=null;
+            // Actual eyewitnesses must face a visible attack. Concealment breaking
+            // is a separate native-combat check, not evidence of prior sight.
+            if(observer)observer.transform.rotation=Quaternion.LookRotation(target.transform.position-observer.transform.position);
+            if(fixedObserver)fixedObserver.transform.rotation=Quaternion.LookRotation(target.transform.position-fixedObserver.transform.position);
+            Physics.SyncTransforms();
             if(npcKiller)
             {
                 killer=NpcMurderNativeProbe.Spawn(directory,game.PlayerMotor.transform.position);
-                yield return null;NpcMurderNativeProbe.Attack(killer,target,mode==Case.DeadNpcKiller);
+                yield return null;NpcMurderNativeProbe.Attack(killer,target,mode==Case.DeadNpcKiller,false);
                 NpcMurderNativeProbe.Conceal(killer,true);
             }
             else for(int hit=0;hit<20 && victim.IsAlive;hit++)
@@ -201,8 +209,11 @@ namespace PeopleOfTheIliacBay.DFU
             CrimeSceneProbe.SetPlayerInvisible(game.PlayerEntity,true);
             yield return new WaitForSecondsRealtime(0.6f);
             var view=FindCorpse(alarm.Id);Require(view,"Actual corpse view missing before departure.");
-            if(!naturalWitness && !staticWitness)
+            if(!naturalWitness)
             {
+                // A stationary witness outside every guard's sight cannot
+                // remotely dispatch one. Use the existing real departure
+                // discovery path, then require physical cleanup and inquiry.
                 TownSmokeHarness.EnterInterior(innOwner.transform,innDoor);
                 yield return new WaitForSecondsRealtime(1);DaggerfallUI.Instance.PopToHUD();
                 Require(game.PlayerEnterExit.IsPlayerInside,"Native Inn entry failed.");
@@ -214,6 +225,7 @@ namespace PeopleOfTheIliacBay.DFU
             string reportId="outdoor:"+alarm.Id;GuardReport report=null;
             bool walked=false,arrived=false;Vector3 previous=Vector3.zero;string followed=null;float largestStep=0;
             Vector3 observerStart=observer?observer.transform.position:Vector3.zero;bool witnessWalked=false;
+            float talkStarted=-1;bool talkVerified=false;Vector3 talkGuardStart=Vector3.zero,talkWitnessStart=Vector3.zero;
             float reportDiagnosticAt=Time.realtimeSinceStartup+5;
             deadline=Time.realtimeSinceStartup+(naturalWitness?90:180);
             while(!alarm.Corpse.Cleared && Time.realtimeSinceStartup<deadline)
@@ -223,6 +235,24 @@ namespace PeopleOfTheIliacBay.DFU
                 {
                     witnessWalked|=Vector3.Distance(observerStart,observer.transform.position)>2;
                     if(report==null)game.PlayerMotor.transform.position=observer.transform.position+Vector3.back*6+Vector3.up;
+                    var motions=Field<IDictionary>(streets,"bodyReportMotion");var motion=motions.Contains(witness.Id)?motions[witness.Id]:null;
+                    var talking=motion==null?null:motion.GetType().GetField("TalkingGuard").GetValue(motion) as GuardActor;
+                    if(talking && Time.time<Field<float>(talking,"reportConversationUntil"))
+                    {
+                        if(talkStarted<0){talkStarted=Time.time;talkGuardStart=talking.transform.position;talkWitnessStart=observer.transform.position;}
+                        var facing=observer.transform.position-talking.transform.position;facing.y=0;
+                        Require(Vector3.Distance(talkGuardStart,talking.transform.position)<0.2f &&
+                            Vector3.Distance(talkWitnessStart,observer.transform.position)<0.2f,"Report partners moved during their conversation.");
+                        Require(Vector3.Dot(talking.transform.forward,facing.normalized)>0.9f &&
+                            Vector3.Dot(observer.transform.forward,-facing.normalized)>0.9f,"Report partners did not face each other.");
+                    }
+                    else if(talkStarted>=0 && !talkVerified)
+                    {
+                        float seconds=Time.time-talkStarted;
+                        Require(seconds>=1.8f && seconds<=5.3f,"Report conversation did not last 2-5 real seconds: "+seconds);
+                        talkVerified=true;
+                        Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_REPORT_CONVERSATION_NATIVE_PASS: seconds="+seconds+"; bothStill=true; mutualFacing=true; departureAfterTalk=true");
+                    }
                 }
                 if(naturalWitness && Time.realtimeSinceStartup>=reportDiagnosticAt)
                 {
@@ -252,12 +282,13 @@ namespace PeopleOfTheIliacBay.DFU
             Require(alarm.Corpse.Cleared && report!=null && walked && arrived,"Physical guard arrival/cleanup missing: natural="+naturalWitness+
                 "; cleared="+alarm.Corpse.Cleared+"; moved="+walked+"; arrived="+arrived+"; witnessWalked="+witnessWalked+
                 "; reports="+string.Join(",",guards.Roster.Reports.ConvertAll(r=>r.Id).ToArray()));
+            if(naturalWitness)Require(talkVerified,"Witness report did not include the visible conversation pause.");
             yield return new WaitForSecondsRealtime(1);
             Require(!FindCorpse(alarm.Id),"Cleared corpse still rendered after guard arrival.");
             Require(report.HasCorpseInquiryWindow && report.InvestigationUntil<=alarm.Corpse.ClearedAt+1800.01,"Cleanup did not start a bounded inquiry.");
             Require(game.PlayerEntity.CrimeCommitted==PlayerEntity.Crimes.None,"Unwitnessed corpse accused invisible player.");
-            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_CORPSE_PHYSICAL_CLEANUP_PASS: nativeWeaponDeath=true; realInnTransition="+(!naturalWitness&&!staticWitness)+
-                "; quickReturnPreserved="+(!naturalWitness&&!staticWitness)+"; guardWalked=true; bodyRemoved=true; maxStep="+largestStep);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_CORPSE_PHYSICAL_CLEANUP_PASS: nativeWeaponDeath=true; realInnTransition="+(!naturalWitness)+
+                "; quickReturnPreserved="+(!naturalWitness)+"; guardWalked=true; bodyRemoved=true; maxStep="+largestStep);
 
             // Isolate physical inquiry from unrelated routine movement. Supply one explicit direct-account fixture.
             streets.enabled=false;
@@ -289,9 +320,34 @@ namespace PeopleOfTheIliacBay.DFU
             Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_CORPSE_INQUIRY_NATIVE_PASS: physicalContact=true; directAccount=true; hiddenSuspectNotLocated=true; guards="+report.GuardIds.Count);
             if(staticWitness)
             {
+                foreach(var candidate in UnityEngine.Object.FindObjectsOfType<GuardActor>())
+                    if(candidate.GuardId==report.CorpseSuspect.LearnedByGuardId && candidate.gameObject.activeInHierarchy)
+                    {investigator=candidate;break;}
                 Require(fixedObserver && fixedObserver.gameObject.activeInHierarchy && inquiryWalked &&
                     Vector3.Distance(investigator.transform.position,fixedObserver.transform.position)<=4.1f,
                     "Guard did not physically approach the distant static eyewitness.");
+                float started=Time.time,until=Field<float>(investigator,"reportConversationUntil");
+                var guardPoint=investigator.transform.position;var witnessPoint=fixedObserver.transform.position;
+                Require(until-started>=1.8f && until-started<=5.1f,"Physical inquiry has no two-to-five-second conversation.");
+                game.PauseGame(true);float pausedAt=Time.time;
+                yield return new WaitForSecondsRealtime(0.75f);
+                Require(Mathf.Abs(Time.time-pausedAt)<0.01f,"Game pause consumed inquiry conversation time.");
+                game.PauseGame(false);
+                while(Time.time<until)
+                {
+                    var toward=witnessPoint-guardPoint;toward.y=0;
+                    Require(Vector3.Distance(investigator.transform.position,guardPoint)<0.2f &&
+                        Vector3.Distance(fixedObserver.transform.position,witnessPoint)<0.2f,
+                        "Inquiry partners moved during their physical conversation.");
+                    Require(Vector3.Dot(investigator.transform.forward,toward.normalized)>0.9f &&
+                        Field<Transform>(investigator,"conversationPartner")==fixedObserver.transform &&
+                        Field<bool>(investigator,"inquiryConversation"),
+                        "Inquiry lost guard facing or exact stationary witness focus.");
+                    yield return null;
+                }
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_STATIC_INQUIRY_CONVERSATION_PASS: unpausedSeconds="+(Time.time-started)+
+                    "; realPauseExcluded=true; bothStill=true; guardFacing=true; stationaryFocus=true; "+
+                    "cameraFacingPreserved=true; staticDirectionalArt=false; directAccount=true");
                 Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_STATIC_CORPSE_INQUIRY_PASS: actualWitness=true; cleanupFirst=true; walkedToWitness=true; physicalContact=true; sharedCase=true; hiddenSuspectNotLocated=true");
             }
             if(npcKiller)

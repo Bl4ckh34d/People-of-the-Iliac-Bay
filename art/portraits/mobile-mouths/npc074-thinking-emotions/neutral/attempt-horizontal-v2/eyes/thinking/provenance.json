@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T11:42:35.6528825Z",
+    "portraitRecord":  74,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Use the attached exact local NPC074 neutral horizontal reference grid as the only visual reference. Create one 2x2 pixel-art atlas in exact row-major order LEFT OPEN, RIGHT OPEN / LEFT HALF, RIGHT HALF. Every cell is the same complete aligned 64x35 upper-face crop. Preserve face identity, brow and eyelid shape, eye spacing, original narrow aperture, muted skin palette, hair, headpiece, blue hanging ornament and native pixel-cluster style. Keep the compact source blue-gray irises. Keep the pupil as the darkest small part of each iris and the glint as one restrained muted gray-blue pixel beside the pupil; do not turn a bright white glint into the pupil or make large white iris patches. LEFT means viewer-left: shift BOTH iris and pupil clusters toward the same canvas direction, leftward (smaller x), in both eyes. Do not converge both pupils toward the nose; do not reverse one eye. RIGHT means viewer-right: shift BOTH iris and pupil clusters toward larger x, again in the same canvas direction in both eyes. Keep the two eyes parallel and tracking together, with the same natural divergence/convergence as the source. Move only compact iris/pupil clusters within the existing eye apertures. Do not change sclera area, eye width, lid contour, brows, spacing, iris size, or color. Make the left/right difference clear but restrained at native pixel scale. Bottom-row cells remain genuinely half-closed: preserve the source half-lid aperture and let upper lids cover the upper parts of the irises without hiding their dark pupils. No white flash, broad sclera band, enlarged eyes, vector circles, cross-eyed convergence, labels, text, borders, gutters, extra face parts, new background, or transparency. Crisp nearest-neighbor pixel art, no blur, smoothing, or rescaling within cells.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-34702092-c779-4590-ac27-048ecdd375de.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-34702092-c779-4590-ac27-048ecdd375de.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "80218b93c93bb2f695b8bb29cdfa81129c4c5f96026d22c7a532417cce472f6e",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-34702092-c779-4590-ac27-048ecdd375de.png",
+                      "sha256":  "61ea49e51466187fdaba7fae50a67d264efa8ed86417178e462fc86d5511b733",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "61ea49e51466187fdaba7fae50a67d264efa8ed86417178e462fc86d5511b733",
+                "width":  1695,
+                "height":  928
+            }
+}

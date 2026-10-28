@@ -19,7 +19,7 @@ namespace PeopleOfTheIliacBay.DFU
             var game=GameManager.Instance;
             Require(Environment.GetEnvironmentVariable("POTIB_COMPANION_CAST")=="1" &&
                 Environment.GetEnvironmentVariable("POTIB_ROADMAP_PROBE")=="starting-spells" && game &&
-                game.PlayerEntity!=null && game.PlayerEntity.Name.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal),
+                game.PlayerEntity!=null && NativeProbeText.IsTestCharacter(game.PlayerEntity.Name),
                 "Starting spell trial needs its explicit isolated disposable fixture.");
             string character=game.PlayerEntity.Name;
             var streets=UnityEngine.Object.FindObjectOfType<StreetPopulation>();

@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T15:46:39.5293137Z",
+    "portraitRecord":  92,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "neutral",
+    "prompt":  "Create exactly one 3-by-3 pixel-art mouth atlas from the supplied 1536x696 reference grid, using it as the only visual reference. Return a single 192x87 image composed of nine complete 64x29 native lower-face crops, arranged row-major A B C / D E F / G H X. Each cell is the same face, same scale and framing, including cheeks, chin, hair, jaw and background. No labels, gutters, borders, padding, extra row, zooming, rescaling, neck bands, or transparency.\n\nThis is the neutral mouth atlas for NPC092. Preserve the exact face identity and soft pixel-art style. Keep the original muted terracotta/brown-rose lip hue and lip scale; do not turn it into lipstick red. Preserve the source skin, jaw and face framing. Change only the mouth within its source-sized region. Where teeth or tongue show, use small, subdued neutral gray-ivory teeth and a muted natural tongue, distinct from the skin but never shiny white, saturated orange, or oversized. No exaggerated gums or broad white flash.\n\nUse the canonical Rhubarb mouth poses exactly:\nA: lips pressed together for P/B/M, closed and natural.\nB: very narrow opening with teeth close together for consonants and EE.\nC: medium opening, unrounded, for EH/AE.\nD: widest vertical opening for AA, with natural subdued teeth visible.\nE: slightly rounded AO/ER opening, no wider than C.\nF: small rounded, puckered UW/OW/W mouth.\nG: upper teeth touching the lower lip for F/V.\nH: tongue raised behind the upper teeth for L, with an opening between C and D.\nX: relaxed closed idle mouth, matching the source neutral mouth.\n\nKeep all nine poses anatomically plausible and clearly distinct while retaining the source\u0027s modest mouth size and muted palette. A and X should match the source\u0027s neutral closed mouth as closely as possible. No changes to surrounding face pixels.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54 as C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-850eb82e-aeb2-4346-866c-f64cf5d541d5.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-850eb82e-aeb2-4346-866c-f64cf5d541d5.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "d3b90a135e6dee3135ed00fbdd0ce1dd9182d1d1a7120b2ee75c9c9dd5f82db8",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "3d6e76052d3cc4db8e05d7906797b0d0c86dbe3e53567e6c567958c75044fd29",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-850eb82e-aeb2-4346-866c-f64cf5d541d5.png",
+                      "sha256":  "6e97035358b1d6e0a3a024b771a207ae7e6fea2548a4165d93a4b82d88adc9e3",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/neutral/raw.png",
+                "sha256":  "6e97035358b1d6e0a3a024b771a207ae7e6fea2548a4165d93a4b82d88adc9e3",
+                "width":  1863,
+                "height":  844
+            }
+}

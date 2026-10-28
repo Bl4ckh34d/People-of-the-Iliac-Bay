@@ -168,11 +168,6 @@ namespace PeopleOfTheIliacBay.Core
                     entry.HealthEpisodeDamageTotal != 0 || entry.HealthEpisodeHealingTotal != 0 ||
                     entry.HealthEpisodeChangeCount != 0 || entry.HealthEpisodeFirstVitalsRevision != 0 ||
                     entry.HealthEpisodeLastVitalsRevision != 0;
-                if(source.Version < 38)
-                    Require(!hasEpisodeFields,"Legacy NPC vitals cannot contain a pending health episode.");
-                if(source.Version < 49)
-                    Require(entry.HealthExperienceProjectedThroughVitalsRevision==0,
-                        "Legacy NPC progression cannot supply a health projection cursor.");
                 Require(entry.HealthExperienceProjectedThroughVitalsRevision>=0 &&
                     entry.HealthExperienceProjectedThroughVitalsRevision<=entry.VitalsRevision &&
                     (entry.VitalsInitialized || entry.HealthExperienceProjectedThroughVitalsRevision==0) &&

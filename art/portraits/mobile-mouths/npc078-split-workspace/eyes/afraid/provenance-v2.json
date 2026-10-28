@@ -1,0 +1,28 @@
+{
+  "asset": "NPC078 afraid eyes",
+  "status": "prototype; user-review-pending; not installed",
+  "generation_count": 1,
+  "generator": "built-in image_gen edit",
+  "generated_original": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-626e-7471-95f3-109617bb3581\\exec-9e91b0b1-ff71-40d8-8193-4fde2c6c08c2.png",
+  "saved_output": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc078-split-workspace\\eyes\\afraid\\raw-v2.png",
+  "dimensions": "1694x928",
+  "output_sha256": "242C5CE153565F6C70D735F7A5C93F78F0CA6CE1F3209FEBB5372B01C2D065AE",
+  "prior_raw_sha256": "FE0A64129A879EAC109CC3150FD39A2F0099D715DAC4C7E83E5299888F5BB3C0",
+  "cells": "2x2 row-major: open, half blink, fully closed blink, repeated open",
+  "references": [
+    {
+      "sha256": "FE0A64129A879EAC109CC3150FD39A2F0099D715DAC4C7E83E5299888F5BB3C0",
+      "path": "C:UsersDanielDesktopCode_ExperimentsDFULivingCitiesartportraitsmobile-mouths\npc078-split-workspaceeyesafraid\raw.png"
+    },
+    {
+      "sha256": "770BCAF228993A243E7AF873727E0EA24EE1788439AFA29E5DFB66BED0581340",
+      "path": "C:UsersDanielDesktopCode_ExperimentsDFULivingCitiesartportraitsmobile-mouths\npc078-split-workspaceeyes-reference-grid.png"
+    },
+    {
+      "sha256": "4CFAB5DCE8D40FF0246728C2C28922D9B5627CEC9549F9B5252F2F601E4978CE",
+      "path": "C:UsersDanielDesktopCode_ExperimentsDFULivingCitiesartportraitsmobile-mouths\npc078-split-workspaceoriginal.png"
+    }
+  ],
+  "prompt": "Image 1 is the EDIT TARGET: retain its complete 2x2 upper-half atlas, framing, proportions and cell order. Image 2 is the original neutral eye-grid reference. Image 3 is the immutable original portrait for identity, hair, soft skin palette and geometry. Make one focused AFRAID-eye expression edit. Show fear through clearly raised and slightly drawn-together inner brow ends, tense upper lids and a worried/uncertain look; do not rely on merely wide-open eyes. Keep brows wholly visible inside the original native Y15–22 band in every cell, including the complete outer tail of the viewer-left brow. Keep head and gaze forward. Preserve original compact iris size and narrow elongated vertical pupil shape; do not enlarge irises, stretch eyes vertically, widen pupils, or alter pupil direction/position. Open eyes may be moderately alert, not comic-wide; avoid bulging eyes, huge white sclera, surprise caricature, anger, symmetrical scowling V, or exaggerated distress. Preserve the original soft muted palette, skin shading, hair, geometry and low contrast. Row-major cells remain open / half blink / fully closed blink / repeated open. Keep brow shape, position and tension identical across all four phases; only eyelids vary. In half blink, lids cover about half the iris without shrinking or moving pupil horizontally. In closed blink, lids fully hide iris and sclera. Do not change crop, face, hair or background. No new detail, text, labels, or extra cells. Return one complete 2x2 sheet.",
+  "visual_review": "Brows read more worried and tense than the prior sheet, with raised inner ends. Open/half eyes remain alert and forward. Visible limitation: irises still look comparatively large against the original compact eye geometry, so the fear could still read partly as wide-eyed surprise; native pixel-scale review is recommended. Brow phase consistency appears maintained."
+}

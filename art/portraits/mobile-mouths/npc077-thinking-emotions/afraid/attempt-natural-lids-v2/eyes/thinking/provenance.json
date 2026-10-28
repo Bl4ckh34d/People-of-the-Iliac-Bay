@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T06:46:50.1365366Z",
+    "portraitRecord":  77,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Use case: precise-object-edit\nAsset type: DFU NPC pixel-art eye atlas\nPrimary request: Edit the supplied 3x3 reference atlas of this same woman into nine natural, clearly distinct gaze directions. Keep her afraid/worried expression in every cell, with her lifted, tense worried brows intact. Each cell is the complete upper face, 64:35 aspect, with identical framing. Return only one 3x3 atlas.\nInput image: Image 1 is the sole reference. It is the exact inspected 3x3 grid made from this portrait\u0027s own afraid open-eye source.\nDirection order: top-left=up-left, top-center=up, top-right=up-right; middle-left=left, middle-center=center, middle-right=right; bottom-left=down-left, bottom-center=down, bottom-right=down-right. Both eyes point together. Diagonal cells must visibly combine horizontal and vertical gaze; do not repeat left, center, or right.\nEye anatomy: Keep each pupil and compact iris fully inside the eye opening. For upward gaze, naturally raise the upper lid enough to make room for the higher iris; do not hold a fixed narrow slit while pushing iris through lid. Let the lid contour follow gaze while preserving eye corners and spacing. For downward gaze, lower gaze within a naturally lowered upper lid and let lid cover iris as needed. Keep iris scale coherent across all cells. Do not move brow or whole socket to fake gaze.\nUp-gaze iris shape: In all three top-row cells, keep each iris compact with a small curved or stepped silhouette that follows the eyelid and original pixel lattice. Do not render a square iris or a rectangular purple bar. Preserve a readable roundish pupil inside it.\nHighlights: Remove the harsh bright specular glint in the picture-right eye. Keep highlights tiny, warm, and muted; no white or pale pinprick sparkle. Use restrained matching highlights in both eyes so they remain balanced.\nIdentity and expression: Preserve this exact face, hair, skin, pixel lattice, palette, crop and fearful/worried brow tension. Do not neutralize brows or turn expression sad. Middle-center must match supplied source exactly. Keep everything outside eye features unchanged.\nStyle and constraints: Low-resolution softly shaded pixel art. Retain compact muted violet-gray irises, small pupils, tiny restrained warm highlights, warm subdued sclera and original brown skin/hair palette. Keep original square pixels. No vector-round eyes, giant irises, huge white areas, harsh highlights, labels, borders, gutters, text, or extra content.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-485c3739-5bdc-46c4-8225-a81138b2e45f.png by default.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-485c3739-5bdc-46c4-8225-a81138b2e45f.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "f40aa448fc8e958a3615e54c27b84cdf496a6c7e1d9fc818d5a294353bbb2a6f",
+                          "width":  1536,
+                          "height":  840
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-485c3739-5bdc-46c4-8225-a81138b2e45f.png",
+                      "sha256":  "42f60641eafa419d667c363d1ea71f5c28495224c4b8562deaeb99876dfffb7c",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "42f60641eafa419d667c363d1ea71f5c28495224c4b8562deaeb99876dfffb7c",
+                "width":  1695,
+                "height":  928
+            }
+}

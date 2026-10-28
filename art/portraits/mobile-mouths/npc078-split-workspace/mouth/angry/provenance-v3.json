@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 78,
+  "emotion": "angry",
+  "assetType": "3x3 angry mouth-viseme atlas palette edit",
+  "imageTool": "built-in image_gen",
+  "sourceReferences": [
+    {
+      "file": "raw-v2.png (edit target)",
+      "sha256": "d26a4ec6645b7d70f9f34dc712c455401a67d8a5aefa43667c48326422077782"
+    },
+    {
+      "file": "../../source-lower.png (original color reference)",
+      "sha256": "b4198907de03ee1af39b9100f862f1d01d4b9525d203845831ecbaa69bdc185e"
+    },
+    {
+      "file": "../../mouth-reference-grid.png (neutral color reference)",
+      "sha256": "723a29c0e82dc6a0b811139c36f110100a031876b51ea7eea10984dd1a3e9f45"
+    }
+  ],
+  "prompt": "Use case: precise pixel-art palette correction for Daggerfall Unity portrait NPC 078.\nEdit target: Image 1, existing 3x3 angry mouth-viseme atlas. Preserve the complete sheet, all nine cell boundaries, cell positions, lower-face crops and mouth shapes.\nColor references: Image 2 is the exact original native lower-half face; Image 3 is the 3x3 neutral mouth reference grid. Match their subdued original lip palette.\nChange only the color of the lips in all nine angry mouth shapes. Shift the current vivid saturated red noticeably toward the original muted terracotta-brown: lower red saturation, softer brown-red hue, subdued value. Lips must look like natural pixels from this portrait, not lipstick. Keep angry tension and every viseme's exact geometry.\nKeep all mouth openings, teeth, inner-mouth colors, lip contours, corners, skin, nose, hair, neck, lighting, pixel pattern, alignment, framing and cell layout unchanged. No new shadows, highlights, outlines, creases, enlargement, reshaping, blur, text, labels, watermark, or extra cells.",
+  "rawFile": "raw-v3.png",
+  "rawSha256": "07441f9b7e57b0e3f08fbef06751a82dff494d9e20be1fba55173f89ff31925b",
+  "imagegenOutput": "exec-fa7dc82b-322b-4d2a-9803-eeb4d1fccbc5.png"
+}

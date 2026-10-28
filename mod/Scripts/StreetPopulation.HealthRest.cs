@@ -16,16 +16,16 @@ namespace PeopleOfTheIliacBay.DFU
     {
         private sealed class HealthRestChoice
         {
-            public string ResidentId,CareEpisodeId,BedId,RoomId;
+            public string ResidentId,CareEpisodeId,BedId;
             public int SettlementId,BuildingKey,BedRecordIndex,Nights,Price,RecoveryRate,ExpectedGain;
-            public bool PaidRoom,PrepaidRoom,AssignedInnBed;
+            public bool PaidBed,PrepaidBed;
             public long InventoryRevision,VitalsRevision;
             public double StartsAt,DurationSeconds,ExpectedSeconds;
             public NpcActionTarget Target;
         }
 
         // Pure from the scorer's perspective: this verifies the loaded local bed
-        // and quotes an NPC-funded stay, but never books a room or changes gold.
+        // and quotes an NPC-funded stay, but never books a bed or changes gold.
         private bool TryGetHealthRestChoice(ResidentActor actor,NpcTaskPlan task,double now,
             out int costGold,out int expectedGain,out double expectedSeconds)
         {
@@ -67,14 +67,14 @@ namespace PeopleOfTheIliacBay.DFU
             HealthRestChoice choice;string discoverReason;
             if(!TryDiscoverHealthRestChoice(actor,care,now,out choice,out discoverReason) || !TaskUsesHealthRestChoice(task,choice))
             {reason=discoverReason??reason;return false;}
-            if(choice.PrepaidRoom)
+            if(choice.PrepaidBed)
             {
                 NpcHealthLodgingReservation saved=worldStore.NpcHealthRestLodging(actor.Resident.Id,care.Id,now);
                 if(saved==null || saved.SettlementId!=choice.SettlementId || saved.BuildingKey!=choice.BuildingKey ||
-                    saved.RoomId!=choice.RoomId || saved.BedId!=choice.BedId || saved.EndsAt<now+choice.ExpectedSeconds)return false;
+                    saved.BedId!=choice.BedId || saved.EndsAt<now+choice.ExpectedSeconds)return false;
                 reason=null;return true;
             }
-            if(!choice.PaidRoom){reason=null;return true;}
+            if(!choice.PaidBed){reason=null;return true;}
 
             NativeNpcInventoryOwner owner=actor.GetComponent<NativeNpcInventoryOwner>();
             if(!owner || owner.Binding==null || !NativeNpcInventoryBridge.TryCapture(worldStore,owner.Binding,out reason))return false;
@@ -84,14 +84,14 @@ namespace PeopleOfTheIliacBay.DFU
             var request=new NpcHealthLodgingReservationRequest {ResidentId=actor.Resident.Id,
                 CareEpisodeId=care.Id,TaskId=task.Id,ExpectedCareRevision=care.Revision,
                 ExpectedInventoryRevision=inventory.Revision,SettlementId=choice.SettlementId,
-                BuildingKey=choice.BuildingKey,RoomId=choice.RoomId,BedId=choice.BedId,
+                BuildingKey=choice.BuildingKey,BedId=choice.BedId,
                 Nights=choice.Nights,Price=choice.Price,StartsAt=now};
             NpcHealthLodgingReservation reservation;
             if(!worldStore.TryReserveNpcHealthRestLodging(request,out reservation) || reservation==null)
-            {reason="The exact rentable room became unavailable or the resident's wallet changed.";return false;}
+            {reason="The exact bed became unavailable or the resident's wallet changed.";return false;}
             if(reservation.ResidentId!=actor.Resident.Id || reservation.CareEpisodeId!=care.Id ||
                 reservation.SettlementId!=choice.SettlementId || reservation.BuildingKey!=choice.BuildingKey ||
-                reservation.RoomId!=choice.RoomId || reservation.BedId!=choice.BedId || reservation.EndsAt<now+choice.ExpectedSeconds)
+                reservation.BedId!=choice.BedId || reservation.EndsAt<now+choice.ExpectedSeconds)
             {reason="The saved Inn reservation does not match the accepted bed-rest task.";return false;}
             reason=null;return true;
         }
@@ -134,28 +134,25 @@ namespace PeopleOfTheIliacBay.DFU
             BedAnchor bed;
             if(!TryValidateHealthRestTarget(job,actor,now,out bed,out _))
             {
-                EndAction(job,now,"The assigned bed, health status or room access changed during rest.",false);
+                EndAction(job,now,"The assigned bed, health status or access changed during rest.",false);
                 return;
             }
-            if(IsHealthRestPoseAtTarget(job,actor,now))return;
             if(actor.IsSleeping)return;
-            SleepingArt.Atlas atlas=sleepingArt==null?null:sleepingArt.ForResident(actor.Resident);
+            SleepingArt.Atlas atlas=null;
+            // Art is presentation only. The validated standing point beside
+            // this exact bed remains a valid rest position if art is absent.
+            try {atlas=sleepingArt==null?null:sleepingArt.ForResident(actor.Resident);}
+            catch(Exception) {return;}
             if(atlas!=null && atlas.Texture!=null && atlas.Views!=null && atlas.Views.Length>0)
                 actor.Sleep(interior.transform,bed,atlas);
-            else
-            {
-                EndAction(job,now,"A verified sleeping pose became unavailable.",false);
-            }
         }
 
         // Used by the shared arrival loop after the saved action timer has begun.
-        // Sleeping alone is not evidence: the actor must occupy this bed's native pose.
+        // Access, status and the exact bed position matter; sleeping art does not.
         private bool IsHealthRestPoseAtTarget(NpcActionJob job,ResidentActor actor,double now)
         {
             BedAnchor bed;string ignored;
-            if(!TryValidateHealthRestTarget(job,actor,now,out bed,out ignored) || !actor.IsSleeping)return false;
-            Vector3 mattress=interior.transform.TransformPoint(bed.LocalCenter)+Vector3.up*0.18f;
-            return Vector3.Distance(actor.transform.position,mattress)<=0.12f;
+            return TryValidateHealthRestTarget(job,actor,now,out bed,out ignored);
         }
 
         private bool TryDiscoverHealthRestChoice(ResidentActor actor,NpcHealthCareRecord care,double now,
@@ -168,11 +165,6 @@ namespace PeopleOfTheIliacBay.DFU
                 population==null || population.SettlementId<0 || !actor.transform.IsChildOf(interior.transform) ||
                 actor.IsConversing || IsAlarmed(actor.Resident.Id) || worldStore.IsResidentAway(actor.Resident.Id,now) ||
                 !NativeRestStatusSafe(actor))return false;
-            SleepingArt.Atlas sleepAtlas;
-            try {sleepAtlas=sleepingArt==null?null:sleepingArt.ForResident(actor.Resident);}
-            catch(Exception error){reason="Sleeping art could not be loaded for this resident: "+error.Message;return false;}
-            if(sleepAtlas==null || sleepAtlas.Texture==null || sleepAtlas.Views==null || sleepAtlas.Views.Length==0)
-            {reason="A verified sleeping pose is unavailable for this resident.";return false;}
             NpcVitalsView vitals=worldStore.ReadNpcVitals(actor.Resident.Id,HealthArchetype(worldStore,actor.Resident.Id));
             if(vitals==null || !vitals.IsAlive || !vitals.IsPersisted || vitals.CurrentHealth<=0 ||
                 vitals.CurrentHealth>=vitals.MaximumHealth)return false;
@@ -193,57 +185,50 @@ namespace PeopleOfTheIliacBay.DFU
             if(beds.Count==0)return false;
             BuildingSummary summary;bool isInn=directory.GetBuildingSummary(building,out summary) &&
                 summary.BuildingType==DFLocation.BuildingTypes.Tavern;
-            Dictionary<string,LodgingRoom> roomByBed=null;
-            Dictionary<int,string> markerRooms=null;List<LodgingRoom> innRooms=null;
+            HashSet<string> innBedIds=null;List<LodgingBed> innBeds=null;
             if(isInn)
             {
                 try
                 {
-                    Dictionary<int,string> occupants,bedroomOccupants;
-                    innRooms=TavernRoomSurvey.Read(interior,out markerRooms,out occupants,out bedroomOccupants);
-                    var rentable=new HashSet<string>(markerRooms.Values,StringComparer.Ordinal);
-                    foreach(var room in innRooms)room.NonRentable=!rentable.Contains(room.Id);
-                    worldStore.RegisterLodging(town,building,innRooms);
-                    roomByBed=new Dictionary<string,LodgingRoom>(StringComparer.Ordinal);
-                    foreach(var room in innRooms)
-                        foreach(string bedId in room.Beds)
-                            if(!roomByBed.ContainsKey(bedId))roomByBed.Add(bedId,room);
+                    Dictionary<int,string> markerBeds,occupants,assignedBeds;
+                    innBeds=TavernBedSurvey.Read(interior,out markerBeds,out occupants,out assignedBeds);
+                    worldStore.RegisterLodgingBeds(town,building,innBeds);
+                    innBedIds=new HashSet<string>(StringComparer.Ordinal);
+                    foreach(var innBed in innBeds)innBedIds.Add(innBed.Id);
                 }
                 catch(Exception error)
-                {reason="The loaded Inn room survey could not verify rentable beds: "+error.Message;return false;}
+                {reason="The loaded Inn bed survey could not verify beds: "+error.Message;return false;}
             }
             var homeAssignment=OwnHomeBed(actor.Resident,building);
-            var assignedInnBed=isInn?OwnAssignedInnBed(actor.Resident,town,building,roomByBed):null;
+            var assignedInnBed=isInn?OwnAssignedInnBed(actor.Resident,town,building,innBedIds):null;
             NpcHealthLodgingReservation reserved=worldStore.NpcHealthRestLodging(actor.Resident.Id,care.Id,now);
-            string reservedBed=null,reservedRoom=null;
+            string reservedBed=null;
             if(reserved!=null && reserved.SettlementId==town && reserved.BuildingKey==building)
-            {reservedBed=reserved.BedId;reservedRoom=reserved.RoomId;}
+                reservedBed=reserved.BedId;
 
-            // Keep the resident's exact assigned bed ahead of a rented room.
+            // Keep the resident's exact assigned bed ahead of a paid bed.
             foreach(var bed in beds)
             {
                 string bedId="bed:"+bed.RecordIndex.ToString(CultureInfo.InvariantCulture);
                 bool ownHome=homeAssignment!=null && homeAssignment.BedRecordIndex==bed.RecordIndex && homeAssignment.SharingCount==1;
                 bool ownInn=assignedInnBed!=null && assignedInnBed==bedId;
-                bool prepaid=reservedBed==bedId && roomByBed!=null && roomByBed.ContainsKey(bedId) &&
-                    roomByBed[bedId].Id==reservedRoom;
+                bool prepaid=reservedBed==bedId && innBedIds!=null && innBedIds.Contains(bedId);
                 if(!ownHome && !ownInn && !prepaid)continue;
-                if(ownInn && roomByBed!=null && (!roomByBed.ContainsKey(bedId) || roomByBed[bedId].NonRentable))continue;
+                if(ownInn && (innBedIds==null || !innBedIds.Contains(bedId)))continue;
                 double routeSeconds;
                 if(!TryHealthRestStanding(actor,bed,out Vector3 targetWorld,out routeSeconds))continue;
                 double expectedSeconds=duration+routeSeconds;
                 if(expectedSeconds>NpcHealthCareChoice.MaximumCandidateTimeSeconds-600d)continue;
-                string roomId=prepaid?reservedRoom:ownInn?roomByBed[bedId].Id:null;
                 if(prepaid && (reserved==null || reserved.EndsAt<now+expectedSeconds))continue;
                 choice=CreateHealthRestChoice(actor,care,now,vitals,rate,missing,nights,duration,gain,
-                    bed,bedId,roomId,town,building,prepaid,prepaid?reserved.Price:0,0,targetWorld,prepaid,routeSeconds);
+                    bed,bedId,town,building,prepaid,prepaid?reserved.Price:0,0,targetWorld,prepaid,routeSeconds);
                 reason=null;return true;
             }
 
-            if(!isInn || roomByBed==null)return false;
+            if(!isInn || innBedIds==null)return false;
             if(reserved!=null)
             {
-                // A valid prepaid room is reserved for this entire episode and is
+                // A valid prepaid bed is reserved for this entire episode and is
                 // reused for later rest actions without another debit.
                 return false;
             }
@@ -255,23 +240,21 @@ namespace PeopleOfTheIliacBay.DFU
             if(GameManager.Instance==null || !GameManager.Instance.PlayerEnterExit ||
                 !GameManager.Instance.PlayerEnterExit.IsPlayerInside ||
                 GameManager.Instance.PlayerEnterExit.BuildingDiscoveryData.buildingKey!=building)return false;
-            int nativeRoomCost=FormulaHelper.CalculateRoomCost(nights);
-            if(nativeRoomCost<0)return false;
+            int nativeStayCost=FormulaHelper.CalculateRoomCost(nights);
+            if(nativeStayCost<0)return false;
             int price=0;int quality=GameManager.Instance.PlayerEnterExit.BuildingDiscoveryData.quality;
-            if(nativeRoomCost>0 && !NpcShopCommerce.TryPriceForBuyer(worldStore,actor.Resident.Id,
-                nativeRoomCost,1,quality,false,out price))return false;
+            if(nativeStayCost>0 && !NpcShopCommerce.TryPriceForBuyer(worldStore,actor.Resident.Id,
+                nativeStayCost,1,quality,false,out price))return false;
             if(inventory.WalletGold<price)
             {reason="The resident cannot afford the full quoted Inn stay.";return false;}
             double stayEnds=now+nights*86400d;
             if(double.IsNaN(stayEnds) || double.IsInfinity(stayEnds) || stayEnds<=now)return false;
-            string availableRoom=worldStore.AvailableLodgingRoom(town,building,1,now,stayEnds);
-            if(string.IsNullOrWhiteSpace(availableRoom))
-            {reason="Every rentable room in this Inn is occupied or already reserved for the required nights.";return false;}
-            LodgingRoom selectedRoom=innRooms.Find(room=>room.Id==availableRoom && !room.NonRentable);
-            if(selectedRoom==null)return false;
-            foreach(string bedId in selectedRoom.Beds)
+            List<string> availableBeds=worldStore.AvailableLodgingBeds(town,building,1,now,stayEnds);
+            if(availableBeds==null || availableBeds.Count==0)
+            {reason="Every bed in this Inn is occupied or already reserved for the required nights.";return false;}
+            foreach(string bedId in availableBeds)
             {
-                if(!roomByBed.ContainsKey(bedId))continue;
+                if(!innBedIds.Contains(bedId))continue;
                 BedAnchor bed=beds.Find(value=>"bed:"+value.RecordIndex.ToString(CultureInfo.InvariantCulture)==bedId);
                 Vector3 targetWorld;
                 double routeSeconds;
@@ -279,23 +262,23 @@ namespace PeopleOfTheIliacBay.DFU
                 double expectedSeconds=duration+routeSeconds;
                 if(expectedSeconds>NpcHealthCareChoice.MaximumCandidateTimeSeconds-600d)continue;
                 choice=CreateHealthRestChoice(actor,care,now,vitals,rate,missing,nights,duration,gain,
-                    bed,bedId,selectedRoom.Id,town,building,true,price,inventory.Revision,targetWorld,false,routeSeconds);
+                    bed,bedId,town,building,true,price,inventory.Revision,targetWorld,false,routeSeconds);
                 reason=null;return true;
             }
-            reason="The exact available Inn bedroom has no reachable surveyed bed.";return false;
+            reason="The exact available Inn bed is not reachable.";return false;
         }
 
         private HealthRestChoice CreateHealthRestChoice(ResidentActor actor,NpcHealthCareRecord care,double now,
             NpcVitalsView vitals,int rate,int missing,int nights,double duration,int gain,BedAnchor bed,string bedId,
-            string roomId,int town,int building,bool paid,int price,long inventoryRevision,Vector3 targetWorld,bool prepaid,
+            int town,int building,bool paid,int price,long inventoryRevision,Vector3 targetWorld,bool prepaid,
             double routeSeconds)
         {
             NpcActionTarget target=ActionPosition(targetWorld);
             target.ContainerId=bedId;
-            return new HealthRestChoice {ResidentId=actor.Resident.Id,CareEpisodeId=care.Id,BedId=bedId,RoomId=roomId,
+            return new HealthRestChoice {ResidentId=actor.Resident.Id,CareEpisodeId=care.Id,BedId=bedId,
                 SettlementId=town,BuildingKey=building,BedRecordIndex=bed.RecordIndex,Nights=prepaid?0:nights,
-                Price=prepaid?0:price,RecoveryRate=rate,ExpectedGain=gain,PaidRoom=paid,PrepaidRoom=prepaid,
-                AssignedInnBed=roomId!=null&&!paid,InventoryRevision=inventoryRevision,
+                Price=prepaid?0:price,RecoveryRate=rate,ExpectedGain=gain,PaidBed=paid,PrepaidBed=prepaid,
+                InventoryRevision=inventoryRevision,
                 VitalsRevision=vitals.Revision,StartsAt=now,DurationSeconds=duration,
                 ExpectedSeconds=duration+routeSeconds,Target=target};
         }
@@ -317,15 +300,14 @@ namespace PeopleOfTheIliacBay.DFU
                 assignment.BedRecordIndex>=0 && indoorBeds.ContainsKey(assignment.BedRecordIndex)?assignment:null;
         }
 
-        private string OwnAssignedInnBed(Resident resident,int town,int building,Dictionary<string,LodgingRoom> rooms)
+        private string OwnAssignedInnBed(Resident resident,int town,int building,HashSet<string> beds)
         {
-            if(resident==null || rooms==null)return null;
+            if(resident==null || beds==null)return null;
             NativePerson native=worldStore.NativePersonInSettlement(town,resident.Id);
             if(native==null || !native.IsAlive || native.WorkKey!=building)return null;
             string bedId=worldStore.NativeLodgingBed(resident.Id);
-            if(string.IsNullOrWhiteSpace(bedId) || worldStore.NativeGuestBedroom(resident.Id)==null ||
-                !rooms.ContainsKey(bedId) || rooms[bedId].NonRentable)return null;
-            return bedId;
+            return string.IsNullOrWhiteSpace(bedId) || worldStore.NativeGuestBed(resident.Id)==null ||
+                !beds.Contains(bedId)?null:bedId;
         }
 
         private bool TryHealthRestStanding(ResidentActor actor,BedAnchor bed,out Vector3 targetWorld,
@@ -398,17 +380,12 @@ namespace PeopleOfTheIliacBay.DFU
             bool assignedInn=false;
             if(isInn)
             {
-                Dictionary<int,string> markerRooms,occupants,bedrooms;
-                List<LodgingRoom> rooms=TavernRoomSurvey.Read(interior,out markerRooms,out occupants,out bedrooms);
-                var map=new Dictionary<string,LodgingRoom>(StringComparer.Ordinal);
-                var rentable=new HashSet<string>(markerRooms.Values,StringComparer.Ordinal);
-                foreach(var room in rooms)
-                {
-                    room.NonRentable=!rentable.Contains(room.Id);
-                    foreach(string bedId in room.Beds)map[bedId]=room;
-                }
-                worldStore.RegisterLodging(town,building,rooms);
-                string innBed=OwnAssignedInnBed(actor.Resident,town,building,map);
+                Dictionary<int,string> markerBeds,occupants,assignedBeds;
+                List<LodgingBed> beds=TavernBedSurvey.Read(interior,out markerBeds,out occupants,out assignedBeds);
+                var ids=new HashSet<string>(StringComparer.Ordinal);
+                foreach(var value in beds)ids.Add(value.Id);
+                worldStore.RegisterLodgingBeds(town,building,beds);
+                string innBed=OwnAssignedInnBed(actor.Resident,town,building,ids);
                 assignedInn=innBed==job.Target.ContainerId;
             }
             NpcHealthCareRecord care=worldStore.ReadNpcHealthCare(actor.Resident.Id);
@@ -419,7 +396,7 @@ namespace PeopleOfTheIliacBay.DFU
                     reservation.BedId!=job.Target.ContainerId || reservation.EndsAt<job.FinishAt || !isInn)return false;
                 var task=worldStore.ReadNpcTask(reservation.TaskId);
                 // The original accepted task remains the durable authority for
-                // a prepaid room used by later attempts in this care episode.
+                // a prepaid bed used by later attempts in this care episode.
                 if(task==null || task.ResidentId!=actor.Resident.Id || task.Steps.Count!=1 ||
                     task.Steps[0].Target.ContainerId!=reservation.BedId)return false;
             }

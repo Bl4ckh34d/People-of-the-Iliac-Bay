@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T12:44:07.2877632Z",
+    "portraitRecord":  75,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "happy",
+    "prompt":  "Create a crisp pixel-art eye atlas for the same NPC, using the sole provided reference image: a 2x2 grid of four exact repeats of the selected HAPPY v4 open phase. Preserve identity, scale, hair/fringe, eye placement, compact iris geometry, actual iris hue, palette, and pixel-art style.\n\nOutput exactly a 2x2 grid of complete 64x35 upper-face crops, with no gutters or padding: top-left OPEN, top-right HALF, bottom-left CLOSED, bottom-right OPEN REPEAT. Keep the brows identical in all four cells. Make this clearly warm, relaxed, unmistakably happy: raise each inner brow end by about 1–2 native pixels relative to the reference, removing the downward inner slant. Shape each brow as a shallow soft rounded arc with inner and outer endpoints at roughly the same height and only a modest middle peak. Do not make an angry V, furrow, worried inner lift, outer-only raised arch, or surprised high arch.\n\nKeep brow pixels connected, source-colored, soft brown, and anatomically coherent. Keep both irises compact and unchanged in color, with tiny muted warm glints; no cream-white bands or bright flash. Preserve the narrow eye aperture and fixed lower-lid contour at native row 28. Only the upper lid moves between phases: HALF shows the upper lid covering the upper portion of the iris, CLOSED has the upper lid meet the fixed lower lid, and OPEN REPEAT matches OPEN. Do not lift or move lower lids, cheeks, or face features. Use native crisp stepped pixels, no anti-aliasing, no extra rows or labels.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-3783c0fc-4c20-4feb-9845-fab5d1472ff6.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-3783c0fc-4c20-4feb-9845-fab5d1472ff6.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "a154a78e834678acf8141690467fbf8bd0343d91a500373aae8b06562dd1c32d",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-3783c0fc-4c20-4feb-9845-fab5d1472ff6.png",
+                      "sha256":  "ba59e75e6a6e950416592fc44d30a22c8be5806cfc8a93502502c034ba58dc4b",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/happy/raw.png",
+                "sha256":  "ba59e75e6a6e950416592fc44d30a22c8be5806cfc8a93502502c034ba58dc4b",
+                "width":  1695,
+                "height":  928
+            }
+}

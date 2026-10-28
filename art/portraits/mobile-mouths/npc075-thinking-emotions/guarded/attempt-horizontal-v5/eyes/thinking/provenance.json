@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T14:06:45.2846508Z",
+    "portraitRecord":  75,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Use case: stylized-concept\nAsset type: DFU native pixel-art NPC075 guarded-thinking eye atlas\nPrimary request: Create one 2x2 atlas with identical complete 64x35 upper-face crops. Row-major cells: LEFT OPEN, RIGHT OPEN / LEFT HALF, RIGHT HALF. No labels, gutters, margins, borders, or reframing.\nInput images: Image 1 is the sole exact local selected-guarded reference grid. Follow its face identity, skeptical brow asymmetry, eyelid anatomy, palette, framing, and pixel clusters.\nPreserve: The current guarded expression and connected asymmetric brows, hair/fringe, eye spacing, narrow source apertures, compact dark olive-brown/amber iris-pupil clusters, muted shaded eye whites and tiny subdued warm glints. Keep brow row24 and lower-lid row28 fixed. Keep cheeks and all rows29 and below unchanged.\nGaze: In both OPEN cells, shift BOTH colored iris/dark-pupil clusters together by about one native pixel toward the same image edge: image-left for LEFT OPEN, image-right for RIGHT OPEN. Keep both eyes aligned and naturally convergent. Neither eye may remain centered while the other shifts; do not shift eyes in opposite directions or move one by more than about one pixel.\nBlink: In each HALF cell, preserve the exact horizontal iris/pupil positions of that matching OPEN cell. Only lower the upper lid to cover the top of the iris, preserving the selected narrow half aperture. Do not resize or reposition the iris, widen whites, alter brows, or move lower lids/cheeks.\nAvoid: Cross-eyed or asymmetric gaze direction, changed guarded expression, cream-white bands, enlarged eye whites, bright glints, round/vector irises, new forehead/nose wrinkles, cheek movement, blur, smoothing, labels, or edits outside the source eye anatomy.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-610ccb02-9c27-4e96-ad9b-cfe1a6e18b92.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-610ccb02-9c27-4e96-ad9b-cfe1a6e18b92.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "ffbdca46086c32b6a135f4e99f2211e9caeac2f618f8fa395cef91b25fc1b86a",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-610ccb02-9c27-4e96-ad9b-cfe1a6e18b92.png",
+                      "sha256":  "9fc1a13e49e71a887b5b514d6bb5a70e74e75975829c9ade386cca04b60d2e6b",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "9fc1a13e49e71a887b5b514d6bb5a70e74e75975829c9ade386cca04b60d2e6b",
+                "width":  1695,
+                "height":  928
+            }
+}

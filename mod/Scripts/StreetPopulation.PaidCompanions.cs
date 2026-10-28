@@ -23,7 +23,7 @@ namespace PeopleOfTheIliacBay.DFU
             out int dailyGold, out string reason)
         {
             dailyGold = 0;
-            reason = "Only a willing, available adventurer can take this paid Follow contract.";
+            reason = "Only a willing, available adventurer can become a paid travel companion.";
             if (!Ready || worldStore == null || population == null || decision == null ||
                 decision.Option == null || !decision.Option.PaidCompanion ||
                 decision.Option.Kind != NpcActionKind.Follow ||
@@ -47,7 +47,11 @@ namespace PeopleOfTheIliacBay.DFU
             if (worldStore.ReadNpcInventory(residentId) == null)
             { reason = "The NPC wallet is not available for the agreed wage."; return false; }
             double now = ActionNow();
-            if (worldStore.IsResidentAwayDuring(residentId, now, now + NpcServiceContract.BillingPeriodSeconds))
+            TravelerPlan currentGuest;
+            string currentVisit=travelerPlans.TryGetValue(residentId,out currentGuest) && currentGuest.Visit.SettlementId==population.SettlementId &&
+                currentGuest.Visit.Admission==TravelerAdmission.Admitted && worldStore.TravelerBed(currentGuest.Visit.Id,now)!=null
+                ?currentGuest.Visit.Id:null;
+            if (worldStore.IsResidentAwayDuring(residentId, now, now + NpcServiceContract.BillingPeriodSeconds,currentVisit))
             { reason = "An existing journey takes priority over the proposed day."; return false; }
             var state = worldStore.Snapshot();
             foreach (var appointment in state.Appointments)
@@ -61,8 +65,8 @@ namespace PeopleOfTheIliacBay.DFU
             var player = GameManager.Instance == null ? null : GameManager.Instance.PlayerEntity;
             if (player == null || player.GetGoldAmount() < dailyGold)
             { reason = "The player lacks the "+dailyGold+" gold needed for one day of service."; return false; }
-            reason = dailyGold+" gold for one 24-game-hour day of Follow and travel from acceptance (10 gold per level). No automatic renewal. " +
-                "The started day is non-refundable; dismissal ends service immediately.";
+            reason = dailyGold+" gold for one day as a travel companion. Payment is up front. " +
+                "No refund for ending the day early. Another day needs a new agreement.";
             return true;
         }
 
@@ -120,7 +124,7 @@ namespace PeopleOfTheIliacBay.DFU
                 return RefundFailedHire(contractId,player,true,reason,out reason);
             }
             // Starting the paid day and binding the physical job are one store operation.
-            // A failed binding leaves the reservation fully refundable.
+            // A failed binding reverses the direct payment before service begins.
             if (!worldStore.TryBindPaidFollowAction(action.Id,action.Revision,contractId,out reason))
                 return RefundFailedHire(contractId,player,true,
                     "The prepaid service could not bind its accepted Follow action.",out reason);
@@ -186,7 +190,7 @@ namespace PeopleOfTheIliacBay.DFU
                 var currentContract = worldStore.ReadNpcServiceContracts().Read(contractId);
                 var active = currentContract == null ? null : worldStore.ActiveNpcAction(currentContract.NpcId);
                 if (active != null && !TryStopConversationAction(currentContract.NpcId,out ignored))
-                { reason = original + " Action cancellation failed; prepaid service remains held."; return false; }
+                { reason = original + " Action cancellation failed; the paid service remains active."; return false; }
             }
             var ticket = worldStore.CaptureNpcServiceContractWriteTicket();
             var contract = ticket.SourceLedger.Read(contractId);
@@ -199,8 +203,8 @@ namespace PeopleOfTheIliacBay.DFU
             Exception failure;
             if (!NativeNpcServiceContractSettlement.TrySettle(worldStore,ticket,player,contractId,
                 contract.Revision,end,out settled,out earnings,out refund,out failure))
-                reason = original + " The prepaid contract remains reserved; refund failed: " + FailureText(failure);
-            else reason = original + " Player payment was refunded through the native service ledger.";
+                reason = original + " The contract remains reserved; payment reversal failed: " + FailureText(failure);
+            else reason = original + " Failed-start payment was reversed through both wallets.";
             return false;
         }
 

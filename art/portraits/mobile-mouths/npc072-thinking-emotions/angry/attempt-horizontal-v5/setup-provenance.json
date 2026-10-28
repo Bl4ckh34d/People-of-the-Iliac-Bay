@@ -1,0 +1,78 @@
+﻿{
+    "kind":  "current-copy-source-preparation",
+    "createdAtUtc":  "2026-10-22T14:44:10.0349779Z",
+    "portraitRecord":  72,
+    "emotionId":  "angry",
+    "sourceWorkspace":  "art/portraits/mobile-mouths/npc072-split-workspace",
+    "sourceManifestSha256":  "7bf89846744207fa71e81a8af58736da9dc2602ccbd2fb87a5678a037001b439",
+    "claim":  "Copied only immutable original/split and the selected mood open/half/closed sources from the current split workspace. No generation, historical art provenance, or source editing is claimed.",
+    "sourceFile":  "original.png",
+    "sourceSha256":  "4af6922ef7f8345a11ae8418761144f64dcaaa8b836f461486a2fb206cbebd85",
+    "sourceWidth":  64,
+    "sourceHeight":  64,
+    "splitY":  35,
+    "sourceFiles":  [
+                        "original.png",
+                        "source-upper.png",
+                        "source-lower.png",
+                        "eyes/angry/open.png",
+                        "eyes/angry/half.png",
+                        "eyes/angry/closed.png"
+                    ],
+    "copiedFiles":  {
+                        "original.png":  {
+                                             "source":  "art/portraits/mobile-mouths/npc072-split-workspace/original.png",
+                                             "sha256":  "4af6922ef7f8345a11ae8418761144f64dcaaa8b836f461486a2fb206cbebd85",
+                                             "sourceSha256":  "4af6922ef7f8345a11ae8418761144f64dcaaa8b836f461486a2fb206cbebd85"
+                                         },
+                        "source-upper.png":  {
+                                                 "source":  "art/portraits/mobile-mouths/npc072-split-workspace/source-upper.png",
+                                                 "sha256":  "46ef88ee1c5229db1cccab3904428fd50a4404d25c2f7195e9739ebafab6d814",
+                                                 "sourceSha256":  "46ef88ee1c5229db1cccab3904428fd50a4404d25c2f7195e9739ebafab6d814"
+                                             },
+                        "source-lower.png":  {
+                                                 "source":  "art/portraits/mobile-mouths/npc072-split-workspace/source-lower.png",
+                                                 "sha256":  "ddfc2f9517095267164b4685d6cc6e324fe2df7f628f6a91504d91b156dbdd15",
+                                                 "sourceSha256":  "ddfc2f9517095267164b4685d6cc6e324fe2df7f628f6a91504d91b156dbdd15"
+                                             },
+                        "layout.json":  {
+                                            "source":  "art/portraits/mobile-mouths/npc072-split-workspace/layout.json",
+                                            "sha256":  "b8dbc559627bd84b966f817a21ab9b0ce17bd0d6f593e82f4c3017afeaf90e7e",
+                                            "sourceSha256":  "f85dcab10e3f5814f0bc455abe5e1be02e558edf70137c1e79486b4a692898c6"
+                                        },
+                        "eyes/angry/open.png":  {
+                                                    "source":  "art/portraits/mobile-mouths/npc072-split-workspace/eyes/angry/open.png",
+                                                    "sha256":  "1d706a092ad9f7419ef0d89dcbdf092966bb8282beec2a72f2929df7057e9b12",
+                                                    "sourceSha256":  "1d706a092ad9f7419ef0d89dcbdf092966bb8282beec2a72f2929df7057e9b12"
+                                                },
+                        "eyes/angry/half.png":  {
+                                                    "source":  "art/portraits/mobile-mouths/npc072-split-workspace/eyes/angry/half.png",
+                                                    "sha256":  "928fc3c4007f5860c89b4131f30e1ef4d0230a9a030ebf33587fadf1e80d2d1c",
+                                                    "sourceSha256":  "928fc3c4007f5860c89b4131f30e1ef4d0230a9a030ebf33587fadf1e80d2d1c"
+                                                },
+                        "eyes/angry/closed.png":  {
+                                                      "source":  "art/portraits/mobile-mouths/npc072-split-workspace/eyes/angry/closed.png",
+                                                      "sha256":  "d331d847056d48f73b7f0530e5cae7e1afba116a944c6938f31b81f809ee7aad",
+                                                      "sourceSha256":  "d331d847056d48f73b7f0530e5cae7e1afba116a944c6938f31b81f809ee7aad"
+                                                  }
+                    },
+    "sourceLayoutSha256":  "f85dcab10e3f5814f0bc455abe5e1be02e558edf70137c1e79486b4a692898c6",
+    "workspaceLayoutSha256":  "b8dbc559627bd84b966f817a21ab9b0ce17bd0d6f593e82f4c3017afeaf90e7e",
+    "browLockEndY":  19,
+    "browInspection":  "Native 64x35 phase crops inspected; preserve angry brow through row 19 inclusively, then candidate eye area. Provisional source-only setting for parent review.",
+    "referenceGrid":  {
+                          "file":  "thinking-reference-grid.png",
+                          "sha256":  "71864c18caafed1273ace672a3c1cf255b9a0a5a3ac75649582807a7c9b8b7f7",
+                          "width":  1024,
+                          "height":  560,
+                          "nearestNeighborScale":  8,
+                          "cellOrder":  [
+                                            "open-left",
+                                            "open-right",
+                                            "half-left",
+                                            "half-right"
+                                        ]
+                      },
+    "candidateWorkspace":  "art/portraits/mobile-mouths/npc072-thinking-emotions/angry/attempt-horizontal-v5",
+    "notCopied":  "No current manifest or legacy thinking map was copied into this mood root; no mouth source or unrelated mood source was copied."
+}

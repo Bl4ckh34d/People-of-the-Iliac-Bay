@@ -20,7 +20,7 @@ namespace PeopleOfTheIliacBay.DFU
             if (Array.IndexOf(Environment.GetCommandLineArgs(), RunFlag) < 0 || !host || !streets ||
                 game == null || game.PlayerEntity == null || game.PlayerMotor == null ||
                 string.IsNullOrEmpty(character) ||
-                !character.StartsWith("PeopleOfTheIliacBayTest-", StringComparison.Ordinal) ||
+                !NativeProbeText.IsTestCharacter(character) ||
                 game.PlayerEntity.Name != character || game.PlayerEnterExit.IsPlayerInside)
                 throw new InvalidOperationException("Lead witness requires the caller-owned exterior fixture.");
 

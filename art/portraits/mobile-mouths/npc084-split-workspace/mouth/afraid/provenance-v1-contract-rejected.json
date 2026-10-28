@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "createdUtc": "2026-10-21T23:40:49.5547034Z",
+  "portraitRecord": 84,
+  "bank": "TFAC00I0.RCI",
+  "part": "mouth",
+  "emotion": "afraid",
+  "prompt": "Use only the supplied 3x3 reference grid as the exact original face and pixel-art anatomy. Create exactly one 3x3 lower-face atlas in row-major order A B C / D E F / G H X. Keep each cell's full lower-half 64x29 framing and original proportions. Preserve the same woman's mouth scale, original muted brown lip color and soft contrast, brown skin, golden wavy hair at both sides, nose, jaw, neck and lighting. Emotion AFRAID: restrained worried lip tension, subtle tense corners, slightly parted or gently pressed lips. Make A and X closed worried mouth expressions; make B-H distinct, small believable speech shapes with varied openings and lip positions readable at the original tiny pixel scale. Keep openings modest and oral interiors dark muted brown; any teeth detail should be minimal and low contrast. No red lipstick, orange skin halo, bright white teeth flash, oversized gape, repeated closed/grinning mouths, extra facial changes, labels, gutters, borders or extra panels. Pixel art matching the original color clusters and feature size.",
+  "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a160c7-2947-7951-a025-d361fa65da49 as C:\\Users\\Daniel\\.codex\\generated_images\\01a160c7-2947-7951-a025-d361fa65da49\\exec-340a0f0d-b60d-4ce3-bfa8-f396ef4fc68a.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+  "generatedPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c7-2947-7951-a025-d361fa65da49\\exec-340a0f0d-b60d-4ce3-bfa8-f396ef4fc68a.png",
+  "sourceOriginal": {
+    "path": "original.png",
+    "sha256": "10ec019f2359c6e700ebcba2286778ad666255ba107e21849cbe885f65de2d88",
+    "width": 64,
+    "height": 64
+  },
+  "referenceGrid": {
+    "path": "mouth-reference-grid.png",
+    "sha256": "47a9646b4ccc362eba8f1855ca36d8b0a14294103b22c6a2f9ede335c0459d47",
+    "width": 1536,
+    "height": 696
+  },
+  "generator": {
+    "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c7-2947-7951-a025-d361fa65da49\\exec-340a0f0d-b60d-4ce3-bfa8-f396ef4fc68a.png",
+    "sha256": "7da4932267a04da2bd1aa85f731b74c210c981df5c7f4328ec62d29d828f2e51",
+    "width": 1863,
+    "height": 844
+  },
+  "raw": {
+    "path": "mouth/afraid/raw.png",
+    "sha256": "7da4932267a04da2bd1aa85f731b74c210c981df5c7f4328ec62d29d828f2e51",
+    "width": 1863,
+    "height": 844
+  }
+}

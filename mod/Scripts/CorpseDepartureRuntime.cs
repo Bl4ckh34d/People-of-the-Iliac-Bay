@@ -13,12 +13,12 @@ namespace PeopleOfTheIliacBay.DFU
     public sealed partial class StreetPopulation
     {
         public void CaptureCorpseDeparture(){FlushOutdoorDeparture();}
-        public List<ResidentActor> NearbyCorpseInquiryPeople(Vector3 point)
+        public List<ResidentActor> NearbyCorpseInquiryPeople(Vector3 point,float radius=4)
         {
             var result=new List<ResidentActor>();
             foreach(var actor in actors.Values)
                 if(actor && actor.gameObject.activeInHierarchy && actor.Resident!=null && actor.Resident.IsAlive &&
-                    !actor.IsConversing && !actor.IsSleeping && (actor.transform.position-point).sqrMagnitude<=16)result.Add(actor);
+                    !actor.IsConversing && !actor.IsSleeping && (actor.transform.position-point).sqrMagnitude<=radius*radius)result.Add(actor);
             result.Sort((a,b)=>(a.transform.position-point).sqrMagnitude.CompareTo((b.transform.position-point).sqrMagnitude));
             return result;
         }
@@ -90,8 +90,8 @@ namespace PeopleOfTheIliacBay.DFU
             var streets=GetComponent<StreetPopulation>();
             if(streets)
                 foreach(var person in streets.NearbyCorpseInquiryPeople(actor.transform.position))
-                    if(TryQuestionCorpsePerson(alarm,guard,actor,person.Resident.Id,person.Person.NameNPC,
-                        person.transform.position,false,now))return true;
+                    if(TryQuestionCorpsePerson(alarm,guard,actor,person.Resident.Id,person.DisplayName,
+                        person.transform,false,now))return true;
             foreach(var npc in directory.GetComponentsInChildren<StaticNPC>())
             {
                 if(!npc || !npc.gameObject.activeInHierarchy || !RDBLayout.IsNPCFlat(npc.Data.billboardArchiveIndex) ||
@@ -100,16 +100,23 @@ namespace PeopleOfTheIliacBay.DFU
                 int hash=NativeExteriorNpcIdentity.Hash(npc,directory.transform);
                 var native=worldStore.RegisterNativePerson(directory.MapID,-1,hash,npc.DisplayName,
                     d.gender==Genders.Female?ResidentSex.Female:ResidentSex.Male,(int)d.race,d.factionID,d.billboardArchiveIndex,d.billboardRecordIndex);
-                if(native.IsAlive && TryQuestionCorpsePerson(alarm,guard,actor,native.Id,npc.DisplayName,npc.transform.position,true,now))return true;
+                var sleep=npc.GetComponent<SleepingPose>();if(sleep && sleep.Active)continue;
+                if(native.IsAlive && TryQuestionCorpsePerson(alarm,guard,actor,native.Id,npc.DisplayName,npc.transform,true,now))return true;
             }
             return true;
         }
         private bool TryQuestionCorpsePerson(CivilianIncident alarm,GuardRecord guard,GuardActor actor,
-            string personId,string name,Vector3 position,bool staticPerson,double now)
+            string personId,string name,Transform person,bool staticPerson,double now)
         {
+            if(alarm.Corpse.Inquiries.Exists(row=>row.PersonId==personId) ||
+                Vector3.Distance(actor.transform.position,person.position)>4 ||
+                !CivilianResponses.Sees(actor.transform.position,person.position,5))return false;
+            float seconds=UnityEngine.Random.Range(2f,5f);
+            if(!actor.BeginInquiryConversation(person,seconds,now))return false;
             bool statement;
             if(!worldStore.TryQuestionCorpseCase(alarm.Id,guard.Id,personId,staticPerson,
-                Vector3.Distance(actor.transform.position,position),CivilianResponses.Sees(actor.transform.position,position,5),now,out statement))return false;
+                Vector3.Distance(actor.transform.position,person.position),true,now,out statement))
+            {actor.EndReportConversation();return false;}
             LearnCorpseSuspect(alarm,guard.Id,now);
             if((actor.transform.position-GameManager.Instance.PlayerMotor.transform.position).sqrMagnitude<=625)
             {
@@ -117,7 +124,7 @@ namespace PeopleOfTheIliacBay.DFU
                 DaggerfallUI.AddHUDText(name+": "+(statement?"I saw the attack. I can tell you what I witnessed.":"I have no first-hand account."),3f);
             }
             Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_CORPSE_INQUIRY: incident="+alarm.Id+"; guard="+guard.Id+
-                "; person="+personId+"; static="+staticPerson+"; directStatement="+statement);
+                "; person="+personId+"; static="+staticPerson+"; directStatement="+statement+"; realSeconds="+seconds);
             return true;
         }
     }

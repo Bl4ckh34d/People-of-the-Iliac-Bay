@@ -18,7 +18,7 @@ namespace PeopleOfTheIliacBay.DFU
         {
             var game=GameManager.Instance;
             if(string.IsNullOrWhiteSpace(folder) || !game || game.PlayerEntity==null ||
-                !game.PlayerEntity.Name.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal) ||
+                !NativeProbeText.IsTestCharacter(game.PlayerEntity.Name) ||
                 !game.PlayerEnterExit || !game.PlayerEnterExit.IsPlayerInsideDungeon)
                 throw new InvalidOperationException("Dungeon block export requires an owned loaded native dungeon and folder.");
 

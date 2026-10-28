@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "createdUtc": "2026-10-22T07:03:38.840906+00:00",
+  "preparationTool": "source-only emotion preflight explicit copier",
+  "portraitRecord": 86,
+  "bank": "TFAC00I0.RCI",
+  "sourcePath": "art/portraits/mobile-mouths/npc086-split-workspace/original.png",
+  "sourceSha256": "685cd0cb922554bb245a0431ee5f141aadbb8c740df7fb81d5a9cb03c888e99d",
+  "sourceWidth": 64,
+  "sourceHeight": 64,
+  "splitY": 35,
+  "layoutPath": "art/portraits/mobile-mouths/npc086-split-workspace/layout.json",
+  "layoutSha256": "b8825d18815413fc7fc06dc06cbfea0ec0ece2a4302799167b12e9c6fe7512ea",
+  "selectedEmotion": "happy",
+  "selectedPhaseSha256": {
+    "open": "80da2ed17d360f66583365784c246ba423d2da0aa65760d6668a286bc4fd5e02",
+    "half": "9385869252d0919b2b7d53087b5b1222b42e6665c7ed7e3824216d6cb0129f44",
+    "closed": "b67c45d965cea6c9a0e596c19f94c4b39e29ae9bd4d9f9362f6881eac8a5c25a"
+  },
+  "workspaceFiles": {
+    "original.png": "685cd0cb922554bb245a0431ee5f141aadbb8c740df7fb81d5a9cb03c888e99d",
+    "source-upper.png": "16a17f3483dc81d8b503be1f63dc8fffe5af1fa3788541abf724814161150c32",
+    "source-lower.png": "e759f67562c028b486e9a8e17a04f91946ecaadcbc42917577c0a38813e52fe9",
+    "layout.json": "b8825d18815413fc7fc06dc06cbfea0ec0ece2a4302799167b12e9c6fe7512ea",
+    "eyes/happy/open.png": "80da2ed17d360f66583365784c246ba423d2da0aa65760d6668a286bc4fd5e02",
+    "eyes/happy/half.png": "9385869252d0919b2b7d53087b5b1222b42e6665c7ed7e3824216d6cb0129f44",
+    "eyes/happy/closed.png": "b67c45d965cea6c9a0e596c19f94c4b39e29ae9bd4d9f9362f6881eac8a5c25a"
+  },
+  "generatedExpressions": false,
+  "sourceCopyLedger": [
+    {
+      "file": "original.png",
+      "source": "art/portraits/mobile-mouths/npc086-split-workspace/original.png",
+      "sha256": "685cd0cb922554bb245a0431ee5f141aadbb8c740df7fb81d5a9cb03c888e99d",
+      "copiedSha256": "685cd0cb922554bb245a0431ee5f141aadbb8c740df7fb81d5a9cb03c888e99d",
+      "byteExact": true
+    },
+    {
+      "file": "source-upper.png",
+      "source": "art/portraits/mobile-mouths/npc086-split-workspace/source-upper.png",
+      "sha256": "16a17f3483dc81d8b503be1f63dc8fffe5af1fa3788541abf724814161150c32",
+      "copiedSha256": "16a17f3483dc81d8b503be1f63dc8fffe5af1fa3788541abf724814161150c32",
+      "byteExact": true
+    },
+    {
+      "file": "source-lower.png",
+      "source": "art/portraits/mobile-mouths/npc086-split-workspace/source-lower.png",
+      "sha256": "e759f67562c028b486e9a8e17a04f91946ecaadcbc42917577c0a38813e52fe9",
+      "copiedSha256": "e759f67562c028b486e9a8e17a04f91946ecaadcbc42917577c0a38813e52fe9",
+      "byteExact": true
+    },
+    {
+      "file": "layout.json",
+      "source": "art/portraits/mobile-mouths/npc086-split-workspace/layout.json",
+      "sha256": "b8825d18815413fc7fc06dc06cbfea0ec0ece2a4302799167b12e9c6fe7512ea",
+      "copiedSha256": "b8825d18815413fc7fc06dc06cbfea0ec0ece2a4302799167b12e9c6fe7512ea",
+      "byteExact": true
+    },
+    {
+      "file": "eyes/happy/open.png",
+      "source": "art/portraits/mobile-mouths/npc086-split-workspace/eyes/happy/open.png",
+      "sha256": "80da2ed17d360f66583365784c246ba423d2da0aa65760d6668a286bc4fd5e02",
+      "copiedSha256": "80da2ed17d360f66583365784c246ba423d2da0aa65760d6668a286bc4fd5e02",
+      "byteExact": true
+    },
+    {
+      "file": "eyes/happy/half.png",
+      "source": "art/portraits/mobile-mouths/npc086-split-workspace/eyes/happy/half.png",
+      "sha256": "9385869252d0919b2b7d53087b5b1222b42e6665c7ed7e3824216d6cb0129f44",
+      "copiedSha256": "9385869252d0919b2b7d53087b5b1222b42e6665c7ed7e3824216d6cb0129f44",
+      "byteExact": true
+    },
+    {
+      "file": "eyes/happy/closed.png",
+      "source": "art/portraits/mobile-mouths/npc086-split-workspace/eyes/happy/closed.png",
+      "sha256": "b67c45d965cea6c9a0e596c19f94c4b39e29ae9bd4d9f9362f6881eac8a5c25a",
+      "copiedSha256": "b67c45d965cea6c9a0e596c19f94c4b39e29ae9bd4d9f9362f6881eac8a5c25a",
+      "byteExact": true
+    }
+  ],
+  "note": "Fresh source-only copy from current split workspace. Only original/source-upper/source-lower/layout and the selected emotion open/half/closed frames were copied. No parent tree copy, gaze generation, assembly, catalog edit, or publication."
+}

@@ -1,0 +1,89 @@
+{
+  "emotion": "thinking",
+  "generator": "built-in image_gen",
+  "status": "revision2-prototype-user-review-pending-not-installed",
+  "source": {
+    "approvedAtlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\tfac-077-full-frame-v5.png",
+    "approvedSha256": "D2BD017E7773336DE704BF3E4C935AB1EF7D0FC84DD4BBC551A61E22AF322223",
+    "neutralOpen": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\neutral-open.png",
+    "neutralOpenSha256": "20F1BF609D27A94B70B92C4621EACD111886749F04E4E07A720585CFAEF9965F"
+  },
+  "referencePreparation": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\thinking-reference-grid.png",
+    "sha256": "53D4E1D42932E8F68E5042AFF49AAB3A152209B0F9E4B1FA3EA3095D489AA2E4",
+    "temporarySource": "C:\\Users\\Daniel\\.codex\\tmp\\portrait77-thinking-reference-v2.png",
+    "temporarySourceSha256": "53D4E1D42932E8F68E5042AFF49AAB3A152209B0F9E4B1FA3EA3095D489AA2E4",
+    "method": "Copied complete neutral-open X cell (lower-right, x=836, y=836, 418×418) into all nine cells without resizing."
+  },
+  "atlas": {
+    "dimensions": "1254×1254 square; 3×3",
+    "gazeOrder": "Screen-relative row-major: upper-left, up, upper-right / left, center, right / lower-left, down, lower-right",
+    "mouths": "All nine cells use relaxed, fully closed resting mouth."
+  },
+  "generationCount": 6,
+  "visibleDeviations": "Native-size review: all nine gaze directions now read distinctly, including upper-left and lower directions. Pupils remain visible; lateral directions show some sclera.",
+  "rejectedAttempts": [
+    {
+      "phase": "open",
+      "reason": "First thinking generation rejected: upper-left pupil direction mapped screen-right like upper-right; vertical offsets too subtle.",
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\thinking-open-rejected-v1.png",
+      "outputSha256": "07BA4BF48C52259C4013FF0CFC707D0038DBC14FEBD71E127E05691A248B01E2",
+      "generatedOriginal": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-5744-7b43-9b03-e8cced819bb7\\exec-c43d2aaa-1090-47cc-8e48-e95fc84bd6ce.png",
+      "prompt": "Create one complete 3×3 pixel-art thinking-gaze atlas from the repeated full-portrait reference. Every cell keeps the exact same full portrait framing, identity, head angle, hairstyle, skin tone, muted palette, lighting, and background. All nine mouths stay relaxed and fully closed. Give every cell a mildly thoughtful, serious look through subtle brow tension only; no strong emotion. Change only eyes and subtle brows. Keep eyes crisp at native 64×64 display size: clear iris and pupil as deliberate pixel clusters, restrained highlights, crisp eyelid outlines, no blur or airbrushed shadow. Shift gaze plausibly and screen-relative in row-major order: upper-left, up, upper-right / left, center, right / lower-left, down, lower-right. Keep pupils visible in all directions; no rolling eyes to extremes, no blank white eyes, no head tilt, chin movement, or change in face anatomy. Do not change the closed mouth, face, hair, crop, tile boundaries, scale, or background. No text, border, or gutter changes. Return exact square 3×3 atlas at reference dimensions."
+    },
+    {
+      "phase": "half",
+      "reason": "First thinking generation rejected: upper-left pupil direction mapped screen-right like upper-right; vertical offsets too subtle.",
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\thinking-half-rejected-v1.png",
+      "outputSha256": "1516B9B579232F8E205B397855EBDE5F9FD5F42CCA20159CE17AEA76B5A13E4F",
+      "generatedOriginal": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-5744-7b43-9b03-e8cced819bb7\\exec-f9ef8326-b2fa-4ca5-a481-07314345e1a1.png",
+      "prompt": "Edit this completed thinking-gaze atlas into the HALF blink atlas. Preserve all nine gaze directions exactly in their current cells, the complete square 3×3 sheet, exact framing, identity, hairstyle, face, thoughtful brows, colors, lighting, and background. All nine mouths stay fully closed. Change ONLY eyelids in all cells: lower upper lids to cover roughly half of each iris, while keeping each pupil visible and gaze direction clear. Keep brows and eye direction unchanged. Preserve screen-relative row-major gaze order: upper-left, up, upper-right / left, center, right / lower-left, down, lower-right. Keep pixel clusters crisp at native 64×64, no blur or soft shadow. No crop, resize, mouth edits, gaze changes, head changes, added details, text, border, or gutter changes. Return one complete atlas at the same square dimensions."
+    },
+    {
+      "phase": "closed",
+      "reason": "First thinking generation rejected: upper-left pupil direction mapped screen-right like upper-right; vertical offsets too subtle.",
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\thinking-closed-rejected-v1.png",
+      "outputSha256": "51882F69EED8F4ED5B55E7F7C8A2C9C0EC1C216985BAFECA24E150C27CF99E6C",
+      "generatedOriginal": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-5744-7b43-9b03-e8cced819bb7\\exec-1be3f984-d92e-4093-83a9-7a459fbb163e.png",
+      "prompt": "Edit this completed thinking-gaze atlas into the CLOSED blink atlas. Preserve every screen-relative gaze direction exactly in its current cell, the complete square 3×3 sheet, exact framing, identity, hairstyle, face, thoughtful brows, colors, lighting, and background. All nine mouths stay fully closed. Change ONLY eyelids in all cells: fully shut both eyes so eyelids hide iris and sclera. Keep brow shape and position unchanged. Preserve gaze order: upper-left, up, upper-right / left, center, right / lower-left, down, lower-right. Keep mouths, head, tile alignment, and framing unchanged. No crop, resize, blur, soft shadow, mouth edits, gaze changes, added details, text, border, or gutter changes. Return one complete atlas at same square dimensions."
+    }
+  ],
+  "phases": [
+    {
+      "phase": "open",
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\thinking-open-rejected-v1.png",
+      "generatedOriginal": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-5744-7b43-9b03-e8cced819bb7\\exec-68e56d03-0545-4f81-953f-12f730ce1e57.png",
+      "output": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\thinking-open.png",
+        "width": 1254,
+        "height": 1254,
+        "sha256": "D5FE9002F98DD9827B046F5D86E4BD72DB12E42447C677F50F4115B0FBA9CF36"
+      },
+      "prompt": "Targeted correction: reposition gaze pupils in this complete 3×3 atlas. Previous attempt mapped upper-left incorrectly to screen-right and made vertical gaze shifts too subtle. Use SCREEN directions from viewer's perspective. Move both irises and pupils toward the same screen direction within each face (never mirror the two eyes). Explicit row-major map: top-left cell, both pupils clearly screen-left and slightly up; top-center, pupils centered horizontally and clearly raised; top-right, both pupils screen-right and slightly up. Middle-left, both pupils screen-left horizontally; middle-center, pupils forward and centered; middle-right, both pupils screen-right horizontally. Bottom-left, both pupils screen-left and visibly down; bottom-center, pupils centered horizontally and visibly down; bottom-right, both pupils screen-right and visibly down. Make left/right and up/down differences clear at native 64×64 face size while keeping pupil clusters visible and sclera restrained. Preserve exact full portrait grid, face, identity, head angle, hair, skin, colors, background, closed resting mouths, thoughtful brows, and tile framing. Change only iris/pupil positions inside the eyes; do not change eyelids, eyebrows, head, chin, mouth, or other pixels beyond what is needed to reposition eyes naturally. Keep crisp pixel clusters, no blur, no airbrushing, no blank white eyes, no extreme rolling. No crop, resize, overlay, filter, text, border, or gutter. Return one complete square 3×3 atlas."
+    },
+    {
+      "phase": "half",
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\thinking-open.png",
+      "generatedOriginal": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-5744-7b43-9b03-e8cced819bb7\\exec-0e991e6b-b5fd-41b0-8053-a9f6c40675c2.png",
+      "output": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\thinking-half.png",
+        "width": 1254,
+        "height": 1254,
+        "sha256": "7E20A78A3161C97DCE294139C67616FE97FA541DD31A9DA94600E54ADCD5F21A"
+      },
+      "prompt": "Edit this corrected thinking-gaze atlas into the HALF blink atlas. Preserve all nine gaze directions exactly in their current cells, the complete square 3×3 sheet, exact framing, identity, hairstyle, face, thoughtful brows, colors, lighting, and background. All nine mouths stay fully closed. Change ONLY eyelids in all cells: lower upper lids to cover roughly half of each iris, while keeping each pupil visible and gaze direction clear. Keep brows and eye direction unchanged. Preserve screen-relative row-major gaze order: upper-left, up, upper-right / left, center, right / lower-left, down, lower-right. Keep pixel clusters crisp at native 64×64, no blur or soft shadow. No crop, resize, mouth edits, gaze changes, head changes, added details, text, border, or gutter changes. Return one complete atlas at the same square dimensions."
+    },
+    {
+      "phase": "closed",
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\thinking-open.png",
+      "generatedOriginal": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-5744-7b43-9b03-e8cced819bb7\\exec-3b0f12e5-0fde-413c-b2fe-ab6348968e36.png",
+      "output": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\thinking-closed.png",
+        "width": 1254,
+        "height": 1254,
+        "sha256": "9B5876772E69345BF736CAA392156F646AF3438C6F71FB69B0CD636EA094786B"
+      },
+      "prompt": "Edit this corrected thinking-gaze atlas into the CLOSED blink atlas. Preserve every screen-relative gaze direction exactly in its current cell, the complete square 3×3 sheet, exact framing, identity, hairstyle, face, thoughtful brows, colors, lighting, and background. All nine mouths stay fully closed. Change ONLY eyelids in all cells: fully shut both eyes so eyelids hide iris and sclera. Keep brow shape and position unchanged. Preserve gaze order: upper-left, up, upper-right / left, center, right / lower-left, down, lower-right. Keep mouths, head, tile alignment, and framing unchanged. No crop, resize, blur, soft shadow, mouth edits, gaze changes, added details, text, border, or gutter changes. Return one complete atlas at same square dimensions."
+    }
+  ]
+}

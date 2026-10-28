@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T09:13:20.7272041Z",
+    "portraitRecord":  90,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Create one pixel-art eye atlas for common portrait NPC090 in the exact sad expression. Use the attached 2x2 reference grid as the exact face identity, sad brows, eyelid contours, very narrow eye apertures, eye spacing, compact olive-green iris colors, and native pixel-art guide. Return one 2-column by 2-row atlas, overall aspect ratio 64:35 (about 1.83:1), four equal cells, no gutters, labels, borders, text, or extra panels.\n\nRow-major cells: top-left has both eyes open, glancing gently one native pixel to the viewer\u0027s left; top-right has both eyes open, glancing gently one native pixel to the viewer\u0027s right. Bottom-left repeats left glance with the exact source sad half-lidded aperture. Bottom-right repeats right glance with the exact source sad half-lidded aperture. No vertical gaze.\n\nPreserve each eye\u0027s exact source upper and lower lid contours and native opening height. Keep the sad eyes narrow and lowered. Do not lift the upper lid, lower the lower lid, widen the opening, or expose more sclera. Shift only the existing compact stepped olive-green iris and dark pupil sideways by about one native pixel inside that fixed aperture. Keep iris size and actual source hue. Use restrained, tiny source-matched highlights. Keep sad brows fixed.\n\nDo not add broad white sclera bands, pale strips, alert or wide-open eyes, large or round irises, bright glints, or new colors. Do not alter face, brows, forehead, hair, skin, nose, mouth, background, crop, or pixels outside eye masks. Keep crisp native pixel edges; no smoothing, blur, antialiasing, resampling, or invented colors. Closed phase reuses existing sad closed image and is not in this atlas.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-9e75bb2f-407a-4809-b216-13b2a05ea5e7.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-9e75bb2f-407a-4809-b216-13b2a05ea5e7.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "b8b0a0da8a68fea050774dbe95633fcb561aa0d4a4b316a787b9831b46247489",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "9099c2272e441eb5d464b63d4745b6cf154533acb06d7cdf48b34923ce848e66",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-9e75bb2f-407a-4809-b216-13b2a05ea5e7.png",
+                      "sha256":  "c17d970fa29f85cc57724ab87d16715b6e43d8e1145a5e5af3a088821a26af07",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "c17d970fa29f85cc57724ab87d16715b6e43d8e1145a5e5af3a088821a26af07",
+                "width":  1695,
+                "height":  928
+            }
+}

@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T15:31:53.6458376Z",
+    "portraitRecord":  91,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "sad",
+    "prompt":  "Use case: stylized-concept\nAsset type: native-scale pixel-art eye atlas for a Daggerfall Unity NPC portrait\nInput image: Image 1 is the sole exact reference grid; preserve this face, its source palette, framing, eye spacing and native pixel-cluster style.\nPrimary request: Return one clean 2×2 atlas of complete upper portrait halves, with four equal cells in row-major order: OPEN, HALF-CLOSED, FULLY CLOSED, OPEN REPEAT. Each cell represents the full 64×35 upper half at the same scale and framing as the supplied grid; no labels, borders, gutters, zooming, or rescaling.\nSubject and expression: This is the same woman and identity shown in the grid, with a clearly sad, quietly downcast expression. Give both brows a subtle but visible sorrowful lift toward the inner ends, with soft natural asymmetry and continuous tapered pixel contours. Keep that sad brow expression identical in all four cells.\nEyes: Preserve the source\u0027s narrow eye apertures, small warm brown/amber irises, tiny muted highlights, and subdued shaded sclera. Both eyes remain centered and aligned; do not enlarge, round, brighten, or reposition the irises. OPEN and OPEN REPEAT must match. In HALF-CLOSED, upper lids descend naturally over the upper part of both stationary irises; keep lower lids, cheeks, hair, nose, skin shading and all unrelated features still. FULLY CLOSED covers both irises and sclera with natural closed lid lines, while the brows remain unchanged.\nComposition: Copy the complete upper half and source pixel-art face from the reference in every cell; vary only the eyelid phase and the sad brow expression. Preserve hairline and exterior exactly in appearance. Soft muted warm-brown skin and hair, source-matched tones, no outlines added.\nAvoid: broad white eye bands, giant or smooth circular pupils, bright white glints, detached/doubled brows, tears, extra features, expression drift, cheek movement, labels, text, or watermark.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-7ea484e8-355e-4c78-8c17-35fcd4e3eaa8.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-7ea484e8-355e-4c78-8c17-35fcd4e3eaa8.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "428f65da65c68b7c50b7cefcf4fde03aa83505c54de6ccbb2ac3ab018f8a5c51",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "4bc32091eba9e8ef44f76a0ec4c1fe6c6b26be1c59c3ec999c9bd3709e281c2f",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-7ea484e8-355e-4c78-8c17-35fcd4e3eaa8.png",
+                      "sha256":  "625839b803c47217d47f0cec16fa76c1c3b66cbbfbce27977a03fb74614d2f03",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/sad/raw.png",
+                "sha256":  "625839b803c47217d47f0cec16fa76c1c3b66cbbfbce27977a03fb74614d2f03",
+                "width":  1695,
+                "height":  928
+            }
+}

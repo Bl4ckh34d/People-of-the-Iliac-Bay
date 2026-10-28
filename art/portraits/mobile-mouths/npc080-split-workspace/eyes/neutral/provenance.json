@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 80,
+  "bank": "TFAC00I0.RCI",
+  "emotion": "neutral",
+  "assetType": "eyes atlas",
+  "imageTool": "built-in image_gen",
+  "generationMode": "exactly one edit call; generated PNG copied byte-for-byte; no resize, postprocessing, or reroll",
+  "sourceOriginal": {
+    "path": "art/portraits/mobile-mouths/npc080-split-workspace/original.png",
+    "sha256": "4ea9b975047475ae696146fbd02a9b005b16c4baab7e1c1e1c3651ee287f4b0b",
+    "dimensionsPx": [
+      64,
+      64
+    ]
+  },
+  "sourceReferences": [
+    {
+      "path": "art/portraits/mobile-mouths/npc080-split-workspace/eyes-reference-grid.png",
+      "sha256": "68275f3a970329cd449c3a75313210237ae84fe4ade1b0a18e6be6b93e7ee842",
+      "dimensionsPx": [
+        1024,
+        560
+      ]
+    },
+    {
+      "path": "art/portraits/mobile-mouths/npc080-split-workspace/original.png",
+      "sha256": "4ea9b975047475ae696146fbd02a9b005b16c4baab7e1c1e1c3651ee287f4b0b",
+      "dimensionsPx": [
+        64,
+        64
+      ]
+    }
+  ],
+  "prompt": "Image 1 is NPC080's complete 2x2 upper-face eye reference grid. Image 2 is the immutable original NPC080 portrait and is the binding authority for eye identity, geometry, exact palette, soft contrast, and pixel texture. Make one restrained NEUTRAL blink atlas. Return one complete 2x2 sprite atlas only, with four equal whole upper-half cells in row-major order: OPEN, HALF BLINK, FULLY CLOSED BLINK, REPEATED OPEN. Each cell is the same native 64x35 upper-face half. Preserve the reference framing and equal cell layout; no margins, labels, gutters, borders, or extra cells.\n\nKeep the exact original neutral brows in every cell: same shape, thickness, color, height, and position. Preserve the compact golden-hazel irises and tiny dark pupils, with the same natural pixel shape, width, gaze, and position in open and half blink. Half blink changes only the upper lids moving vertically over the same stationary eyeballs; cover about half the iris without shifting, shrinking, enlarging, rounding, or repainting it. Fully closed blink closes both eyes naturally and hides the entire iris and pupil. Brows remain unchanged. Repeated open returns to the same open neutral pose.\n\nUse the original muted colors exactly: do not make lips redder, skin more orange/yellow, skin brighter, contrast stronger, outlines darker or thicker, brows heavier, or irises brighter. Preserve NPC080's hair, forehead, skin shading, nose region, eye spacing, crop, lighting, and low-contrast soft pixel clusters. Change only the lids for the two blink poses. Do not add makeup, eyeliner, wrinkles, highlights, blur, smudging, new details, text, or background changes.",
+  "promptSha256Utf8": "fd655874eb93649f91e2f2ac5c1413903299cf306b2574b5d1aa07f0d8695b58",
+  "grid": {
+    "rows": 2,
+    "columns": 2,
+    "rowMajorOrder": [
+      "open",
+      "half",
+      "closed",
+      "repeat-open"
+    ],
+    "nativeCellDimensionsPx": [
+      64,
+      35
+    ],
+    "completeHalfCells": true,
+    "generatedCanvasDimensionsPx": [
+      1695,
+      928
+    ],
+    "equalIntegerCellDivisionPossible": false,
+    "samplingLimitation": "Generated dimensions are not exactly divisible into equal integer cells; parent must confirm boundaries before native sampling. Raw PNG remains unaltered.",
+    "cellSemantics": "Neutral open, half blink, fully closed blink, repeated open; original neutral brows and compact stationary iris requested."
+  },
+  "generatedOutput": {
+    "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-5744-7b43-9b03-e8cced819bb7\\exec-3432aa3b-9ab7-406d-9734-1653e454c4a7.png",
+    "sha256": "2b0bcfcd211dbdf50d3355c73e6e677280ef57bb8285791f15e4a9dc2b65263e",
+    "dimensionsPx": [
+      1695,
+      928
+    ],
+    "mode": "RGB"
+  },
+  "savedRaw": {
+    "path": "art/portraits/mobile-mouths/npc080-split-workspace/eyes/neutral/raw.png",
+    "sha256": "2b0bcfcd211dbdf50d3355c73e6e677280ef57bb8285791f15e4a9dc2b65263e",
+    "dimensionsPx": [
+      1695,
+      928
+    ],
+    "mode": "RGB",
+    "bytewiseSameAsGenerated": true
+  },
+  "rawReview": {
+    "status": "raw generated; parent review pending",
+    "paletteLock": "not met",
+    "notes": "Single raw generation. The four lid phases are visible and the iris remains compact at the displayed atlas scale. Visible palette/style limitation: eyebrows look heavier/darker and skin warmer/oranger than the original reference. Exact native-scale iris stationarity and blink coverage remain unverified. Palette lock is not met; parent review required. No reroll or postprocessing.",
+    "nativeScaleOrMaskAcceptance": false,
+    "generatedCellDivisionExact": false
+  }
+}

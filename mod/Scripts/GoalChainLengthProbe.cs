@@ -4,8 +4,8 @@ using DaggerfallWorkshop.Game;
 
 namespace PeopleOfTheIliacBay.DFU
 {
-    // Controlled native accepted-path probe. Typed extraction and D3 ACCEPT are
-    // injected; per-step target binding and all task effects use native paths.
+    // Controlled native accepted-path probe. Typed extraction is injected;
+    // same-model willingness, per-step binding and task effects use production paths.
     internal static class GoalChainLengthProbe
     {
         internal const string Switch = "-peopleoftheiliacbay-goal-chain-length-probe";

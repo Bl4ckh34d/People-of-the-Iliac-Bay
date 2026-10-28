@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T02:35:36.6539736Z",
+    "portraitRecord":  89,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "guarded",
+    "prompt":  "Create one 3-column by 3-row pixel-art atlas from the supplied reference grid only. The reference is a 3x3 grid of repeated native 64x29 lower portrait halves, each enlarged 8x with nearest-neighbor pixel edges. Return same 3x3 grid layout and 192:87 aspect ratio, with nine complete lower-half cells, no borders or extra tiles. Row-major cells: A B C / D E F / G H X.\n\nSame character, guarded/skeptical emotion. Keep emotion lightly pressed and subtly asymmetrical: one mouth corner is slightly tighter than the other. Use understated tension, not a smile or a strong frown. Preserve original soft brown lip color, subdued tan/brown skin, natural muted contrast and original lip scale. Preserve jaw, nose, neck, hair, background and complete cell framing. Change only mouth and necessary interior pixels. Do not widen face or mouth, add orange skin, lipstick-red lips, bright white tooth blocks, harsh outlines, or smooth vector detail. Use restrained warm teeth and cavity shades. Keep true native pixel-grid look.\n\nUse these exact Rhubarb pose meanings in row-major order. A: closed lips with light pressure for P/B/M. B: narrow horizontal opening with nearly together teeth for consonants and EE. C: medium relaxed unrounded EH/AE opening. D: wide vertical AA opening, larger than C. E: slightly rounded AO/ER opening, no wider than C. F: small forward pucker for UW/OW/W, not tooth biting. G: upper teeth touching lower lip for F/V, not a wide vowel or pucker. H: tongue raised behind upper teeth for L, with opening between C and D; tiny tongue may be subtle. X: relaxed closed idle lips. Keep guarded tension and corner asymmetry across poses while preserving each pose family.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a16174-1085-7970-90d3-2d3837279196 as C:\\Users\\Daniel\\.codex\\generated_images\\01a16174-1085-7970-90d3-2d3837279196\\exec-5e9b2022-9b0b-4980-97f3-3e378d3d8039.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a16174-1085-7970-90d3-2d3837279196\\exec-5e9b2022-9b0b-4980-97f3-3e378d3d8039.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "ff6db931146aa84fe2260b0daba0269a20455b1dcbb61e232e011a87291b4b5f",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "dc5611a05ea1f3aeea7f7b08b7b2f4ec4c353d989f2043ebe7bca92d085cee4d",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a16174-1085-7970-90d3-2d3837279196\\exec-5e9b2022-9b0b-4980-97f3-3e378d3d8039.png",
+                      "sha256":  "f2c9e44855515a41e51efd7509318265de39fca5c488e520bb223e3e50263c8a",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/guarded/raw.png",
+                "sha256":  "f2c9e44855515a41e51efd7509318265de39fca5c488e520bb223e3e50263c8a",
+                "width":  1863,
+                "height":  844
+            }
+}

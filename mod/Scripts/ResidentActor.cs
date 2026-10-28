@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace PeopleOfTheIliacBay.DFU
 {
-    public sealed class ResidentActor : MonoBehaviour
+    public sealed partial class ResidentActor : MonoBehaviour
     {
         private const float MaxFacingTurnRateDegreesPerSecond = 1080f;
         public Resident Resident { get; private set; }
@@ -28,6 +28,18 @@ namespace PeopleOfTheIliacBay.DFU
         private readonly DirectionalStandingPose standingPose = new DirectionalStandingPose();
         private Texture2D runningPilotAtlas;
         private RunningPilotPose runningPilot;
+        private CompletedNpcPose completedPose;
+        internal void ReleaseCompletedPose(){if(completedPose)completedPose.Release();}
+        internal void ReleaseStandingForCompleteArt(){if(Person&&Person.Asset)standingPose.Set(Person.Asset,false);if(runningPilot)runningPilot.SetRunning(false);}
+        internal void ShowMeleeSwing(Vector3 toward)
+        {
+            DaggerfallWorkshop.Game.Items.DaggerfallUnityItem weapon;
+            if(!completedPose||!NativeNpcCombatAssist.TryWeapon(this,out weapon))return;
+            // Selected art carries a one-handed sword, not an axe, bow or empty hand.
+            int type=weapon.TemplateIndex;
+            if(type>=(int)DaggerfallWorkshop.Game.Items.Weapons.Shortsword&&type<=(int)DaggerfallWorkshop.Game.Items.Weapons.Katana)
+                completedPose.Swing(toward);
+        }
         private bool conversing;
         private bool watchingNearbyPlayer;
         private float nextAttentionCheck;
@@ -36,6 +48,8 @@ namespace PeopleOfTheIliacBay.DFU
         public void ResumeFromSocialPause() { if(crowd) crowd.ResumeFromPause(); }
         internal void HoldPhysicalPosition()
         {
+            ReleaseCompletedPose();
+            if(completedPose)completedPose.Movement(false,false,Vector3.zero);
             if(!gameObject.activeInHierarchy || conversing || IsSleeping || IsSeated || !Person || !Person.Asset)return;
             ResumeFromSocialPause();SetRunningPreview(false);
             if(!standingPose.Set(Person.Asset,true) && !Person.Asset.IsIdle)Person.Asset.IsIdle=true;
@@ -45,15 +59,18 @@ namespace PeopleOfTheIliacBay.DFU
         private Action death;
         public float NextCounterattack;
         public int Counterattacks;
-        public bool IsSleeping { get { return sleeping && sleeping.Active; } }
+        public bool IsSleeping { get { var pose=sleeping?sleeping:IsStationary?GetComponent<SleepingPose>():null;return pose && pose.Active; } }
         public void Sleep(Transform interior, BedAnchor bed, SleepingArt.Atlas atlas)
         {
+            ReleaseCompletedPose();
+            if(completedPose)completedPose.Movement(false,false,Vector3.zero);
             EndSitting();
             SetRunningPreview(false);
-            standingPose.Set(Person.Asset, false);
+            if(Person && Person.Asset)standingPose.Set(Person.Asset, false);
             if(crowd) crowd.ResetPlacement();
             if (!sleeping) sleeping = gameObject.AddComponent<SleepingPose>();
-            sleeping.Begin(this, interior, bed, atlas);
+            if(IsStationary)sleeping.BeginNative(interior,bed,atlas);
+            else sleeping.Begin(this, interior, bed, atlas);
         }
         public void Initialize(Resident resident, uint surnameSeed, CityNavigation navigation,Action onDeath=null,WorldStateStore inventoryStore=null)
         {
@@ -119,6 +136,7 @@ namespace PeopleOfTheIliacBay.DFU
             NativeNpcVitalsBinding.BindTo(gameObject,entity,inventoryStore,resident);
             NativeNpcPoisonOnsetBinding.BindTo(gameObject,inventoryStore,resident);
             entity.OnDeath += Died;
+            completedPose=CompletedNpcPose.Bind(this);
         }
         // Called only after the native hostile-threat witness has passed its sight checks.
         // A restored world invalidates this actor's write authority even if its person ID survives.
@@ -174,12 +192,18 @@ namespace PeopleOfTheIliacBay.DFU
             EndSitting();
             CaptureInventory();
             SetRunningPreview(false);
+            if(stateStore!=null && Resident!=null && stateStore.IsNpcVitalsWriteEpochCurrent(stateWriteEpoch))
+            {
+                var traveler=stateStore.Traveler(Resident.Id);
+                if(traveler!=null && traveler.HomeKey>=0 && ReferenceEquals(stateStore.TravelerOriginResident(Resident.Id),Resident))
+                    stateStore.KillTraveler(Resident.Id,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
+            }
             if(death!=null) death();
             if (Resident != null) { Resident.IsAlive = false; if (Resident.NativeIdentity != null) Resident.NativeIdentity.IsAlive = false; }
             Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_RESIDENT_DEATH: " + Resident.Id);
             gameObject.SetActive(false);
         }
-        private void OnDisable() { EndSitting();SetRunningPreview(false);if(Person)standingPose.Set(Person.Asset,false); }
+        private void OnDisable() { ReleaseCompletedPose();EndSitting();SetRunningPreview(false);if(Person)standingPose.Set(Person.Asset,false); }
         private void OnDestroy() { EndSitting();SetRunningPreview(false); if (entity != null) entity.OnDeath -= Died; }
         public void SetRunningPilotAtlas(Texture2D atlas)
         {
@@ -190,10 +214,16 @@ namespace PeopleOfTheIliacBay.DFU
         public void TransferOwner(Transform parent,CityNavigation navigation)
         {
             transform.SetParent(parent,true);
-            Person.Motor.cityNavigation=navigation;
+            if(Person && Person.Motor)Person.Motor.cityNavigation=navigation;
         }
         public bool SetRunningPreview(bool fleeing)
         {
+            bool eligible=fleeing&&Resident!=null&&Resident.IsAlive&&Resident.AgeGroup==ResidentAgeGroup.Adult&&
+                !conversing&&!IsSleeping&&!IsSeated&&!GameManager.IsGamePaused&&!standingPose.Active&&
+                (IsStationary||Person&&Person.Asset&&Person.Asset.gameObject.activeInHierarchy&&!Person.Asset.IsIdle);
+            if(completedPose)completedPose.Running(eligible);
+            if(eligible&&CompletedNpcArt.Current!=null&&CompletedNpcArt.Current.ForActor(this,"run")!=null)
+            {if(runningPilot)runningPilot.SetRunning(false);return true;}
             if (!fleeing || !CanShowRunningPreview())
             {
                 if (runningPilot) runningPilot.SetRunning(false);
@@ -225,8 +255,9 @@ namespace PeopleOfTheIliacBay.DFU
         }
         private void FaceConversation()
         {
+            ReleaseCompletedPose();
             EndSitting();
-            standingPose.Set(Person.Asset, false);
+            if(Person && Person.Asset)standingPose.Set(Person.Asset, false);
             var camera = GameManager.Instance.MainCamera;
             if (camera)
             {
@@ -234,7 +265,7 @@ namespace PeopleOfTheIliacBay.DFU
                 towardPlayer.y = 0;
                 if (towardPlayer.sqrMagnitude > 0.00001f) transform.rotation = Quaternion.LookRotation(towardPlayer);
             }
-            if (!Person.Asset.IsIdle)
+            if (Person && Person.Asset && !Person.Asset.IsIdle)
             {
                 Person.Asset.IsIdle = true;
                 var native = Person.Asset as MobilePersonBillboard;
@@ -247,8 +278,11 @@ namespace PeopleOfTheIliacBay.DFU
         }
         public void Place(Vector3 ground, Vector3 direction, bool standing = false, bool fleeing = false,bool waitAtOccupiedTarget=false,SelectedSeatAccess seatAccess=null,bool freeStanding=false,bool comfortWalking=true,Func<Vector3,bool> placementAllowed=null,Vector3? navigationDestination=null,bool preferNative=true)
         {
+            ReleaseCompletedPose();
+            if(fleeing)ReleaseFlightPause();
+            if(!fleeing && HoldGuardInquiryPosition())return;
             var jump=GetComponent<NativeDungeonJumpTraversal>();
-            if(jump && jump.Active){jump.Advance();return;}
+            if(!fleeing && jump && jump.Active){jump.Advance();return;}
             bool seatTarget=seatAccess!=null&&seatAccess.Valid&&standing&&(ground-seatAccess.Slot.Ground).sqrMagnitude<0.0001f;
             if(!seatTarget)EndSitting();
             if(seatAccess!=null && seatAccess.Valid && seatAccess.Permits(transform.position-Vector3.up,ground))SeatBodyCollision.Set(this,true);
@@ -260,7 +294,7 @@ namespace PeopleOfTheIliacBay.DFU
             Vector3 actual;
             bool nativeMoved=false;
             var native=GetComponent<NativeResidentNavigation>();
-            if(preferNative && !fleeing && seatAccess==null && NativeNavigationWorld.Current && NativeNavigationWorld.Current.Ready)
+            if(!IsStationary && preferNative && !fleeing && seatAccess==null && NativeNavigationWorld.Current && NativeNavigationWorld.Current.Ready)
             {
                 if(!native)native=gameObject.AddComponent<NativeResidentNavigation>();
                 nativeMoved=native.TryMove(navigationDestination.HasValue && crowd && crowd.HasPlacement?
@@ -274,7 +308,7 @@ namespace PeopleOfTheIliacBay.DFU
                 // ordinary walking cap from initial body configuration.
                 if(crowd && Resident!=null)crowd.Configure(1,fleeing&&!standing?ResidentMovement.FleeSpeed(Resident.AppearanceSeed):WalkingSpeed);
                 if(crowd && !crowd.Place(ground,out actual,comfortWalking&&!standing,waitAtOccupiedTarget,seatAccess,placementAllowed)) { gameObject.SetActive(false); return; }
-                if(!crowd) transform.position=ground+Vector3.up;
+                if(!crowd) transform.position=ground+BodyOffset;
             }
             if(!gameObject.activeSelf) gameObject.SetActive(true);
             var moved=transform.position-before;
@@ -304,6 +338,8 @@ namespace PeopleOfTheIliacBay.DFU
             // DFU's setter restarts the animation even when the value is unchanged.
             // A stopped walker retains its world heading. Optional native-scale
             // standing art supplies all bearings; unknown assets keep the fallback.
+            if(completedPose)completedPose.Movement(!idle,fleeing&&!idle,direction);
+            if(IsStationary)return;
             if (!standingPose.Set(Person.Asset, atActivity || idle) && Person.Asset.IsIdle != idle)
                 Person.Asset.IsIdle = idle;
             SetRunningPreview(fleeing && !standing && !idle);

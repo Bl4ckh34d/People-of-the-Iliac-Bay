@@ -186,21 +186,8 @@ try {
 
     $dialogueDefinition = @($settingsDefinition.Sections | Where-Object { $_.Name -eq 'Dialogue' })[0]
 
-    $plannerDefinition = @($dialogueDefinition.Keys | Where-Object { $_.Name -eq 'EnableDecisionPlanner' })[0]
-
-    Assert-True ($plannerDefinition -and $plannerDefinition.Value -eq $false) 'Optional D3 planner must default off, matching Gemma + Breeze.'
-
-    Assert-True (([string]$plannerDefinition.Description).IndexOf('restart',[StringComparison]::OrdinalIgnoreCase) -ge 0) 'EnableDecisionPlanner must explain that changes require restart.'
-
-    $modSource = Get-Content -LiteralPath (Join-Path $repoRoot 'mod/Scripts/PeopleOfTheIliacBayMod.cs') -Raw
-
-    $decisionSource = Get-Content -LiteralPath (Join-Path $repoRoot 'mod/Scripts/PeopleOfTheIliacBayMod.Decisions.cs') -Raw
-
-    Assert-True ($modSource.Contains('decisionPlannerSettingCaptured') -and $modSource.Contains('takes effect after restart')) 'Runtime planner setting must retain its startup value.'
-
-    Assert-True ($decisionSource.Contains('decisionPlannerEnabled && localDialogueEnabled && LocalDecisionShadowConfiguration.TryParseRouting')) 'Runtime routing must require startup planner and LLM enablement.'
-
-    Write-Output 'PASS planner setting defaults off, documents restart, and gates runtime routing at startup.'
+    $plannerDefinition = @($dialogueDefinition.Keys | Where-Object { $_.Name -eq 'EnableDecisionPlanner' })
+    Assert-True ($plannerDefinition.Count -eq 0) 'Single-LLM settings must not expose the removed second-model planner.'
 
     @'
 
@@ -229,18 +216,6 @@ if ($OwnershipReceiptPath -and $global:HybridLauncherDialogueOwned) {
 if ($global:HybridLauncherDialogueFailure) { throw 'synthetic Qwen readiness failure' }
 
 '@ | Set-Content -LiteralPath (Join-Path $fakeRepo 'tools\StartLocalDialogue.ps1') -Encoding Ascii
-
-    @'
-
-param([int]$ReadinessTimeoutSeconds)
-
-Add-HybridLauncherEvent @{ Kind = 'mini'; Timeout = $ReadinessTimeoutSeconds }
-
-if ($global:HybridLauncherDecisionFailure) { throw 'synthetic Mini readiness failure' }
-
-[pscustomobject]@{ Ready = $true; ModelId = 'C:\models\vllm-d3-mini-Q4_K_M.gguf'; Endpoint = 'http://127.0.0.1:8093/v1/systemone' }
-
-'@ | Set-Content -LiteralPath (Join-Path $fakeRepo 'tools\StartLocalDecision.ps1') -Encoding Ascii
 
     @'
 
@@ -293,21 +268,13 @@ if ($global:HybridLauncherSpeechFailure) { throw 'synthetic Breeze readiness fai
 
     $events = Get-Events
 
-    Assert-True (($events.Kind -join ',') -eq 'qwen,mini,game,watcher') 'Normal launch must start Qwen, then Mini, then game and arm owned-service cleanup.'
+    Assert-True (($events.Kind -join ',') -eq 'qwen,game,watcher') 'Normal launch must start one LLM, then game and owned-service cleanup despite the obsolete enabled setting.'
 
-    Assert-True ($events[2].Arguments -like '*-peopleoftheiliacbay-decision-routing*') 'Normal launch must pass routing flag.'
+    Assert-True (-not $events[1].Arguments) 'Old enabled planner settings must not add second-model routing flags.'
 
-    Assert-True ($events[2].Arguments -like '*-peopleoftheiliacbay-goal-extraction*') 'Normal hybrid launch must enable typed LLM goal extraction.'
+    Assert-True ($events[2].Arguments -like '*WatchGameOwnedServices.ps1*' -and $events[2].WindowStyle -eq 'Hidden') 'Lifecycle watcher must run hidden with its manifest.'
 
-    Assert-True ($events[2].Arguments -like '*-peopleoftheiliacbay-action-wording*') 'Normal hybrid launch must enable receipt-grounded wording.'
-
-    Assert-True ($events[2].Arguments -like '*C:\models\vllm-d3-mini-Q4_K_M.gguf*') 'Normal launch must pass exact model ID.'
-
-    Assert-True ($events[2].Arguments -like '*http://127.0.0.1:8093/v1/systemone*') 'Normal launch must pass decision endpoint.'
-
-    Assert-True ($events[3].Arguments -like '*WatchGameOwnedServices.ps1*' -and $events[3].WindowStyle -eq 'Hidden') 'Lifecycle watcher must run hidden with its manifest.'
-
-    $manifestPaths = @(Get-NativeOptionValues ([string]$events[3].Arguments) '-ManifestPath')
+    $manifestPaths = @(Get-NativeOptionValues ([string]$events[2].Arguments) '-ManifestPath')
 
     Assert-True ($manifestPaths.Count -eq 1 -and (Test-Path -LiteralPath $manifestPaths[0] -PathType Leaf)) 'Successful launch must preserve the watcher manifest after the launcher exits.'
 
@@ -315,7 +282,7 @@ if ($global:HybridLauncherSpeechFailure) { throw 'synthetic Breeze readiness fai
 
     Assert-True (@($manifest.gameProcesses).Count -eq 1 -and @($manifest.ownedServices).Count -eq 1) 'Watcher manifest must contain exact game and newly owned service identities.'
 
-    Write-Output 'PASS Qwen starts before Mini and game receives exact routing metadata.'
+    Write-Output 'PASS single LLM starts with no second-model routing despite obsolete enabled setting.'
 
     Reset-Case
 
@@ -323,7 +290,7 @@ if ($global:HybridLauncherSpeechFailure) { throw 'synthetic Breeze readiness fai
 
     $events = Get-Events
 
-    Assert-True (($events.Kind -join ',') -eq 'qwen,mini,game') 'DevelopmentMode must leave launched model services warm without starting a watcher.'
+    Assert-True (($events.Kind -join ',') -eq 'qwen,game') 'DevelopmentMode must leave launched model services warm without starting a watcher.'
 
     Assert-True ($global:HybridLauncherStopEvents.Count -eq 0) 'DevelopmentMode must not stop model services.'
 
@@ -335,11 +302,11 @@ if ($global:HybridLauncherSpeechFailure) { throw 'synthetic Breeze readiness fai
 
     $events = Get-Events
 
-    Assert-True (($events.Kind -join ',') -eq 'qwen,game,watcher') 'DialogueOnly must skip Mini and supervise newly owned Qwen.'
+    Assert-True (($events.Kind -join ',') -eq 'qwen,game,watcher') 'DialogueOnly supervises the one dialogue service.'
 
     Assert-True (-not $events[1].Arguments) 'DialogueOnly game launch must have no decision flags.'
 
-    Write-Output 'PASS DialogueOnly starts Qwen and game without Mini routing.'
+    Write-Output 'PASS DialogueOnly starts the one dialogue service and game.'
 
     Remove-Item -LiteralPath $fixtureSettings
     # Missing EnableFreeText must retain the legacy default of true while the mod is enabled.
@@ -380,7 +347,7 @@ if ($global:HybridLauncherSpeechFailure) { throw 'synthetic Breeze readiness fai
 
     $events = Get-Events
 
-    Assert-True (($events.Kind -join ',') -eq 'qwen,game,watcher') 'LLM-on planner-off launch must skip the D3 service and supervise newly owned Qwen.'
+    Assert-True (($events.Kind -join ',') -eq 'qwen,game,watcher') 'Normal LLM launch supervises the one dialogue service.'
 
     Assert-True (-not $events[1].Arguments) 'LLM-on planner-off game launch must not receive D3 flags.'
 
@@ -468,13 +435,13 @@ if ($global:HybridLauncherSpeechFailure) { throw 'synthetic Breeze readiness fai
 
     $events = Get-Events
 
-    Assert-True (($events.Kind -join ',') -eq 'qwen,mini,game,watcher') 'Mini failure must fall back after Qwen readiness and supervise the owned Qwen service.'
+    Assert-True (($events.Kind -join ',') -eq 'qwen,game,watcher') 'Obsolete enabled planner setting must not require a second launcher file.'
 
-    Assert-True (-not $events[2].Arguments) 'Mini failure fallback must launch game without decision flags.'
+    Assert-True (-not $events[1].Arguments) 'Obsolete planner setting must not add decision flags.'
 
-    Assert-True (@($warningOutput | Where-Object { $_ -is [System.Management.Automation.WarningRecord] -and $_.Message.Contains('D3-mini unavailable') }).Count -gt 0) 'Mini failure must emit a readiness warning.'
+    Assert-True (@($warningOutput | Where-Object { $_ -is [System.Management.Automation.WarningRecord] }).Count -eq 0) 'Retired planner service must not be contacted or emit a fallback warning.'
 
-    Write-Output 'PASS Mini readiness failure falls back to Qwen-only game launch.'
+    Write-Output 'PASS retired planner cannot start a second service or trigger fallback warnings.'
 
     @{ Values = @{ Dialogue = @{ EnableFreeText = $true; EnableNpcVoice = $false; EnableDecisionPlanner = $false } } } | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath (Join-Path $fakeDfu "Player/PortableAppdata/Mods/GameData/$modGuid/modsettings.json") -Encoding Ascii
 

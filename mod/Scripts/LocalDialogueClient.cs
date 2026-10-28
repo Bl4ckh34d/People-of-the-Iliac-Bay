@@ -32,8 +32,6 @@ namespace PeopleOfTheIliacBay.DFU
             public Action<SocialDialogueStreamResult> StreamComplete;
             public SocialDialogueStreamResult StreamResult;
             public List<string> AcceptedStreamSegments;
-            public Action<NpcSpeechActClassification> SpeechComplete;
-            public NpcSpeechActClassification SpeechClassification;
         }
 
         private readonly object completedGate = new object();
@@ -75,7 +73,7 @@ namespace PeopleOfTheIliacBay.DFU
             return true;
         }
 
-        // Low-priority classification shares the same Qwen client and transport.
+        // Low-priority classification shares the same dialogue client and transport.
         // A later foreground operation takes the dispatch slot and invalidates this ticket.
         public int TryClassifyBackground(LocalDialogueConnection connection, string prompt, Action<string> complete,
             string grammar = null, int responseTokens = 32, Action<string, string, string> classificationTrace = null)
@@ -524,14 +522,6 @@ namespace PeopleOfTheIliacBay.DFU
                 return;
             }
             if (!dispatch.TryFinish(result.Version)) return;
-            if (result.SpeechComplete != null)
-            {
-                if (result.ClassificationTrace != null)
-                    result.ClassificationTrace(result.RequestJson ?? string.Empty, result.Body ?? string.Empty,
-                        result.SpeechClassification == null ? Unavailable : result.SpeechClassification.Kind.ToString());
-                result.SpeechComplete(result.SpeechClassification);
-                return;
-            }
             if (result.TransportFailed)
             {
                 Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_DIALOGUE_FAILURE: stage="+
@@ -543,8 +533,7 @@ namespace PeopleOfTheIliacBay.DFU
                 return;
             }
             if (result.Body != null && (LocalDialogueNativeTemplate.IsTruncated(result.Body) ||
-                (result.Body.IndexOf("\"error\"", StringComparison.OrdinalIgnoreCase) >= 0 &&
-                 result.Body.IndexOf("context", StringComparison.OrdinalIgnoreCase) >= 0)))
+                LocalDialogueNativeTemplate.HasContextLimitError(result.Body)))
             {
                 if (!result.SuppressContextLimitHud)
                     DaggerfallUI.AddHUDText("Local model context unavailable or too small for NPC/world data. Check server context size.");
@@ -618,6 +607,6 @@ namespace PeopleOfTheIliacBay.DFU
         }
 
         private static string ExtractContent(string json)
-        { return DialogueCompletionText.Extract(json); }
+        { return LocalDialogueNativeTemplate.ReadCompletionContent(json); }
     }
 }

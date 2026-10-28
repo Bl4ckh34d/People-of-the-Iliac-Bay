@@ -9,6 +9,7 @@ namespace PeopleOfTheIliacBay.DFU
     {
         internal static bool IsTestCharacter(string value)
         {
+            if(value==TownSmokeHarness.CanonicalFixtureCharacter)return true;
             const string prefix="PeopleOfTheIliacBayTest-";
             if(value==null || value.Length!=prefix.Length+8 || !value.StartsWith(prefix,StringComparison.Ordinal))return false;
             for(int i=prefix.Length;i<value.Length;i++)

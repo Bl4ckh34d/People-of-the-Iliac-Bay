@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 81,
+  "bank": "TFAC00I0.RCI",
+  "emotion": "guarded",
+  "feature": "mouth",
+  "sourceReference": "../../mouth-reference-grid.png",
+  "sourceReferenceSha256": "195f9a431b7a6509ca0c701eb5057672431e11ab58037bef41cc61402bbe851f",
+  "originalSha256": "eb0f7dcd1d390a6ff58d1bc0bba7a3855b5930ee824aa54e2f749211721e8ba0",
+  "imageGenCall": 1,
+  "imageUrlPrefix": "data:image/png;base64,iVBORw0KGgoAA",
+  "imageUrlLength": 1730606,
+  "outputHintPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-626e-7471-95f3-109617bb3581\\exec-24c7f8ae-77b8-42ce-81f7-9193691a7eed.png",
+  "outputSha256": "5115acdec2a3985a50d20754605ba39a1d3c55f3bcd6920286e4044913a9ab74",
+  "outputWidth": 1863,
+  "outputHeight": 844,
+  "prompt": "Use case: pixel-art game portrait speech viseme sheet. Edit Image 1, the existing 3×3 mouth-reference grid for portrait 081, as the sole target. Preserve full grid, exact 3×3 arrangement and each lower-face crop; do not alter hair, skin, nose, chin, neck, clothing, background, camera or cell boundaries. Create nine small, restrained mouth shapes in row-major order A B C / D E F / G H X: A closed lips; B teeth visible; C small open; D wide open; E rounded open; F puckered; G lip-teeth shape; H tongue visible; X neutral resting lips. This is one reserved skeptical/guarded set: closed/rest lips feel gently pressed at corners, restrained and observant, never angry, snarling, grinning or pouting. Keep native lip size and placement. Use the original muted brown/rose palette and soft low contrast exactly; no brighter red lipstick, orange skin, black outlines, exaggerated cavities, extra teeth, white flashes, or color cast. Keep the output a clean complete 3×3 grid with equal cells, no text or labels, no extra panels. Do not enlarge the mouth relative to the source.",
+  "status": "raw generated output; parent review pending",
+  "visualLimitations": [
+    "Generated lips appear more saturated red than the original muted palette.",
+    "Verify all nine visemes and crop boundaries at native size before use.",
+    "Not composited or registered."
+  ]
+}

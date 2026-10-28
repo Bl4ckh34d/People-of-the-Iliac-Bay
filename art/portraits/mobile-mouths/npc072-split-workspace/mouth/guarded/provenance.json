@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T09:28:34.6837129Z",
+    "portraitRecord":  72,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "guarded",
+    "prompt":  "Create a 3×3 pixel-art mouth atlas for this exact NPC portrait and its guarded emotion, using the supplied mouth reference grid as the exact identity, palette and composition guide. Overall aspect ratio 64:29. Every cell is the same complete 64×29 lower-half crop, aligned identically; no labels, gutters, borders, full-face panels, independent zooms, or background changes. Row-major cells A B C / D E F / G H X.\n\nUse these actual Rhubarb mouth-shape definitions:\n- A: pressured closed P/B/M.\n- B: narrow opening, teeth nearly together, consonants/EE.\n- C: medium unrounded EH/AE.\n- D: wide AA.\n- E: slightly rounded AO/ER, no wider than C.\n- F: puckered UW/OW/W.\n- G: upper teeth touching lower lip, F/V.\n- H: tongue raised behind upper teeth for L, opening between C and D.\n- X: relaxed closed idle.\n\nKeep original lip scale and center, jaw, nose, neck, hair, background registration, muted terracotta-brown skin and soft brown lip palette. No lipstick-red lips, broad surrounding skin patch, exaggerated corners, giant grin, or smile across every pose. Teeth, where visible, use restrained neutral ivory/gray clearly distinct from skin, with modest dark mouth-cavity contrast; no warm skin-colored teeth, tooth gaps, shiny teeth or bright white flash.\n\nMake the assigned guarded expression subtly doubtful: slight lip tension and restrained asymmetry at the corners, not a dramatic frown. Keep phoneme poses recognizable; expression must not erase the mouth-shape pose. Because this is the guarded emotion rather than neutral, A and X may carry the subtle guarded expression while remaining closed poses. Preserve exact source crop registration. Crisp low-resolution pixel art with stepped native clusters, no smoothing, painterly detail, labels, or extra panels.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-345c53c6-2692-419f-999c-ca24b72bdcf4.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-345c53c6-2692-419f-999c-ca24b72bdcf4.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "4af6922ef7f8345a11ae8418761144f64dcaaa8b836f461486a2fb206cbebd85",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "439016eece9c19baa01534109a73a9de37ac5555ae9f7e4d5bbbcdc6fbcbe550",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-345c53c6-2692-419f-999c-ca24b72bdcf4.png",
+                      "sha256":  "f72e6e4ed6a9e524caea4ea62489de284b76f7ad8bdc7c6fe86452baa970e620",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/guarded/raw.png",
+                "sha256":  "f72e6e4ed6a9e524caea4ea62489de284b76f7ad8bdc7c6fe86452baa970e620",
+                "width":  1863,
+                "height":  844
+            }
+}

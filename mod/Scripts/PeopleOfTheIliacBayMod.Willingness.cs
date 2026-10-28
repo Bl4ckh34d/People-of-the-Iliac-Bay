@@ -10,35 +10,36 @@ namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class PeopleOfTheIliacBayMod
     {
-        private bool DecisionWillingnessEnabled => decisionRoutingSession != null && decisionRoutingSession.Enabled &&
-            decisionRoutingConnection != null && isActiveAndEnabled && options.Enabled && localDialogueEnabled && !saveFault;
+        private bool DialogueWillingnessEnabled => isActiveAndEnabled && options.Enabled &&
+            localDialogueEnabled && localDialogue && !saveFault;
+        private long dialogueWillingnessDispatchCount, dialogueWillingnessCompletionCount;
+        private string dialogueWillingnessLastChoice;
+        private string dialogueWillingnessRequestJson, dialogueWillingnessResponseJson, dialogueWillingnessRawChoice;
 
-        // Explicit experiment only. A configured D3 outage never silently
-        // changes the decision backend or turns extraction into consent.
-        private bool QwenWillingnessEnabled => !decisionPlannerEnabled && isActiveAndEnabled && options.Enabled &&
-            localDialogueEnabled && localDialogue && !saveFault &&
-            Array.IndexOf(Environment.GetCommandLineArgs(), "-peopleoftheiliacbay-qwen-willingness") >= 0;
-        private long qwenWillingnessDispatchCount, qwenWillingnessCompletionCount;
-        private string qwenWillingnessLastChoice;
-        private string qwenWillingnessRequestJson, qwenWillingnessResponseJson, qwenWillingnessRawChoice;
-
-        private bool TryBeginQwenWillingness(ConversationContextSnapshot snapshot, DaggerfallTalkWindow window,
+        private bool TryBeginDialogueWillingness(ConversationContextSnapshot snapshot, DaggerfallTalkWindow window,
             string originalText, IList<NpcActionDecision> proposed, Action<string> complete)
         {
-            if (!QwenWillingnessEnabled || complete == null || !IsCurrentConversationContext(snapshot, window)) return false;
-            qwenWillingnessLastChoice = null;
+            if (!DialogueWillingnessEnabled || complete == null || !IsCurrentConversationContext(snapshot, window)) return false;
+            dialogueWillingnessLastChoice = null;
             if (Array.IndexOf(Environment.GetCommandLineArgs(), "-peopleoftheiliacbay-goal-binding-probe") >= 0)
-                qwenWillingnessRequestJson = qwenWillingnessResponseJson = qwenWillingnessRawChoice = null;
+                dialogueWillingnessRequestJson = dialogueWillingnessResponseJson = dialogueWillingnessRawChoice = null;
             string prompt;
             try
             {
-                var proposal = new LocalDecisionWillingnessProposal(proposed);
-                var request = LocalDecisionWillingness.Build(snapshot, originalText, ReadDecisionShadowHistory(window),
+                var proposal = new LocalActionWillingnessProposal(proposed);
+                var request = LocalActionWillingness.Build(snapshot, originalText, ReadConversationContextHistory(window),
                     ReadCapturedConversationMemory(snapshot, window), proposal);
-                prompt = LocalQwenWillingness.Build(request);
+                prompt = LocalDialogueWillingness.Build(request);
+                var paidFollow=store==null?null:store.ReadPaidFollowForTravelTask(conversationPersonId,ConversationActionTime());
+                if(paidFollow!=null)
+                    prompt+="\nVerified existing paid travel service: contract "+NpcPaidCompanionAction.ContractId(paidFollow)+
+                        "; paid until absolute game second "+paidFollow.FinishAt.ToString(CultureInfo.InvariantCulture)+
+                        ". Local MoveTo and Wait travel guidance can use this same service, then resume following. No extra pay or longer service is offered. Decide willingness normally for this particular request.";
             }
-            catch (ArgumentException) { return false; }
-            catch (InvalidOperationException) { return false; }
+            catch (ArgumentException error)
+            { Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_DIALOGUE_WILLINGNESS_PROPOSAL_REJECTED: " + error.Message); return false; }
+            catch (InvalidOperationException error)
+            { Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_DIALOGUE_WILLINGNESS_CONTEXT_REJECTED: " + error.Message); return false; }
             int session = memorySession;
             string person = conversationPersonId;
             long stage = BeginConversationContextStage(snapshot, window);
@@ -49,85 +50,37 @@ namespace PeopleOfTheIliacBay.DFU
             }
             bool submitted = localDialogue.Classify(NewDialogueConnection(), prompt, string.Empty, output =>
             {
-                CompleteQwenWillingness(snapshot, window, originalText, session, person, stage,
+                CompleteDialogueWillingness(snapshot, window, originalText, session, person, stage,
                     proposed.Count, output, complete);
-            }, LocalQwenWillingness.Grammar(), 16, classificationTrace: (request, response, result) =>
+            }, LocalDialogueWillingness.Grammar(), 16, classificationTrace: (request, response, result) =>
             {
                 if (Array.IndexOf(Environment.GetCommandLineArgs(), "-peopleoftheiliacbay-goal-binding-probe") < 0) return;
-                qwenWillingnessRequestJson = request;
-                qwenWillingnessResponseJson = response;
-                qwenWillingnessRawChoice = result;
+                dialogueWillingnessRequestJson = request;
+                dialogueWillingnessResponseJson = response;
+                dialogueWillingnessRawChoice = result;
             });
-            if (submitted) { qwenWillingnessDispatchCount++; return true; }
+            if (submitted) { dialogueWillingnessDispatchCount++; return true; }
             if (!TryConsumeConversationContextStage(snapshot, window, stage)) return true;
             return false;
         }
 
         // Shared completion boundary also permits controlled lifecycle checks
         // without replacing or retrying any real model response.
-        private void CompleteQwenWillingness(ConversationContextSnapshot snapshot, DaggerfallTalkWindow window,
+        private void CompleteDialogueWillingness(ConversationContextSnapshot snapshot, DaggerfallTalkWindow window,
             string originalText, int session, string person, long stage, int proposedCount,
             string output, Action<string> complete)
         {
-            if (!QwenWillingnessEnabled || complete == null || !CurrentMemorySession(window, session) ||
+            if (!DialogueWillingnessEnabled || complete == null || !CurrentMemorySession(window, session) ||
                 person != conversationPersonId) return;
             if (!TryConsumeConversationContextStage(snapshot, window, stage))
             { HandleRejectedConversationStage(snapshot, window, stage, originalText, "No new action was accepted."); return; }
-            qwenWillingnessCompletionCount++;
-            string choice = LocalQwenWillingness.ParseChoice(output);
-            qwenWillingnessLastChoice = choice;
-            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_QWEN_WILLINGNESS_RESULT: choice=" + (choice ?? "unconfirmed") +
+            dialogueWillingnessCompletionCount++;
+            string choice = LocalDialogueWillingness.ParseChoice(output);
+            dialogueWillingnessLastChoice = choice;
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DIALOGUE_WILLINGNESS_RESULT: choice=" + (choice ?? "unconfirmed") +
                 "; steps=" + proposedCount + "; nativeDispatch=false");
             try { complete(choice); }
             catch (Exception error) { Debug.LogException(error); throw; }
-        }
-
-        // A typed proposal is not agreement. This stage never commits a job.
-        private bool TryBeginDecisionWillingness(ConversationContextSnapshot snapshot, DaggerfallTalkWindow window,
-            string originalText, IList<NpcActionDecision> proposed, Action<string> complete)
-        {
-            if (!DecisionWillingnessEnabled || complete == null) return false;
-            if (!IsCurrentConversationContext(snapshot, window)) return false;
-            NpcDecisionRequest request;
-            try
-            {
-                var proposal = new LocalDecisionWillingnessProposal(proposed);
-                request = LocalDecisionWillingness.Build(snapshot, originalText, ReadDecisionShadowHistory(window),
-                    ReadCapturedConversationMemory(snapshot, window), proposal);
-            }
-            catch (ArgumentException) { return false; }
-            catch (InvalidOperationException) { return false; }
-            int session = memorySession;
-            string person = conversationPersonId;
-            long stage = BeginConversationContextStage(snapshot, window);
-            if (stage <= 0)
-            {
-                HandleRejectedConversationStage(snapshot, window, stage, originalText, "No new action was accepted.");
-                return true;
-            }
-            bool submitted = decisionRoutingSession.TryRequest(decisionRoutingConnection, request,
-                () => IsCurrentConversationContext(snapshot, window)
-                    ? new LocalDecisionFreshness(snapshot.Binding, snapshot.Revision, request.CandidateSetRevision, request.Options)
-                    : null,
-                result =>
-                {
-                    if (!CurrentMemorySession(window, session) || person != conversationPersonId) return;
-                    if (!TryConsumeConversationContextStage(snapshot, window, stage))
-                    { HandleRejectedConversationStage(snapshot, window, stage, originalText, "No new action was accepted."); return; }
-                    string choice = result.Status == NpcDecisionStatus.Ok ? result.SelectedOptionId : null;
-                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DECISION_WILLINGNESS_RESULT: status=" + result.Status +
-                        "; choice=" + (choice ?? "unconfirmed") + "; steps=" + proposed.Count +
-                        "; latencyMs=" + result.LatencyMilliseconds.ToString("F2", CultureInfo.InvariantCulture) +
-                        "; nativeDispatch=false");
-                    // The session counts callback failures, but a native commit
-                    // failure also needs a stack trace. Never retry a callback:
-                    // its native effect may already have been saved.
-                    try { complete(choice); }
-                    catch (Exception error) { Debug.LogException(error); throw; }
-                });
-            if (submitted) return true;
-            if (!TryConsumeConversationContextStage(snapshot, window, stage)) return true;
-            return false;
         }
 
         private void SubmitUnconfirmedWillingness(DaggerfallTalkWindow window, string originalText, string history,
@@ -141,34 +94,31 @@ namespace PeopleOfTheIliacBay.DFU
         }
 
         private void ResolveProposedActionWillingness(ResidentActor actor, DaggerfallTalkWindow window,
-            string originalText, string history, ConversationContextSnapshot snapshot, bool required,
+            string originalText, string history, ConversationContextSnapshot snapshot,
             IList<NpcActionDecision> proposed, Action<List<NpcActionDecision>> accept)
         {
-            // Legacy Qwen already assessed willingness. Interpretation-only mode
-            // must never reuse this branch after a decision service outage.
-            if (!required)
-            {
-                if (decisionPlannerEnabled)
-                {
-                    SubmitUnconfirmedWillingness(window, originalText, history, snapshot, null);
-                    return;
-                }
-                accept(new List<NpcActionDecision>(proposed));
-                return;
-            }
+            if(proposed!=null && proposed.Count>1)
+            {ResolveTaskFailureSemantics(actor,window,originalText,history,snapshot,proposed,accept);return;}
+            ResolveProposedActionWillingnessCore(actor,window,originalText,history,snapshot,proposed,accept);
+        }
+
+        private void ResolveProposedActionWillingnessCore(ResidentActor actor, DaggerfallTalkWindow window,
+            string originalText, string history, ConversationContextSnapshot snapshot,
+            IList<NpcActionDecision> proposed, Action<List<NpcActionDecision>> accept)
+        {
             List<NpcActionDecision> frozen;
-            LocalDecisionWillingnessProposal proposal;
+            LocalActionWillingnessProposal proposal;
             string reason;
             try
             {
-                frozen = new LocalDecisionWillingnessProposal(proposed).CopyDecisions();
+                frozen = new LocalActionWillingnessProposal(proposed).CopyDecisions();
                 foreach (var step in frozen)
                     if (!PrepareSemanticActionDecision(actor, step, out reason))
                     {
                         SubmitWillingnessTargetChanged(window, originalText, history, snapshot, reason);
                         return;
                     }
-                proposal = new LocalDecisionWillingnessProposal(frozen);
+                proposal = new LocalActionWillingnessProposal(frozen);
             }
             catch (ArgumentException)
             { SubmitUnconfirmedWillingness(window, originalText, history, snapshot, null); return; }
@@ -183,9 +133,7 @@ namespace PeopleOfTheIliacBay.DFU
                 { SubmitWillingnessTargetChanged(window, originalText, history, snapshot, changedReason); return; }
                 accept(agreed);
             };
-            bool submitted = DecisionWillingnessEnabled
-                ? TryBeginDecisionWillingness(snapshot, window, originalText, frozen, finish)
-                : TryBeginQwenWillingness(snapshot, window, originalText, frozen, finish);
+            bool submitted = TryBeginDialogueWillingness(snapshot, window, originalText, frozen, finish);
             if (!submitted) finish(null);
         }
 
@@ -206,7 +154,7 @@ namespace PeopleOfTheIliacBay.DFU
                 return false;
             foreach (var step in decisions)
                 if (!PrepareSemanticActionDecision(actor, step, out reason)) return false;
-            if (!string.Equals(new LocalDecisionWillingnessProposal(decisions).Signature, expectedSignature, StringComparison.Ordinal))
+            if (!string.Equals(new LocalActionWillingnessProposal(decisions).Signature, expectedSignature, StringComparison.Ordinal))
             {
                 reason = "The proposal changed while considering it. No action was accepted.";
                 return false;

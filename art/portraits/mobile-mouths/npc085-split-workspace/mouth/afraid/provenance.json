@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T00:48:29.3378342Z",
+    "portraitRecord":  85,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "afraid",
+    "prompt":  "Use case: stylized-concept\nAsset type: pixel-art speech-mouth atlas for Daggerfall Unity NPC record 85\nPrimary request: Create one clean 3-by-3 sprite atlas using the supplied mouth reference grid as the exact layout guide and the original portrait as identity and palette reference. Each equal cell shows the same complete original lower 64x29 portrait half, in row-major order A B C / D E F / G H X. The full atlas aspect ratio must be exactly 64:29 (2.206897), matching the reference grid; no margins, gutters, borders, labels, text, or extra frames. Keep identical crop and scale in every cell.\nInput images: Image 1 is the native original 64x64 portrait, for identity, geometry, and subdued colors. Image 2 is the 3x3 enlarged original lower-half reference grid; follow its framing, original small lip scale, and pixel style.\nScene/backdrop: The unchanged original lower face, hair, neck and background in each cell. Change only mouth pose and restrained lip-corner tension.\nSubject: Same front-facing woman, same nose base, face width, chin, jaw, hair, neck and colors in every frame. Emotion is afraid: restrained tension at the mouth corners, slightly tight lips where the pose allows. Fear must not turn every viseme into the same pursed or compressed mouth.\nStyle/medium: Crisp low-resolution game pixel art, nearest-neighbor pixel clusters, original muted brown lips, warm tan skin, soft subdued contrast.\nComposition/framing: Nine equal cells in three columns by three rows. Each cell contains the complete original lower half from split line through chin and the original neck/background crop. Exact atlas aspect ratio 64:29. No cell-specific scale, camera, lighting, or crop changes.\nColor palette: Match the original muted brown lips and warm tan skin, with the same soft shadows. Use only tiny restrained warm tooth highlights when required. No lipstick red, orange skin patch, stark white teeth or high-contrast outlines.\nRhubarb pose definitions, required exactly by cell:\nA: Closed lips with light pressure for P/B/M.\nB: Slightly open, nearly together teeth, narrow horizontal opening for most consonants and EE.\nC: Medium open mouth with relaxed unrounded lips for EH/AE.\nD: Wide vertical opening for AA; visibly larger opening than C.\nE: Slightly rounded lips for AO/ER; opening no wider than C.\nF: Puckered rounded lips with a small forward opening for UW/OW/W; not a tooth bite.\nG: Upper teeth touching lower lip for F/V; not a wide open vowel.\nH: Tongue raised behind upper teeth for long L; opening between C and D; a tiny tongue may be invisible at native resolution.\nX: Closed relaxed idle lips for silence.\nConstraints: Preserve original lip width, placement and face geometry. Make all nine poses distinct at native scale while preserving each phonetic family. Fear affects corners/tension only. Keep B narrow, C medium, D widest and vertical, E slightly rounded and no wider than C, F a small pucker, G a lip-to-teeth contact, H an intermediate L shape. A is lightly pressed; X is relaxed closed idle. Do not force a smile.\nAvoid: Making every cell tight/closed/puckered, changing lips to red, orange skin, white teeth flashes, broad jaw or neck, changed nose/face/hair/background, stretching the mouth, arbitrary mouth shapes, text, labels, watermark.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a160c7-2947-7951-a025-d361fa65da49 as C:\\Users\\Daniel\\.codex\\generated_images\\01a160c7-2947-7951-a025-d361fa65da49\\exec-10c92286-a069-4d23-9dd9-0af48be40a0f.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c7-2947-7951-a025-d361fa65da49\\exec-10c92286-a069-4d23-9dd9-0af48be40a0f.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "8381f07edb8751dd0dfa93e4049c5ae00563c75ba9b0bb1fb5dfa80ca2a001d4",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "7b7a44274d6593733f56b7ed6838224154a6606fb0818d05641509d4bc13fcfa",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c7-2947-7951-a025-d361fa65da49\\exec-10c92286-a069-4d23-9dd9-0af48be40a0f.png",
+                      "sha256":  "6a3539c4e1c443e104ccd76a613be52e7bcdbf20433e064c31e442169c3afb61",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/afraid/raw.png",
+                "sha256":  "6a3539c4e1c443e104ccd76a613be52e7bcdbf20433e064c31e442169c3afb61",
+                "width":  1863,
+                "height":  844
+            }
+}

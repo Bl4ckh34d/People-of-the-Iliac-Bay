@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T15:32:36.7349114Z",
+    "portraitRecord":  91,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "neutral",
+    "prompt":  "Use case: stylized-concept\nAsset type: Daggerfall Unity native pixel-art NPC portrait mouth atlas\nPrimary request: Create a clean 3x3 atlas of nine complete lower-face cells, each exactly native64x29 in composition and registration, overall aspect64:29. Exact row-major order A B C / D E F / G H X. Use only the supplied inspected local mouth-reference grid.\nSubject: Preserve the exact NPC091 identity, small muted terracotta lips, lower-face proportions, nose boundary, chin, hair, shadows and original soft pixel-art style. Neutral emotion only.\nRhubarb mouth poses, exact intended meanings:\nA: pressed, fully closed lips for P/B/M.\nB: narrow opening with teeth nearly together for consonants and EE.\nC: medium opening, unrounded, for EH/AE.\nD: wide open AA.\nE: slightly rounded AO/ER opening, no wider than C.\nF: puckered UW/OW/W.\nG: upper teeth touch the lower lip for F/V.\nH: tongue raised behind the upper teeth for L, with an opening between C and D.\nX: relaxed closed idle.\nAnatomy and palette: Keep the original mouth scale and registration. Preserve a natural small lip contour with muted source terracotta/brown-red hue, not lipstick red. New teeth must be subdued neutral gray-ivory, clearly distinct from skin but never shiny white. Use modest interior cavity contrast. For G show upper incisors touching the lower lip. For H show the tongue behind upper teeth at native scale. Keep jaw and chin stable; do not exaggerate the mouth.\nComposition: All nine cells show the same complete lower64x29 crop with identical framing and pixel scale. No labels, borders, gutters, added neck bands, extra margins, transparency, face resizing or zooming. Preserve original nose, cheek, chin, hair, and exterior pixels around the mouth.\nAvoid: Bright white teeth, skin-orange teeth, saturated lipstick, huge openings, oversized lips or teeth, broad black cavities, changed nose/chin/neck/hair, smearing, smoothing, or any feature beyond the calibrated mouth envelope [22,40,43,51).",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54 as C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-db439f63-53a0-485d-bcd7-7d06f7b31d4b.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-db439f63-53a0-485d-bcd7-7d06f7b31d4b.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "428f65da65c68b7c50b7cefcf4fde03aa83505c54de6ccbb2ac3ab018f8a5c51",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "9aa1575cc6695b619b5736d6e8bcb9e4cc5c32cf340443e5c40e38cddbff383e",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-db439f63-53a0-485d-bcd7-7d06f7b31d4b.png",
+                      "sha256":  "07f2d013cf4d1e52b45457840f3f9aae13b26ca1d6268f76203c93520d10e0cc",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/neutral/raw.png",
+                "sha256":  "07f2d013cf4d1e52b45457840f3f9aae13b26ca1d6268f76203c93520d10e0cc",
+                "width":  1863,
+                "height":  844
+            }
+}

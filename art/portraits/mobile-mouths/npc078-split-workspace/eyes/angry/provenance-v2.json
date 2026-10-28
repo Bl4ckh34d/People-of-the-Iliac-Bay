@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 78,
+  "emotion": "angry",
+  "revision": 2,
+  "assetType": "eye 2x2 raw atlas",
+  "imageTool": "built-in image_gen",
+  "sourceReferences": [
+    {
+      "sha256": "6a6f7f3985350f8cc615dd9525042e7a7ac05192caa83d8b205e726734811335",
+      "file": "raw.png"
+    },
+    {
+      "sha256": "770bcaf228993a243e7af873727e0ea24ee1788439afa29e5dfb66bed0581340",
+      "file": "../../eyes-reference-grid.png"
+    }
+  ],
+  "rawFile": "raw-v2.png",
+  "rawSha256": "f4863d7216755da2a9f5f1f3fd9161fa64f6cfb76ec516957fba04965727b4dc",
+  "imagegenOutputName": "exec-b104f01b-984f-4188-8509-6b2e20fea1f8.png",
+  "prompt": "Use case: stylized-concept\nAsset type: revision 2 pixel-art angry eye atlas for Daggerfall Unity NPC 78\nInput images: Image 1 is the current angry v1 atlas to revise; preserve its exact crop, face identity, hair, facial geometry, native pixel-art style, eye spacing and cell layout. Image 2 is the inspected original eye grid; use it to lock the original soft palette, eye size, golden-hazel iris width, pupil position and gaze.\nPrimary request: replace only the emotional brow/eyelid expression with unmistakably angry, focused tension. Create one exact 2x2 atlas with row-major cells: OPEN, HALF-CLOSED, CLOSED, repeated OPEN. No labels, gutters, borders, extra cells or captions.\nAnger expression: make the inner ends of both brows clearly lowered and drawn inward toward the bridge, with the outer ends higher, forming a distinct tense V. Keep the brows thin-to-medium and softly shaded in the original dark-brown palette; do not make black bars. Give the eyes a tighter, focused angry squint. This must read clearly angrier than the mild arched brows in Image 1.\nNative placement lock: keep all brow pixels fully within original portrait rows y=15..22 (inclusive) in each 64x35 cell. Do not move, enlarge or reshape forehead, hairline, eye sockets, nose, face, crop or head geometry. Keep the same original brow/skin colors and surrounding shading.\nPhase consistency: copy exactly the same angry brow master into OPEN, HALF-CLOSED, CLOSED and repeated OPEN; brows must not vary between cells. Keep iris width, pupil position, left/right eye spacing and forward gaze unchanged in OPEN and HALF-CLOSED. HALF-CLOSED changes only continuous upper-lid coverage over the same eyes: no iris shrink or sideways drift, no bright sclera strip/white flash, no blurred or smudged iris. CLOSED cleanly closes both lids. The last OPEN visually matches the first OPEN.\nStyle: crisp softly shaded retro fantasy pixel portrait, original warm skin and muted brown hair, sharply readable eye and brow pixels at native size. Use clear discrete pixel clusters, no blur or smudge.\nAvoid: neutral or gently surprised arch; weak emotion; asymmetrical eye geometry; thick black eyebrow blocks; heavy eyeliner; added wrinkles; changed hair/forehead/skin; red skin; cartoon rage; glow; text; watermark; artifacts."
+}

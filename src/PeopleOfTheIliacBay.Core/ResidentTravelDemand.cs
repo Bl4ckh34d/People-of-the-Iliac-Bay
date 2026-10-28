@@ -54,13 +54,16 @@ namespace PeopleOfTheIliacBay.Core
             if(saved!=null && !saved.IsPartial)
                 return ResidentTravelProposals(town,day,destinations,chancePerThousand,maximumDepartures);
             if(homes==null) throw new ArgumentNullException(nameof(homes));
-            var profiles=new List<HomeProfile>(homes);
+            // Remote callers supply a stable sample. One departure request must
+            // not force interior surveys of every other house in its hometown.
+            var profiles=new List<HomeProfile>();
+            foreach(var home in homes) {profiles.Add(home);if(profiles.Count>=maximumDepartures) break;}
             var preview=Population.CreateFamilies(state.WorldSeed,town,profiles);
             if(saved!=null) foreach(var household in saved.Households)
             {
                 int index=preview.Households.FindIndex(h=>h.BuildingKey==household.BuildingKey);
-                if(index<0) throw new ArgumentException("Reserved hometown layout no longer contains its household.");
-                preview.Households[index]=household;
+                if(index<0) preview.Households.Add(household);
+                else preview.Households[index]=household;
             }
             var residents=new List<Resident>();
             foreach(var household in preview.Households) residents.AddRange(household.Residents);
@@ -71,7 +74,8 @@ namespace PeopleOfTheIliacBay.Core
             foreach(var proposal in proposals)
             {
                 var resident=residents.Find(p=>p.Id==proposal.ResidentId);
-                ReserveHousehold(town,profiles.Find(h=>h.BuildingKey==resident.HomeKey));
+                var profile=profiles.Find(h=>h.BuildingKey==resident.HomeKey);
+                if(profile!=null) ReserveHousehold(town,profile);
             }
             return proposals;
         }

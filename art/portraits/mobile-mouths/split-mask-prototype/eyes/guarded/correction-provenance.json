@@ -1,0 +1,20 @@
+{
+  "emotion": "guarded / skeptical",
+  "generator": "built-in image_gen",
+  "status": "prototype; user-review-pending; not installed",
+  "correction_reason": "Prior raw had symmetrical downward-angled brows that read stern or angry.",
+  "input": {
+    "sha256": "D238A2DEF9D7C0A5300D12029FD312C44A279DB19D91C1017B20DF373E056D21",
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\eyes\\guarded\\raw.png"
+  },
+  "generated_original": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-626e-7471-95f3-109617bb3581\\exec-a2a9b577-5f1a-479d-b1ef-df45c4cff8cf.png",
+  "output": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\eyes\\guarded\\raw-corrected.png",
+    "dimensions": "1694x928",
+    "sha256": "86E23C309043B80C73971C01D811A4D91E263B496996BEF741967DE6FEBA8C11"
+  },
+  "prompt": "Make exactly one targeted eyebrow correction to this existing 2x2 upper-half eye atlas. Preserve all cell geometry, crop, face and eye sizes, hairline, soft muted palette, skin shading, current eyelid phase in each cell and row-major order (open, half blink, closed blink, duplicate open). Preserve the existing skeptical sideward gaze. Both eyes' pupils must point in the same direction toward viewer's right in both open-eye cells, with matching gaze retained in the half-blink cell. Change brows consistently across all four cells: raise the brow above the eye on viewer's left slightly but clearly; make the brow above viewer's right relaxed and nearly level, perhaps a little lowered. This asymmetry must read as skeptical, not angry. Remove the symmetric inward-pulled V shape. Keep both brows fully visible, thin and soft like original pixel art. Preserve original eye size and soft low-contrast shading; do not sharpen, darken, enlarge, smear, airbrush, or alter eyelids. Keep closed cell fully closed and half-blink cell at same lid coverage. No head rotation or change to hair, eye direction, eye size, framing or background. Full original 2x2 sheet; no cropping, labels, text or extra cells.",
+  "grid_order": "open / half blink / closed blink / duplicate open (row-major)",
+  "generation_count": 1,
+  "visible_deviations": "Both brows remain visible. Viewer-left brow is slightly raised; viewer-right brow is relaxed and nearly level. Sideward pupils align in same direction. Generated width is 1 px narrower than input (1694x928 vs 1695x928); raw-corrected.png was preserved unchanged."
+}

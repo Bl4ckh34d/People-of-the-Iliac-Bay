@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T15:40:41.0999591Z",
+    "portraitRecord":  91,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Create one 2×2 pixel-art horizontal-gaze atlas from the single supplied reference grid. The reference shows the selected NPC091 HAPPY OPEN eyes in the top row and selected HAPPY HALF phase in the bottom row. Output four equal, aligned, complete 64×35 upper-face cells in row-major order: LEFT OPEN, RIGHT OPEN / LEFT HALF, RIGHT HALF. Preserve exact crop framing, hair, forehead, brows, expression, eye spacing, eyelid contours, iris size, and source pixel style.\n\nBoth eyes must track together toward the same image side. In both LEFT cells, shift each compact iris and pupil about one native pixel toward image-left. In both RIGHT cells, shift both about one native pixel toward image-right. Keep natural source convergence and nearly equal movement. Do not leave one eye centered, move either eye toward the nose, or make the gaze cross-eyed. Keep the eyes warm and friendly, but preserve the selected happy smile-eye anatomy.\n\nKeep dark pupil and colored iris clusters compact and the same native size, with muted source highlights. Do not change pupil height, widen the aperture, add broad white or cream bands, enlarge the eyes, or add bright glints. Bottom-row HALF cells must retain the selected half-closed aperture. Keep each iris and pupil at the same x/y position as its corresponding OPEN gaze; the upper lid covers the top of each iris while leaving the dark pupil and part of the iris recognizable. Do not move lower lids, brows, hair, cheeks, or face. No extra details, labels, text, border, watermark, or transparency.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-ee662a11-db10-491c-b6bf-e217c0ccae30.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-ee662a11-db10-491c-b6bf-e217c0ccae30.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "428f65da65c68b7c50b7cefcf4fde03aa83505c54de6ccbb2ac3ab018f8a5c51",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "b55bf37e4e513a26677b8b58f51816d95a37a934e0b7af33a02013927912999f",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-ee662a11-db10-491c-b6bf-e217c0ccae30.png",
+                      "sha256":  "e0f5c2ccc8e471a6351301be6864307c6fc782fa22cc484eaacab516219eef0c",
+                      "width":  1696,
+                      "height":  927
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "e0f5c2ccc8e471a6351301be6864307c6fc782fa22cc484eaacab516219eef0c",
+                "width":  1696,
+                "height":  927
+            }
+}

@@ -528,6 +528,15 @@ namespace PeopleOfTheIliacBay.DFU
             {
                 var from=directory.transform.InverseTransformPoint(actual);var to=directory.transform.InverseTransformPoint(destination);
                 motion.Outdoor=geometry.RouteBetweenPoints(new SavedRoutePoint {X=from.x,Z=from.z},new SavedRoutePoint {X=to.x,Z=to.z});
+                if(motion.Outdoor.Count<2 && range>0.5f)
+                {
+                    // The straight-line standoff point can cut inside a wall
+                    // at a corner even though the observed person is reachable.
+                    // Follow the verified path toward that actual target; the
+                    // existing arrival distance and sight check still stop us.
+                    destination=target;to=directory.transform.InverseTransformPoint(destination);
+                    motion.Outdoor=geometry.RouteBetweenPoints(new SavedRoutePoint {X=from.x,Z=from.z},new SavedRoutePoint {X=to.x,Z=to.z});
+                }
                 if(motion.Outdoor.Count<2) {motion.Outdoor=null;return false;}motion.Next=1;
                 // Other callers reuse ActionMotion for approaches with their own
                 // tighter arrival tests. Keep those on their existing graph route.
@@ -556,6 +565,15 @@ namespace PeopleOfTheIliacBay.DFU
         // It owns only this existing actor; all movement still passes through CrowdMotion.
         private bool ApplyNpcActionOverlay(Plan plan,ref ResidentActor actor,double now,AlarmPerson nativeReaction)
         {
+            if(ApplyNpcCustodyOverlay(plan,ref actor,now))return true;
+            if(nativeReaction!=null && nativeReaction.Reaction==CivilianReaction.Flee)
+            {
+                InterruptResidentForFlight(plan.Resident.Id,actor,now);
+                return false;
+            }
+            // Travelers reach this shared owner before their visit placement;
+            // use the same physical report path as an ordinary local resident.
+            if(actor && (nativeReaction==null || !nativeReaction.HasPosition) && PlaceDialogueComplaint(actor,now))return true;
             if(roadTravelActors && roadTravelActors.OwnsDungeonFollow(plan.Resident.Id))return true;
             RetryPaidCompanionSettlements();
             bool nativeOwnsMovement=nativeReaction!=null || IsAlarmed(plan.Resident.Id);
@@ -571,10 +589,10 @@ namespace PeopleOfTheIliacBay.DFU
             var job=worldStore.ActiveNpcAction(plan.Resident.Id);
             if(IsPaidDoorActionPlan(plan))
             {
-                var paidDoorJob=job??ReadPaidDoorAction(plan);
+                var paidDoorJob=ReadPaidDoorAction(plan);
                 if(PaidDoorPlanNeedsRetirement(paidDoorJob,now))
                     return RetirePaidDoorPlan(plan,ref actor,paidDoorJob,now);
-                job=paidDoorJob;
+                job=job??paidDoorJob;
             }
             if(job==null) {ReleaseActionSeat(plan.Resident.Id);actionMotions.Remove(plan.Resident.Id);
                 bool retryDue=false;
@@ -590,10 +608,16 @@ namespace PeopleOfTheIliacBay.DFU
                 if(nativeOwnsMovement || !healthOwnsRoutine && !retryDue)return false;
                 bool held=HoldNpcHealthCare(plan,ref actor,now);
                 return held && (healthOwnsRoutine || actor);}
-            if(!plan.Resident.IsAlive || plan.Resident.IsQuestProtected || QuestOwned(plan.Resident) || nativeOwnsMovement ||
-                worldStore.IsResidentAway(plan.Resident.Id,now) && !(job.PaidTravelHandoff!=null &&
-                    NpcPaidCompanionTravel.TryReadActiveTravel(worldStore,job,now,out _)))
+            string observedActionVisit=ObservedTravelerActionVisit(plan,actor,job);
+            bool away=worldStore.IsResidentAway(plan.Resident.Id,now,observedActionVisit) && !PaidDoorOwnsTravel(plan,job,now) && !(job.PaidTravelHandoff!=null &&
+                NpcPaidCompanionTravel.TryReadActiveTravel(worldStore,job,now,out _));
+            if(!plan.Resident.IsAlive || plan.Resident.IsQuestProtected || QuestOwned(plan.Resident) || nativeOwnsMovement || away)
             {
+                if(NpcPaidCompanionAction.IsPaidFollowJob(job))Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_PAID_FOLLOW_INTERRUPTED: person="+job.ResidentId+
+                    "; alive="+plan.Resident.IsAlive+"; questProtected="+plan.Resident.IsQuestProtected+"; questOwned="+QuestOwned(plan.Resident)+
+                    "; nativeMovement="+nativeOwnsMovement+"; away="+away+"; observedVisit="+(observedActionVisit??"none")+
+                    "; actor="+(bool)actor+"; actorActive="+(actor && actor.gameObject.activeInHierarchy)+"; followTransit="+(job.FollowTransition!=null)+
+                    "; "+TravelerActionVisitDiagnostic(plan,job));
                 EndAction(job,now,"Danger, native ownership, travel, or scene change interrupted this action.",false);
                 ReleaseActionSeat(plan.Resident.Id);actionMotions.Remove(plan.Resident.Id);return false;
             }
@@ -662,6 +686,16 @@ namespace PeopleOfTheIliacBay.DFU
             if(NpcActionExecutor.IsTerminal(job))
             {
                 if(healthOwnsRoutine)return HoldNpcHealthCare(plan,ref actor,now);
+                if(job.BuildingTransitionReceipt!=null && job.BuildingTransitionReceipt.DestinationObserved &&
+                    worldStore.ActiveNpcTask(plan.Resident.Id)?.Phase==NpcTaskPhase.Ready)
+                {
+                    // The first observed landing creates this actor below the
+                    // frame's initial task dispatch. Give its existing Ready
+                    // continuation control before ordinary return can remove it.
+                    AdvanceConversationTask(plan.Resident.Id,actor,now,!nativeOwnsMovement);
+                    var continued=worldStore.ActiveNpcAction(plan.Resident.Id);
+                    if(continued!=null && continued.Id!=job.Id)return true;
+                }
                 return ReturnActionToRoutine(plan,actor,job,motion,now);
             }
             if(job.Kind==NpcActionKind.TakeSeat)

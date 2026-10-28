@@ -93,19 +93,16 @@ namespace PeopleOfTheIliacBay.DFU
                 player.RentedRooms.RemoveAll(r => r.mapID == map && r.buildingKey == buildingKey);
                 player.GoldPieces = 5000;
                 Dictionary<int, string> markers;
-                var allRooms = TavernRoomSurvey.Read(interior, out markers);
-                var rentable = new HashSet<string>(markers.Values);
-                foreach (var room in allRooms) room.NonRentable = !rentable.Contains(room.Id);
-                var rentableRooms = allRooms.FindAll(r => rentable.Contains(r.Id));
-                if (rentableRooms.Count == 0) throw new InvalidOperationException("Tavern has no surveyed rentable room.");
+                var allBeds = TavernBedSurvey.Read(interior, out markers);
+                if (markers.Count == 0) throw new InvalidOperationException("Tavern has no native rental bed.");
                 var stateField = typeof(WorldStateStore).GetField("state", InstancePrivate);
                 var state = stateField == null ? null : stateField.GetValue(store) as WorldState;
                 if (state == null) throw new InvalidOperationException("Unable to stage temporary conversation baseline.");
                 // The outer save snapshot is restored in finally. Start the test inn
                 // with clean bookings so native keeper/occupant reconciliation can
-                // claim genuine rooms instead of competing with probe-created holds.
+                // claim genuine beds instead of competing with probe-created holds.
                 state.Lodgings.RemoveAll(t => t.SettlementId == map && t.BuildingKey == buildingKey);
-                store.RegisterLodging(map, buildingKey, allRooms);
+                store.RegisterLodgingBeds(map, buildingKey, allBeds);
                 int nativePrice = FormulaHelper.CalculateTradePrice(FormulaHelper.CalculateRoomCost(1),
                     game.PlayerEnterExit.BuildingDiscoveryData.quality, false);
                 if (nativePrice <= 0) throw new InvalidOperationException("Native room price is not positive; discount charge cannot be proven.");

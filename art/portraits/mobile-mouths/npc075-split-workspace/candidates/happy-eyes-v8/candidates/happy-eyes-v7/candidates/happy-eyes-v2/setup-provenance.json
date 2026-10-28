@@ -1,0 +1,32 @@
+{
+  "kind": "current-copy-source-preparation",
+  "createdAtUtc": "2026-10-22T11:07:59.1828733Z",
+  "portraitRecord": 75,
+  "emotionId": "happy",
+  "sourceWorkspace": "art/portraits/mobile-mouths/npc075-split-workspace",
+  "claim": "Copied immutable original/layout and exact local eyes reference grid into an isolated one-call happy-eyes v2 candidate. No prior generated eye output or v1 candidate copied.",
+  "copiedFiles": {
+    "original.png": {
+      "source": "art/portraits/mobile-mouths/npc075-split-workspace/original.png",
+      "sha256": "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98"
+    },
+    "source-upper.png": {
+      "source": "art/portraits/mobile-mouths/npc075-split-workspace/source-upper.png",
+      "sha256": "81141288fcba64ffe51a22cddb77302aa6d80c34b80d6e32fa574ce4ad08d3c1"
+    },
+    "source-lower.png": {
+      "source": "art/portraits/mobile-mouths/npc075-split-workspace/source-lower.png",
+      "sha256": "20f0ff86e0665fd593049ea4e26b91d760f86a7cf4eeccee31bb18ac3e9fd371"
+    },
+    "layout.json": {
+      "source": "art/portraits/mobile-mouths/npc075-split-workspace/layout.json",
+      "sha256": "dc13b4e2910f44f4936a22d4a6366cb363cde2e8adb03e04f8740f4c19879e29"
+    },
+    "eyes-reference-grid.png": {
+      "source": "art/portraits/mobile-mouths/npc075-split-workspace/eyes-reference-grid.png",
+      "sha256": "e2e7919bfc72eb52738873b46bffa3a1eb3ca2b503bd62101ac973e8f30cd8b3"
+    }
+  },
+  "candidateWorkspace": "art/portraits/mobile-mouths/npc075-split-workspace/candidates/happy-eyes-v2",
+  "notCopied": "No prior happy eye raw, mouth art, manifest, catalog, or other mood files copied."
+}

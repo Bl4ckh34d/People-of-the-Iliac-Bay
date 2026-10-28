@@ -39,13 +39,13 @@ function Get-SavedDialogueLaunchSettings([string]$RepoRoot, [string]$PortableDat
     $manifestPath = Join-Path $RepoRoot 'mod/PeopleOfTheIliacBay.dfmod.json'
     $modsPath = Join-Path $PortableDataRoot 'Mods/GameData/Mods.json'
     if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf) -or -not (Test-Path -LiteralPath $modsPath -PathType Leaf)) {
-        return [pscustomobject]@{ ModEnabled = $false; EnableFreeText = $false; EnableNpcVoice = $false; EnableDecisionPlanner = $false }
+        return [pscustomobject]@{ ModEnabled = $false; EnableFreeText = $false; EnableNpcVoice = $false }
     }
     try {
         $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
         $modState = @(Get-Content -LiteralPath $modsPath -Raw | ConvertFrom-Json | Where-Object { $_.FileName -eq 'peopleoftheiliacbay' } | Select-Object -First 1)
         if (-not $manifest.GUID -or $modState.Count -ne 1 -or -not $modState[0].Enabled) {
-            return [pscustomobject]@{ ModEnabled = $false; EnableFreeText = $false; EnableNpcVoice = $false; EnableDecisionPlanner = $false }
+            return [pscustomobject]@{ ModEnabled = $false; EnableFreeText = $false; EnableNpcVoice = $false }
         }
         $settingsPath = Join-Path $PortableDataRoot ("Mods/GameData/{0}/modsettings.json" -f $manifest.GUID)
         $settings = $null
@@ -58,7 +58,6 @@ function Get-SavedDialogueLaunchSettings([string]$RepoRoot, [string]$PortableDat
             ModEnabled = $true
             EnableFreeText = Convert-SavedToggle $dialogue.EnableFreeText $true 'Dialogue.EnableFreeText'
             EnableNpcVoice = Convert-SavedToggle $dialogue.EnableNpcVoice $false 'Dialogue.EnableNpcVoice'
-            EnableDecisionPlanner = Convert-SavedToggle $dialogue.EnableDecisionPlanner $false 'Dialogue.EnableDecisionPlanner'
         }
     } catch {
         throw "Could not safely read saved dialogue launch settings: $($_.Exception.Message)"
@@ -159,7 +158,7 @@ try {
         Where-Object { [string]::Equals([string]$_.ExecutablePath, $player, [StringComparison]::OrdinalIgnoreCase) })
     if ($runningPlayers.Count -gt 0) {
         # Voice may have been enabled while the game was already open. Warm only its
-        # independent service; the running game owns Qwen/D3 and must not get a duplicate.
+        # independent service; the running game owns dialogue and must not get a duplicate.
         Start-OptionalNpcVoiceService
         if (-not $DevelopmentMode) { Start-GameOwnedServiceMonitor -GameProcesses $runningPlayers }
         $ids = ($runningPlayers | ForEach-Object ProcessId) -join ', '
@@ -202,22 +201,7 @@ try {
     }
     Start-OptionalNpcVoiceService
 
-    $decisionArguments = $null
-    if ($freeTextEnabled -and $launchSettings.EnableDecisionPlanner -and -not $DialogueOnly) {
-        try {
-            $decision = & (Join-Path $RepositoryRoot 'tools/StartLocalDecision.ps1') -ReadinessTimeoutSeconds $ReadinessTimeoutSeconds
-            if (-not $decision.Ready -or -not $decision.ModelId -or -not $decision.Endpoint) { throw 'Decision service returned no ready model.' }
-            $decisionArguments = '-peopleoftheiliacbay-decision-routing -peopleoftheiliacbay-goal-extraction -peopleoftheiliacbay-action-wording -peopleoftheiliacbay-decision-model "' +
-                $decision.ModelId + '" -peopleoftheiliacbay-decision-endpoint "' + $decision.Endpoint + '"'
-        } catch {
-            Write-Warning "D3-mini unavailable; starting with Qwen routing: $($_.Exception.Message)"
-        }
-    }
-    if ($decisionArguments) {
-        $gameProcess = Start-Process -FilePath $player -WorkingDirectory $playerRoot -ArgumentList $decisionArguments -PassThru
-    } else {
-        $gameProcess = Start-Process -FilePath $player -WorkingDirectory $playerRoot -PassThru
-    }
+    $gameProcess = Start-Process -FilePath $player -WorkingDirectory $playerRoot -PassThru
     if ($freeTextEnabled) {
         Write-Output "Started Daggerfall Unity PID $($gameProcess.Id) after local dialogue server became ready."
     } else {

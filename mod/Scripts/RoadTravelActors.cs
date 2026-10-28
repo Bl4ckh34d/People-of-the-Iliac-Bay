@@ -32,8 +32,9 @@ namespace PeopleOfTheIliacBay.DFU
             PlayerEnterExit.OnTransitionDungeonInterior+=CompleteNativeDungeonEntry;
             PlayerEnterExit.OnTransitionDungeonExterior+=CompleteNativeDungeonExit;
             PlayerEnterExit.OnFailedTransition+=AbortNativeDungeonFollow;
+            InstallFastTravel();
         }
-        public ResidentActor Find(string id) { ResidentActor actor; actors.TryGetValue(id,out actor); return actor?actor:FindDungeonCompanion(id); }
+        public ResidentActor Find(string id) { ResidentActor actor; actors.TryGetValue(id,out actor); return actor?actor:FindFastTravelFollower(id)?FindFastTravelFollower(id):FindDungeonCompanion(id); }
         public bool TryAdopt(ResidentActor actor,WorldStateStore store,double now)
         {
             if(!actor || !actor.Resident.IsAlive || source==null || !ReferenceEquals(source(),store) ||
@@ -60,7 +61,7 @@ namespace PeopleOfTheIliacBay.DFU
         }
         public void Clear()
         {
-            ClearRoadActors(); ClearPaidCompanions(); ClearDungeonFollowers();
+            ClearRoadActors(); ClearPaidCompanions(); ClearDungeonFollowers();ClearFastTravelFollowers();
         }
         private void ClearRoadActors()
         {
@@ -72,10 +73,12 @@ namespace PeopleOfTheIliacBay.DFU
             foreach(var actor in actors.Values) if(actor) actor.CaptureState();
             CapturePaidCompanionStates();
             CaptureDungeonFollowers();
+            foreach(var member in fastTravelFollowers.Values)if(member.Actor)member.Actor.CaptureState();
+            if(fastTravelTransit!=null)foreach(var member in fastTravelTransit.Members)if(member.Actor)member.Actor.CaptureState();
         }
         private void OnDestroy() { PlayerEnterExit.OnTransitionDungeonInterior-=CompleteNativeDungeonEntry;
             PlayerEnterExit.OnTransitionDungeonExterior-=CompleteNativeDungeonExit;
-            PlayerEnterExit.OnFailedTransition-=AbortNativeDungeonFollow;Clear(); }
+            PlayerEnterExit.OnFailedTransition-=AbortNativeDungeonFollow;UninstallFastTravel();Clear(); }
         public static bool Ground(RoutePoint position,out Vector3 ground,out Transform terrainParent)
         {
             ground=Vector3.zero; terrainParent=null;
@@ -108,6 +111,8 @@ namespace PeopleOfTheIliacBay.DFU
             var clock=DaggerfallUnity.Instance.WorldTime.Now;
             double now=(double)clock.ToSeconds()+clock.Second-Math.Floor(clock.Second);
             if(GameManager.IsGamePaused) return;
+            if(AdvanceFastTravelArrival(store,now)){UpdateFastTravelFollowers(store,now);return;}
+            UpdateFastTravelFollowers(store,now);
             UpdateDungeonFollowers(store,now);
             if(GameManager.Instance.StreamingWorld.IsInit)
             { CapturePaidForUnobservedReload(store,now); return; }

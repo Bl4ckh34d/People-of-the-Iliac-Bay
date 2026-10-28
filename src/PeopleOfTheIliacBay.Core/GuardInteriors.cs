@@ -153,25 +153,6 @@ namespace PeopleOfTheIliacBay.Core
             return copy;
         }
         private static double EffectiveTimeScale(GuardInteriorState room) { return room.TimeScale == 0 ? 12 : room.TimeScale; }
-        internal static void MigrateInteriorClock(GuardRoster roster, double now, double previousRate, double currentRate)
-        {
-            foreach (var guard in roster.Guards)
-            {
-                var room = guard.Interior;
-                if (room == null) continue;
-                if (room.Returning)
-                {
-                    ClockInterval interval;
-                    if (now >= room.ExitAt)
-                        interval = new ClockInterval(room.ExitAt - (room.ExitAt - room.ReturnAt) * currentRate / previousRate,
-                            room.ExitAt, now);
-                    else interval = ClockRateMigration.RescaleInterval(room.ReturnAt, room.ExitAt, now, previousRate, currentRate);
-                    room.ReturnAt = interval.Start; room.ExitAt = interval.End;
-                    guard.SearchUntil = interval.Start;
-                }
-                room.TimeScale = currentRate;
-            }
-        }
         private static GuardPoint3 Point3(GuardPoint3 point)
         {
             Require(point != null && Finite(point.X) && Finite(point.Y) && Finite(point.Z) &&

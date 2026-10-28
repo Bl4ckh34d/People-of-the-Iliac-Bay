@@ -1,0 +1,68 @@
+﻿{
+    "portraitRecord":  89,
+    "bank":  "TFAC00I0.RCI",
+    "width":  64,
+    "height":  64,
+    "splitY":  35,
+    "eyeRegions":  [
+                       {
+                           "x":  12,
+                           "y":  12,
+                           "width":  19,
+                           "height":  19
+                       },
+                       {
+                           "x":  34,
+                           "y":  12,
+                           "width":  20,
+                           "height":  19
+                       }
+                   ],
+    "mouthRegion":  {
+                        "x":  20,
+                        "y":  40,
+                        "width":  25,
+                        "height":  15
+                    },
+    "eyeFeatureLocks":  [
+                            {
+                                "emotion":  "neutral",
+                                "phase":  "half",
+                                "x":  22,
+                                "y":  23,
+                                "width":  1,
+                                "height":  1,
+                                "sourceFile":  "source-upper.png"
+                            },
+                            {
+                                "emotion":  "neutral",
+                                "phase":  "half",
+                                "x":  40,
+                                "y":  23,
+                                "width":  1,
+                                "height":  1,
+                                "sourceFile":  "source-upper.png"
+                            },
+                            {
+                                "emotion":  "afraid",
+                                "phase":  "half",
+                                "x":  22,
+                                "y":  23,
+                                "width":  1,
+                                "height":  1,
+                                "sourceFile":  "eyes/afraid/open.png"
+                            },
+                            {
+                                "emotion":  "afraid",
+                                "phase":  "half",
+                                "x":  40,
+                                "y":  23,
+                                "width":  1,
+                                "height":  1,
+                                "sourceFile":  "eyes/afraid/open.png"
+                            }
+                        ],
+    "blinkRepairRationale":  "Parent and separate visual review confirm four clear neutral/afraid half-phase glints moved from22 to23. Restore dark underlying source/open pixels at22,23 and40,23. Sad/guarded lower-edge taupe shifts were also inspected but do not show a convincing material glint flash; retain them rather than copy more pixels speculatively. Angry blue-gray highlight remains a palette review point. RED regression failed4 subtests before repair.",
+    "maskBoundsRationale":  "Parent inspected actual089 source8x and coordinate grid. Brows16..19, upper lids20..21, irises22..25 and lower shadow through28. browEnd19 precedes moving eyelid. Expanded upper/lateral eye envelopes permit raised emotional brows without clipping; mouth40..54 stays below nose base and allows wide AA below source lips41..46. Keep muted tan/brown colors and gray-violet iris geometry; preserve asymmetric head/hair. Do not inherit88 pixel locks or palette policy. Safety envelopes do not authorize repainting every enclosed skin pixel.",
+    "browLockEndY":  18
+}

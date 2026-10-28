@@ -1,0 +1,123 @@
+﻿{
+    "schemaVersion":  1,
+    "kind":  "deterministic-whole-cell-permutation-not-generation",
+    "portraitRecord":  78,
+    "emotion":  "happy",
+    "source":  "mouth/happy/raw.png",
+    "sourceSha256":  "79c4bcfbb35c568456c3dde57739671139c63746d884b028f8e8970dfc1077e7",
+    "derived":  "mouth/happy/remap-v1/derived-atlas.png",
+    "derivedSha256":  "4fff0faac1996f2aff08648aa810d98617d6d674f8aa1b69784f647a839219e8",
+    "sampling":  "Exact BuildSplitEmotionMouths whole-cell System.Drawing nearest-neighbor/PixelOffsetMode.Half; 64x29 native cell; no mouth-crop scaling",
+    "cells":  [
+                  {
+                      "targetShape":  "A",
+                      "targetCell":  0,
+                      "sourceShape":  "A",
+                      "sourceCell":  0,
+                      "sourceRectangle":  {
+                                              "y":  0,
+                                              "width":  621,
+                                              "height":  281,
+                                              "x":  0
+                                          }
+                  },
+                  {
+                      "targetShape":  "B",
+                      "targetCell":  1,
+                      "sourceShape":  "B",
+                      "sourceCell":  1,
+                      "sourceRectangle":  {
+                                              "y":  0,
+                                              "width":  621,
+                                              "height":  281,
+                                              "x":  621
+                                          }
+                  },
+                  {
+                      "targetShape":  "C",
+                      "targetCell":  2,
+                      "sourceShape":  "C",
+                      "sourceCell":  2,
+                      "sourceRectangle":  {
+                                              "y":  0,
+                                              "width":  621,
+                                              "height":  281,
+                                              "x":  1242
+                                          }
+                  },
+                  {
+                      "targetShape":  "D",
+                      "targetCell":  3,
+                      "sourceShape":  "D",
+                      "sourceCell":  3,
+                      "sourceRectangle":  {
+                                              "y":  281,
+                                              "width":  621,
+                                              "height":  281,
+                                              "x":  0
+                                          }
+                  },
+                  {
+                      "targetShape":  "E",
+                      "targetCell":  4,
+                      "sourceShape":  "E",
+                      "sourceCell":  4,
+                      "sourceRectangle":  {
+                                              "y":  281,
+                                              "width":  621,
+                                              "height":  281,
+                                              "x":  621
+                                          }
+                  },
+                  {
+                      "targetShape":  "F",
+                      "targetCell":  5,
+                      "sourceShape":  "H",
+                      "sourceCell":  7,
+                      "sourceRectangle":  {
+                                              "y":  562,
+                                              "width":  621,
+                                              "height":  282,
+                                              "x":  621
+                                          }
+                  },
+                  {
+                      "targetShape":  "G",
+                      "targetCell":  6,
+                      "sourceShape":  "F",
+                      "sourceCell":  5,
+                      "sourceRectangle":  {
+                                              "y":  281,
+                                              "width":  621,
+                                              "height":  281,
+                                              "x":  1242
+                                          }
+                  },
+                  {
+                      "targetShape":  "H",
+                      "targetCell":  7,
+                      "sourceShape":  "G",
+                      "sourceCell":  6,
+                      "sourceRectangle":  {
+                                              "y":  562,
+                                              "width":  621,
+                                              "height":  282,
+                                              "x":  0
+                                          }
+                  },
+                  {
+                      "targetShape":  "X",
+                      "targetCell":  8,
+                      "sourceShape":  "X",
+                      "sourceCell":  8,
+                      "sourceRectangle":  {
+                                              "y":  562,
+                                              "width":  621,
+                                              "height":  282,
+                                              "x":  1242
+                                          }
+                  }
+              ],
+    "visualAcceptance":  "pending",
+    "published":  false
+}

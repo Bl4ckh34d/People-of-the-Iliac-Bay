@@ -1,0 +1,58 @@
+{
+  "emotion": "happy",
+  "generator": "built-in image_gen",
+  "status": "prototype; user-review-pending; not installed",
+  "source": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\tfac-077-full-frame-v5.png",
+    "sha256": "D2BD017E7773336DE704BF3E4C935AB1EF7D0FC84DD4BBC551A61E22AF322223"
+  },
+  "canvas": "1254x1254",
+  "cell_order": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "X"
+  ],
+  "generation_count": 4,
+  "phases": [
+    {
+      "phase": "open",
+      "output": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\happy-open.png",
+        "sha256": "23BAF327B7E1DAE1188456939E75D2AD6097492FAAC8A8446892BF9DDBD063D3"
+      },
+      "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\tfac-077-full-frame-v5.png",
+      "prompt": "Use case: stylized-concept\nAsset type: complete square 3×3 portrait viseme atlas for an NPC game prototype\nInput image: Image 1 is the approved source atlas; preserve its character, exact 3×3 grid, framing, muted pixel-art style, and cell alignment.\nPrimary request: create the happy OPEN-EYE version of this same complete atlas.\nSubject: the same woman, repeated as nine separate complete portrait frames.\nStyle/medium: preserve the existing pixel-art rendering, colors, texture, hair, proportions, and modest mouth size.\nComposition/framing: preserve exact square 3×3 layout and all full-head portrait boundaries; no crop or resize; row-major cells A B C / D E F / G H X.\nLighting/mood: warm, genuinely cheerful, smiling eyes; natural gentle smile and mouth corners in every cell.\nConstraints: Keep each cell’s useful speech mouth shape exact in intent and clearly distinct: A lips closed for M/B/P; B narrow consonant opening with slight teeth; C medium EH opening; D moderately open AH, no yawn; E rounded OH; F small OO/W; G upper teeth touching lower lip for F/V; H subtle tongue behind upper teeth for L; X relaxed closed mouth suitable for happy emotion. Preserve each mouth opening and modest mouth scale while adding only natural smile-corner warmth. Keep face identity, hairstyle, skin tone, clothes, background, layout, cell size and alignment. Do not label cells or add grid lines.\nAvoid: giant grin, exaggerated teeth, caricature, puffy lips, protruding tongue, tears, objects, labels, borders, gutters, altered grid, duplicated poses, missing row, any other character."
+    },
+    {
+      "phase": "half",
+      "output": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\happy-half.png",
+        "sha256": "082529D783AFCB38E5C95ABBF1EFB0CCDF148CD6284D9717D13AB188764AC8D2"
+      },
+      "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\happy-open.png",
+      "prompt": "Use case: stylized-concept\nAsset type: complete square 3×3 blink atlas for an NPC game prototype\nInput image: Image 1 is the completed happy open-eye atlas.\nPrimary request: create its HALF-BLINK version as a complete full-frame atlas.\nStyle/medium: preserve exact pixel-art style, color, texture, character, hair, face, framing, and 3×3 grid.\nComposition/framing: same square canvas and exact 3×3 cell alignment; row-major A B C / D E F / G H X.\nConstraints: Change only upper eyelids in all nine cells so each upper lid covers roughly half its iris. Keep happy eyebrows and cheerful expression unchanged. Preserve each cell’s exact corresponding A/B/C/D/E/F/G/H/X mouth pose, size, opening, tongue/teeth details, and smile corners. Keep all complete portrait frames unchanged. No crop, resize, overlays, labels, dividers, borders, or extra changes.\nAvoid: closed eyes, fully open eyes, missing eyes, visible expression shift, altered mouths, reordered or duplicated poses, missing grid cells, changed character, extra objects."
+    },
+    {
+      "phase": "closed",
+      "output": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\happy-closed.png",
+        "sha256": "883219F9DA53A7580EF02E703DA6B26B80F66A7A111E4C20F03B6EBCC49FB4A8"
+      },
+      "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\happy-open.png",
+      "prompt": "Use case: stylized-concept\nAsset type: complete square 3×3 blink atlas for an NPC game prototype\nInput image: Image 1 is the completed happy open-eye atlas.\nPrimary request: create its CLOSED-BLINK version as a complete full-frame atlas.\nStyle/medium: preserve exact pixel-art style, colors, texture, character, hair, face, framing, and 3×3 grid.\nComposition/framing: same square canvas and exact 3×3 cell alignment; row-major A B C / D E F / G H X.\nConstraints: Change only eyelids in all nine cells so both eyes are fully shut. No iris or sclera visible beneath. Keep happy eyebrows and cheerful expression unchanged. Preserve each cell’s exact corresponding A/B/C/D/E/F/G/H/X mouth pose, size, opening, tongue/teeth details, and smile corners. Keep all complete portrait frames unchanged. No crop, resize, overlays, labels, dividers, borders, or extra changes.\nAvoid: half-open or open eyes, visible iris or sclera, missing grid cells, expression shift, altered mouths, reordered or duplicated poses, changed character, extra objects."
+    }
+  ],
+  "unused_generation": {
+    "phase": "open",
+    "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-8b98-7181-a1df-84e7b766303c\\exec-25d1050b-51b1-4cb2-8bf2-0204291783c5.png",
+    "sha256": "CD75967855735A400DCFA8D29360F5D54354A4771707818438DECDF2F07AF82F",
+    "selected": false,
+    "reason": "First identical-prompt generation; retained generated original, second output selected."
+  }
+}

@@ -120,6 +120,7 @@ namespace PeopleOfTheIliacBay.Tests
                 f.Store=Reload(f.Store);
                 f.Store.AdvanceHouseholdInnService(f.Plan.Id,f.Departure+800,
                     (region,time)=>new NpcInnServiceTariff{RegionIndex=region,AbsoluteDay=(int)Math.Floor(time/86400d)});
+                Check.True(f.Store.PrepareHouseholdInnObservation(f.Plan.Id,f.Departure+800,(catalog,pair)=>true));
                 var a=f.Store.ProjectHouseholdInnMember(f.Plan.Id,"mother",f.Departure+800);
                 var b=f.Store.ProjectHouseholdInnMember(f.Plan.Id,"father",f.Departure+800);
                 var sim=f.Store.ReadHouseholdJointSimulation(2,7);
@@ -128,15 +129,16 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.Equal(5,Purchases(f.Store).Count);Check.Equal(16,f.Store.ReadNpcInventory("mother").WalletGold);
                 Check.Equal(0,f.Store.ReadNpcInventory("father").WalletGold);Reload(f.Store);
             }));
-            cases.Add(("Pending and refused projected Inn admissions do not invent purchases",()=>{
-                var f=HouseholdInnServiceTests.Prepared(secondGold:1);
+            cases.Add(("Pending and unavailable projected Inn admissions do not invent purchases",()=>{
+                var f=HouseholdInnServiceTests.Prepared();
                 var admission=f.Store.AdvanceHouseholdInnService(f.Plan.Id,f.Departure+300,
                     (region,time)=>new NpcInnServiceTariff{RegionIndex=region,AbsoluteDay=(int)Math.Floor(time/86400d)});
                 Check.Equal("pending",admission.Outcome);
                 Check.Equal(0,Purchases(f.Store).Count);
+                var saved=f.Store.Snapshot();saved.NativePeople.Find(p=>p.Id==f.Keeper.Id).IsAlive=false;f.Store.Restore(saved);
                 var refused=f.Store.AdvanceHouseholdInnService(f.Plan.Id,f.Departure+700,
                     (region,time)=>new NpcInnServiceTariff{RegionIndex=region,AbsoluteDay=(int)Math.Floor(time/86400d)});
-                Check.Equal("refused",refused.Outcome);Check.Equal(0,Purchases(f.Store).Count);
+                Check.True(refused==null);Check.Equal(0,Purchases(f.Store).Count);
             }));
         }
     }

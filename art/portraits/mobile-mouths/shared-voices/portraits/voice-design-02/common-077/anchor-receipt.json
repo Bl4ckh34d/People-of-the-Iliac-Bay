@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "portraitId": "common-077",
+  "profileId": "common-077-voice-design-02",
+  "profilePath": "work/portrait-female-voice-design-02/profiles/common-077.json",
+  "profileSha256": "9a6bb29a99fbe2505224af665ad0bc11f7fb6eb28f42ba375604ea8be210c7df",
+  "attributes": {
+    "pitch": "a middle mezzo-soprano register",
+    "timbre": "warm and rounded",
+    "roughness": "lightly raspy",
+    "breathiness": "with softly breathy phrasing",
+    "vocalFry": "without habitual vocal fry",
+    "pace": "a measured conversational pace"
+  },
+  "stableInstruction": "An adult woman speaking British English with a neutral southern English accent. Her distinctive voice has a middle mezzo-soprano register; its timbre is warm and rounded, lightly raspy, with softly breathy phrasing, without habitual vocal fry. Use a measured conversational pace. Keep this individual vocal identity consistent; speak naturally, without caricature, shouting, or added vocal events.",
+  "seed": 1536509072,
+  "guidanceScale": 4.0,
+  "anchorText": "Good day. I have been in this town for many years. What brings you here today?",
+  "anchorRequestPurpose": "Breeze VoiceDesign without voice_ref; stable per-woman profile instruction and seed.",
+  "requestPayload": {
+    "model": "breeze",
+    "input": "Good day. I have been in this town for many years. What brings you here today?",
+    "response_format": "pcm",
+    "stream_format": "sse",
+    "options": {
+      "instruct": "An adult woman speaking British English with a neutral southern English accent. Her distinctive voice has a middle mezzo-soprano register; its timbre is warm and rounded, lightly raspy, with softly breathy phrasing, without habitual vocal fry. Use a measured conversational pace. Keep this individual vocal identity consistent; speak naturally, without caricature, shouting, or added vocal events.",
+      "guidance_scale": 4.0,
+      "stream_lookahead_margin": 0,
+      "stream_chunk_policy": "grow",
+      "seed": 1536509072
+    }
+  },
+  "requestPayloadSha256": "c02c11c6b9457e84b959eec0bb4e713cda03ca3446452d65e05a16f516491e77",
+  "referenceWav": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait-female-voice-design-02\\anchors\\common-077\\reference.wav",
+  "referenceSha256": "b29fcb1113d8a1f51fba15c466d909fdacbe3a321d0425d7254e4b572735a155",
+  "referenceRawWav": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait-female-voice-design-02\\anchors\\common-077\\reference.raw.wav",
+  "referenceRawSha256": "80917898da7c771450e5db0a33f40aa86f2ef6eaa274f6b42baf8516a02321bd",
+  "audioSampleRate": 24000,
+  "audioFrames": 115200,
+  "normalization": {
+    "schemaVersion": 1,
+    "normalizer": "pcm16-active-rms-v1",
+    "status": "normalized",
+    "targetActiveRmsDbfs": -20.0,
+    "peakCeilingDbfs": -3.0,
+    "maxBoostDb": 12.0,
+    "gateDbfs": -50.0,
+    "appliedGainDb": 0.6064714957223124,
+    "input": {
+      "sha256": "80917898da7c771450e5db0a33f40aa86f2ef6eaa274f6b42baf8516a02321bd",
+      "sampleRate": 24000,
+      "channels": 1,
+      "sampleWidthBytes": 2,
+      "frames": 115200,
+      "peakDbfs": -6.77791350692856,
+      "activeRmsDbfs": -20.60647149572231,
+      "activeFrames": 80400
+    },
+    "output": {
+      "sha256": "b29fcb1113d8a1f51fba15c466d909fdacbe3a321d0425d7254e4b572735a155",
+      "sampleRate": 24000,
+      "channels": 1,
+      "sampleWidthBytes": 2,
+      "frames": 115200,
+      "peakDbfs": -6.17140225306836,
+      "activeRmsDbfs": -19.999997750457815,
+      "activeFrames": 80400
+    }
+  },
+  "synthesis": {
+    "outputWav": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait-female-voice-design-02\\anchors\\common-077\\reference.raw.wav",
+    "pcmBytes": 230400,
+    "sampleRate": 24000,
+    "channels": 1,
+    "synthesisMs": 2484.551,
+    "firstAudioMs": 394.673,
+    "audioDeltaCount": 7,
+    "serverTiming": {
+      "ttft_ms": 393.314
+    }
+  }
+}

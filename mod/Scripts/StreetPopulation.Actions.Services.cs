@@ -95,7 +95,9 @@ namespace PeopleOfTheIliacBay.DFU
                     job.ServicePrice==0?ActionRecipientName(actor)+" collects "+(itemName??"the repaired item")+".":
                         ActionRecipientName(actor)+" leaves "+(itemName??"the item")+" for repair and pays "+job.ServicePrice+" gold. Repair is pending.":
                 job.ServiceCode==NativeNpcTempleTraining.ServiceCode && job.Phase==NpcActionPhase.Completed?
-                    ActionRecipientName(actor)+" completes native temple training for "+job.ServicePrice+" gold from their own wallet.":
+                    ActionRecipientName(actor)+" completes training in "+
+                        DaggerfallUnity.Instance.TextProvider.GetSkillName((DFCareer.Skills)int.Parse(job.Target.ItemId,System.Globalization.CultureInfo.InvariantCulture))+
+                        " for "+job.ServicePrice+" gold from their own wallet.":
                 NpcActionFeedback.Describe(job,ActionRecipientName(actor),itemName,ActionRecipientName(recipient));
             if(!string.IsNullOrEmpty(message)) DaggerfallUI.AddHUDText(message,4f);
         }

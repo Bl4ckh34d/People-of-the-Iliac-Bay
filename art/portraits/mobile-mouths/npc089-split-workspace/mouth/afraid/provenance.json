@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T02:33:54.7415857Z",
+    "portraitRecord":  89,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "afraid",
+    "prompt":  "Use case: stylized-concept\nAsset type: Daggerfall Unity NPC pixel-art speech mouth atlas\nInput image: Image 1 is the only reference and layout guide: mouth-reference-grid.png, a 3×3 grid of repeated whole lower 64×29 portrait halves enlarged 8×. Use no other reference.\nPrimary request: Create one complete 3×3 atlas of the same lower-face halves. Preserve each cell boundary, exact crop, face identity, pixel grid, mouth scale, nose, jaw, neck, hair, background, and aspect ratio. Row-major cells: A B C / D E F / G H X. Change only lip, mouth, and minimal expression tension. Keep the afraid expression tense and restrained; retain the same shape family for each pose.\nRhubarb poses, required exactly: A closed lips with light pressure for P/B/M. B slightly open, nearly together teeth, narrow horizontal opening for most consonants and EE. C medium open mouth with relaxed unrounded lips for EH/AE. D wide vertical opening for AA, clearly larger than C. E slightly rounded lips, opening no wider than C, for AO/ER. F puckered rounded lips with a small forward opening for UW/OW/W; not a tooth bite. G upper teeth touching lower lip for F/V; not a wide vowel or pucker. H tongue raised behind upper teeth for long L, opening between C and D; tongue may be invisible at native scale. X closed relaxed idle lips. Emotion changes tension and corners without changing these pose meanings.\nPalette and pixels: preserve original subdued warm tan/brown skin, softly blended brown lips, restrained warm teeth, and original pixel-art contrast. Keep facial proportions and lip scale. No orange surrounding skin, lipstick-red lips, bright white tooth blocks, heavy outlines, blur, smooth vector shapes, antialiasing, labels, margins, extra panels, or watermark.\nComposition: output only the complete 3×3 atlas of lower halves, with same cell proportions and 64:29 aspect ratio as reference. Do not output a full portrait, mouth-only close-ups, alternate crop, or redesigned background.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a16172-370e-7840-a7fd-4ff090e7e19f as C:\\Users\\Daniel\\.codex\\generated_images\\01a16172-370e-7840-a7fd-4ff090e7e19f\\exec-4d637557-42f1-454f-9176-417ac53b7e24.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a16172-370e-7840-a7fd-4ff090e7e19f\\exec-4d637557-42f1-454f-9176-417ac53b7e24.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "ff6db931146aa84fe2260b0daba0269a20455b1dcbb61e232e011a87291b4b5f",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "dc5611a05ea1f3aeea7f7b08b7b2f4ec4c353d989f2043ebe7bca92d085cee4d",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a16172-370e-7840-a7fd-4ff090e7e19f\\exec-4d637557-42f1-454f-9176-417ac53b7e24.png",
+                      "sha256":  "cdae671b1e845022398a6d3eaf64c09a03e76cf9048908057fb1ed218d1a5c26",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/afraid/raw.png",
+                "sha256":  "cdae671b1e845022398a6d3eaf64c09a03e76cf9048908057fb1ed218d1a5c26",
+                "width":  1863,
+                "height":  844
+            }
+}

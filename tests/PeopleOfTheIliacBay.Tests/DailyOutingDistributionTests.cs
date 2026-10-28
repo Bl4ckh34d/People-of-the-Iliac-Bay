@@ -7,6 +7,57 @@ namespace PeopleOfTheIliacBay.Tests
     {
         public static void Add(List<(string Name, Action Body)> cases)
         {
+            cases.Add(("Multiple outings repair early shopping arrivals without moving the afternoon visit",()=>
+            {
+                var arrivals=new HashSet<double>();
+                for(uint seed=1;seed<=100;seed++)
+                {
+                    var source=Routine();source.Itinerary.Stops[0].OpenMinute=600;
+                    var afternoon=Routine();afternoon.Itinerary.Stops[0].OpenMinute=720;
+                    source.AdditionalOutings.Add(new ResidentDailyOuting{DepartureSeconds=14*3600,Itinerary=afternoon.Itinerary});
+                    var result=DailyOutingDistribution.Spread(source,seed,6,22);
+                    var visits=ResidentRoutineDay.ScheduledVisits(result);
+                    Check.True(visits[0].ArriveAt>=10*3600,"A composed day must not retain the early shop queue.");
+                    Check.Equal(visits[0].ArriveAt,visits[0].EnterAt);
+                    Check.Equal(14*3600d,result.AdditionalOutings[0].DepartureSeconds);
+                    Check.True(visits[0].LeaveAt+result.Itinerary.ExitWalkSeconds<=14*3600);
+                    Check.Equal(8*3600d,source.ItineraryDepartureSeconds);
+                    Check.Equal(3600d,result.Itinerary.Stops[0].DwellSeconds);
+                    Check.Equal(result.ItineraryDepartureSeconds,DailyOutingDistribution.Spread(result,seed,6,22).ItineraryDepartureSeconds);
+                    arrivals.Add(visits[0].ArriveAt);
+                }
+                Check.True(arrivals.Count>80,"Residents must not all arrive at opening.");
+            }));
+            cases.Add(("A later outing also respects refreshed service hours and the following home deadline",()=>
+            {
+                var source=Routine();source.ItineraryDepartureSeconds=10*3600;
+                var later=Routine();later.Itinerary.Stops[0].OpenMinute=900;
+                source.AdditionalOutings.Add(new ResidentDailyOuting{DepartureSeconds=14*3600,Itinerary=later.Itinerary});
+                var result=DailyOutingDistribution.Spread(source,42,6,22,17*3600);
+                var visits=ResidentRoutineDay.ScheduledVisits(result);
+                Check.Equal(10*3600d,result.ItineraryDepartureSeconds);
+                Check.True(visits[1].ArriveAt>=15*3600);
+                Check.Equal(visits[1].ArriveAt,visits[1].EnterAt);
+                Check.True(visits[1].LeaveAt+result.AdditionalOutings[0].Itinerary.ExitWalkSeconds<=17*3600);
+                Check.Equal(14*3600d,source.AdditionalOutings[0].DepartureSeconds);
+            }));
+            cases.Add(("Shop timing repair preserves service duration closing time and a home break before the next outing",()=>
+            {
+                for(uint seed=1;seed<=80;seed++)
+                {
+                    var source=Routine();source.Itinerary.Stops[0].OpenMinute=600;
+                    source.Itinerary.Stops[0].CloseMinute=680;
+                    source.AdditionalOutings.Add(new ResidentDailyOuting{DepartureSeconds=12*3600,Itinerary=Routine().Itinerary});
+                    var result=DailyOutingDistribution.Spread(source,seed,6,22);
+                    var visits=ResidentRoutineDay.ScheduledVisits(result);
+                    Check.True(visits[0].ArriveAt>=36000 && visits[0].LeaveAt<=680*60);
+                    Check.Near(3600,visits[0].LeaveAt-visits[0].EnterAt);
+                    Check.True(visits[0].LeaveAt+result.Itinerary.ExitWalkSeconds<=12*3600-20*60);
+                    Check.Equal(12*3600d,result.AdditionalOutings[0].DepartureSeconds);
+                    result.Itinerary.Stops[0].Route[0].X=999;
+                    Check.Equal(0d,source.Itinerary.Stops[0].Route[0].X);
+                }
+            }));
             cases.Add(("Redistributing a ten-o-clock shop never creates an early queue and spreads arrivals over the morning",()=>
             {
                 double earliest=double.MaxValue,latest=0;

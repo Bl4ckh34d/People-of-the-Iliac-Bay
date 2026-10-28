@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T08:59:09.7767225Z",
+    "portraitRecord":  88,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Create one pixel-art atlas from the supplied reference: exactly a 2-by-2 grid of four equal portrait-eye crops, each 64:35, overall 128:70 (64:35). No gutters, labels, borders or extra panels. Top-left: same face looking gently LEFT, eyes open. Top-right: gently RIGHT, eyes open. Bottom-left: LEFT, eyes half-lidded. Bottom-right: RIGHT, eyes half-lidded.\n\nUse the supplied grid as the exact source of identity and anatomy. Preserve this angry expression and brow shapes/positions, eye spacing, face crop, hair and skin palette, eyelid contours, lash lines, and eye aperture: open stays exactly as narrow as the top source row; half-lidded stays exactly as narrow as the bottom source row. Preserve the source\u0027s muted lavender-gray iris color and small compact dark pupils. Both eyes look in the same requested direction, with only a subtle lateral move of about one native pixel. Keep each iris compact, irregularly stepped, and fully inside the existing lid opening. Sclera stays subdued and warm beige, never broad bright-white bands. Keep highlights tiny and dim, no glare.\n\nKeep crisp native pixel-art steps and source colors; do not smooth or vectorize. Do not change brows/expression, raise or widen eyes, change lid contour or aperture, enlarge or round the irises, recolor the eyes, add glints, or alter other facial details. Bottom cells differ from their top counterparts only by the exact half-lid aperture and the subtle left/right gaze.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-ee57ff03-0eca-456f-b4b4-a4f3f5ec2ded.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-ee57ff03-0eca-456f-b4b4-a4f3f5ec2ded.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "f2e18bec953ffba12224397a695b2f80ddda822519be1414696b593243bc864c",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "4978c2d77291e4eb00f41dd0958ecc9d0d65c86e8a1db5a382e1175e0eb7e6ca",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-ee57ff03-0eca-456f-b4b4-a4f3f5ec2ded.png",
+                      "sha256":  "7015d5f95e92861a8612183e1e1340771406ea91dc466f3c229971edf538a7bd",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "7015d5f95e92861a8612183e1e1340771406ea91dc466f3c229971edf538a7bd",
+                "width":  1695,
+                "height":  928
+            }
+}

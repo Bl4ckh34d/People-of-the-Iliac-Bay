@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "kind": "exact-original-source-upper-repeated-grid",
+  "portraitRecord": 75,
+  "bank": "TFAC00I0.RCI",
+  "sourceUpperFile": "source-upper.png",
+  "sourceUpperSha256": "81141288fcba64ffe51a22cddb77302aa6d80c34b80d6e32fa574ce4ad08d3c1",
+  "sourceUpperDimensions": {
+    "width": 64,
+    "height": 35
+  },
+  "sourceOriginalFile": "original.png",
+  "sourceOriginalSha256": "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98",
+  "layoutSnapshotFile": "layout.json",
+  "layoutSnapshotSha256": "dcdf5a0a2998ef35fa384dc582541506d5541d270b0b8d5d837930b5d6ce1ee8",
+  "referenceGridFile": "eyes-reference-grid.png",
+  "referenceGridSha256": "986e638aa3a7013b1c00da31e9aac054f32b249711efef96b6638dee3c902e4f",
+  "referenceDimensions": {
+    "width": 1024,
+    "height": 560
+  },
+  "nearestNeighborScale": 8,
+  "cellOrder": [
+    "open",
+    "half",
+    "closed",
+    "open-repeat"
+  ],
+  "cells": [
+    {
+      "row": 0,
+      "column": 0,
+      "sourceFile": "source-upper.png",
+      "sourceSha256": "81141288fcba64ffe51a22cddb77302aa6d80c34b80d6e32fa574ce4ad08d3c1"
+    },
+    {
+      "row": 0,
+      "column": 1,
+      "sourceFile": "source-upper.png",
+      "sourceSha256": "81141288fcba64ffe51a22cddb77302aa6d80c34b80d6e32fa574ce4ad08d3c1"
+    },
+    {
+      "row": 1,
+      "column": 0,
+      "sourceFile": "source-upper.png",
+      "sourceSha256": "81141288fcba64ffe51a22cddb77302aa6d80c34b80d6e32fa574ce4ad08d3c1"
+    },
+    {
+      "row": 1,
+      "column": 1,
+      "sourceFile": "source-upper.png",
+      "sourceSha256": "81141288fcba64ffe51a22cddb77302aa6d80c34b80d6e32fa574ce4ad08d3c1"
+    }
+  ],
+  "claim": "Four cells are byte-identical nearest-neighbor enlargements of the original source-upper crop. No generated angry candidate or prior brow correction was used."
+}

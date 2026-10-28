@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace PeopleOfTheIliacBay.DFU
 {
-    // Explicit actual-player fixture for the rejected Archive 385 running draft.
+    // Actual-player fixture for the selected complete Archive 385 running set.
     // It owns one disposable actor and never changes a saved resident's wardrobe.
     public static class RunningPilotProbe
     {
@@ -63,8 +63,9 @@ namespace PeopleOfTheIliacBay.DFU
                 // Keep the actor's heading fixed while the camera orbits so each
                 // camera sample maps to a distinct native orientation.
                 actor.Place(from, runDirection, false, true);
-                var pose = body.GetComponent<RunningPilotPose>();
-                if (!pose || !pose.Active || nativeRenderer.enabled)
+                yield return new WaitForEndOfFrame();
+                var pose = body.GetComponent<CompletedNpcPose>();
+                if (!pose || !pose.Active || !nativeRenderer.forceRenderingOff)
                     throw new System.InvalidOperationException("Active flee movement did not replace native renderer.");
 
                 var orientations = new HashSet<int>();
@@ -76,18 +77,25 @@ namespace PeopleOfTheIliacBay.DFU
                 float movementDistance = 0;
                 for (int step = 0; step < 8; step++)
                 {
-                    float along = 0.15f + step * 0.1f;
-                    Vector3 target = Vector3.Lerp(from, to, along);
-                    actor.Place(target, runDirection, false, true);
-                    movementDistance += Vector3.Distance(previousPosition, actor.transform.position);
-                    previousPosition = actor.transform.position;
                     Vector3 radial = Quaternion.AngleAxis(step * 45f, Vector3.up) * actor.transform.forward;
-                    game.PlayerMotor.transform.position = actor.transform.position + radial * 4f + Vector3.up * 0.2f;
-                    SleepProbe.AimCamera(nativeRenderer.bounds.center);
-                    yield return new WaitForSecondsRealtime(0.15f);
+                    // The movement owner is normally called every frame. Sparse
+                    // snapshots alone cannot exercise its bounded physical step.
+                    float until=Time.realtimeSinceStartup+0.12f;
+                    do
+                    {
+                        actor.Place(to,runDirection,false,true);
+                        movementDistance+=Vector3.Distance(previousPosition,actor.transform.position);
+                        previousPosition=actor.transform.position;
+                        game.PlayerMotor.transform.position=actor.transform.position+radial*4f+Vector3.up*0.2f;
+                        SleepProbe.AimCamera(nativeRenderer.bounds.center);
+                        yield return null;
+                        if(pose.Active)frames.Add(pose.Frame);
+                    }while(Time.realtimeSinceStartup<until);
                     yield return new WaitForEndOfFrame();
-                    if (!pose.Active || nativeRenderer.enabled || pose.Orientation < 0 || pose.Orientation > 7)
-                        throw new System.InvalidOperationException("Archive 385 preview failed at a native orientation.");
+                    if (!pose.Active || !nativeRenderer.forceRenderingOff || pose.Orientation < 0 || pose.Orientation > 7)
+                        throw new System.InvalidOperationException("Archive 385 preview failed at angle "+step+"; active="+pose.Active+
+                            "; suppressed="+nativeRenderer.forceRenderingOff+"; standing="+actor.IsStandingStill+
+                            "; moved="+movementDistance+"; remaining="+Vector3.Distance(actor.transform.position-Vector3.up,to));
                     if (!orientations.Add(pose.Orientation))
                         throw new System.InvalidOperationException("Camera orbit repeated a running-pilot orientation.");
                     frames.Add(pose.Frame);
@@ -102,7 +110,7 @@ namespace PeopleOfTheIliacBay.DFU
                 if (frames.Count != 4)
                     throw new System.InvalidOperationException("Running pilot did not display all four atlas frames during movement.");
                 if (movementDistance < 1f)
-                    throw new System.InvalidOperationException("Running pilot orientation samples did not include sustained actor movement.");
+                    throw new System.InvalidOperationException("Running pilot orientation samples did not include sustained actor movement: "+movementDistance);
                 float screenshotDeadline = Time.realtimeSinceStartup + 10f;
                 while (screenshots.Exists(path => !File.Exists(path)) && Time.realtimeSinceStartup < screenshotDeadline)
                     yield return null;
@@ -110,20 +118,20 @@ namespace PeopleOfTheIliacBay.DFU
                     throw new System.InvalidOperationException("Running pilot orientation screenshots were not written.");
 
                 actor.SetRunningPreview(false);
-                if (pose.Active || !nativeRenderer.enabled)
+                if (pose.Active || nativeRenderer.forceRenderingOff || !nativeRenderer.enabled)
                     throw new System.InvalidOperationException("Stopping preview did not restore native renderer.");
 
                 actor.Person.Asset.IsIdle = false;
                 if (!actor.SetRunningPreview(true)) throw new System.InvalidOperationException("Conversation restore setup failed.");
                 actor.SetConversationFacing(true);
-                if (pose.Active || !nativeRenderer.enabled)
+                if (pose.Active || nativeRenderer.forceRenderingOff || !nativeRenderer.enabled)
                     throw new System.InvalidOperationException("Talking did not stop and restore running preview.");
                 actor.SetConversationFacing(false);
                 actor.Person.Asset.IsIdle = false;
 
                 Vector3 current = actor.transform.position;
                 actor.Place(current - Vector3.up, Vector3.forward, true);
-                if (pose.Active || actor.SetRunningPreview(true) || !nativeRenderer.enabled)
+                if (pose.Active || actor.SetRunningPreview(true) || !actor.IsStandingStill)
                     throw new System.InvalidOperationException("Standing actor accepted running preview.");
 
                 var sleepAtlas = sleepingArt.ForResident(resident);
@@ -182,8 +190,8 @@ namespace PeopleOfTheIliacBay.DFU
                             Vector3 side = Vector3.Cross(Vector3.up, heading).normalized;
                             if (!Wide(middle - heading * 3f, side) || !Wide(middle, side) ||
                                 !Wide(middle + heading * 3f, side)) continue;
-                            from = middle - heading * 1.5f;
-                            to = middle + heading * 1.5f;
+                            from = middle - heading * 3f;
+                            to = middle + heading * 3f;
                             return true;
                         }
                     }

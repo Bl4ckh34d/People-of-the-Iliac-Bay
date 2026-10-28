@@ -57,25 +57,20 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.Equal(person.Id,store.EntriesFor(300)[0].CitizenWitnesses[0]);
                 Check.True(store.Witness(alarm.Id,person.Id,124)!=null);
             }));
-            cases.Add(("Through-town joins persist and cannot be silently read as older single-join stops",()=>{
+            cases.Add(("Through-town joins persist and reject invalid through-route destinations",()=>{
                 var store=new WorldStateStore(12);string id=store.GetOrCreate(100,new[]{1},1).Households[0].Residents[0].Id;
                 var trip=Trip(id);trip.OutboundStops[0].ExitRoadNode=3;
                 trip.OutboundStops[0].Visit.ThroughRoute=true;trip.OutboundStops[0].Visit.ExitRoute[1].X=1010;
                 store.ScheduleResidentTrip(trip);var saved=store.Snapshot();Check.Equal(new WorldState().Version,saved.Version);
                 Check.Near(154,saved.ResidentTrips[0].ArrivesAt);Check.Near(282,saved.ResidentTrips[0].HomeAt);
                 store.Restore(saved);Check.Near(3.1,store.ResidentTripAt(id,145).Position.X);
-                saved.Version=16;Check.Throws<ArgumentException>(()=>store.Restore(saved));
-                Check.Near(282,store.Snapshot().ResidentTrips[0].HomeAt);
-                var legacy=new WorldStateStore(12);id=legacy.GetOrCreate(100,new[]{1},1).Households[0].Residents[0].Id;
-                legacy.ScheduleResidentTrip(Trip(id));saved=legacy.Snapshot();saved.Version=16;
-                legacy.Restore(saved);Check.Near(302,legacy.Snapshot().ResidentTrips[0].HomeAt);
                 trip=Trip(id);trip.Destination.ThroughRoute=true;
                 Check.Throws<ArgumentException>(()=>ResidentTrip.CopyValidated(trip));
             }));
             cases.Add(("Rejected historical refusal cannot leave a partial failed admission",()=>{
                 var store=new WorldStateStore(12);string id=store.GetOrCreate(100,new[]{1},1).Households[0].Residents[0].Id;
                 foreach(int town in new[]{200,300})
-                {store.GetOrCreate(town,new[]{2},1);store.RegisterLodging(town,7,new[]{new LodgingRoom{Id="room",Beds=new List<string>{"bed"+town}}});}
+                {store.GetOrCreate(town,new[]{2},1);store.RegisterLodgingBeds(town,7,new[]{new LodgingBed {Id="bed"+town}});}
                 store.ScheduleResidentTrip(Trip(id));
                 store.SaveResidentInnReception(id,new ResidentInnReception {VisitId="outbound/0/0",SettlementId=300,BuildingKey=7,
                     VisitEnterAt=122,VisitLeaveAt=142,StartedAt=122,SecondsPerMetre=1,ServiceSeconds=2,
@@ -107,9 +102,9 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.Equal(ResidentVisitPhase.ExitingService,store.ResidentTripAt(id,198.5).VisitPhase);
                 Check.Equal(3,store.Snapshot().ResidentTrips[0].ServiceExits.Count);
             }));
-            cases.Add(("Full intermediate inn sends guest through the counter exit and retimes later keeper appointments",()=>{
+            cases.Add(("Full intermediate inn sends guest through the counter exit and retains later keeper appointments",()=>{
                 var store=new WorldStateStore(12);string id=store.GetOrCreate(100,new[]{1},1).Households[0].Residents[0].Id;
-                store.GetOrCreate(300,new[]{2},1);store.RegisterLodging(300,7,new[]{new LodgingRoom{Id="room",Beds=new List<string>{"bed"}}});
+                store.GetOrCreate(300,new[]{2},1);store.RegisterLodgingBeds(300,7,new[]{new LodgingBed {Id="bed"}});
                 Check.True(store.TryBookLodging(300,7,"player-room","player",300,true,1,120,200));
                 store.ScheduleResidentTrip(Trip(id));
                 foreach(double entered in new[]{122d,176d,240d})
@@ -122,8 +117,10 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.True(!store.TryAdmitResidentInn(id,125));
                 Check.Equal(ResidentVisitPhase.ExitingService,store.ResidentTripAt(id,125.5).VisitPhase);
                 Check.Near(.5,store.ResidentTripAt(id,125.5).Position.X);
-                Check.Near(160,store.Snapshot().ResidentTrips[0].InnReceptions[1].VisitEnterAt);
-                Check.Near(224,store.Snapshot().ResidentTrips[0].InnReceptions[2].VisitEnterAt);
+                Check.Near(176,store.Snapshot().ResidentTrips[0].InnReceptions[1].VisitEnterAt);
+                Check.Near(240,store.Snapshot().ResidentTrips[0].InnReceptions[2].VisitEnterAt);
+                Check.Equal(-1,store.ResidentTripAt(id,127).BuildingKey);
+                Check.Equal(ResidentVisitPhase.WaitingToLeave,store.ResidentTripAt(id,127).VisitPhase);
                 store.Restore(store.Snapshot());Check.Equal(1,store.Snapshot().ResidentTrips[0].ServiceExits.Count);
                 Check.Equal(1,store.Snapshot().Lodgings[0].Bookings.Count);
                 Check.Equal(TravelerAdmission.Refused,store.ResidentInnAdmission(id,125.5));
@@ -149,7 +146,7 @@ namespace PeopleOfTheIliacBay.Tests
                 foreach(int place in new[]{300,400})
                 {
                     store.GetOrCreate(place,new[]{3},1);
-                    store.RegisterLodging(place,7,new[]{new LodgingRoom {Id="room",Beds=new List<string>{"bed"+place}}});
+                    store.RegisterLodgingBeds(place,7,new[]{new LodgingBed {Id="bed"+place}});
                 }
                 store.ScheduleResidentTrip(Trip(first));store.ScheduleResidentTrip(Trip(second));
                 Check.Equal(0,store.Snapshot().Lodgings[0].Bookings.Count);
@@ -164,7 +161,7 @@ namespace PeopleOfTheIliacBay.Tests
                 foreach(int town in new[]{200,300,400})
                 {
                     store.GetOrCreate(town,new[]{2},1);
-                    store.RegisterLodging(town,7,new[]{new LodgingRoom {Id="room",Beds=new List<string>{"bed"+town}}});
+                    store.RegisterLodgingBeds(town,7,new[]{new LodgingBed {Id="bed"+town}});
                 }
                 store.ScheduleResidentTrip(Trip(id));Check.True(!store.TryAdmitResidentInn(id,121));
                 foreach(double now in new[]{123d,177d,241d})
@@ -245,13 +242,6 @@ namespace PeopleOfTheIliacBay.Tests
                 {var a=store.ResidentTripAt(person.Id,now);var b=restored.ResidentTripAt(person.Id,now);Check.Equal(a.Phase,b.Phase);Check.Equal(a.VisitId,b.VisitId);Check.Near(a.Position.X,b.Position.X);}
                 saved.ResidentTrips[0].OutboundStops[0].Visit.Stops[0].DwellSeconds=999;
                 Check.Near(302,restored.Snapshot().ResidentTrips[0].HomeAt);
-            }));
-            cases.Add(("Legacy road trips retain their original uninterrupted timing",()=>{
-                var store=new WorldStateStore(12);var person=store.GetOrCreate(100,new[]{1},1).Households[0].Residents[0];
-                var trip=Trip(person.Id);trip.OutboundStops=null;trip.ReturnStops=null;store.ScheduleResidentTrip(trip);
-                var saved=store.Snapshot();saved.Version=15;saved.ResidentTrips[0].OutboundStops=null;saved.ResidentTrips[0].ReturnStops=null;
-                store.Restore(saved);trip=store.Snapshot().ResidentTrips[0];Check.Near(150,trip.ArrivesAt);Check.Near(244,trip.HomeAt);
-                Check.Equal(0,trip.OutboundStops.Count);Check.Equal(0,trip.ReturnStops.Count);Check.Equal(new WorldState().Version,store.Snapshot().Version);
             }));
             cases.Add(("Road stop IDs, ordering and endpoints are validated without partial replacement",()=>{
                 var source=Trip("person");source.OutboundStops[0].Id="return/0";

@@ -21,11 +21,11 @@ namespace PeopleOfTheIliacBay.DFU
         private string goalTwoPassRepairPrompt, goalTwoPassRepairOutput;
         private string goalTwoPassRepairRequest, goalTwoPassRepairResponse;
 
-        private bool GoalTwoPassEnabled => GoalExtractionEnabled &&
-            Array.IndexOf(Environment.GetCommandLineArgs(), "-peopleoftheiliacbay-goal-two-pass") >= 0;
+        private bool GoalTwoPassEnabled => GoalExtractionEnabled;
 
         private bool GoalTwoPassProbeEnabled =>
-            Array.IndexOf(Environment.GetCommandLineArgs(), "-peopleoftheiliacbay-goal-two-pass-probe") >= 0;
+            Array.IndexOf(Environment.GetCommandLineArgs(), "-peopleoftheiliacbay-goal-two-pass-probe") >= 0 ||
+            Array.IndexOf(Environment.GetCommandLineArgs(), "-peopleoftheiliacbay-goal-binding-probe") >= 0;
 
         private bool TryBeginGoalActionTwoPass(DaggerfallTalkWindow window, string text, string history,
             ConversationContextSnapshot snapshot)

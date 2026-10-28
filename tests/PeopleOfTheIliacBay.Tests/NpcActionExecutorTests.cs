@@ -19,6 +19,7 @@ namespace PeopleOfTheIliacBay.Tests
         }
         public static void Add(List<(string Name,Action Body)> cases)
         {
+            AddPaidTrainingRejoin(cases);
             NpcMurderReportTests.Add(cases);
             cases.Add(("An anonymous murder report is a distinct executable action, not an approach",()=>{
                 NpcActionKind report;
@@ -59,14 +60,13 @@ namespace PeopleOfTheIliacBay.Tests
                     id=>id=="player" || id==resident.Id,id=>id=="home:100:10",
                     (id,category,revision)=>false,(id,revision,kind,start,end)=>false,out terms));
                 var funding=NpcServiceTransferReceipt.Create("fund:paid-test",contractId,
-                    NpcServiceTransferKind.Funding,"player","contract:"+contractId+":escrow",120,100);
+                    NpcServiceTransferKind.Funding,"player",resident.Id,120,100);
                 var ticket=store.CaptureNpcServiceContractWriteTicket();
                 NpcServiceContractLedger reserved;
                 Check.True(NpcServiceContractLedger.TryReserve(ticket.SourceLedger,ticket.ExpectedLedgerRevision,
                     terms,funding,out reserved));
                 string error;
-                Check.True(store.TryCommitNpcServiceContracts(ticket,reserved,new[]{funding},
-                    new NpcServiceRenewalAuthorization[0],out error),error);
+                Check.True(NpcDailyPaymentFixture.Commit(store,ticket,reserved,funding,out error),error);
                 var action=Job();action.ResidentId=resident.Id;action.Kind=NpcActionKind.Follow;
                 action.Target=new NpcActionTarget {Kind=NpcActionTargetKind.Person,PersonId="player"};
                 action.FinishAt=200;action.DeadlineAt=260;
@@ -112,11 +112,9 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.True(retryStore.TrySuspendPaidFollowSettlement(retryJob.Id,retryJob.Revision,out reason),reason);
                 activeContract=retryStore.ReadNpcServiceContracts().Read(contractId);
                 Check.Equal(43300d,activeContract.LastServiceUpdateAt);
-                var wage=NpcServiceTransferReceipt.Create("wage:paid-test",contractId,
-                    NpcServiceTransferKind.Earnings,"contract:"+contractId+":escrow",resident.Id,120,90000);
                 NpcServiceContract terminated;
                 Check.True(activeContract.TrySettle(activeContract.Revision,90000,
-                    NpcServiceEndReason.NaturalExpiry,resident.Id,wage,null,out terminated));
+                    NpcServiceEndReason.NaturalExpiry,resident.Id,null,null,out terminated));
                 Check.Equal(NpcServiceContractStatus.Terminated,terminated.Status);
                 Check.Equal(NpcServiceEndReason.NaturalExpiry,terminated.EndReason.Value);
                 Check.Equal(120,terminated.EarnedGold);
@@ -445,6 +443,32 @@ namespace PeopleOfTheIliacBay.Tests
                 job.CompletedEffectId="effect";NpcActionExecutor.Validate(job);
             }));
             
+        }
+        internal static void AddPaidTrainingRejoin(List<(string Name,Action Body)> cases)
+        {
+            cases.Add(("Paid training keeps its executing timer during a restored body's physical rejoin",()=>{
+                var store=new WorldStateStore(42);var resident=store.GetOrCreate(100,new[]{10},1).Households[0].Residents[0];
+                store.InitializeNpcInventory(resident.Id,10,new NpcInventoryItem[0]);
+                var job=Job();job.ResidentId=resident.Id;job.Kind=NpcActionKind.Purchase;
+                job.ServiceCode=NpcShopCommerce.TrainingServiceCode;job.ServicePrice=1;job.DeadlineAt=12000;
+                job.Target=new NpcActionTarget {Kind=NpcActionTargetKind.IndoorPoint,SettlementId=100,BuildingKey=10,
+                    PersonId="trainer",ContainerId=NpcShopCommerce.TrainingTargetContainerId,ItemId="14",Quantity=1,QuotedGold=1};
+                string reason;Check.True(ClassifiedAdmissionFixture.TryAcceptAction(store,job,true,true,true,out reason),reason);
+                Check.True(store.ObserveNpcAction(job.Id,1,101,NpcActionObservation.Arrival()));
+                Check.True(store.TryPayNpcActionService(job.Id,2,102));
+                var restored=new WorldStateStore(0);restored.Restore(store.Snapshot());
+                var running=restored.ReadNpcAction(job.Id);
+                Check.True(!restored.ObserveNpcAction(job.Id,running.Revision,103,NpcActionObservation.Approach()),
+                    "A restored paid lesson must not restart as a new approaching service.");
+                running=restored.ReadNpcAction(job.Id);Check.Equal(NpcActionPhase.Executing,running.Phase);
+                Check.Equal(1,running.ServiceStep);Check.Equal(10902d,running.FinishAt);
+                Check.Equal(9,restored.ReadNpcInventory(resident.Id).WalletGold);
+                Check.True(!restored.TryPayNpcActionService(job.Id,running.Revision,104));
+                int effects=0;Check.True(!restored.TryCompleteNpcActionEffect(job.Id,running.Revision,104,()=>{effects++;return true;}));
+                Check.Equal(0,effects);Check.True(restored.TryCompleteNpcActionEffect(job.Id,running.Revision,10902,()=>{effects++;return true;}));
+                Check.Equal(1,effects);Check.Equal(9,restored.ReadNpcInventory(resident.Id).WalletGold);
+                Check.True(!restored.TryCompleteNpcActionEffect(job.Id,running.Revision,10903,()=>{effects++;return true;}));Check.Equal(1,effects);
+            }));
         }
     }
 }

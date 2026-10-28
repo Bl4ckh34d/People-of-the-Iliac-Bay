@@ -34,6 +34,7 @@ namespace PeopleOfTheIliacBay.Core
                 result.Add(new NpcActionDecision
                 {
                     DurationSeconds = decision.DurationSeconds,
+                    ContinueAfterFailure = decision.ContinueAfterFailure,
                     Option = new NpcActionOption
                     {
                         Id = option.Id,

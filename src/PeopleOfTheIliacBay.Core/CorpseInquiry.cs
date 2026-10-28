@@ -68,13 +68,13 @@ namespace PeopleOfTheIliacBay.Core
         private static List<CorpseInquiryReceipt> CopyCorpseInquiries(CivilianIncident alarm,WorldState source)
         {
             var rows=alarm.Corpse.Inquiries;
-            Require(rows!=null && rows.Count<=32 && (source.Version>=61 || rows.Count==0),"Invalid corpse inquiry ledger.");
+            Require(rows!=null && rows.Count<=32,"Invalid corpse inquiry ledger.");
             var copy=new List<CorpseInquiryReceipt>();var people=new HashSet<string>(StringComparer.Ordinal);
             foreach(var row in rows)
             {
                 Require(row!=null && alarm.Corpse.Cleared && row.At>=alarm.Corpse.ClearedAt &&
                     row.PersonId!=alarm.VictimId && people.Add(row.PersonId) &&
-                    ValidTime(row.At) && (row.WindowVersion==0 || row.WindowVersion==1 && source.Version>=64),
+                    ValidTime(row.At) && (row.WindowVersion==0 || row.WindowVersion==1),
                     "Invalid corpse inquiry chronology.");
                 var roster=source.Garrisons.Find(r=>r.SettlementId==alarm.SettlementId);
                 var report=roster==null?null:roster.Reports.Find(r=>r.Id=="outdoor:"+alarm.Id && r.Investigation &&

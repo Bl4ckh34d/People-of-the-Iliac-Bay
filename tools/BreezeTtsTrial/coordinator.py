@@ -21,6 +21,7 @@ import ipaddress
 import uuid
 import wave
 from dataclasses import dataclass
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 from urllib.parse import urlsplit, urlunsplit
@@ -39,6 +40,7 @@ MAX_NATIVE_SPEECH_WPM = 325.0
 PREPARED_PRESENTATION_REQUEST_TIMEOUT_SECONDS = 240
 PREPARED_PRESENTATION_ALIGNMENT_TIMEOUT_SECONDS = 180
 PREPARED_PRESENTATION_VISEME_TIMEOUT_SECONDS = 90
+PREPARED_ALIGNMENT_THREADS = max(1, min(8, (os.cpu_count() or 2) // 2))
 EMOTIONS = {"neutral", "joy", "anger", "concern", "grief", "fear"}
 DELIVERY_MODES = {"normal", "whisper"}
 CONTRAST_LABELS = {"neutral", "positiveMood", "lowMood", "highFear", "highResentment", "whisper"}
@@ -999,7 +1001,8 @@ def publish_preview_alignment(request: Any, wav_path: Path, wav_info: Dict[str, 
                               response_manifest: Path, requests_root: Path,
                               aligner_cli: Optional[Path], aligner_model: Optional[Path],
                               aligner_sha256: Optional[str],
-                              timeout_seconds: int = PREPARED_PRESENTATION_ALIGNMENT_TIMEOUT_SECONDS) -> str:
+                              timeout_seconds: int = PREPARED_PRESENTATION_ALIGNMENT_TIMEOUT_SECONDS,
+                              threads: int = 1) -> str:
     """Synchronously stage exact-text forced word alignment before manifest publication."""
     if aligner_cli is None or aligner_model is None:
         raise RequestError("--preview-alignment-before-playback requires --aligner-cli and --aligner-model")
@@ -1020,7 +1023,7 @@ def publish_preview_alignment(request: Any, wav_path: Path, wav_info: Dict[str, 
     with tempfile.TemporaryDirectory(prefix=".alignment-preview-", dir=str(response_manifest.parent)) as stage_dir:
         staged_path = Path(stage_dir) / (request_id + ".alignment.json")
         timeline = run_alignment(str(aligner_cli), str(aligner_model), str(wav_path), text,
-            str(staged_path), threads=1, timeout_seconds=timeout_seconds,
+            str(staged_path), threads=threads, timeout_seconds=timeout_seconds,
             expected_model_sha256=aligner_sha256)
         if not staged_path.is_file():
             raise RequestError("alignment preview returned without a staged sidecar")
@@ -1049,7 +1052,7 @@ def publish_preview_alignment(request: Any, wav_path: Path, wav_info: Dict[str, 
                     provenance.get("transcriptSha256") != expected_text_hash or
                     not isinstance(aligner_sha256, str) or
                     not isinstance(model_hash, str) or model_hash.lower() != aligner_sha256.lower() or
-                    provenance.get("backend") != "cpu" or provenance.get("threads") != 1 or
+                    provenance.get("backend") != "cpu" or provenance.get("threads") != threads or
                     provenance.get("phonemeAlignment") is not False):
                 raise RequestError("alignment preview failed exact WAV/transcript/model binding validation")
         if timeline != staged_timeline:
@@ -1261,25 +1264,44 @@ def process_claimed(claimed: Path, request_id: str, root: Path, cli: Path, model
             evidence["personalVoice"] = personal_voice_evidence
         if prepare_presentation_before_playback:
             assert prepared_deadline is not None
+            preparation_started = time.monotonic()
             try:
                 viseme_timeout = prepared_helper_timeout(prepared_deadline,
                     PREPARED_PRESENTATION_VISEME_TIMEOUT_SECONDS, "viseme preparation")
-                publish_preview_visemes(request, final_wav, wav_info, response_manifest,
-                    root / "requests", rhubarb_cli, timeout_seconds=viseme_timeout)
                 published_visemes = responses / (request.request_id + ".visemes.json")
+                has_aligner = aligner_cli is not None and aligner_model is not None
+                if has_aligner:
+                    published_alignment = responses / (request.request_id + ".alignment.json")
+                def prepare_visemes():
+                    started_at = time.monotonic()
+                    publish_preview_visemes(request, final_wav, wav_info, response_manifest,
+                        root / "requests", rhubarb_cli, timeout_seconds=viseme_timeout)
+                    return round((time.monotonic() - started_at) * 1000)
+                def prepare_alignment():
+                    started_at = time.monotonic()
+                    alignment_timeout = prepared_helper_timeout(prepared_deadline,
+                        PREPARED_PRESENTATION_ALIGNMENT_TIMEOUT_SECONDS, "word alignment")
+                    publish_preview_alignment(request, final_wav, wav_info, response_manifest,
+                        root / "requests", aligner_cli, aligner_model, aligner_sha256,
+                        timeout_seconds=alignment_timeout, threads=PREPARED_ALIGNMENT_THREADS)
+                    return round((time.monotonic() - started_at) * 1000)
+                # Both jobs read the same immutable WAV and publish separate validated
+                # sidecars. Join both before playback, fallback cleanup or cancellation.
+                with ThreadPoolExecutor(max_workers=2) as preparation:
+                    visemes_job = preparation.submit(prepare_visemes)
+                    alignment_job = preparation.submit(prepare_alignment) if has_aligner else None
+                    evidence["visemePreparationMilliseconds"] = visemes_job.result()
+                    if alignment_job is not None:
+                        evidence["alignmentPreparationMilliseconds"] = alignment_job.result()
+                        evidence["alignmentThreads"] = PREPARED_ALIGNMENT_THREADS
+                evidence["presentationPreparationMilliseconds"] = round((time.monotonic() - preparation_started) * 1000)
                 if not published_visemes.is_file():
                     raise RequestError("prepared viseme timeline was not published")
                 if time.monotonic() >= prepared_deadline:
                     raise RequestError("prepared presentation request deadline expired before manifest publication")
                 evidence["visemePreviewStatus"] = "ready"
                 evidence["visemePreviewKind"] = "recognizer-viseme-estimate"
-                if aligner_cli is not None and aligner_model is not None:
-                    alignment_timeout = prepared_helper_timeout(prepared_deadline,
-                        PREPARED_PRESENTATION_ALIGNMENT_TIMEOUT_SECONDS, "word alignment")
-                    publish_preview_alignment(request, final_wav, wav_info, response_manifest,
-                        root / "requests", aligner_cli, aligner_model, aligner_sha256,
-                        timeout_seconds=alignment_timeout)
-                    published_alignment = responses / (request.request_id + ".alignment.json")
+                if has_aligner:
                     if not published_alignment.is_file():
                         raise RequestError("prepared word alignment was not published")
                     evidence["alignmentPreviewStatus"] = "ready"

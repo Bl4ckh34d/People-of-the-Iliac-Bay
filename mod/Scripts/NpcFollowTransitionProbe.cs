@@ -23,7 +23,7 @@ namespace PeopleOfTheIliacBay.DFU
         {
             var game=GameManager.Instance;
             if(Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-follow-transition-probe")<0 ||
-                string.IsNullOrEmpty(expectedCharacter) || !expectedCharacter.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal) ||
+                string.IsNullOrEmpty(expectedCharacter) || !NativeProbeText.IsTestCharacter(expectedCharacter) ||
                 game.PlayerEntity.Name!=expectedCharacter || !streets || !streets.Ready || crossDoor==null)
                 throw new InvalidOperationException("Follow transition probe requires an explicitly owned fixture and native door callback.");
             var store=(WorldStateStore)typeof(StreetPopulation).GetField("worldStore",Private).GetValue(streets);

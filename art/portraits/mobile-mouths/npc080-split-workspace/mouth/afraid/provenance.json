@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 80,
+  "bank": "TFAC00I0.RCI",
+  "emotion": "afraid",
+  "asset": "mouth",
+  "rawPath": "art\\portraits\\mobile-mouths\\npc080-split-workspace\\mouth\\afraid\\raw.png",
+  "rawSha256": "2f921cdf99af958632caff8496dcea4388b4c81f8636d69a8a4148e70b22a0b0",
+  "generatedSourcePath": "C:/Users/Daniel/.codex/generated_images/01a15fdf-2ede-7fc1-b24a-9d18707baa51/exec-3b7900fa-d863-452a-a8ef-05c10e6b2c00.png",
+  "generatedSourceSha256": "2f921cdf99af958632caff8496dcea4388b4c81f8636d69a8a4148e70b22a0b0",
+  "referenceGridPath": "art\\portraits\\mobile-mouths\\npc080-split-workspace\\mouth-reference-grid.png",
+  "referenceGridSha256": "360fbbced7a02766a36b31374267af4e8c05702708815d7720b030712a5bd435",
+  "originalPath": "art\\portraits\\mobile-mouths\\npc080-split-workspace\\original.png",
+  "originalSha256": "4ea9b975047475ae696146fbd02a9b005b16c4baab7e1c1e1c3651ee287f4b0b",
+  "dimensions": {
+    "width": 1863,
+    "height": 844
+  },
+  "generationTool": "built-in image_gen",
+  "generationCallsForAsset": 1,
+  "rawCopiedWithoutModification": true,
+  "prompt": "Use case: Daggerfall Unity game sprite atlas. Create one 3x3 atlas of the full 64x29 lower-face pixel-art half from the reference, nine equal native-proportion cells, no margins. Row-major A, B, C / D, E, F / G, H, X. Emotion AFRAID: mild uncertainty and held tension at the mouth corners, not a big grimace or pout. A and X are closed but subtly tense. Give all nine poses useful, clearly distinguishable speech shapes; vary lip opening and contour across B–H without stretching the face. Preserve exact nose, cheeks, jaw, chin, hair, neck and background in every cell. Strictly preserve the muted original skin and dusty lip palette: no lipstick-red lips, no orange shift, no added saturation or contrast, and no bright white teeth flashes. Any visible teeth must be small and subdued. Keep the whole lower half in its original crop and scale. No other edits, props, sweat, tears, text, borders or color grading. Output only the atlas.",
+  "visualQaIssues": [
+    "Lip hue/saturation shifts more vivid red than muted source; skin also appears warmer/oranger. Several teeth/openings have stronger contrast. This visibly violates palette constraint; do not process without review."
+  ],
+  "scope": "Raw generation only; no frame sampling, compositing, palette repair or registration."
+}

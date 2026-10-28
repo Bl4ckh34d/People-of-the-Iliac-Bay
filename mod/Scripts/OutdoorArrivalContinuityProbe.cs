@@ -290,6 +290,7 @@ namespace PeopleOfTheIliacBay.DFU
             if(!NativeNavigationWorld.Current || !NativeNavigationWorld.Current.Ready)
                 throw new InvalidOperationException("Shared door test requires shipped native navigation.");
             var walkers=new List<DoorWalker>();
+            bool crowded=Environment.GetEnvironmentVariable("POTIB_VERIFY_CROWDED_DOOR")=="1";
             double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
             var endpoint=source.Route[source.Route.Count-1];
             Vector3 door=geometry.ScenePoint(new RoutePoint(endpoint.X,endpoint.Z));
@@ -312,7 +313,9 @@ namespace PeopleOfTheIliacBay.DFU
                 for(int i=0;i<walkers.Count;i++)
                 {
                     var walker=walkers[i];
-                    var from=PointFromEnd(source.Route,Math.Min(4+i*2,RouteLength(source.Route)*0.9));
+                    // Optional reconstruction stress: ordinary placement must
+                    // separate three bodies requested at the same near-door point.
+                    var from=PointFromEnd(source.Route,Math.Min(crowded?1.5:4+i*2,RouteLength(source.Route)*0.9));
                     var route=geometry.RouteBetweenPoints(from,endpoint);
                     if(route.Count<2)throw new InvalidOperationException("Shared door approach has no native path.");
                     var stop=CopyStopRoute(source);stop.Route=route;stop.WalkSeconds=2;stop.DwellSeconds=300;
@@ -367,7 +370,7 @@ namespace PeopleOfTheIliacBay.DFU
                             "; failure="+(walker.Actor&&walker.Actor.GetComponent<NativeResidentNavigation>()?
                                 walker.Actor.GetComponent<NativeResidentNavigation>().FailureReason:"none"));
                 Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_SHARED_DOOR_PASS: ordinaryResidents=3; sameDoor="+source.BuildingKey+
-                    "; allPhysicallyArrived=true; allRemoved=true; nativeWalking=true; largestFrameStep="+maxStep);
+                    "; allPhysicallyArrived=true; allRemoved=true; nativeWalking=true; crowdedReconstruction="+crowded+"; largestFrameStep="+maxStep);
             }
             finally
             {

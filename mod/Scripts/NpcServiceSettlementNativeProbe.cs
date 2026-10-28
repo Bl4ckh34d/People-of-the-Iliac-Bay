@@ -21,7 +21,6 @@ namespace PeopleOfTheIliacBay.DFU
         private const uint Seed = 0x53564350;
         private const string ContractId = "fixture-native-service-settlement";
         private const string FundingId = "fixture-native-service-funding";
-        private const string WageId = "fixture-native-service-wage";
 
         private sealed class CreditSnapshot
         {
@@ -134,7 +133,7 @@ namespace PeopleOfTheIliacBay.DFU
                 Require(suspended != null && suspended.Status == NpcServiceContractStatus.Suspended &&
                     suspended.SuspensionOwnerKind == NpcServiceSuspensionOwnerKind.HealthCare &&
                     suspended.SuspensionOwnerId == care.Id && suspended.EarnedGold == 120 &&
-                    suspended.EscrowGold == 120 && suspended.ReleasedGold == 0,
+                    suspended.EscrowGold == 0 && suspended.ReleasedGold == 120,
                     "Health pause changed the fixed day wage or its saved owner.");
 
                 double secondsToLateExpiry = suspended.BlockEndAt - liveClock.ToSeconds() + 1;
@@ -184,7 +183,7 @@ namespace PeopleOfTheIliacBay.DFU
                 Require(!NativeNpcServiceContractSettlement.TrySettleWithCommitter(store,
                     store.CaptureNpcServiceContractWriteTicket(), player, ContractId,
                     suspended.Revision, NpcServiceEndReason.NaturalExpiry,
-                    "fixture-forced-wage", null, rejectDailyWage,
+                    null, null, rejectDailyWage,
                     out rejectedLedger, out rejectedWage, out rejectedRefund, out failure) &&
                     failure != null && dailyWageReachedCommit,
                     "Forced Core refusal did not reach the daily-wage commit with an unchanged player purse.");
@@ -199,7 +198,7 @@ namespace PeopleOfTheIliacBay.DFU
                 NpcServiceTransferReceipt wage, refund;
                 Require(NativeNpcServiceContractSettlement.TrySettle(store, finalTicket, player,
                     ContractId, suspended.Revision, NpcServiceEndReason.NaturalExpiry,
-                    WageId, null, out completed, out wage, out refund, out failure),
+                    null, null, out completed, out wage, out refund, out failure),
                     "Actual native late settlement failed: " + Failure(failure));
                 VerifySettled(store, worker.Id, care.Id, settledAt, funding, wage, refund);
                 Require(player.GoldPieces == 10 && player.GetGoldAmount() == 90 &&
@@ -219,7 +218,7 @@ namespace PeopleOfTheIliacBay.DFU
                 Require(!NativeNpcServiceContractSettlement.TrySettle(restored,
                     restored.CaptureNpcServiceContractWriteTicket(), player, ContractId,
                     suspended.Revision, NpcServiceEndReason.NaturalExpiry,
-                    WageId, null, out rejectedLedger, out rejectedWage,
+                    null, null, out rejectedLedger, out rejectedWage,
                     out rejectedRefund, out failure) && failure != null &&
                     player.GoldPieces == 10 && player.GetGoldAmount() == 90,
                     "Restored settled contract accepted replay or changed the actual player purse.");
@@ -260,9 +259,9 @@ namespace PeopleOfTheIliacBay.DFU
             }
             Debug.Log("NPC_FRAMEWORK_SERVICE_SETTLEMENT_NATIVE_PASS: source=controlled-disposable-fixture; " +
                 "mixed-player-coins-and-LOC-funding=true; health-owned-half-period-pause=true; " +
-                "late-expiry-wage-to-NPC-wallet=120; late-expiry-player-refund=0; escrow=0; " +
+                "direct-start-payment-to-NPC-wallet=120; late-expiry-new-payment=0; " +
                 "daily-wage-Core-refusal-unchanged=true; FullSerializer-roundtrip=true; " +
-                "stale-foreign-duplicate-overflow-death-rejected=true; gameplay-recruitment=false; human-save=false; " +
+                "stale-foreign-extra-payment-rejected=true; gameplay-recruitment=false; human-save=false; " +
                 "original-player-currency-and-clock-restored=true");
         }
 
@@ -313,21 +312,16 @@ namespace PeopleOfTheIliacBay.DFU
                 contract.SuspensionOwnerId == null && contract.FundedGold == 120 &&
                 contract.EarnedGold == 120 && contract.ReleasedGold == 120 &&
                 contract.RefundedGold == 0 && contract.EscrowGold == 0 &&
-                contract.EligibleServiceSeconds >= 43200 &&
-                contract.EligibleServiceSeconds < 43920 &&
+                contract.EligibleServiceSeconds == 0 &&
                 contract.LastServiceUpdateAt < contract.BlockEndAt &&
                 contract.SettlementRecordedAt == settledAt &&
-                contract.TransferReceipts.Count == 2 &&
+                contract.TransferReceipts.Count == 1 &&
                 SameReceipt(contract.TransferReceipts[0], funding) &&
-                SameReceipt(contract.TransferReceipts[1], wage) &&
-                wage != null && refund == null && wage.Amount == 120 &&
-                wage.GameTime == settledAt &&
-                wage.ToOwnerId == workerId &&
+                wage == null && refund == null &&
                 wallet != null && wallet.WalletGold == 127 && wallet.Revision == 1 &&
-                wallet.LastTransactionId == WageId &&
-                saved.NpcServiceEvidence.CompletedTransfers.Count == 2 &&
+                wallet.LastTransactionId == FundingId &&
+                saved.NpcServiceEvidence.CompletedTransfers.Count == 1 &&
                 SameReceipt(saved.NpcServiceEvidence.CompletedTransfers[0], funding) &&
-                SameReceipt(saved.NpcServiceEvidence.CompletedTransfers[1], wage) &&
                 store.ReadNpcHealthCare(workerId).Id == careId,
                 "Native settlement lost exact wage, refund, wallet, pause, or receipt evidence.");
         }

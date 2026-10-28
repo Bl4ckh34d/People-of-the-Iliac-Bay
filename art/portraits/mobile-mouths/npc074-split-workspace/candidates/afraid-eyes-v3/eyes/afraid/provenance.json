@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T11:41:04.7496339Z",
+    "portraitRecord":  74,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "afraid",
+    "prompt":  "Use case: stylized-concept\nAsset type: native pixel-art afraid eye atlas for an NPC portrait\nInput image: the single provided local eyes-reference-grid.png is the exact original upper-half face crop, identity, pale blue-gray eyes, blue ornament, palette, framing, and pixel-art reference.\nPrimary request: Create one exact 2×2 atlas of complete 64:35 upper-half crops, same crop scale, alignment and framing. Row-major: top-left OPEN, top-right HALF, bottom-left FULLY CLOSED, bottom-right OPEN REPEAT. No labels, borders, gutters, margins, text, extra panels or added background.\nExpression must read unmistakably AFRAID and visibly differ from the neutral reference: BOTH brows rise and pinch inward toward the nose bridge, with clear lifted inner brow ends, raised arch, and restrained tension above the center. Make the brow shape visibly different at native pixel size, not a subtle neutral copy. Keep both eyebrows coherent continuous soft brown pixel contours, never stacked dark bars. Repeat the same fear brow master across every blink cell.\nEyes stay alert but controlled, not giant round surprised eyes. Keep source narrow eye scale and pale blue-gray irises aligned forward, compact and naturally contained by the lids, with only tiny muted pale glints. No large white sclera bands or oversized pupils. HALF visibly lowers continuous skin-toned upper lids over the upper part of both irises and clearly narrows the aperture compared with OPEN; preserve the same fear brows. FULLY CLOSED uses continuous opaque lids that cover iris and sclera fully while retaining the fear brow expression. OPEN REPEAT matches OPEN.\nPreserve the exact face identity, light-brown/blond hairline, blue ornament, warm muted skin, eye spacing, crop, registration, original pixel-cluster size, and background. Change only brow, eyelid, and eye pixels needed for this afraid atlas. No blur, smoothing, gradients, vector circles, harsh outlines, bright white flashes, altered hair or ornament, added text or decoration.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-8fc6c794-ebe3-4bf3-9bf3-bf93b96a0a59.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-8fc6c794-ebe3-4bf3-9bf3-bf93b96a0a59.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "2efaad16ffae3fc9541f3d14137095db7cddeb908310fef80410ce201fd2ad84",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-8fc6c794-ebe3-4bf3-9bf3-bf93b96a0a59.png",
+                      "sha256":  "7f7c737489cd975b6657e157a5fba080411963cb1f5864c17efdcf9ebf808df6",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/afraid/raw.png",
+                "sha256":  "7f7c737489cd975b6657e157a5fba080411963cb1f5864c17efdcf9ebf808df6",
+                "width":  1695,
+                "height":  928
+            }
+}

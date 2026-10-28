@@ -29,7 +29,7 @@ namespace PeopleOfTheIliacBay.DFU
             if(Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-indoor-crowd-probe")<0)
                 throw new InvalidOperationException("Existing-venue crowd fixture requires explicit crowd flag.");
             var game=GameManager.Instance;
-            if(!game.PlayerEntity.Name.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal))
+            if(!NativeProbeText.IsTestCharacter(game.PlayerEntity.Name))
                 throw new InvalidOperationException("Existing-venue crowd fixture requires a disposable character.");
             game.PlayerEntity.GodMode=true;
             if(game.PlayerEnterExit.IsPlayerInside)

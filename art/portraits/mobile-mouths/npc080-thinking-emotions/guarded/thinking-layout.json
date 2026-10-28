@@ -1,0 +1,25 @@
+{
+  "emotionId": "guarded",
+  "referenceUpperFile": "eyes/guarded/open.png",
+  "browSourceFile": "eyes/guarded/open.png",
+  "halfSourceFile": "eyes/guarded/half.png",
+  "closedSourceFile": "eyes/guarded/closed.png",
+  "halfLidRegions": [
+    {
+      "x": 18,
+      "y": 24,
+      "width": 11,
+      "height": 2
+    },
+    {
+      "x": 36,
+      "y": 24,
+      "width": 11,
+      "height": 2
+    }
+  ],
+  "sourceSha256": "56e245ef622dfa895f1f53ea6b1639aa6bdc91835faa90d41e5613a1be6b77ec",
+  "referenceSha256": "bdc4adc700d243fe52fc69b8147f5c4ca20b846061bc8cce8ef92224a9a5dbb7",
+  "candidateOnly": true,
+  "rationale": "Provisional from npc080 portrait-specific candidate y24..25. Inspected all six mood phase crops; selected band is the narrow skin/lid strip above retained eye colors. Parent must check composed atlas before use. Applies to guarded only after inspecting its source phase RGB; not an approval to build or publish."
+}

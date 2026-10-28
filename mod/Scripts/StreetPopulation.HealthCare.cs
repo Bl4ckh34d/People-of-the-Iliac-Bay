@@ -277,10 +277,8 @@ namespace PeopleOfTheIliacBay.DFU
             }
             else if(IsGuildPotionTarget(step.Target))
             {
-                NativeNpcInventoryBinding seller;string failure;
-                if(NativeNpcInventoryBridge.TryOpen(worldStore,step.Target.PersonId,null,
-                    NativeNpcInventoryBridge.InitialWalletGold(worldStore,step.Target.PersonId),out seller,out failure))
-                    item=seller.Items.GetItem(uid);
+                int recipeKey;
+                if(NpcGuildPotionSupply.TryRecipeKey(uid,out recipeKey))item=ItemBuilder.CreatePotion(recipeKey);
             }
             else
             {

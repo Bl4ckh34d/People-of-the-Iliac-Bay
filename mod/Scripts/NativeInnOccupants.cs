@@ -14,10 +14,10 @@ namespace PeopleOfTheIliacBay.DFU
     {
         // Called only after native paid receipts have been reconciled.
         public static void Claim(WorldStateStore store,BuildingDirectory directory,StaticDoor entry,
-            List<LodgingRoom> rooms,Dictionary<int,string> occupants,double now,int? keeperHash=null)
-        { Claim(store,directory.MapID,directory.LocationData,entry,rooms,occupants,now,keeperHash); }
+            List<LodgingBed> beds,Dictionary<int,string> occupants,double now,int? keeperHash=null)
+        { Claim(store,directory.MapID,directory.LocationData,entry,beds,occupants,now,keeperHash); }
         public static void Claim(WorldStateStore store,int settlement,DFLocation location,StaticDoor entry,
-            List<LodgingRoom> rooms,Dictionary<int,string> occupants,double now,int? keeperHash=null)
+            List<LodgingBed> beds,Dictionary<int,string> occupants,double now,int? keeperHash=null)
         {
             if(location.RegionIndex<0 || location.RegionIndex>=MapsFile.RegionRaces.Length)
                 throw new System.ArgumentException("Invalid destination region.");
@@ -35,8 +35,8 @@ namespace PeopleOfTheIliacBay.DFU
                 {
                     string bed;
                     int hash=StaticNPC.GetPositionHash(record.XPos,record.YPos,record.ZPos);
-                    bool bedroom=occupants.TryGetValue(hash,out bed) && rooms.Exists(r=>r.Beds.Contains(bed));
-                    if(!bedroom && (!keeperHash.HasValue || hash!=keeperHash.Value)) continue;
+                    bool assignedBed=occupants.TryGetValue(hash,out bed) && beds.Exists(value=>value.Id==bed);
+                    if(!assignedBed && (!keeperHash.HasValue || hash!=keeperHash.Value)) continue;
                     FactionFile.FactionData faction;
                     if(game.PlayerEntity.FactionData.GetFactionData(record.FactionID,out faction) &&
                         faction.type==(int)FactionFile.FactionTypes.Individual) continue;
@@ -58,7 +58,7 @@ namespace PeopleOfTheIliacBay.DFU
                         data.factionID,data.billboardArchiveIndex,data.billboardRecordIndex);
                     // Only loaded, verified retirement releases an authored claim.
                     // Passive faction metadata alone cannot exclude quest/actions.
-                    if(person.IsAlive && bedroom) store.TryClaimLodgingBed(settlement,entry.buildingKey,person.Id,bed,now);
+                    if(person.IsAlive && assignedBed) store.TryClaimLodgingBed(settlement,entry.buildingKey,person.Id,bed,now);
                 }
             }
             finally { DFRandom.Seed=previous; RuntimeTiming.End("inn-occupants-claim",claimStarted); }

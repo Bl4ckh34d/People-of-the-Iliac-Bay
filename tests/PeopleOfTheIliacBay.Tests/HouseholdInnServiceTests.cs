@@ -20,10 +20,7 @@ namespace PeopleOfTheIliacBay.Tests
                 var payerField=typeof(HouseholdJointInn).GetField("PayerId");
                 Check.True(payerField!=null,"Shared Inn outing needs one explicit payer.");
                 payerField.SetValue(request.JointInn,payer);
-                typeof(HouseholdJointInn).GetField("FirstMenuIndex").SetValue(request.JointInn,4);
-                typeof(HouseholdJointInn).GetField("SecondMenuIndex").SetValue(request.JointInn,5);
-                typeof(HouseholdJointInn).GetField("FirstPriceGold").SetValue(request.JointInn,2);
-                typeof(HouseholdJointInn).GetField("SecondPriceGold").SetValue(request.JointInn,2);
+                request.JointInn.ReserveGold=4;
             }
             var plan=HouseholdDayPlanTests.Create(request);
             var store=HouseholdDayPlanTests.Store(request);Check.True(store.TryPublishHouseholdDay(plan,request.PlannedAt,out var why),why);
@@ -52,6 +49,8 @@ namespace PeopleOfTheIliacBay.Tests
             return new Fixture{Store=store,Plan=plan,Keeper=keeper,Departure=start};
         }
         private static GuardPoint3 P(double x){return new GuardPoint3{X=x};}
+        private static void Observe(Fixture f,double now)
+        {Check.True(f.Store.PrepareHouseholdInnObservation(f.Plan.Id,now,(catalog,pair)=>true));}
         internal static T Field<T>(object record,string name){return (T)record.GetType().GetField(name).GetValue(record);}
         internal static object Advance(Fixture fixture,double at)
         {
@@ -63,6 +62,28 @@ namespace PeopleOfTheIliacBay.Tests
         }
         internal static void Add(List<(string Name,Action Body)> cases)
         {
+            cases.Add(("Native Inn catalog canonicalizes measured local-coordinate round-trip drift",()=>{
+                var catalog=new NpcInnServiceCatalog{SettlementId=2,BuildingKey=10,BlockIndex=1,RecordIndex=2,Climate=224,RegionIndex=0,
+                    KeeperId="native:2:10:900",KeeperHash=900,CapturedAt=1,OpenMinute=0,CloseMinute=1440,
+                    EntryToCounter=new List<GuardPoint3>{P(0),P(2)},Pairs=new List<NpcInnServiceSeatPair>{new NpcInnServiceSeatPair{
+                        First=new TableSeatPosition{Id="chair-a",TableId="table",X=3,Z=0,Height=.5,FacingX=1},
+                        Second=new TableSeatPosition{Id="chair-b",TableId="table",X=4,Z=0,Height=.5,FacingX=-1},
+                        FirstCounterToSeat=new List<GuardPoint3>{new GuardPoint3{X=2.0000019073486328},P(3)},
+                        SecondCounterToSeat=new List<GuardPoint3>{new GuardPoint3{X=2.0000019073486328},P(4)},
+                        FirstSeatToEntry=new List<GuardPoint3>{P(3),new GuardPoint3{X=0.0000042649611997600361}},
+                        SecondSeatToEntry=new List<GuardPoint3>{P(4),new GuardPoint3{X=0.0000042649611997600361}}}}};
+                for(int i=0;i<11;i++)catalog.Menu.Add(new NpcInnMenuItem{MenuIndex=i,
+                    Kind=i<4?NpcInnConsumptionKind.Drink:NpcInnConsumptionKind.Food,ProductName="native-item-"+i,BasePriceGold=2});
+                NpcInnServiceCatalog.CanonicalizeMeasuredRoutes(catalog);
+                var sealedCatalog=NpcInnServiceCatalog.Seal(catalog);
+                var pair=sealedCatalog.Pairs[0];
+                Check.True(pair.FirstCounterToSeat[0].X==sealedCatalog.EntryToCounter[sealedCatalog.EntryToCounter.Count-1].X,
+                    "Counter route must use the canonical measured counter endpoint.");
+                Check.True(pair.FirstSeatToEntry[pair.FirstSeatToEntry.Count-1].X==sealedCatalog.EntryToCounter[0].X,
+                    "Exit route must use the canonical measured entry endpoint.");
+                catalog.Pairs[0].FirstSeatToEntry[catalog.Pairs[0].FirstSeatToEntry.Count-1].X=0.001;
+                Check.Throws<ArgumentException>(()=>NpcInnServiceCatalog.CanonicalizeMeasuredRoutes(catalog));
+            }));
             cases.Add(("Planned withdrawal preserves existing gold and completes the shared budget once",()=>{
                 var f=Prepared(1,0,"mother",false);double now=f.Plan.AbsoluteDay*86400d+9*3600;
                 var epoch=f.Store.CaptureNpcVitalsWriteEpoch();
@@ -85,7 +106,7 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.Equal("purchased",service.Outcome);
                 Check.Equal(0,f.Store.ReadNpcInventory("mother").WalletGold);
                 Check.Equal(0,f.Store.ReadNpcInventory("father").WalletGold);
-                Check.Equal(4,service.FirstReceipt.MenuIndex);Check.Equal(5,service.SecondReceipt.MenuIndex);
+                Check.True(service.FirstReceipt.MenuIndex>=0 && service.SecondReceipt.MenuIndex>=0);
                 Check.Equal("mother",Field<string>(service.FirstReceipt,"PayerId"));
                 Check.Equal("mother",Field<string>(service.SecondReceipt,"PayerId"));
                 var restored=new WorldStateStore(0);restored.Restore(f.Store.Snapshot());
@@ -112,13 +133,13 @@ namespace PeopleOfTheIliacBay.Tests
             cases.Add(("Native Inn service needs buyer gold but no keeper inventory",()=>{
                 var f=Prepared();var state=f.Store.Snapshot();state.NpcInventories.RemoveAll(i=>i.PersonId==f.Keeper.Id);f.Store.Restore(state);
                 var service=(HouseholdInnServiceAdmission)Advance(f,f.Departure+700);
-                Check.Equal("purchased",service.Outcome);Check.Equal(18,f.Store.ReadNpcInventory("mother").WalletGold);
+                Check.Equal("purchased",service.Outcome);Check.Equal(16,f.Store.ReadNpcInventory("mother").WalletGold);
                 Check.True(f.Store.ReadNpcInventory(f.Keeper.Id)==null);
             }));
             cases.Add(("Native-equivalent reconstructed instant tolerates G15 clock rounding only",()=>{
                 var f=Prepared();Advance(f,f.Departure+700);double now=f.Departure+800;
                 var state=f.Store.Snapshot();state.HouseholdJointSimulations[0].AdvancedThrough=Math.BitIncrement(now);f.Store.Restore(state);
-                var sim=f.Store.ReadHouseholdJointSimulation(2,7);var a=f.Store.ProjectHouseholdInnMember(f.Plan.Id,"mother",now);var b=f.Store.ProjectHouseholdInnMember(f.Plan.Id,"father",now);
+                Observe(f,now);var sim=f.Store.ReadHouseholdJointSimulation(2,7);var a=f.Store.ProjectHouseholdInnMember(f.Plan.Id,"mother",now);var b=f.Store.ProjectHouseholdInnMember(f.Plan.Id,"father",now);
                 Check.True(a!=null && b!=null);
                 f.Store.ReconstructHouseholdInnSimulation(f.Plan.Id,sim.Revision,now,new HouseholdInnPlacement{ResidentId="mother",Position=a.Position},new HouseholdInnPlacement{ResidentId="father",Position=b.Position});
                 Check.True(!f.Store.ReadHouseholdJointSimulation(2,7).Active);
@@ -167,6 +188,7 @@ namespace PeopleOfTheIliacBay.Tests
                 var f=Prepared();Advance(f,f.Departure+700);
                 var project=typeof(WorldStateStore).GetMethod("ProjectHouseholdInnMember");
                 Check.True(project!=null,"Missing source-bound Inn member projection.");
+                Observe(f,f.Departure+800);
                 var a=(HouseholdInnProjection)project.Invoke(f.Store,new object[]{f.Plan.Id,"mother",f.Departure+800});
                 var b=(HouseholdInnProjection)project.Invoke(f.Store,new object[]{f.Plan.Id,"father",f.Departure+800});
                 var method=typeof(WorldStateStore).GetMethod("ReconstructHouseholdInnSimulation");
@@ -176,7 +198,7 @@ namespace PeopleOfTheIliacBay.Tests
                     new HouseholdInnPlacement{ResidentId="mother",Position=a.Position},new HouseholdInnPlacement{ResidentId="father",Position=b.Position}});
                 Check.True(!f.Store.ReadHouseholdJointSimulation(2,7).Active);
                 Check.Equal(HouseholdJointPhase.Visiting,f.Store.ReadHouseholdJointProgress(2,7).Phase);
-                Check.Equal(18,f.Store.ReadNpcInventory("mother").WalletGold);
+                Check.Equal(16,f.Store.ReadNpcInventory("mother").WalletGold);
                 Check.Equal(f.Store.ReadHouseholdInnServiceAdmission(f.Plan.Id).FirstReceipt.VisitId,f.Store.ReadNpcInnConsumption("mother").VisitId);
                 new WorldStateStore(0).Restore(f.Store.Snapshot());
                 var actual=f.Store.ReadHouseholdJointProgress(2,7);
@@ -193,7 +215,7 @@ namespace PeopleOfTheIliacBay.Tests
                 b=f.Store.ProjectHouseholdInnMember(f.Plan.Id,"father",f.Departure+820);
                 f.Store.ReconstructHouseholdInnSimulation(f.Plan.Id,sim.Revision,f.Departure+820,
                     new HouseholdInnPlacement{ResidentId="mother",Position=a.Position},new HouseholdInnPlacement{ResidentId="father",Position=b.Position});
-                Check.Equal(18,f.Store.ReadNpcInventory("mother").WalletGold);new WorldStateStore(0).Restore(f.Store.Snapshot());
+                Check.Equal(16,f.Store.ReadNpcInventory("mother").WalletGold);new WorldStateStore(0).Restore(f.Store.Snapshot());
             }));
             cases.Add(("Joint household publication installs paired waiting ownership with the day",()=>{
                 var request=HouseholdDayAppointmentTests.SharedRequest();var plan=HouseholdDayPlanTests.Create(request);
@@ -210,7 +232,7 @@ namespace PeopleOfTheIliacBay.Tests
                 var sim=(HouseholdJointSimulation)lifecycle.Invoke(f.Store,new object[]{f.Plan.Id,at,tariff,true,true,false,null});
                 Check.Equal(HouseholdJointPhase.Completed,sim.Phase);Check.Equal("returned-home",sim.Outcome);
                 Check.Equal(HouseholdJointPhase.Waiting,f.Store.ReadHouseholdJointProgress(2,7).Phase);
-                Check.Equal(18,f.Store.ReadNpcInventory("mother").WalletGold);
+                Check.Equal(16,f.Store.ReadNpcInventory("mother").WalletGold);
                 var restored=new WorldStateStore(0);restored.Restore(f.Store.Snapshot());
                 Check.Equal(HouseholdJointPhase.Completed,restored.ReadHouseholdJointSimulation(2,7).Phase);
             }));
@@ -223,7 +245,7 @@ namespace PeopleOfTheIliacBay.Tests
                 small=b.Store.AdvanceHouseholdJointLifecycle(b.Plan.Id,b.Departure+6000,tariff);
                 Check.Equal(large.Phase,small.Phase);Check.Near(large.PhaseSince,small.PhaseSince);
                 Check.Near(a.Store.ReadHouseholdInnServiceAdmission(a.Plan.Id).CounterAt,b.Store.ReadHouseholdInnServiceAdmission(b.Plan.Id).CounterAt);
-                Check.Equal(18,b.Store.ReadNpcInventory("mother").WalletGold);
+                Check.Equal(16,b.Store.ReadNpcInventory("mother").WalletGold);
             }));
             cases.Add(("Completed offscreen return releases daily ownership without fabricating physical home observation",()=>{
                 var f=Prepared();var release=typeof(WorldStateStore).GetMethod("ReleaseCompletedHouseholdSimulation");
@@ -260,7 +282,7 @@ namespace PeopleOfTheIliacBay.Tests
                 var f=Prepared();var anchor=f.Store.ReadHouseholdJointProgress(2,7);
                 var service=Advance(f,f.Departure+700);
                 Check.Equal("purchased",Field<string>(service,"Outcome"));
-                Check.Equal(18,f.Store.ReadNpcInventory("mother").WalletGold);Check.Equal(18,f.Store.ReadNpcInventory("father").WalletGold);
+                Check.Equal(16,f.Store.ReadNpcInventory("mother").WalletGold);Check.Equal(20,f.Store.ReadNpcInventory("father").WalletGold);
                 Check.Equal(40,f.Store.ReadNpcInventory(f.Keeper.Id).WalletGold);
                 var saved=f.Store.Snapshot();Check.Equal(0,saved.ObservedVisits.Count);
                 Check.Equal(anchor.Sequence,f.Store.ReadHouseholdJointProgress(2,7).Sequence);
@@ -273,27 +295,18 @@ namespace PeopleOfTheIliacBay.Tests
                 var restored=new WorldStateStore(0);restored.Restore(JsonSerializer.Deserialize<WorldState>(json,new JsonSerializerOptions{IncludeFields=true}));
                 f.Store=restored;var repeated=Advance(f,f.Departure+701);
                 Check.Equal(Field<NpcInnConsumptionReceipt>(first,"FirstReceipt").VisitId,Field<NpcInnConsumptionReceipt>(repeated,"FirstReceipt").VisitId);
-                Check.Equal(18,f.Store.ReadNpcInventory("mother").WalletGold);Check.Equal(40,f.Store.ReadNpcInventory(f.Keeper.Id).WalletGold);
+                Check.Equal(16,f.Store.ReadNpcInventory("mother").WalletGold);Check.Equal(40,f.Store.ReadNpcInventory(f.Keeper.Id).WalletGold);
                 foreach(var cursor in f.Store.Snapshot().NpcInnConsumptionCursors)
                 {Check.Near(0,cursor.ObservedAt);Check.Equal("world-time-projection",Field<string>(cursor,"SourceKind"));Check.True(Field<double?>(cursor,"ServiceStartsAt").HasValue);}
             }));
-            cases.Add(("Shared service refuses unaffordable pair before any new debit or shared seating",()=>{
-                var f=Prepared(secondGold:1);var service=Advance(f,f.Departure+700);
-                Check.Equal("refused",Field<string>(service,"Outcome"));Check.Equal(20,f.Store.ReadNpcInventory("mother").WalletGold);
-                Check.Equal(40,f.Store.ReadNpcInventory(f.Keeper.Id).WalletGold);Check.True(Field<string>(service,"FirstSeatId")==null);
-                Check.True(Field<NpcInnConsumptionReceipt>(service,"SecondReceipt").Outcome==NpcInnConsumptionOutcome.InsufficientFunds);
-            }));
-            cases.Add(("Empty wallet blocks a new family Inn outing before departure",()=>{
-                Check.Throws<ArgumentException>(()=>Prepared(secondGold:0));
-                Check.Throws<ArgumentException>(()=>Prepared(firstGold:0));
-            }));
-            cases.Add(("Spending the last gold does not interrupt an already paid shared Inn visit",()=>{
-                var f=Prepared(firstGold:2,secondGold:2);Advance(f,f.Departure+700);
+            cases.Add(("One funded parent permits a zero-wallet partner while unfunded pair must visit bank",()=>{
+                var f=Prepared(4,0,"mother");Advance(f,f.Departure+700);
                 Check.Equal(0,f.Store.ReadNpcInventory("mother").WalletGold);
+                Check.Equal(0,f.Store.ReadNpcInventory("father").WalletGold);
                 Check.True(!f.Store.NeedsNpcCashErrand("mother",f.Departure+701));
                 Check.True(!f.Store.NeedsNpcCashErrand("father",f.Departure+701));
-                var moved=f.Store.AdvanceHouseholdJointSimulation(f.Plan.Id,f.Departure+701);
-                Check.True(moved.PauseReason!="partner-unavailable");
+                Check.True(f.Store.AdvanceHouseholdJointSimulation(f.Plan.Id,f.Departure+701).PauseReason!="partner-unavailable");
+                Check.Throws<ArgumentException>(()=>Prepared(2,2));
             }));
             cases.Add(("Cash errand preserves partner waiting context through save and return",()=>{
                 var f=Prepared();var point=new NpcActionTarget{Kind=NpcActionTargetKind.WorldPoint,SettlementId=2,BuildingKey=-1,

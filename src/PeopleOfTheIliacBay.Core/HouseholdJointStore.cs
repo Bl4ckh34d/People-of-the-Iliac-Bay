@@ -194,14 +194,12 @@ namespace PeopleOfTheIliacBay.Core
         }
         private static List<HouseholdJointProgress> CopyHouseholdJointProgress(WorldState source,WorldState copied)
         {
-            var result=new List<HouseholdJointProgress>();if(source.Version<69)return result;
+            var result=new List<HouseholdJointProgress>();
             Require(source.HouseholdJointProgress!=null && source.HouseholdJointProgress.Count<=100000,"Missing or unbounded shared progress.");
             var owners=new HashSet<string>(StringComparer.Ordinal);
             foreach(var entry in source.HouseholdJointProgress)
             {
-                Require(source.Version>=74 || entry.RetirementReason!="simulated-return-home" && entry.RetirementReason!="missed-shared-departure",
-                    "Old schema contains future simulated household retirement.");
-                var copy=source.Version<70?Core.HouseholdJointProgress.CopyLegacy69(entry):Core.HouseholdJointProgress.Copy(entry);
+                var copy=Core.HouseholdJointProgress.Copy(entry);
                 Require(owners.Add(copy.SettlementId+":"+copy.HomeKey),"Duplicate shared household progress owner.");
                 var town=copied.Settlements.Find(t=>t.SettlementId==copy.SettlementId);
                 var home=town?.Households.Find(h=>h.BuildingKey==copy.HomeKey && h.Generation==copy.Generation);

@@ -1,0 +1,45 @@
+{
+  "portraitRecord": 78,
+  "emotion": "happy",
+  "revision": "v2 targeted expression strengthening",
+  "asset": "upper-half eye expression sheet",
+  "generator": "built-in image_gen",
+  "generation_count": 1,
+  "sources": [
+    {
+      "role": "edit target; previous happy eye generation",
+      "path": "art/portraits/mobile-mouths/npc078-split-workspace/eyes/happy/raw.png",
+      "sha256": "EE5F8FE6608763DE60EEFA74BF0C502052FDC080520143B3CCC14328D9A36DD7",
+      "dimensions_px": [1695, 928]
+    },
+    {
+      "role": "original identity, geometry, palette, and style reference",
+      "path": "art/portraits/mobile-mouths/npc078-split-workspace/eyes-reference-grid.png",
+      "sha256": "770BCAF228993A243E7AF873727E0EA24EE1788439AFA29E5DFB66BED0581340",
+      "dimensions_px": [1024, 560]
+    }
+  ],
+  "generated": {
+    "path": "C:/Users/Daniel/.codex/generated_images/01a15fde-8b98-7181-a1df-84e7b766303c/exec-02a2acd7-eda5-4d0d-bfe7-bcbf4ec6e9ed.png",
+    "sha256": "DF2DCE35AA332F78EFF05026C653A44A7B76C4E97A8AC9A63C534EA3C3CE9F53",
+    "dimensions_px": [1694, 928]
+  },
+  "output": {
+    "path": "art/portraits/mobile-mouths/npc078-split-workspace/eyes/happy/raw-v2.png",
+    "sha256": "DF2DCE35AA332F78EFF05026C653A44A7B76C4E97A8AC9A63C534EA3C3CE9F53",
+    "dimensions_px": [1694, 928],
+    "copied_unaltered": true
+  },
+  "grid": {
+    "rows": 2,
+    "columns": 2,
+    "row_major_order": ["open-happy", "half-blink-happy", "closed-happy", "open-happy-repeat"],
+    "native_cell_dimensions_px": [64, 35],
+    "expression_change_area": "eyes and brows only, intended native y=15..22; no mouth or layout edits"
+  },
+  "prompt": "Use Image 1 as the sole edit target. Use Image 2 only as the original identity, geometry, palette, and soft pixel-style reference. Revise the HAPPY eye sheet so happiness reads clearly warmer and friendlier than the nearly neutral expression, while preserving same woman and complete 2x2 upper-half sheet. Keep native 64x35 geometry per cell, 8x enlargement, original hair, forehead, face framing, skin shading, muted palette, and coarse soft pixel structure. Change only the eyebrows and eyes, within the original eye/brow area around native y=15..22; leave hair and all forehead pixels unchanged. Row-major cells: top-left open happy, top-right half blink, bottom-left fully closed blink, bottom-right exact repeat of open happy. In every cell, use gently relaxed slightly raised brows that form the same friendly happy shape and same height/position in all four phases. Show recognizable joyful warmth through smiling eyes: soften the lower lids and lift outer eye corners very slightly, without pinching eyes shut or making a wink. Keep both eyes and gaze matched, iris and pupil size/width and horizontal position fixed across open and half-blink; blink only by lowering upper lids over stationary eyeballs. Closed phase hides irises fully. Keep brow shape stationary across phases. Preserve original restrained skin colors and pixel edges; no extra contrast, black eyeliner, thick brows, new makeup, blur, smoothing, giant grin, face repaint, altered hair/forehead, labels, gutters, or text. Output a complete 2x2 sheet only.",
+  "visual_review": {
+    "status": "raw generation; parent review pending",
+    "notes": "Compared with prior happy raw, brows appear more gently arched and eyes warmer, so mood difference is stronger. Full-sheet view keeps soft muted face palette. Need native-cell review to confirm brow coordinates/heights stay within intended eye area, iris width stays fixed in half blink, and closed phase fully hides irises. Output is 1 px narrower than prior happy raw (1694x928 vs 1695x928); no resizing or postprocessing performed."
+  }
+}

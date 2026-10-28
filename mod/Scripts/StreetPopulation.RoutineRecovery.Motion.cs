@@ -45,12 +45,18 @@ namespace PeopleOfTheIliacBay.DFU
                 else keys.Add(plan.Routine.DestinationKey);
                 var family=RuntimeFamily(plan,now);
                 if(family!=null && family.Source.JointInn!=null)keys.Add(family.Source.JointInn.InnKey);
-                float nearest=float.PositiveInfinity;SavedRoutePoint point;
+                double nearest=double.PositiveInfinity;SavedRoutePoint point;
+                var actual=directory.transform.InverseTransformPoint(actor.transform.position-Vector3.up);
+                var start=new SavedRoutePoint {X=actual.x,Z=actual.z};
                 foreach(int key in keys)
                 {
                     if(!TryRoutineRecoveryDoor(plan,key,out point)) continue;
                     Vector3 target=geometry.ScenePoint(new RoutePoint(point.X,point.Z));
-                    float distance=(target-(actor.transform.position-Vector3.up)).sqrMagnitude;
+                    var route=geometry.RouteBetweenPoints(start,point);
+                    if(route==null || route.Count<2)continue;
+                    var end=geometry.ScenePoint(new RoutePoint(route[route.Count-1].X,route[route.Count-1].Z));
+                    if(Vector3.Distance(end,target)>0.4f)continue;
+                    double distance=RouteLength(route);
                     if(distance>=nearest)continue;
                     nearest=distance;motion.RecoveryOrigin=key;motion.Goal=target;
                 }

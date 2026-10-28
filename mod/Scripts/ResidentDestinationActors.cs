@@ -62,6 +62,7 @@ namespace PeopleOfTheIliacBay.DFU
                 }
                 bool visible=resident.IsAlive && (visiting || reacting) && (inside || outside) &&
                     (ground-GameManager.Instance.PlayerMotor.transform.position).sqrMagnitude<=(actor ? 165*165 : 140*140);
+                if(!reacting && actor && ContinueResidentLodgingDoorwayExit(actor,seconds))continue;
                 if(!visible)
                 {
                     if(!reacting && actor && visiting && ContinueDestinationOutdoorArrival(actor,state)) continue;

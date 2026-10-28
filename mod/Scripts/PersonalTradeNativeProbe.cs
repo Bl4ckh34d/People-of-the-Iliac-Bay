@@ -21,7 +21,7 @@ namespace PeopleOfTheIliacBay.DFU
         {
             var game=GameManager.Instance;
             Require(Environment.GetEnvironmentVariable("POTIB_ROADMAP_PROBE")=="personal-trade" && host && streets &&
-                game.PlayerEntity.Name.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal),"Personal trade requires an owned explicit fixture.");
+                NativeProbeText.IsTestCharacter(game.PlayerEntity.Name),"Personal trade requires an owned explicit fixture.");
             var store=(WorldStateStore)typeof(StreetPopulation).GetField("worldStore",Private).GetValue(streets);
             Require(store!=null,"The loaded street population has no authoritative world store.");
             var clock=DaggerfallWorkshop.DaggerfallUnity.Instance.WorldTime.Now;

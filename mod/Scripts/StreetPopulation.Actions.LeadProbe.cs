@@ -26,7 +26,7 @@ namespace PeopleOfTheIliacBay.DFU
             var game = GameManager.Instance;
             if (!Ready || worldStore == null || population == null || directory == null || geometry == null || interior ||
                 game == null || game.PlayerEntity == null || game.PlayerMotor == null ||
-                !game.PlayerEntity.Name.StartsWith("PeopleOfTheIliacBayTest-", StringComparison.Ordinal) ||
+                !NativeProbeText.IsTestCharacter(game.PlayerEntity.Name) ||
                 (Array.IndexOf(Environment.GetCommandLineArgs(), "-peopleoftheiliacbay-lead-probe") < 0 &&
                     Array.IndexOf(Environment.GetCommandLineArgs(), "-peopleoftheiliacbay-knowledge-browse-only") < 0 &&
                     Environment.GetEnvironmentVariable("POTIB_QUEST_PERSON_LOCATION_PROBE") != "1"))

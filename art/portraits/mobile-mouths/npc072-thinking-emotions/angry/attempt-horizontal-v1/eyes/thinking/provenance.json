@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T09:54:56.4503322Z",
+    "portraitRecord":  72,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Create one exact 2-column × 2-row pixel-art sprite atlas for NPC072\u0027s angry eye animation. Use the supplied 2×2 source grid as the exact same-emotion reference: top row shows angry open eyes; bottom row shows the same angry half-lidded eyes. Each cell has native proportions 64×35 pixels; whole canvas must be 128×70 pixels, with no gutters, borders, labels, scaling between cells, extra cells, or background changes.\n\nCell order: top-left = LEFT gaze, open; top-right = RIGHT gaze, open; bottom-left = LEFT gaze, half-lidded; bottom-right = RIGHT gaze, half-lidded. Keep the two angry brows fixed in shape, position, color, and tension in every cell. Keep face crop, skin, hair, nose, shading, palette, and all pixels outside the eye apertures unchanged from the reference.\n\nInside each eye aperture only, create a subtle lateral glance of about one native pixel: both compact, irregular olive/gold iris clusters move slightly toward the viewer\u0027s left in the LEFT cells and slightly toward the viewer\u0027s right in the RIGHT cells. Preserve their source olive/gold hue and tiny stepped pixel-art form. Keep pupil clusters small and naturally irregular, not round disks or rectangular bars. Keep exact open aperture contour in top row and exact half-lidded aperture contour in bottom row. Upper and lower lids remain continuous and match source geometry. Preserve small source-colored sclera areas; add no broad pale bands, large white highlights, bright glints, or iris enlargement.\n\nOutput crisp native pixel art with nearest-neighbor edges. This is a production atlas, not a full portrait. Do not add expressions or move brows.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-b5df5a0c-026b-4c3a-b087-8b8af0c9ccb2.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-b5df5a0c-026b-4c3a-b087-8b8af0c9ccb2.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "4af6922ef7f8345a11ae8418761144f64dcaaa8b836f461486a2fb206cbebd85",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "71864c18caafed1273ace672a3c1cf255b9a0a5a3ac75649582807a7c9b8b7f7",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-b5df5a0c-026b-4c3a-b087-8b8af0c9ccb2.png",
+                      "sha256":  "5812e5e0c7357a43f25a3e40b4c4500e8a12efd7fe2e443b825a194846860ead",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "5812e5e0c7357a43f25a3e40b4c4500e8a12efd7fe2e443b825a194846860ead",
+                "width":  1695,
+                "height":  928
+            }
+}

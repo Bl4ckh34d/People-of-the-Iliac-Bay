@@ -32,7 +32,7 @@ namespace PeopleOfTheIliacBay.DFU
         internal static IEnumerator Run(PeopleOfTheIliacBayMod host,StreetPopulation streets,string character)
         {
             if(Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-enter-wait-probe")<0 ||
-                string.IsNullOrWhiteSpace(character) || !character.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal))
+                string.IsNullOrWhiteSpace(character) || !NativeProbeText.IsTestCharacter(character))
                 throw new InvalidOperationException("Enter/Wait probe requires its explicit flag and owned disposable character.");
             var game=GameManager.Instance;var store=Store(host);
             if(!host || !streets || store==null || !game || !streets.Ready || game.PlayerEntity==null ||

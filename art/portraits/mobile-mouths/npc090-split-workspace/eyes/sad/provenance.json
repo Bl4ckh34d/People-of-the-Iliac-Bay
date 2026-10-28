@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T04:12:30.1405937Z",
+    "portraitRecord":  90,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "sad",
+    "prompt":  "Use case: stylized-concept\nAsset type: Daggerfall Unity NPC portrait eye atlas, common090 sad emotion\nPrimary request: From the single supplied source reference, make one 2-by-2 sad eye atlas. The source is four identical copies of the SAME native upper portrait half. Preserve its exact four-cell layout, canvas aspect, framing, colors, hair and background. Cell order top-left OPEN, top-right HALF-CLOSED, bottom-left CLOSED, bottom-right OPEN repeated. No face reconstruction: retain the portrait as exact pixel art and alter only eyebrow and eyelid expression.\nSubject: same adult woman. Sadness is quiet and recognizable through gently raised inner brow tips and a modest inward-worried brow slope, with both gazes slightly lowered. Relaxed, not angry, crying or theatrical. Use matching bilateral eyes.\nStyle/medium: original low-resolution retro game pixel portrait. Match source pixel clusters, nearest-neighbor edges and subdued game palette exactly.\nColor palette: copy source muted olive-green iris pixels, exact iris width and horizontal location; copy its tan-brown skin, dark brown brows and eye shadows. Preserve the subdued contrast and exact hue relationships. No palette reinterpretation.\nConstraints: only change brows and eyelids. Keep the central bridge, eye spacing, face, nose, hair, shading, background, feature scale and crop fixed. In every cell, both irises keep identical width, shape and horizontal position from the source. Open/half/closed lids cover only the same eyeballs vertically. Open cells share the same iris geometry and sad brow master. Half and closed lids are solid dark muted brown with NO sclera flash, NO white or cream pixel, NO pale glint, and NO bright crease. Brows and stationary creases must remain identical in all four phases. The output must have exactly four equal cells, no new edge marks or stray blue pixels, no borders, separators, labels, padding or text. Do not introduce orange skin, blue eyes, bright white marks, red lips, black eyeliner, smoothing, blur, antialiasing, or lighting changes. Maintain original pixel scale.\n",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161cc-8e12-73a1-b0d8-dc91163e069c as C:\\Users\\Daniel\\.codex\\generated_images\\01a161cc-8e12-73a1-b0d8-dc91163e069c\\exec-4a97500c-072c-410a-aacb-8621f62177bc.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161cc-8e12-73a1-b0d8-dc91163e069c\\exec-4a97500c-072c-410a-aacb-8621f62177bc.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "b8b0a0da8a68fea050774dbe95633fcb561aa0d4a4b316a787b9831b46247489",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "6ab5ede4469b2edecb63c4b4f5238c7808248ee7f5afc1a45b7f4730465acf9b",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161cc-8e12-73a1-b0d8-dc91163e069c\\exec-4a97500c-072c-410a-aacb-8621f62177bc.png",
+                      "sha256":  "335aab7ea3ba6f7ab94c088317746448b0cd1a966f9171edb089df226f1f657e",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/sad/raw.png",
+                "sha256":  "335aab7ea3ba6f7ab94c088317746448b0cd1a966f9171edb089df226f1f657e",
+                "width":  1695,
+                "height":  928
+            }
+}

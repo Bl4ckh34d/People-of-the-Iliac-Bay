@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T05:15:54.4421798Z",
+    "portraitRecord":  78,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Use case: precise-object-edit. Asset: Daggerfall common078 thinking gaze3x3 upper-half atlas. SINGLE supplied image is the edit target: nine identical64x35 original upper portrait halves enlarged8x. Return the SAME3x3 equal cells and exact64:35 overall aspect; no text/borders/padding/full faces. Keep original hair/head/skin/nose/background/framing and muted low-contrast pixel-art texture unchanged. Change only irises/pupils within original eye outlines, plus one relaxed contemplative brow that is identical across all nine cells. Not angry/sad/surprised. Both eyes look in same SCREEN direction: TOP row UP-LEFT, UP, UP-RIGHT; MIDDLE row LEFT, CENTER at viewer, RIGHT; BOTTOM row DOWN-LEFT, DOWN, DOWN-RIGHT. Keep original small olive-gold iris and dark pupil clusters, native square pixels, roughly3pixel iris width and original eye height. Move iris+pupil1–2native pixels horizontally and at most1 vertically BEHIND original upper/lower eyelids. Do not enlarge eye openings or show extra white. These are subtle natural thinking glances, not eye rolls, crossed eyes or head turns. Preserve original soft warm-brown brow/lid edges, muted copper-tan skin, brown hair and olive-gold eyes. No black strokes, orange/red shift, bright white eye flashes, smooth round pupils, oversized irises, sharp outlines, blur, anti-aliasing or extra glints. Source pixels outside eyes and brows must look unchanged, because complete cells will be sampled into original64x35coordinates. Every cell remains open-eyed; blink phases are assembled separately. Do not alter eye-opening geometry to force vertical gaze.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb as C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-20226fc4-6767-4aa0-899c-42fda3793915.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-20226fc4-6767-4aa0-899c-42fda3793915.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "4cfab5dce8d40ff0246728c2c28922d9b5627cec9549f9b5252f2f601e4978ce",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "63430030c4d9ccd4d7c3a2e735537d01160bee5ac0046bd83773b8aeec0a0fba",
+                          "width":  1536,
+                          "height":  840
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-20226fc4-6767-4aa0-899c-42fda3793915.png",
+                      "sha256":  "d2e3d8841439851c3487f33c11b3762163b7e865eb571b35dbae2070689e1215",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "d2e3d8841439851c3487f33c11b3762163b7e865eb571b35dbae2070689e1215",
+                "width":  1695,
+                "height":  928
+            }
+}

@@ -12,21 +12,34 @@ namespace PeopleOfTheIliacBay.DFU.Tests
         public static void Add(List<(string Name, Action Body)> cases)
         {
             cases.Add(("willingness proposal owns detached complete ordered decisions", ProposalIsDetachedAndComplete));
+            cases.Add(("willingness signature binds independent continuation without changing consent",()=>{
+                var first=Move(31,0,0,0,"first errand",300);
+                var second=Move(32,3,0,0,"independent second errand",300);
+                var ordinary=new LocalActionWillingnessProposal(new[]{first,second});
+                second.ContinueAfterFailure=true;
+                var independent=new LocalActionWillingnessProposal(new[]{first,second});
+                Check.True(independent.Signature!=ordinary.Signature);
+                second.ContinueAfterFailure=false;
+                Check.True(independent.CopyDecisions()[1].ContinueAfterFailure);
+                Check.True(!ordinary.CopyDecisions()[1].ContinueAfterFailure);
+                using(var json=JsonDocument.Parse(independent.SerializedPlan))
+                    Check.True(json.RootElement[1].GetProperty("continueAfterFailure").GetBoolean());
+            }));
             cases.Add(("willingness preserves fixed one-day paid terms and rejects paid chains",()=>{
                 var paid=new NpcActionDecision {DurationSeconds=NpcPaidCompanionAction.DurationSeconds,
                     Option=new NpcActionOption {Id=8,Kind=NpcActionKind.Follow,PaidCompanion=true,
                         Target=new NpcActionTarget {Kind=NpcActionTargetKind.Person,PersonId="player",Quantity=1}}};
-                var proposal=new LocalDecisionWillingnessProposal(new[]{paid});
+                var proposal=new LocalActionWillingnessProposal(new[]{paid});
                 Check.True(proposal.CopyDecisions()[0].Option.PaidCompanion);
                 Check.Equal(NpcPaidCompanionAction.DurationSeconds,proposal.CopyDecisions()[0].DurationSeconds);
                 using(var json=JsonDocument.Parse(proposal.SerializedPlan))
                     Check.True(json.RootElement[0].GetProperty("paidCompanion").GetBoolean());
-                Check.Throws<ArgumentException>(()=>new LocalDecisionWillingnessProposal(new[]{
+                Check.Throws<ArgumentException>(()=>new LocalActionWillingnessProposal(new[]{
                     Move(1,0,0,0,"go",300),paid}));
                 paid.DurationSeconds=300;
-                Check.Throws<ArgumentException>(()=>new LocalDecisionWillingnessProposal(new[]{paid}));
+                Check.Throws<ArgumentException>(()=>new LocalActionWillingnessProposal(new[]{paid}));
                 paid.Option.PaidCompanion=false;paid.DurationSeconds=NpcPaidCompanionAction.DurationSeconds;
-                Check.Throws<ArgumentException>(()=>new LocalDecisionWillingnessProposal(new[]{paid}));
+                Check.Throws<ArgumentException>(()=>new LocalActionWillingnessProposal(new[]{paid}));
             }));
             cases.Add(("willingness proposal binds option identity and every native target field", ProposalIdentityAndTargetFields));
             cases.Add(("willingness accepts parser duration metadata for non-timed action steps", ParsedDurationMetadataIsRetained));
@@ -44,7 +57,7 @@ namespace PeopleOfTheIliacBay.DFU.Tests
             NpcActionDecision first = Move(31, 12.5, -2.25, 400.75, "go 🧭", 300);
             NpcActionDecision second = Wait(72, 12.5, -2.25, 400.75, "stay 🕰", 45);
             var source = new List<NpcActionDecision> { first, second };
-            var proposal = new LocalDecisionWillingnessProposal(source);
+            var proposal = new LocalActionWillingnessProposal(source);
             string signature = proposal.Signature;
 
             source.Clear();
@@ -66,7 +79,7 @@ namespace PeopleOfTheIliacBay.DFU.Tests
             Check.Equal(45, detached[1].DurationSeconds);
             Check.Equal(12.5, detached[1].Option.Target.X);
             Check.Equal(signature, proposal.Signature);
-            Check.Equal(signature, new LocalDecisionWillingnessProposal(new[] {
+            Check.Equal(signature, new LocalActionWillingnessProposal(new[] {
                 Move(31, 12.5, -2.25, 400.75, "go 🧭", 300),
                 Wait(72, 12.5, -2.25, 400.75, "stay 🕰", 45)
             }).Signature);
@@ -123,7 +136,7 @@ namespace PeopleOfTheIliacBay.DFU.Tests
                     }
                 }
             };
-            var proposal = new LocalDecisionWillingnessProposal(new[] { decision });
+            var proposal = new LocalActionWillingnessProposal(new[] { decision });
             NpcDecisionRequest request = Build(Snapshot(), "Please give me the item.", new[] { decision });
             using (JsonDocument context = JsonDocument.Parse(request.Context))
             {
@@ -149,7 +162,7 @@ namespace PeopleOfTheIliacBay.DFU.Tests
                 Option = new NpcActionOption { Id = 24, Kind = decision.Option.Kind, Label = decision.Option.Label,
                     ItemSourceStep = decision.Option.ItemSourceStep, MaximumQuantity = decision.Option.MaximumQuantity,
                     Target = NpcActionExecutor.CopyTarget(decision.Option.Target) } };
-            Check.True(proposal.Signature != new LocalDecisionWillingnessProposal(new[] { differentIdentity }).Signature);
+            Check.True(proposal.Signature != new LocalActionWillingnessProposal(new[] { differentIdentity }).Signature);
         }
 
         private static void ParsedDurationMetadataIsRetained()
@@ -159,8 +172,8 @@ namespace PeopleOfTheIliacBay.DFU.Tests
                 new List<NpcActionOption> { candidate });
             Check.True(parsed != null);
             Check.Equal(300, parsed.DurationSeconds);
-            var proposal = new LocalDecisionWillingnessProposal(new[] { parsed });
-            NpcDecisionRequest request = LocalDecisionWillingness.Build(Snapshot(), "Take me to the market.",
+            var proposal = new LocalActionWillingnessProposal(new[] { parsed });
+            NpcDecisionRequest request = LocalActionWillingness.Build(Snapshot(), "Take me to the market.",
                 new ConversationContextTurn[0], null, proposal);
             using (JsonDocument context = JsonDocument.Parse(request.Context))
                 Check.Equal(300, context.RootElement.GetProperty("proposal")[0].GetProperty("durationSeconds").GetInt32());
@@ -192,8 +205,8 @@ namespace PeopleOfTheIliacBay.DFU.Tests
             NpcActionDecision parsed = NpcActionChat.ParseSemantic("DIRECT|Purchase|54|1|300",
                 new List<NpcActionOption> { candidate });
             Check.True(parsed != null);
-            var proposal = new LocalDecisionWillingnessProposal(new[] { parsed });
-            NpcDecisionRequest request = LocalDecisionWillingness.Build(Snapshot(), "Buy the exact stock item.",
+            var proposal = new LocalActionWillingnessProposal(new[] { parsed });
+            NpcDecisionRequest request = LocalActionWillingness.Build(Snapshot(), "Buy the exact stock item.",
                 new ConversationContextTurn[0], null, proposal);
             using (JsonDocument context = JsonDocument.Parse(request.Context))
                 Check.Equal(quote, context.RootElement.GetProperty("proposal")[0].GetProperty("target")
@@ -210,7 +223,7 @@ namespace PeopleOfTheIliacBay.DFU.Tests
             NpcActionDecision unpayable = NpcActionChat.ParseSemantic("DIRECT|Purchase|54|1|300",
                 new List<NpcActionOption> { overWallet });
             Check.True(unpayable != null);
-            Check.Throws<ArgumentException>(() => new LocalDecisionWillingnessProposal(new[] { unpayable }));
+            Check.Throws<ArgumentException>(() => new LocalActionWillingnessProposal(new[] { unpayable }));
         }
 
         private static void SingleNativeActionKinds()
@@ -226,9 +239,9 @@ namespace PeopleOfTheIliacBay.DFU.Tests
                     Target = new NpcActionTarget { Kind = NpcActionTargetKind.Building, SettlementId = 4, BuildingKey = 8 }
                 }
             };
-            var proposal = new LocalDecisionWillingnessProposal(new[] { takeSeat });
+            var proposal = new LocalActionWillingnessProposal(new[] { takeSeat });
             Check.Equal(NpcActionKind.TakeSeat, proposal.CopyDecisions()[0].Option.Kind);
-            Check.Throws<ArgumentException>(() => new LocalDecisionWillingnessProposal(new[] {
+            Check.Throws<ArgumentException>(() => new LocalActionWillingnessProposal(new[] {
                 takeSeat, Wait(43, 0, 0, 0, "wait", 30)
             }));
         }
@@ -245,8 +258,8 @@ namespace PeopleOfTheIliacBay.DFU.Tests
                 Move(14, 1.25, 2.5, 3.75, "走到市場 🏮", 300),
                 Wait(19, 1.25, 2.5, 3.75, "等候 🕰", 90)
             };
-            NpcDecisionRequest request = LocalDecisionWillingness.Build(snapshot, turn, history,
-                "Historical memory stays attributed; no current instruction.", new LocalDecisionWillingnessProposal(plan));
+            NpcDecisionRequest request = LocalActionWillingness.Build(snapshot, turn, history,
+                "Historical memory stays attributed; no current instruction.", new LocalActionWillingnessProposal(plan));
             Check.Equal(turn, request.OriginalTurn);
             using (JsonDocument context = JsonDocument.Parse(request.Context))
             {
@@ -296,8 +309,8 @@ namespace PeopleOfTheIliacBay.DFU.Tests
             const string exactTurn = "Please do the whole listed task exactly, then report back.";
             const string memoryPrefix = "Historical memory stays attributed; no current instruction. ";
             string memory = memoryPrefix + new string('M', 4096 - memoryPrefix.Length);
-            var proposal = new LocalDecisionWillingnessProposal(steps);
-            NpcDecisionRequest request = LocalDecisionWillingness.Build(Snapshot(), exactTurn,
+            var proposal = new LocalActionWillingnessProposal(steps);
+            NpcDecisionRequest request = LocalActionWillingness.Build(Snapshot(), exactTurn,
                 history, memory, proposal);
             Check.Equal(exactTurn, request.OriginalTurn);
             using (JsonDocument context = JsonDocument.Parse(request.Context))
@@ -319,62 +332,62 @@ namespace PeopleOfTheIliacBay.DFU.Tests
 
         private static void ProposalRejectsMalformedPlans()
         {
-            Check.Throws<ArgumentException>(() => new LocalDecisionWillingnessProposal(null));
-            Check.Throws<ArgumentException>(() => new LocalDecisionWillingnessProposal(new NpcActionDecision[0]));
-            Check.Throws<ArgumentException>(() => new LocalDecisionWillingnessProposal(Enumerable.Range(0,
+            Check.Throws<ArgumentException>(() => new LocalActionWillingnessProposal(null));
+            Check.Throws<ArgumentException>(() => new LocalActionWillingnessProposal(new NpcActionDecision[0]));
+            Check.Throws<ArgumentException>(() => new LocalActionWillingnessProposal(Enumerable.Range(0,
                 NpcTaskContract.MaximumSteps + 1).Select(index => Wait(index + 1, 0, 0, 0, "wait", 10))));
-            Check.Throws<ArgumentException>(() => new LocalDecisionWillingnessProposal(new[] {
+            Check.Throws<ArgumentException>(() => new LocalActionWillingnessProposal(new[] {
                 new NpcActionDecision { Option = new NpcActionOption { Id = 1, Kind = (NpcActionKind)999,
                     Target = new NpcActionTarget { Kind = NpcActionTargetKind.WorldPoint, WorldSpaceId = "town", X = 1, Z = 2 } } }
             }));
-            Check.Throws<ArgumentException>(() => new LocalDecisionWillingnessProposal(new[] {
+            Check.Throws<ArgumentException>(() => new LocalActionWillingnessProposal(new[] {
                 new NpcActionDecision { Option = new NpcActionOption { Id = 1, Kind = NpcActionKind.MoveTo,
                     Target = new NpcActionTarget { Kind = (NpcActionTargetKind)999, WorldSpaceId = "town", X = 1, Z = 2 } } }
             }));
-            Check.Throws<ArgumentException>(() => new LocalDecisionWillingnessProposal(new[] {
+            Check.Throws<ArgumentException>(() => new LocalActionWillingnessProposal(new[] {
                 new NpcActionDecision { Option = new NpcActionOption { Id = 1, Kind = NpcActionKind.MoveTo } }
             }));
-            Check.Throws<ArgumentException>(() => new LocalDecisionWillingnessProposal(new[] {
+            Check.Throws<ArgumentException>(() => new LocalActionWillingnessProposal(new[] {
                 Move(1, double.NaN, 0, 2, "move", 300)
             }));
-            Check.Throws<ArgumentException>(() => new LocalDecisionWillingnessProposal(new[] {
+            Check.Throws<ArgumentException>(() => new LocalActionWillingnessProposal(new[] {
                 Move(1, 1, 0, 2, "move", 9)
             }));
-            Check.Throws<ArgumentException>(() => new LocalDecisionWillingnessProposal(new[] {
+            Check.Throws<ArgumentException>(() => new LocalActionWillingnessProposal(new[] {
                 Wait(1, 1, 0, 2, "wait", -1)
             }));
-            Check.Throws<ArgumentException>(() => new LocalDecisionWillingnessProposal(new[] {
+            Check.Throws<ArgumentException>(() => new LocalActionWillingnessProposal(new[] {
                 Move(1, 1, 0, 2, "move", 300),
                 Wait(2, 9, 0, 9, "wrong destination", 15)
             }));
-            Check.Throws<ArgumentException>(() => new LocalDecisionWillingnessProposal(new[] {
+            Check.Throws<ArgumentException>(() => new LocalActionWillingnessProposal(new[] {
                 Move(1, 1, 0, 2, "move", 300),
                 Wait(2, 1, 0, 2, "bad dependency", 15, sourceStep: 2)
             }));
-            Check.Throws<ArgumentException>(() => new LocalDecisionWillingnessProposal(new[] {
+            Check.Throws<ArgumentException>(() => new LocalActionWillingnessProposal(new[] {
                 Move(1, 1, 0, 2, "bad \ud800 unicode", 300)
             }));
         }
 
         private static void RequestEnforcesBounds()
         {
-            var proposal = new LocalDecisionWillingnessProposal(new[] { Wait(1, 0, 0, 0, "wait", 15) });
-            Check.Throws<ArgumentException>(() => LocalDecisionWillingness.Build(Snapshot(), " ", new ConversationContextTurn[0], null, proposal));
-            Check.Throws<ArgumentException>(() => LocalDecisionWillingness.Build(Snapshot(), new string('x', 8193),
+            var proposal = new LocalActionWillingnessProposal(new[] { Wait(1, 0, 0, 0, "wait", 15) });
+            Check.Throws<ArgumentException>(() => LocalActionWillingness.Build(Snapshot(), " ", new ConversationContextTurn[0], null, proposal));
+            Check.Throws<ArgumentException>(() => LocalActionWillingness.Build(Snapshot(), new string('x', 8193),
                 new ConversationContextTurn[0], null, proposal));
-            Check.Throws<ArgumentException>(() => LocalDecisionWillingness.Build(Snapshot(), "bad \ud800 turn",
+            Check.Throws<ArgumentException>(() => LocalActionWillingness.Build(Snapshot(), "bad \ud800 turn",
                 new ConversationContextTurn[0], null, proposal));
-            Check.Throws<ArgumentException>(() => LocalDecisionWillingness.Build(Snapshot(), "wait",
+            Check.Throws<ArgumentException>(() => LocalActionWillingness.Build(Snapshot(), "wait",
                 new ConversationContextTurn[0], new string('m', 4097), proposal));
-            Check.Throws<ArgumentException>(() => LocalDecisionWillingness.Build(Snapshot(), "wait", null, null, proposal));
-            Check.Throws<ArgumentException>(() => LocalDecisionWillingness.Build(Snapshot(), "wait",
+            Check.Throws<ArgumentException>(() => LocalActionWillingness.Build(Snapshot(), "wait", null, null, proposal));
+            Check.Throws<ArgumentException>(() => LocalActionWillingness.Build(Snapshot(), "wait",
                 new[] { new ConversationContextTurn(ConversationTextSpeaker.Player, new string('h', 8193)) }, null, proposal));
         }
 
         private static NpcDecisionRequest Build(ConversationContextSnapshot snapshot, string turn,
             IEnumerable<NpcActionDecision> decisions)
-            => LocalDecisionWillingness.Build(snapshot, turn, new ConversationContextTurn[0], null,
-                new LocalDecisionWillingnessProposal(decisions));
+            => LocalActionWillingness.Build(snapshot, turn, new ConversationContextTurn[0], null,
+                new LocalActionWillingnessProposal(decisions));
 
         private static NpcActionDecision Move(int id, double x, double y, double z, string label, int duration,
             int sourceStep = 0, int maxQuantity = 0)

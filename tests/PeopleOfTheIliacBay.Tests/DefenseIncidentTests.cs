@@ -212,14 +212,6 @@ namespace PeopleOfTheIliacBay.Tests
                 broken=store.Snapshot(); broken.DefenseCombatants[0].Origin=CombatOrigin.Civilian;
                 Check.Throws<ArgumentException>(()=>store.Restore(broken));
             }));
-            cases.Add(("Legacy schema six migrates to current schema without inventing combat or loot entitlements",()=>{
-                var store=new WorldStateStore(42); var town=store.GetOrCreate(1,new[] { 7 },1);
-                string id=town.Households[0].Residents[0].Id; var legacy=store.Snapshot();
-                legacy.Version=6; legacy.DefenseCombatants=null;
-                store.Restore(legacy); Check.Equal(new WorldState().Version, store.Snapshot().Version);
-                Check.Equal(0,store.Snapshot().DefenseCombatants.Count);
-                Check.Equal(id,store.Snapshot().Settlements[0].Households[0].Residents[0].Id);
-            }));
             cases.Add(("Defense snapshots isolate witness and informed guard collections",()=>{
                 string witness,guard; var store=Store(out witness,out guard);
                 store.RecordDefensePlayerHit("enemy:1",110,true); store.RecordDefenseWitness("enemy:1",guard,true,111);

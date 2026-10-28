@@ -1,0 +1,7 @@
+{
+  "prompt": "Make one opaque pixel-art eye atlas for NPC081 HAPPY, using this single image as the exact source/reference. Canvas: exact 2x2 grid, equal cells, each cell aspect 64:35; each cell represents native 64x35 eye-area crop. Cell order: top-left LEFT/open, top-right RIGHT/open, bottom-left LEFT/half, bottom-right RIGHT/half. This is a bounded gaze correction. Preserve original portrait identity, happy expression, brows, face, hair, placement, palette, and pixel style. Preserve the original eye aperture and upper/lower eyelid contours EXACTLY in every cell; do not widen, enlarge, or reshape either eye. Change only horizontal iris/pupil position: shift the same small muted blue-gray iris cluster by about ONE native pixel left or right, with pupils fully inside original opening. Keep sclera muted brown-beige like source, about the same 1–2 native pixels as original; no broad white bands, white patches, shiny reflections, or glints. Do not enlarge iris, pupil, eye whites, or eyeballs. For HALF row, use same half-source narrow aperture and lid coverage, only shift iris/pupil horizontally. Keep all four cells aligned to exact source crop, without new background, borders, text, smooth antialiasing, or extra colors. Do not create closed or vertical gaze.",
+  "referenced_image_paths": [
+    "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc081-thinking-emotions\\happy\\attempt-horizontal-v2\\thinking-reference-grid.png"
+  ],
+  "transparent_background": false
+}

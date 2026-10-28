@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "purpose": "review-only per-woman VoiceDesign and six-mood voice consistency experiment",
+  "voiceSet": "female",
+  "portraitId": "common-149",
+  "portraitRecord": 149,
+  "profileId": "common-149-voice-race-04",
+  "profilePath": "profile.json",
+  "profileSha256": "1689f8bb160929b15de2fee43116a9eb8fde8a54595f6a7cbaf0524186960d87",
+  "attributes": {
+    "pitch": "an upper mezzo-soprano register",
+    "timbre": "dark and mellow, rounded and fairly full",
+    "roughness": "smooth and clear",
+    "breathiness": "with balanced natural breath support",
+    "vocalFry": "with minimal habitual creak",
+    "pace": "a slightly slower than average conversational pace"
+  },
+  "latentZ": {
+    "pitch": 1.130564717370888,
+    "brightness": -2.2896313087567357,
+    "resonance": -1.0067213124707521,
+    "roughness": -1.0047994563424383,
+    "breathiness": 0.19802700683574104,
+    "vocalFry": -0.0027808283935489733,
+    "pace": -1.2061993496710008
+  },
+  "stableInstruction": "An adult woman speaking English with clearly recognizable Kenyan English pronunciation and cadence, East African English vowel shaping, even syllable rhythm and clean consonant release. Her individual voice has an upper mezzo-soprano register. Its timbre is dark and mellow, rounded and fairly full; it is smooth and clear, with balanced natural breath support, with minimal habitual creak. Use a slightly slower than average conversational pace. Maintain this individual vocal identity. Speak naturally without caricature, shouting, or added vocal events.",
+  "seed": 600271477,
+  "profileMapSha256": "4e4108e09fbb88eef99afa5eb22f207ab0edacf38089c4ec22f31834d4d0ade4",
+  "guidanceScale": 4.0,
+  "exactText": "Before you leave, let me tell you about the old mill beyond the village. Follow the little yellow lanterns across the blue bridge, then turn left by the willow tree. The miller brings fresh bread, warm apple pies, and five fine bottles of wine to the market every morning. Oh, and do look out for the wolves near the ruined tower. If you hear a low howl, keep your bow close and walk home quietly. We can talk about your journey over a cup of tea when you return.",
+  "sameText": "Before you leave, let me tell you about the old mill beyond the village. Follow the little yellow lanterns across the blue bridge, then turn left by the willow tree. The miller brings fresh bread, warm apple pies, and five fine bottles of wine to the market every morning. Oh, and do look out for the wolves near the ruined tower. If you hear a low howl, keep your bow close and walk home quietly. We can talk about your journey over a cup of tea when you return.",
+  "referenceWav": "reference.wav",
+  "referenceSha256": "13b1a1690a634c22c9299ff05c07d641b7837477cddeeaf3867ff2af01e0ab63",
+  "sameReferenceSha256": "13b1a1690a634c22c9299ff05c07d641b7837477cddeeaf3867ff2af01e0ab63",
+  "referenceRawWav": "reference.raw.wav",
+  "referenceRawSha256": "4a2b4610364424c1b5cf3abfeeddb7e60b794cd767070ac34a3949e51f499346",
+  "anchorText": "Good day. I have been in this town for many years. What brings you here today?",
+  "templateConfigSha256": "c3b4c0f03d5dbb20e47eb58251a3037896a326150f89ccf67e9096ee6f7ae3de",
+  "configPath": "config.json",
+  "configSha256": "6b19203c90e9e244bc87d3bffdd8773475f0cd35a68ecb8a34c340e2abcd2e20",
+  "modelId": "breeze",
+  "expectedModelFile": "breeze-tts-2-q4_0.gguf",
+  "audioSets": [
+    {
+      "id": "neutral",
+      "emotionId": "neutral",
+      "audio": "neutral.wav",
+      "timing": "neutral.visemes.json",
+      "audioSha256": "884b28f4ea6c698c73e5e6de416de689467b850e0b4546028c3e88c0d0430cf3",
+      "timingSha256": "2d6ac2e805c90289bc2230eec7f3539dc15ca5de80f4f119becf79c944c82639"
+    },
+    {
+      "id": "happy",
+      "emotionId": "happy",
+      "audio": "happy.wav",
+      "timing": "happy.visemes.json",
+      "audioSha256": "1401f52848a96a5cc17fff5061ff68efd0db776408ada67c0a1a85e9e8a8501a",
+      "timingSha256": "fda7db43b1355a9705c0504a7ca8f34f30fa6e8e17888b228350f8b2f582647f"
+    },
+    {
+      "id": "angry",
+      "emotionId": "angry",
+      "audio": "angry.wav",
+      "timing": "angry.visemes.json",
+      "audioSha256": "3d12e858e7a4473aabbedfae0a3547cc23d739067c8be56e0a88ea7c9fb75f2a",
+      "timingSha256": "b820e16f7bf7ab8804af1174f242b5c141b56af8aee58db9308cb1c0fecfdd18"
+    },
+    {
+      "id": "sad",
+      "emotionId": "sad",
+      "audio": "sad.wav",
+      "timing": "sad.visemes.json",
+      "audioSha256": "5a358ee32f9d18966b6f529a3f222cbe1d3e7a9f00df31093645e3a8e2500246",
+      "timingSha256": "31f2cfa08283d2cc50bc2432b16f9be1cf67164880dbe065fbc0164f4b760677"
+    },
+    {
+      "id": "afraid",
+      "emotionId": "afraid",
+      "audio": "afraid.wav",
+      "timing": "afraid.visemes.json",
+      "audioSha256": "f6c1e9e5c29d9a59b87a1f399d385e8d9b7910ba9a308840b6bbcdac42f83aa6",
+      "timingSha256": "f569b4fd0e313837dd816824f7bf641caff34a5c5bd486cd4c0e944ddc7418f4"
+    },
+    {
+      "id": "guarded",
+      "emotionId": "guarded",
+      "audio": "guarded.wav",
+      "timing": "guarded.visemes.json",
+      "audioSha256": "839764b3b1c6bc06ee245c4e5fee7111690a04dd24c14ae59f62ee9fe817ac6a",
+      "timingSha256": "2c2140c2ccf783c70688204bf4ca068691d5cf840cd28b63ec7c9e93d580d26c"
+    }
+  ]
+}

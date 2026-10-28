@@ -244,14 +244,90 @@ namespace PeopleOfTheIliacBay.DFU
         public static bool TryPurchase(WorldStateStore store,NativeNpcInventoryBinding buyer,ItemCollection actualStock,string sellerPersonId,
             long expectedSellerRevision,ulong itemUid,int count,int totalPrice,Func<bool> stockAccessIsValid,string transactionId,out string reason)
         {
-            if(totalPrice<=0){reason="Purchase requires a positive verified total price.";return false;}
-            NpcActionTransferReceipt ignored;return Execute(store,actualStock,buyer.Items,null,buyer,sellerPersonId,expectedSellerRevision,totalPrice,itemUid,count,stockAccessIsValid,transactionId,false,null,0,out ignored,out reason);
+            reason="The native shop stock or access changed.";
+            try
+            {
+                if(store==null || buyer==null || actualStock==null || ReferenceEquals(actualStock,buyer.Items) ||
+                    stockAccessIsValid==null || !stockAccessIsValid())return false;
+                DaggerfallUnityItem source=actualStock.GetItem(itemUid);
+                if(source==null || source.IsQuestItem || source.IsEquipped || source.IsSummoned ||
+                    source is HouseholdPropertyKeyItem || count<1 || count>source.stackCount ||
+                    count>1 && !source.IsAStack() || store.NpcInventoryItemOwner(itemUid)!=null)return false;
+
+                // Preserve the native shelf for player trade. Deserialize the
+                // exact payload with a fresh native UID, including custom types.
+                var data=source.GetSaveData();data.uid=DaggerfallWorkshop.DaggerfallUnity.NextUID;data.stackCount=count;
+                var detached=new ItemCollection();detached.DeserializeItems(new[]{data});
+                DaggerfallUnityItem acquired=detached.GetItem(data.uid);
+                if(acquired==null || acquired.GetType()!=source.GetType() || acquired.UID==source.UID ||
+                    acquired.stackCount!=count || !ReferenceEquals(actualStock.GetItem(itemUid),source) ||
+                    !stockAccessIsValid())return false;
+                return TryPurchaseCreatedItem(store,buyer,sellerPersonId,expectedSellerRevision,acquired,totalPrice,
+                    stockAccessIsValid,transactionId,out reason);
+            }
+            catch(Exception error){reason=error.Message;return false;}
+        }
+
+        // NPC-only acquisition. The provider supplies one real native item;
+        // both wallets and persisted ownership commit together, or roll back.
+        internal static bool TryPurchaseCreatedItem(WorldStateStore store,NativeNpcInventoryBinding buyer,string sellerId,
+            long sellerRevision,DaggerfallUnityItem acquired,int price,Func<bool> access,string transactionId,out string reason)
+        {
+            reason="The purchase item, wallets or inventory revision changed.";
+            bool added=false,committed=false;
+            try
+            {
+                if(store==null || buyer==null || buyer.Items==null || acquired==null || acquired.UID==0 ||
+                    acquired.IsQuestItem || acquired.IsEquipped || acquired.IsSummoned || acquired.stackCount<1 ||
+                    price<1 || price>NpcInventoryLimits.MaximumWalletGold || access==null || !access() ||
+                    string.IsNullOrWhiteSpace(transactionId) || store.NpcInventoryItemOwner(acquired.UID)!=null ||
+                    buyer.Items.GetItem(acquired.UID)!=null)return false;
+                var state=CheckBinding(store,buyer,transactionId);var seller=store.ReadNpcInventory(sellerId);
+                if(state==null || seller==null || sellerId==buyer.PersonId || seller.Revision!=sellerRevision ||
+                    seller.LastTransactionId==transactionId || state.WalletGold<price ||
+                    seller.WalletGold>NpcInventoryLimits.MaximumWalletGold-price)return false;
+                buyer.Items.AddItem(acquired,noStack:true);added=true;
+                if(!ReferenceEquals(buyer.Items.GetItem(acquired.UID),acquired))return false;
+                var updates=new[]{new NpcInventoryUpdate{PersonId=buyer.PersonId,ExpectedRevision=state.Revision,
+                    WalletGold=state.WalletGold-price,Items=CaptureItems(buyer.Items)},
+                    new NpcInventoryUpdate{PersonId=sellerId,ExpectedRevision=seller.Revision,
+                    WalletGold=seller.WalletGold+price,Items=seller.Items}};
+                if(!access() || !store.CommitNpcInventoryTransaction(transactionId,updates))return false;
+                committed=true;buyer.Revision++;reason=null;return true;
+            }
+            catch(Exception error){reason=error.Message;return false;}
+            finally {if(added && !committed)buyer.Items.RemoveItem(acquired);}
+        }
+        // Market stock is already owned by its vendor's exact personal ledger.
+        // Reuse the existing native move/rollback, paying both saved wallets in
+        // that same transaction rather than treating owned goods as a shelf.
+        public static bool TryPurchaseOwnedStock(WorldStateStore store,NativeNpcInventoryBinding buyer,NativeNpcInventoryBinding seller,
+            ulong itemUid,int count,int totalPrice,Func<bool> stockAccessIsValid,string transactionId,out string reason)
+        {
+            if(buyer==null || seller==null || totalPrice<=0){reason="Purchase requires two exact owners and a positive verified price.";return false;}
+            NpcActionTransferReceipt ignored;return Execute(store,seller.Items,buyer.Items,seller,buyer,seller.PersonId,seller.Revision,
+                totalPrice,itemUid,count,stockAccessIsValid,transactionId,false,null,0,out ignored,out reason);
         }
         private static bool SameItems(List<NpcInventoryItem> a,List<NpcInventoryItem> b)
         {
             if(a.Count!=b.Count)return false;
             var indexed=new Dictionary<ulong,string>();foreach(var item in a)indexed.Add(item.Uid,item.NativePayload);
             foreach(var item in b){string payload;if(!indexed.TryGetValue(item.Uid,out payload) || payload!=item.NativePayload)return false;}return true;
+        }
+        // DFU SplitStack constructs the base class and drops a custom item's
+        // type. Observed market goods have one explicit, lossless split rule.
+        internal static DaggerfallUnityItem SplitExactStack(ItemCollection source,DaggerfallUnityItem item,int count)
+        {
+            var goods=item as NativeMarketGoodsItem;
+            if(goods==null)return source.SplitStack(item,count);
+            if(count<1 || count>=item.stackCount || !ReferenceEquals(source.GetItem(item.UID),item))return null;
+            var allocated=new NativeMarketGoodsItem(goods.GoodsArchive,goods.GoodsRecord);
+            var data=goods.GetSaveData();data.uid=allocated.UID;data.stackCount=count;
+            var detached=new ItemCollection();detached.DeserializeItems(new[]{data});
+            var split=detached.GetItem(data.uid);
+            if(!(split is NativeMarketGoodsItem) || split.stackCount!=count)
+                throw new InvalidOperationException("Native market stack split lost its exact custom payload.");
+            source.AddItem(split,noStack:true);item.stackCount-=count;return split;
         }
         private static NpcInventoryState CheckBinding(WorldStateStore store,NativeNpcInventoryBinding binding,string transactionId)
         {
@@ -276,7 +352,8 @@ namespace PeopleOfTheIliacBay.DFU
                 NpcInventoryState seller=null;
                 if(price>0)
                 {
-                    if(store.NpcInventoryItemOwner(uid)!=null)
+                    if(from==null?store.NpcInventoryItemOwner(uid)!=null:
+                        from.PersonId!=sellerId || store.NpcInventoryItemOwner(uid)!=from.PersonId)
                         throw new InvalidOperationException("Shop stock UID already belongs to a persistent NPC inventory.");
                     seller=store.ReadNpcInventory(sellerId);
                     if(to==null || seller==null || seller.PersonId==to.PersonId || seller.Revision!=sellerRevision || seller.LastTransactionId==transactionId ||
@@ -289,7 +366,8 @@ namespace PeopleOfTheIliacBay.DFU
                     throw new InvalidOperationException("Item is missing, protected, equipped or has insufficient quantity.");
                 if(preserveUid && count!=original.stackCount)
                     throw new InvalidOperationException("An exact-UID container deposit must move the complete stack.");
-                if(count<original.stackCount && (!original.IsAStack() || !string.IsNullOrEmpty(original.GetSaveData().className)))
+                if(count<original.stackCount && (!original.IsAStack() ||
+                    !string.IsNullOrEmpty(original.GetSaveData().className) && !(original is NativeMarketGoodsItem)))
                     throw new InvalidOperationException("This native/custom item cannot safely split.");
                 if(findStack==null)throw new InvalidOperationException("Native stack API is unavailable.");
                 // Acquisitions retain the exact purchased native object/UID (or
@@ -297,7 +375,7 @@ namespace PeopleOfTheIliacBay.DFU
                 merged=price>0 || preserveUid?null:(DaggerfallUnityItem)findStack.Invoke(target,new object[]{original});
                 originalCount=original.stackCount;mergedCount=merged==null?0:merged.stackCount;
                 if(merged!=null && (merged.IsQuestItem || mergedCount>int.MaxValue-count))throw new InvalidOperationException("Target stack is protected or full.");
-                touched=true;moved=count==originalCount?original:source.SplitStack(original,count);
+                touched=true;moved=count==originalCount?original:SplitExactStack(source,original,count);
                 if(moved==null)throw new InvalidOperationException("Native stack split failed.");
                 if(price>0 || preserveUid) {source.RemoveItem(moved);target.AddItem(moved,noStack:true);}
                 else target.Transfer(moved,source);
@@ -332,9 +410,9 @@ namespace PeopleOfTheIliacBay.DFU
                             retainedUid,count,targetBinding.PersonId,sourceBinding.PersonId,observedGameTime,valuation,nativeValue,itemName);
                 }
                 var updates=new List<NpcInventoryUpdate>();
-                if(from!=null)updates.Add(new NpcInventoryUpdate{PersonId=from.PersonId,ExpectedRevision=from.Revision,WalletGold=from.WalletGold,Items=CaptureItems(source)});
+                if(from!=null)updates.Add(new NpcInventoryUpdate{PersonId=from.PersonId,ExpectedRevision=from.Revision,WalletGold=checked(from.WalletGold+(price>0?price:0)),Items=CaptureItems(source)});
                 if(to!=null)updates.Add(new NpcInventoryUpdate{PersonId=to.PersonId,ExpectedRevision=to.Revision,WalletGold=to.WalletGold-price,Items=CaptureItems(target)});
-                if(seller!=null)updates.Add(new NpcInventoryUpdate{PersonId=seller.PersonId,ExpectedRevision=seller.Revision,WalletGold=seller.WalletGold+price,Items=seller.Items});
+                if(seller!=null && from==null)updates.Add(new NpcInventoryUpdate{PersonId=seller.PersonId,ExpectedRevision=seller.Revision,WalletGold=seller.WalletGold+price,Items=seller.Items});
                 if(!store.CommitNpcInventoryTransaction(transactionId,updates))throw new InvalidOperationException("Inventory revision or UID conflict rejected the transaction.");
                 committed=true;if(sourceBinding!=null)sourceBinding.Revision++;if(targetBinding!=null)targetBinding.Revision++;
                 TryRecordExactPlayerGiftSource(store,source,target,sourceBinding,targetBinding,sellerId,

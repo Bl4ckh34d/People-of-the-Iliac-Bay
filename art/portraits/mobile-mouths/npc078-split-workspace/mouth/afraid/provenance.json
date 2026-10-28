@@ -1,0 +1,17 @@
+{
+  "portrait": "TFAC-078",
+  "emotion": "afraid",
+  "asset": "mouth",
+  "raw": "art/portraits/mobile-mouths/npc078-split-workspace/mouth/afraid/raw.png",
+  "sourceGrid": "art\\portraits\\mobile-mouths\\npc078-split-workspace\\mouth-reference-grid.png",
+  "sourceGridSha256": "723a29c0e82dc6a0b811139c36f110100a031876b51ea7eea10984dd1a3e9f45",
+  "generatedFileSha256": "a97dd1d2ce6a95a4a0ad987c5aa25b3f266b53fade84cd6d1fe6d6a37c719b5b",
+  "dimensions": {
+    "height": 844,
+    "width": 1863
+  },
+  "tool": "built-in image_gen",
+  "generationMode": "single generation call; raw image copied unchanged",
+  "prompt": "Create one clean 3-by-3 sprite atlas of the SAME NPC lower-face half from the supplied reference grid. Preserve identity, original pixel-art style and palette, cell framing, face scale, nose, chin, jaw, skin, hair edges and background. Each equal cell represents the original 64x29 lower-face half. Row-major phoneme order A, B, C / D, E, F / G, H, X. Mouths are moderately worried/anxious: controlled tension at the corners and a little uncertainty, with nine clearly useful speech openings and varied phoneme shapes. A and X are closed, subtle tense resting poses. Speech shapes remain natural and readable at 64px scale, not a huge pout and not exaggerated. Keep every mouth wholly within the original lip region and preserve surrounding pixels. Do not change upper-face features, add sweat/tears/props, text, separators, or new details. Output atlas only, exactly nine equal cells in a 3x3 grid, no margins.",
+  "qa": "Inspected visually as a raw sheet. Atlas layout and expression present. Technical composition, native-scale readability, cell consistency and final masked animation are not verified."
+}

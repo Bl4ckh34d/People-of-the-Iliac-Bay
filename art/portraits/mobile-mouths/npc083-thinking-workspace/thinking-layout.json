@@ -1,0 +1,20 @@
+{
+  "halfLidRegions": [
+    {
+      "x": 14,
+      "y": 20,
+      "width": 5,
+      "height": 1
+    },
+    {
+      "x": 33,
+      "y": 20,
+      "width": 7,
+      "height": 1
+    }
+  ],
+  "sourceSha256": "e46c900779f687610af7b821b988300b998aea48632c829537f88cb829b5acfb",
+  "referenceSha256": "8c6fb87aacf3faf0d2bd22190108f26941f569a09813226ac424360a6f9dd58e",
+  "candidateOnly": true,
+  "rationale": "Tentative narrow outer-corner candidate only: source sclera/iris colors begin at x19 (left) and x40 (right) on row 20. Review all nine final gaze cells for shifted iris overlap before build."
+}

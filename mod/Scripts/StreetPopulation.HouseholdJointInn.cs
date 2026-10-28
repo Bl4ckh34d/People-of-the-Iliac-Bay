@@ -22,6 +22,21 @@ namespace PeopleOfTheIliacBay.DFU
         private readonly Dictionary<int,HouseholdJointProgress> jointInnFrames=new Dictionary<int,HouseholdJointProgress>();
         private readonly Dictionary<string,ResidentActor> jointInnEligible=new Dictionary<string,ResidentActor>(StringComparer.Ordinal);
         private void BeginHouseholdInnFrame(){jointInnFrames.Clear();jointInnEligible.Clear();}
+        private bool HasObservedHouseholdInnOwner(int home=-1)
+        {
+            if(!interior)return false;
+            foreach(var pair in jointInnBindings)
+            {
+                var binding=pair.Value;
+                if(home>=0 && pair.Key!=home || binding.Room!=interior || binding.Motion==null ||
+                    binding.Motion.Complete || binding.Motion.RequiresRecovery || !binding.First || !binding.Second ||
+                    !binding.First.Resident.IsAlive || !binding.Second.Resident.IsAlive ||
+                    !binding.First.gameObject.activeInHierarchy || !binding.Second.gameObject.activeInHierarchy ||
+                    binding.First.transform.parent!=interior.transform || binding.Second.transform.parent!=interior.transform)continue;
+                if(FindActor(binding.First.Resident.Id)==binding.First && FindActor(binding.Second.Resident.Id)==binding.Second)return true;
+            }
+            return false;
+        }
         private bool DeferHouseholdInn(Plan plan,ResidentActor actor,double now)
         {
             if(!interior || worldStore==null || !worldStore.HasActiveHouseholdJoint(population.SettlementId,plan.Resident.Id))return false;

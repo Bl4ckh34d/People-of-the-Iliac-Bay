@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "portraitId": "common-080",
+  "profileId": "common-080-voice-design-02",
+  "profilePath": "work/portrait-female-voice-design-02/profiles/common-080.json",
+  "profileSha256": "eaae9f0dee90d55e0df11f039575e1582b6396a52cbbf46afbbc57f6950bb40f",
+  "attributes": {
+    "pitch": "an upper mezzo-soprano register",
+    "timbre": "mellow and velvety",
+    "roughness": "lightly raspy",
+    "breathiness": "with a clean firm tone and little breathiness",
+    "vocalFry": "with occasional subtle vocal fry at phrase endings",
+    "pace": "a measured conversational pace"
+  },
+  "stableInstruction": "An adult woman speaking British English with a neutral southern English accent. Her distinctive voice has an upper mezzo-soprano register; its timbre is mellow and velvety, lightly raspy, with a clean firm tone and little breathiness, with occasional subtle vocal fry at phrase endings. Use a measured conversational pace. Keep this individual vocal identity consistent; speak naturally, without caricature, shouting, or added vocal events.",
+  "seed": 167119338,
+  "guidanceScale": 4.0,
+  "anchorText": "Good day. I have been in this town for many years. What brings you here today?",
+  "anchorRequestPurpose": "Breeze VoiceDesign without voice_ref; stable per-woman profile instruction and seed.",
+  "requestPayload": {
+    "model": "breeze",
+    "input": "Good day. I have been in this town for many years. What brings you here today?",
+    "response_format": "pcm",
+    "stream_format": "sse",
+    "options": {
+      "instruct": "An adult woman speaking British English with a neutral southern English accent. Her distinctive voice has an upper mezzo-soprano register; its timbre is mellow and velvety, lightly raspy, with a clean firm tone and little breathiness, with occasional subtle vocal fry at phrase endings. Use a measured conversational pace. Keep this individual vocal identity consistent; speak naturally, without caricature, shouting, or added vocal events.",
+      "guidance_scale": 4.0,
+      "stream_lookahead_margin": 0,
+      "stream_chunk_policy": "grow",
+      "seed": 167119338
+    }
+  },
+  "requestPayloadSha256": "759b2998be304b8458007cb253f5ea3a0d1c7c06165dde8d4779ba60d7a03b8b",
+  "referenceWav": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait-female-voice-design-02\\anchors\\common-080\\reference.wav",
+  "referenceSha256": "905a95d0f8cae3bd1aef32dee6b10ad6ac595a9fc49e9e4059ea6d16881b2529",
+  "referenceRawWav": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait-female-voice-design-02\\anchors\\common-080\\reference.raw.wav",
+  "referenceRawSha256": "6c703b152bd0d10bd166920e3872434d03bba69ae2f3d6c93473bbaf10f52b2e",
+  "audioSampleRate": 24000,
+  "audioFrames": 120960,
+  "normalization": {
+    "schemaVersion": 1,
+    "normalizer": "pcm16-active-rms-v1",
+    "status": "normalized",
+    "targetActiveRmsDbfs": -20.0,
+    "peakCeilingDbfs": -3.0,
+    "maxBoostDb": 12.0,
+    "gateDbfs": -50.0,
+    "appliedGainDb": 0.99174030919458,
+    "input": {
+      "sha256": "6c703b152bd0d10bd166920e3872434d03bba69ae2f3d6c93473bbaf10f52b2e",
+      "sampleRate": 24000,
+      "channels": 1,
+      "sampleWidthBytes": 2,
+      "frames": 120960,
+      "peakDbfs": -6.705333862229812,
+      "activeRmsDbfs": -20.991740309194583,
+      "activeFrames": 87600
+    },
+    "output": {
+      "sha256": "905a95d0f8cae3bd1aef32dee6b10ad6ac595a9fc49e9e4059ea6d16881b2529",
+      "sampleRate": 24000,
+      "channels": 1,
+      "sampleWidthBytes": 2,
+      "frames": 120960,
+      "peakDbfs": -5.713826474766892,
+      "activeRmsDbfs": -20.023707695558276,
+      "activeFrames": 88080
+    }
+  },
+  "synthesis": {
+    "outputWav": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait-female-voice-design-02\\anchors\\common-080\\reference.raw.wav",
+    "pcmBytes": 241920,
+    "sampleRate": 24000,
+    "channels": 1,
+    "synthesisMs": 2477.508,
+    "firstAudioMs": 353.724,
+    "audioDeltaCount": 7,
+    "serverTiming": {
+      "ttft_ms": 352.45
+    }
+  }
+}

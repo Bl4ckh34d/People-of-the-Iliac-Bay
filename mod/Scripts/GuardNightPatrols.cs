@@ -12,7 +12,8 @@ namespace PeopleOfTheIliacBay.DFU
     public sealed partial class GuardPopulation
     {
         public bool NightPatrols = true;
-        public int MaximumPatrolPairs = 2;
+        public bool DayPatrols = true;
+        public int MaximumPatrolPairs = 8;
         private Coroutine patrolSurvey;
         private readonly List<PatrolPairPlan> patrolTemplates = new List<PatrolPairPlan>();
         private float nextPatrolTick;
@@ -49,13 +50,15 @@ namespace PeopleOfTheIliacBay.DFU
             foreach (var plan in patrolTemplates) { used.Add(plan.LeaderId); used.Add(plan.FollowerId); }
             var guards = new List<GuardRecord>(Roster.Guards);
             guards.Sort((a,b) => string.CompareOrdinal(a.Id,b.Id));
+            int shiftCap = GuardShifts.PatrolPairTarget(Math.Max(3,baseGuardTarget),Mathf.Clamp(MaximumPatrolPairs,0,16));
             foreach (var leader in guards)
             {
+                int shiftTemplates = patrolTemplates.FindAll(p => guards.Exists(g => g.Id == p.LeaderId && g.Shift == leader.Shift)).Count;
                 if (!leader.IsAlive || used.Contains(leader.Id) || IsGateGuard(leader.Id) ||
-                    patrolTemplates.Count >= Mathf.Clamp(MaximumPatrolPairs, 0, 4)) continue;
+                    shiftTemplates >= shiftCap) continue;
                 GuardRecord partner = null; double distance = double.MaxValue;
                 foreach (var candidate in guards)
-                    if (candidate.IsAlive && candidate != leader && !used.Contains(candidate.Id) &&
+                    if (candidate.IsAlive && candidate != leader && candidate.Shift == leader.Shift && !used.Contains(candidate.Id) &&
                         !IsGateGuard(candidate.Id) && Gap(leader.Post, candidate.Post) < distance)
                     { partner = candidate; distance = Gap(leader.Post,candidate.Post); }
                 if (partner == null) continue;
@@ -87,11 +90,11 @@ namespace PeopleOfTheIliacBay.DFU
                         foreach (var point in edge) if (circuit.Count == 0 || Gap(circuit[circuit.Count-1],point) > 0.000001) circuit.Add(point);
                         yield return null;
                     }
-                    if (!usable || circuit.Count < 4 || circuit.Count > 512 || RouteLength(circuit) > 240) continue;
+                    if (!usable || circuit.Count < 4 || circuit.Count > 512 || RouteLength(circuit) > 240 || RouteCrossesGate(circuit)) continue;
                     var leaderJoin = ExactSurvey(leader.Post, circuit[0]); yield return null;
                     while (!OwnsExterior || GameManager.IsGamePaused) yield return null;
                     var followerJoin = ExactSurvey(partner.Post, RouteAt(circuit, 2)); yield return null;
-                    if (leaderJoin == null || followerJoin == null) continue;
+                    if (leaderJoin == null || followerJoin == null || RouteCrossesGate(leaderJoin) || RouteCrossesGate(followerJoin)) continue;
                     try
                     {
                         var plan = PatrolPairPlan.Create(leader.Id, partner.Id, leaderJoin, followerJoin, circuit, 0, 86400, 1.3, DaggerfallUnity.Instance.WorldTime.TimeScale, 2);
@@ -106,49 +109,40 @@ namespace PeopleOfTheIliacBay.DFU
         }
         private void UpdateNightPatrols(double now)
         {
-            // A haunting does not cancel guard duty. Hostile apparitions use
-            // ordinary defense and the same injury/role retreat policy as other foes.
-            bool night = NightPatrols && MaximumPatrolPairs > 0 &&
-                DaggerfallUnity.Instance.WorldTime.Now.IsNight;
-            if (!night)
+            bool enabled = !HauntingShelterNow(now) && MaximumPatrolPairs > 0 &&
+                (GuardShifts.At(now) == GuardShift.Night ? NightPatrols : DayPatrols);
+            if (!enabled)
             {
-                double dusk = Math.Floor(now / 86400) * 86400 + DaggerfallDateTime.DuskHour * 3600;
-                if (dusk <= now) dusk += 86400;
                 foreach (var pair in new List<GuardPatrolAssignment>(Roster.Patrols))
                 {
                     if (!pair.InterruptedAt.HasValue)
-                    {
                         Roster.StopPatrol(pair.Plan.LeaderId, now);
-                        try { Roster.ScheduleDayRest(pair.Plan.LeaderId, dusk, now); }
-                        catch (ArgumentException) { }
-                        try { Roster.ScheduleDayRest(pair.Plan.FollowerId, dusk, now); }
-                        catch (ArgumentException) { }
-                    }
                 }
                 return;
             }
             if (!OwnsExterior || GameManager.Instance.PlayerEntity.CrimeCommitted != DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.None) return;
-            int cap = Mathf.Min(Mathf.Clamp(MaximumPatrolPairs,0,4), Math.Max(0,(Roster.Target-4)/2));
+            int staff = Roster.Guards.FindAll(g => GuardShifts.OnDuty(g,now) && !IsGateGuard(g.Id)).Count;
+            int cap = Math.Min(GuardShifts.PatrolPairTarget(Math.Max(3,baseGuardTarget),Mathf.Clamp(MaximumPatrolPairs,0,16)),
+                Math.Max(0,(staff-1)/2));
             int active = 0;
             foreach (var pair in new List<GuardPatrolAssignment>(Roster.Patrols))
                 if (!pair.InterruptedAt.HasValue && ++active > cap) Roster.StopPatrol(pair.Plan.LeaderId,now);
-            double dawn = Math.Floor(now/86400)*86400 + DaggerfallDateTime.DawnHour*3600;
-            if (dawn <= now) dawn += 86400;
+            double shiftEnd = GuardShifts.NextChange(now);
             foreach (var template in patrolTemplates)
             {
-                if (Roster.Patrols.Count >= cap) break;
-                int free = Roster.Guards.FindAll(g => g.IsAlive && g.Duty == GuardDuty.Posted &&
-                    !Roster.IsOnPatrol(g.Id) && !IsGateGuard(g.Id)).Count;
-                if (free < 6) break;
+                if (Roster.Patrols.FindAll(p => !p.InterruptedAt.HasValue).Count >= cap) break;
+                int free = Roster.Guards.FindAll(g => GuardShifts.OnDuty(g,now) && g.Duty == GuardDuty.Posted &&
+                    g.Refuge == null && !Roster.IsOnPatrol(g.Id) && !IsGateGuard(g.Id)).Count;
+                if (free < 3) break;
                 var a = Roster.Guards.Find(g => g.Id == template.LeaderId);
                 var b = Roster.Guards.Find(g => g.Id == template.FollowerId);
-                if (a == null || b == null || !a.IsAlive || !b.IsAlive || a.Duty != GuardDuty.Posted || b.Duty != GuardDuty.Posted ||
+                if (!GuardShifts.OnDuty(a,now) || !GuardShifts.OnDuty(b,now) || a.Duty != GuardDuty.Posted || b.Duty != GuardDuty.Posted ||
                     Roster.IsOnPatrol(a.Id) || Roster.IsOnPatrol(b.Id) || IsGateGuard(a.Id) || IsGateGuard(b.Id)) continue;
                 try
                 {
-                    var plan = PatrolPairPlan.Create(a.Id,b.Id,template.LeaderJoin,template.FollowerJoin,template.Circuit,now,dawn,1.3,DaggerfallUnity.Instance.WorldTime.TimeScale,2);
+                    var plan = PatrolPairPlan.Create(a.Id,b.Id,template.LeaderJoin,template.FollowerJoin,template.Circuit,now,shiftEnd,1.3,DaggerfallUnity.Instance.WorldTime.TimeScale,2);
                     Roster.StartPatrol(plan,now);
-                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_PATROL_START: " + a.Id + "/" + b.Id);
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_PATROL_START: " + a.Id + "/" + b.Id + "; shift=" + a.Shift);
                 }
                 catch (ArgumentException) { /* Not enough night left to join, or a member has not returned. */ }
             }

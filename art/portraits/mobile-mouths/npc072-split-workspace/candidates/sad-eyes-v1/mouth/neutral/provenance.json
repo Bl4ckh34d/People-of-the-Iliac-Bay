@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T09:33:17.8124830Z",
+    "portraitRecord":  72,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "neutral",
+    "prompt":  "Edit the provided lower-face reference grid into one 3×3 pixel-art speech-mouth atlas for the same Daggerfall Unity NPC portrait. Preserve the exact 3×3 layout, overall 64:29 aspect, and a complete native-size 64×29 lower-half crop in every cell. Keep the source identity, original lip scale and center, nose base, jaw, hair, neck, background and registration. Retain the source\u0027s muted soft brown/terracotta lip and skin palette, with restrained pixel clusters and no lipstick-red color, broad skin repaint, shiny teeth, warm skin-colored teeth, or tooth gaps. A and X are neutral closed-mouth poses and must reproduce the original closed mouth exactly. The other cells show clear but compact phoneme poses without erasing the pose meaning. Use these actual Rhubarb definitions: A: pressured closed P/B/M. B: narrow opening, teeth nearly together, consonants/EE. C: medium unrounded EH/AE. D: wide AA. E: slightly rounded AO/ER, no wider than C. F: puckered UW/OW/W. G: upper teeth touching lower lip, F/V. H: tongue raised behind upper teeth for L, opening between C and D. X: relaxed closed idle. Exact row-major order A B C / D E F / G H X. Teeth should be muted neutral ivory/gray, distinct from skin, with modest cavity contrast. Keep every panel aligned; no labels, gutters, borders, isolated mouth closeups, or enlarged mouth features.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54 as C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-36850a55-aa6c-4937-a477-ae06befdde08.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-36850a55-aa6c-4937-a477-ae06befdde08.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "4af6922ef7f8345a11ae8418761144f64dcaaa8b836f461486a2fb206cbebd85",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "439016eece9c19baa01534109a73a9de37ac5555ae9f7e4d5bbbcdc6fbcbe550",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-36850a55-aa6c-4937-a477-ae06befdde08.png",
+                      "sha256":  "2ab8e29c5a3a992b86e87c1e51607e586801ee578e5aa694cb9014d2c49239fa",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/neutral/raw.png",
+                "sha256":  "2ab8e29c5a3a992b86e87c1e51607e586801ee578e5aa694cb9014d2c49239fa",
+                "width":  1863,
+                "height":  844
+            }
+}

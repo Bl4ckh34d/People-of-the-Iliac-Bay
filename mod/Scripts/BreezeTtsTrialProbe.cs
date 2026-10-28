@@ -17,11 +17,11 @@ using UnityEngine;
 
 namespace PeopleOfTheIliacBay.DFU
 {
-    /// <summary>Opt-in real SubmitFreeText + D3/Qwen + external synthesis + Unity playback trial.</summary>
+    /// <summary>Opt-in real SubmitFreeText + single dialogue model + external synthesis + Unity playback trial.</summary>
     internal static class BreezeTtsTrialProbe
     {
         private const string RunFlag = "-peopleoftheiliacbay-breeze-tts-probe";
-        private const string OwnedCharacter = "PeopleOfTheIliacBayTest-9a5f197b";
+        private const string OwnedCharacter = "Hakon Ironhand";
         private const string BaselineSave = "People - Gothway Garden";
         private static readonly string[] PlayerTurns =
         {
@@ -91,16 +91,11 @@ namespace PeopleOfTheIliacBay.DFU
 
             BreezeTtsTrialBridge bridge = ConversationMoodProbe.ReadHostField(host, "breezeTtsTrial") as BreezeTtsTrialBridge;
             LocalDialogueClient dialogue = ConversationMoodProbe.ReadHostField(host, "localDialogue") as LocalDialogueClient;
-            object decisionSession = ConversationMoodProbe.ReadHostField(host, "decisionRoutingSession");
-            object decisionConnectionValue = ConversationMoodProbe.ReadHostField(host, "decisionRoutingConnection");
-            LocalDialogueConnection decisionConnection = decisionConnectionValue as LocalDialogueConnection;
             LocalDialogueConnection qwenConnection = ReadQwenConnection(host);
-            string d3ModelId = Convert.ToString(ReadMember(decisionSession, "ExpectedModelId"), CultureInfo.InvariantCulture);
             ConversationMoodProbe.Require(bridge && dialogue && dialogue.enabled && !dialogue.IsBusy &&
                 Convert.ToBoolean(ConversationMoodProbe.ReadHostField(host, "localDialogueEnabled"), CultureInfo.InvariantCulture) &&
-                decisionSession != null && ConversationMoodProbe.ReadBoolMember(decisionSession, "Enabled") &&
-                !string.IsNullOrWhiteSpace(d3ModelId) && decisionConnection != null && decisionConnection.Endpoint.Port == 8093,
-                "Breeze pilot requires the actually configured Qwen client and enabled D3 routing session on port 8093.");
+                qwenConnection != null,
+                "Breeze pilot requires the configured single dialogue client and speech bridge.");
             ConversationMoodProbe.Require(bridge.PublishedRequestCount == 0 && !bridge.HasPendingSpeech &&
                 string.IsNullOrEmpty(bridge.LastQueuedRequestId),
                 "Breeze pilot requires a fresh empty TTS trial directory; refusing stale requests.");
@@ -118,7 +113,7 @@ namespace PeopleOfTheIliacBay.DFU
             string[] activeSession = new string[1];
             Exception pilotFailure = null;
             IEnumerator pilot = RunPilotTurns(host, streets, game, bridge, dialogue, qwenConnection,
-                d3ModelId, evidence, activeSession);
+                evidence, activeSession);
             try
             {
                 while (true)
@@ -228,14 +223,14 @@ namespace PeopleOfTheIliacBay.DFU
                 "; real-text-turns=" + totalTurns + "; qwen-backed-turns=" + totalQwenTurns +
                 "; scripted-native-turns=" + totalScriptedTurns + "; playback-measurements=" + playedLines +
                 "; mixer-frames=" + mixerFrames + "; qwen-model-id=" + evidence[0].QwenModelId +
-                "; d3-expected-model-id=" + d3ModelId + "; coordinator-synthesis-claim=false; " +
+                "; single-dialogue-model=true; coordinator-synthesis-claim=false; " +
                 "Unity-playback-start-and-completion-verified=true; pre-question-health-and-model-id-check=true; " +
                 "exact-baseline-reload=true; pending-speech-cleanup=true.");
         }
 
         private static IEnumerator RunPilotTurns(PeopleOfTheIliacBayMod host, StreetPopulation streets,
             GameManager game, BreezeTtsTrialBridge bridge, LocalDialogueClient dialogue,
-            LocalDialogueConnection qwenConnection, string d3ModelId, List<PilotEvidence> evidence,
+            LocalDialogueConnection qwenConnection, List<PilotEvidence> evidence,
             string[] activeSession)
         {
             if (game.PlayerEnterExit.IsPlayerInsideBuilding)
@@ -293,7 +288,7 @@ namespace PeopleOfTheIliacBay.DFU
                     Convert.ToString(ConversationMoodProbe.ReadHostField(host, "conversationPersonId"), CultureInfo.InvariantCulture) == actor.Resident.Id,
                     "Native conversation session did not bind selected resident identity.");
                 var actorEvidence = new PilotEvidence { PersonId = actor.Resident.Id,
-                    SessionId = sessionId, D3ModelId = d3ModelId };
+                    SessionId = sessionId, D3ModelId = "removed-single-llm" };
                 evidence.Add(actorEvidence);
 
                 // The exact native opening ListItem must publish and finish one

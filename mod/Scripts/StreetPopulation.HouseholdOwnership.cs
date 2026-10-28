@@ -33,6 +33,9 @@ namespace PeopleOfTheIliacBay.DFU
             simulatedFamilyFrame.Clear();if(worldStore==null || population==null || geometry==null)return;
             foreach(var progress in worldStore.ReadActiveHouseholdJoints(population.SettlementId))
             {
+                if(Reaction(progress.FirstResidentId,now)?.Reaction==CivilianReaction.Flee ||
+                    Reaction(progress.SecondResidentId,now)?.Reaction==CivilianReaction.Flee)
+                {HoldFamily(progress);continue;}
                 // Cash detours own the collector; the partner keeps the shared
                 // checkpoint instead of being hidden with the whole family.
                 if(FamilyNeedsCash(progress))continue;
@@ -43,6 +46,8 @@ namespace PeopleOfTheIliacBay.DFU
                     simulatedFamilyFrame.Add(progress.FirstResidentId);simulatedFamilyFrame.Add(progress.SecondResidentId);
                     if(!HouseholdParentAvailable(progress.FirstResidentId,now) || !HouseholdParentAvailable(progress.SecondResidentId,now))
                     {HoldFamily(progress);continue;}
+                    // A current-scene visible body is never repositioned by a coarse owner handoff.
+                    if(HasVisibleFamilyBodyInRoom(progress)){HoldFamily(progress);continue;}
                     bool restored=sim.Phase==HouseholdJointPhase.Completed?RestoreHouseholdHomeBodies(progress,sim,now):
                         interior?RestoreHouseholdInnBodies(progress,sim,now):RestoreHouseholdExteriorBodies(progress,sim,now);
                     if(restored){simulatedFamilyFrame.Remove(progress.FirstResidentId);simulatedFamilyFrame.Remove(progress.SecondResidentId);}
@@ -62,6 +67,14 @@ namespace PeopleOfTheIliacBay.DFU
                     }
                 }
             }
+        }
+        private bool HasVisibleFamilyBodyInRoom(HouseholdJointProgress progress)
+        {
+            if(!interior)return false;
+            foreach(string id in new[]{progress.FirstResidentId,progress.SecondResidentId})
+            {ResidentActor actor;if(actors.TryGetValue(id,out actor) && actor && actor.gameObject.activeInHierarchy &&
+                actor.transform.parent==interior.transform)return true;}
+            return false;
         }
         private bool RestoreHouseholdExteriorBodies(HouseholdJointProgress progress,HouseholdJointSimulation sim,double now)
         {
@@ -122,6 +135,11 @@ namespace PeopleOfTheIliacBay.DFU
                 sim.Phase!=HouseholdJointPhase.AtInn && sim.Phase!=HouseholdJointPhase.Visiting)return false;
             var plan=worldStore.ReadHouseholdDay(progress.SettlementId,progress.HomeKey,progress.AbsoluteDay);
             if(plan?.JointInn==null || plan.JointInn.InnKey!=interior.EntryDoor.buildingKey || !FamilyActorCapacity(progress))return false;
+            // Existing visible bodies keep their captured movement owner; reconstruction only creates absent bodies.
+            ResidentActor visibleFirst,visibleSecond;
+            if(actors.TryGetValue(progress.FirstResidentId,out visibleFirst) && visibleFirst && visibleFirst.gameObject.activeInHierarchy ||
+                actors.TryGetValue(progress.SecondResidentId,out visibleSecond) && visibleSecond && visibleSecond.gameObject.activeInHierarchy)return false;
+            if(!worldStore.PrepareHouseholdInnObservation(plan.Id,now,CanReserveHouseholdSeats))return false;
             var a=worldStore.ProjectHouseholdInnMember(plan.Id,progress.FirstResidentId,now);
             var b=worldStore.ProjectHouseholdInnMember(plan.Id,progress.SecondResidentId,now);
             if(a==null || b==null)return false;
@@ -184,11 +202,12 @@ namespace PeopleOfTheIliacBay.DFU
             try{worldStore.BeginHouseholdJointSimulation(progress.HouseholdDayId,progress.Sequence,now);return true;}
             catch(ArgumentException){return false;}
         }
-        private void YieldHouseholds(double now)
+        private void YieldHouseholds(double now,bool retainObservedInn=false)
         {
             if(worldStore==null || population==null || GameManager.Instance.SaveLoadManager.LoadInProgress)return;
             CaptureHouseholdInns(now);
-            foreach(var progress in worldStore.ReadActiveHouseholdJoints(population.SettlementId))YieldHousehold(progress,now);
+            foreach(var progress in worldStore.ReadActiveHouseholdJoints(population.SettlementId))
+                if(!retainObservedInn || !HasObservedHouseholdInnOwner(progress.HomeKey))YieldHousehold(progress,now);
         }
     }
 }

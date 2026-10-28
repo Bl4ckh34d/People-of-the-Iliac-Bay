@@ -16,10 +16,10 @@ using Stopwatch = System.Diagnostics.Stopwatch;
 namespace PeopleOfTheIliacBay.DFU
 {
     /// <summary>One bounded real-model, production-voice dialogue presentation smoke.</summary>
-    internal static class LiveDialoguePresentationProbe
+    internal static partial class LiveDialoguePresentationProbe
     {
         internal const string RunFlag = "-peopleoftheiliacbay-live-dialogue-presentation-probe";
-        private const string OwnedCharacter = "PeopleOfTheIliacBayTest-9a5f197b";
+        private const string OwnedCharacter = "Hakon Ironhand";
         private const string BaselineSave = "People - Gothway Garden";
         private const string PlayerText = "Hi, how are you?";
         private const int FaceRecord = 77;
@@ -147,6 +147,11 @@ namespace PeopleOfTheIliacBay.DFU
             if (restoreFailure != null)
                 throw new InvalidOperationException("Live dialogue presentation could not restore the exact baseline save.", restoreFailure);
 
+            if (LatencyProbe)
+            {
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_LIVE_DIALOGUE_PRESENTATION_PASS: latency-probe=true; baseline-restored=true.");
+                yield break;
+            }
             Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_LIVE_DIALOGUE_PRESENTATION_PASS: person=" + context.PersonId +
                 "; reply-request=" + context.ReplyRequestId + "; generation-pending=" +
                 "visible-when-at-least-one-second=true; tts-pending=" +
@@ -165,7 +170,7 @@ namespace PeopleOfTheIliacBay.DFU
             context.Bridge = ReadField(host, "breezeTtsTrial") as BreezeTtsTrialBridge;
             Require(context.Store != null && context.Client != null && context.Bridge != null &&
                 ReadBool(host, "localDialogueEnabled") && ReadBool(host, "npcVoiceEnabled") &&
-                !ReadBool(host, "socialSentenceStreamingEnabled") && !ReadBool(host, "decisionPlannerEnabled") &&
+                !ReadBool(host, "socialSentenceStreamingEnabled") &&
                 !ReadBool(host, "dialoguePrewarmEnabled") && ReadBool(host, "animatedPortraitsEnabled") &&
                 context.Bridge.VoiceEnabled && !context.Bridge.IsTrialMode &&
                 context.Bridge.OutputAudioSource != null &&
@@ -256,6 +261,11 @@ namespace PeopleOfTheIliacBay.DFU
             Require(!context.Bridge.HasPendingSpeech && !context.Bridge.OutputAudioSource.isPlaying,
                 "Opening greeting did not finish before the typed player turn.");
 
+            if (LatencyProbe)
+            {
+                yield return ExerciseSpeechLatency(context);
+                yield break;
+            }
             context.BaselineReplyRequests = ConversationMoodProbe.ReadLongProperty(context.Client, "ReplyRequestCount");
             context.BaselineReplyCompletions = ConversationMoodProbe.ReadLongProperty(context.Client, "ReplyCompletionCount");
             long submitTicks = Stopwatch.GetTimestamp();

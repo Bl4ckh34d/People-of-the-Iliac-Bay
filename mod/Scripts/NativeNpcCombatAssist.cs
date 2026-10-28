@@ -71,6 +71,14 @@ namespace PeopleOfTheIliacBay.DFU
         {
             if (!actor || !target || !actor.gameObject.activeInHierarchy || !target.gameObject.activeInHierarchy ||
                 target.Entity == null || target.Entity.IsInvisible) return false;
+            var game=GameManager.Instance;
+            if(game.PlayerEnterExit.IsPlayerInsideDungeon)
+            {
+                var dungeon=game.PlayerEnterExit.Dungeon;
+                return dungeon && dungeon.gameObject.activeInHierarchy && actor.transform.IsChildOf(dungeon.transform) &&
+                    target.transform.IsChildOf(dungeon.transform) &&
+                    CivilianResponses.Sees(actor.transform.position,target.transform.position,range);
+            }
             var source = DefenseScene.For(actor);
             var destination = DefenseScene.For(target);
             return source != null && destination != null && source.Root == destination.Root && source.PlayerPresent &&
@@ -93,6 +101,7 @@ namespace PeopleOfTheIliacBay.DFU
                 !OwnershipClear(target) || !SameVisibleScene(actor, target, MeleeRange)) return false;
             var body = actor.GetComponent<DaggerfallEntityBehaviour>();
             if (!stillAuthorized()) return false;
+            actor.ShowMeleeSwing(target.transform.position-actor.transform.position);
             damage = FormulaHelper.CalculateAttackDamage(body.Entity, target.Entity, false, 0, weapon);
             var effects = body.GetComponent<EntityEffectManager>();
             if (weapon.IsEnchanted && effects)

@@ -18,7 +18,7 @@ namespace PeopleOfTheIliacBay.DFU
         public static string Run()
         {
             Verify(false);Verify(true);VerifySplitRollback();
-            return "PEOPLE_OF_THE_ILIAC_BAY_NPC_SHOP_PURCHASE_PASS full-uid split-uid stock buyer-wallet seller-wallet deny stale rollback replay native-save later-handover";
+            return "PEOPLE_OF_THE_ILIAC_BAY_NPC_SHOP_PURCHASE_PASS fresh-uid preserved-stock buyer-wallet seller-wallet deny stale rollback replay native-save later-handover";
         }
         private static void Verify(bool partial)
         {
@@ -64,13 +64,14 @@ namespace PeopleOfTheIliacBay.DFU
             Require(NativeNpcInventoryBridge.TryCompleteActionPurchase(store,job,102,buyer,stock,()=>true,out reason),reason);
             var bought=buyer.Items.GetItem(0);ulong boughtUid=bought.UID;
             Require(store.ReadNpcAction(job.Id).AcquiredItemId==boughtUid.ToString(),"Purchase result lost the actual acquired UID.");
-            Require(bought.stackCount==count && (partial?stock.GetItem(item.UID).stackCount==3 && boughtUid!=item.UID:
-                stock.GetItem(item.UID)==null && boughtUid==item.UID),"Purchase changed source UID/count incorrectly.");
+            Require(bought.stackCount==count && boughtUid!=item.UID &&
+                ReferenceEquals(stock.GetItem(item.UID),item) && item.stackCount==5,
+                "NPC purchase changed native stock or failed to allocate an owned UID.");
             Require(store.ReadNpcInventory(buyerId).WalletGold==41 && store.ReadNpcInventory(sellerId).WalletGold==19,"Purchase debited wrong wallet.");
             var restoredStock=new ItemCollection();restoredStock.DeserializeItems(stock.SerializeItems());
             store.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),SaveLoadManager.Serialize(typeof(WorldState),store.Snapshot())));
             Require(NativeNpcInventoryBridge.TryOpen(store,buyerId,null,999,out buyer,out reason),reason);
-            Require(buyer.Items.GetItem(boughtUid).stackCount==count && restoredStock.Count==(partial?1:0),"Native purchase save lost ownership.");
+            Require(buyer.Items.GetItem(boughtUid).stackCount==count && restoredStock.Count==1 && restoredStock.GetItem(item.UID).stackCount==5,"Native purchase save lost ownership.");
             Require(!NativeNpcInventoryBridge.TryCompleteActionPurchase(store,job,103,buyer,restoredStock,()=>true,out reason),"Restored purchase replay succeeded.");
             Require(store.ReconcileNpcTask(task.Id,2,103),"Restored task could not reconcile confirmed purchase.");
             task=store.ReadNpcTask(task.Id);
@@ -115,7 +116,7 @@ namespace PeopleOfTheIliacBay.DFU
         {
             var game=GameManager.Instance;
             Require(Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-shop-commerce-probe")>=0 &&
-                expectedCharacter!=null && expectedCharacter.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal) &&
+                expectedCharacter!=null && NativeProbeText.IsTestCharacter(expectedCharacter) &&
                 game.PlayerEntity.Name==expectedCharacter && streets && streets.Ready,"Shop probe requires its owned fixture and explicit flag.");
             Require(!taskFailureProbe || Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-task-failure-probe")>=0,
                 "Task failure scene requires its explicit Player flag.");
@@ -180,7 +181,7 @@ namespace PeopleOfTheIliacBay.DFU
             Require(complete.Phase==NpcActionPhase.Completed,"Shop purchase did not complete: "+complete.FailureReason);
             Require(walked>0.5f && maxStep<1.5f,"Shop purchase did not physically approach stock without teleporting.");
             var remaining=shelf.Items.GetItem(uid);var owner=actor.GetComponent<NativeNpcInventoryOwner>();
-            Require((remaining==null?0:remaining.stackCount)==stockBefore-1 && store.ReadNpcInventory(actor.Resident.Id).WalletGold==goldBefore-accepted.ServicePrice &&
+            Require((remaining==null?0:remaining.stackCount)==stockBefore && store.ReadNpcInventory(actor.Resident.Id).WalletGold==goldBefore-accepted.ServicePrice &&
                 game.PlayerEntity.GetGoldAmount()==playerGold,"Scene purchase stock or wallets differ from exact outcome.");
             DaggerfallUnityItem bought=null;
             for(int i=0;i<owner.Binding.Items.Count;i++) {var item=owner.Binding.Items.GetItem(i);if(!ownedBefore.Contains(item.UID)) bought=item;}

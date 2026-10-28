@@ -5,103 +5,64 @@ namespace PeopleOfTheIliacBay.Core
 {
     public sealed partial class WorldStateStore
     {
-        /// <summary>
-        /// Trusted native-adapter boundary for a completed living-NPC wage/refund transfer.
-        /// Receipt objects validate shape and exact candidate history; they do not themselves
-        /// prove that the native player refund happened. The adapter must credit and verify
-        /// the real player before this call, and roll that credit back on rejection.
-        /// </summary>
+        /// <summary>Atomically records a direct daily payment (or failed-start reversal) and the exact NPC wallet change.</summary>
         public bool TryCommitNpcServiceSettlement(NpcServiceContractWriteTicket ticket,
-            NpcServiceContractLedger candidate, NpcInventoryUpdate earningsCredit,
+            NpcServiceContractLedger candidate, NpcInventoryUpdate walletUpdate,
             IList<NpcServiceTransferReceipt> completedNativeTransfers, out string error)
         {
-            error = "Invalid or stale service settlement.";
+            error = "Invalid or stale daily service payment.";
             if (!IsCurrentNpcServiceContractWriteTicket(ticket) || candidate == null ||
-                completedNativeTransfers == null || completedNativeTransfers.Count > 2 ||
+                completedNativeTransfers == null || completedNativeTransfers.Count > 1 ||
                 !candidate.IsDirectlyDerivedFrom(ticket.SourceLedger) ||
                 !IsSingleContractTransition(ticket.SourceLedger, candidate)) return false;
-
-            NpcServiceContract prior = null;
-            NpcServiceContract updated = null;
-            foreach (var oldContract in ticket.SourceLedger.Contracts)
+            if (completedNativeTransfers.Count == 0)
             {
-                var next = candidate.Read(oldContract.ContractId);
-                if (next != null && !oldContract.HasSameSavedState(next))
-                { prior = oldContract; updated = next; break; }
+                if (walletUpdate != null) return false;
+                return TryCommitNpcServiceContracts(ticket,candidate,completedNativeTransfers,
+                    new NpcServiceRenewalAuthorization[0],out error);
             }
-            if (prior == null || updated == null || updated.EndReason == NpcServiceEndReason.Death ||
-                updated.Status != NpcServiceContractStatus.Terminated &&
-                !(prior.Status == NpcServiceContractStatus.Active &&
-                    updated.Status == NpcServiceContractStatus.Active)) return false;
-
-            int earnings = updated.ReleasedGold - prior.ReleasedGold;
-            int refund = updated.RefundedGold - prior.RefundedGold;
-            if (earnings < 0 || refund < 0 ||
-                updated.FundedGold != prior.FundedGold ||
-                (long)prior.EscrowGold - earnings - refund != updated.EscrowGold ||
-                updated.TransferReceipts.Count != prior.TransferReceipts.Count +
-                    (earnings > 0 ? 1 : 0) + (refund > 0 ? 1 : 0) ||
-                updated.Status != NpcServiceContractStatus.Terminated &&
-                    (earnings == 0 || refund != 0)) return false;
-
+            var proof=completedNativeTransfers[0];
+            if (proof==null) return false;
+            var updated=candidate.Read(proof.ContractId);
+            var prior=ticket.SourceLedger.Read(proof.ContractId);
+            if (updated==null || updated.TransferReceipts.Count!=(prior==null ? 1 : prior.TransferReceipts.Count+1)) return false;
+            int delta;
+            if(proof.Kind==NpcServiceTransferKind.Funding && proof.FromOwnerId==updated.PayerId &&
+                proof.ToOwnerId==updated.NpcId && proof.Amount==updated.RatePer24GameHours &&
+                updated.FundedGold-(prior==null ? 0 : prior.FundedGold)==proof.Amount)
+                delta=proof.Amount;
+            else if(proof.Kind==NpcServiceTransferKind.Refund && prior!=null &&
+                prior.Status==NpcServiceContractStatus.Reserved && updated.Status==NpcServiceContractStatus.Terminated &&
+                updated.EndReason==NpcServiceEndReason.CancelledBeforeService &&
+                proof.FromOwnerId==updated.NpcId && proof.ToOwnerId==updated.PayerId &&
+                proof.Amount==prior.FundedGold && updated.RefundedGold-prior.RefundedGold==proof.Amount)
+                delta=-proof.Amount;
+            else return false;
             bool alive;
-            if (!KnownNpcIdentity(state, prior.NpcId, out alive) || !alive) return false;
-            NpcServiceTransferReceipt wageProof = null;
-            NpcServiceTransferReceipt refundProof = null;
-            foreach (var proof in completedNativeTransfers)
-            {
-                if (proof == null || proof.ContractId != prior.ContractId ||
-                    proof.FromOwnerId != "contract:" + prior.ContractId + ":escrow") return false;
-                if (proof.Kind == NpcServiceTransferKind.Earnings && wageProof == null &&
-                    proof.ToOwnerId == prior.NpcId && proof.Amount == earnings)
-                    wageProof = proof;
-                else if (proof.Kind == NpcServiceTransferKind.Refund && refundProof == null &&
-                    proof.ToOwnerId == prior.PayerId && proof.Amount == refund)
-                    refundProof = proof;
-                else return false;
-            }
-            if ((earnings > 0) != (wageProof != null) ||
-                (refund > 0) != (refundProof != null)) return false;
-
-            List<NpcInventoryState> nextInventories = null;
-            if (earnings > 0)
-            {
-                NpcInventoryState current = IndexedNpcInventory(prior.NpcId);
-                if (current == null || earningsCredit == null ||
-                    earningsCredit.PersonId != prior.NpcId ||
-                    earningsCredit.ExpectedRevision != current.Revision ||
-                    current.Revision >= NpcInventoryLimits.MaximumRevision ||
-                    current.LastTransactionId == wageProof.ReceiptId ||
-                    (long)current.WalletGold + earnings > NpcInventoryLimits.MaximumWalletGold ||
-                    earningsCredit.WalletGold != current.WalletGold + earnings ||
-                    !SameServiceSettlementItems(current.Items, earningsCredit.Items)) return false;
-                var replacement = new NpcInventoryState {
-                    PersonId = prior.NpcId, WalletGold = earningsCredit.WalletGold,
-                    Revision = current.Revision + 1, LastTransactionId = wageProof.ReceiptId,
-                    Items = earningsCredit.Items
-                };
-                try { ValidateNpcInventory(replacement, new HashSet<ulong>()); }
-                catch (ArgumentException) { return false; }
-                int index = state.NpcInventories.IndexOf(current);
-                if (index < 0) return false;
-                nextInventories = new List<NpcInventoryState>(state.NpcInventories);
-                nextInventories[index] = CopyNpcInventory(replacement);
-            }
-            else if (earningsCredit != null) return false;
-
-            NpcServiceContractLedgerState nextContracts;
-            NpcServiceNativeEvidenceState nextEvidence;
-            if (!TryPrepareNpcServiceContractCommit(ticket, candidate, completedNativeTransfers,
-                new NpcServiceRenewalAuthorization[0], out nextContracts, out nextEvidence, out error))
-                return false;
-
-            // All validation and copying ended. These replacements cannot throw or reject;
-            // no intermediate state is exposed to a caller on this synchronous thread.
-            if (nextInventories != null) state.NpcInventories = nextInventories;
-            state.NpcServiceEvidence = nextEvidence;
-            state.NpcServiceContracts = nextContracts;
-            if (nextInventories != null) npcInventoryIndexOwner = null;
-            error = null;
+            if(!KnownNpcIdentity(state,updated.NpcId,out alive) || !alive) return false;
+            var current=IndexedNpcInventory(updated.NpcId);
+            long balance=current==null ? -1 : (long)current.WalletGold+delta;
+            if(current==null || walletUpdate==null || walletUpdate.PersonId!=updated.NpcId ||
+                walletUpdate.ExpectedRevision!=current.Revision || current.Revision>=NpcInventoryLimits.MaximumRevision ||
+                current.LastTransactionId==proof.ReceiptId || balance<0 || balance>NpcInventoryLimits.MaximumWalletGold ||
+                walletUpdate.WalletGold!=balance || !SameServiceSettlementItems(current.Items,walletUpdate.Items)) return false;
+            var replacement=new NpcInventoryState {PersonId=updated.NpcId,WalletGold=(int)balance,
+                Revision=current.Revision+1,LastTransactionId=proof.ReceiptId,Items=walletUpdate.Items};
+            try {ValidateNpcInventory(replacement,new HashSet<ulong>());}
+            catch(ArgumentException) {return false;}
+            int index=state.NpcInventories.IndexOf(current);
+            if(index<0)return false;
+            var inventories=new List<NpcInventoryState>(state.NpcInventories);
+            inventories[index]=CopyNpcInventory(replacement);
+            NpcServiceContractLedgerState contracts;
+            NpcServiceNativeEvidenceState evidence;
+            if(!TryPrepareNpcServiceContractCommit(ticket,candidate,completedNativeTransfers,
+                new NpcServiceRenewalAuthorization[0],out contracts,out evidence,out error))return false;
+            state.NpcInventories=inventories;
+            state.NpcServiceContracts=contracts;
+            state.NpcServiceEvidence=evidence;
+            npcInventoryIndexOwner=null;
+            error=null;
             return true;
         }
 

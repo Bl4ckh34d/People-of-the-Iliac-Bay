@@ -16,7 +16,7 @@ namespace PeopleOfTheIliacBay.DFU
     {
         private const BindingFlags PrivateInstance = BindingFlags.Instance | BindingFlags.NonPublic;
         internal const string RunFlag = "-peopleoftheiliacbay-split-portrait-probe";
-        private const string OwnedCharacter = "PeopleOfTheIliacBayTest-9a5f197b";
+        private const string OwnedCharacter = "Hakon Ironhand";
         private const string BaselineSave = "People - Gothway Garden";
         private const int PilotRecord = 77;
         private const int MissingRecord = 71;
@@ -50,13 +50,11 @@ namespace PeopleOfTheIliacBay.DFU
             FieldInfo ownsRenderingField = RequireHostField("splitPortraitProbeOwnsRendering");
             FieldInfo lastPresentationField = RequireHostField("lastPortraitPresentation");
             FieldInfo localDialogueField = RequireHostField("localDialogueEnabled");
-            FieldInfo plannerField = RequireHostField("decisionPlannerEnabled");
             FieldInfo prewarmField = RequireHostField("dialoguePrewarmEnabled");
             FieldInfo voiceField = RequireHostField("npcVoiceEnabled");
             FieldInfo streamingField = RequireHostField("socialSentenceStreamingEnabled");
             bool oldOwnsRendering = (bool)ownsRenderingField.GetValue(host);
             bool oldLocalDialogue = (bool)localDialogueField.GetValue(host);
-            bool oldPlanner = (bool)plannerField.GetValue(host);
             bool oldPrewarm = (bool)prewarmField.GetValue(host);
             bool oldVoice = (bool)voiceField.GetValue(host);
             bool oldStreaming = (bool)streamingField.GetValue(host);
@@ -97,7 +95,6 @@ namespace PeopleOfTheIliacBay.DFU
                 Require(overlay, "Split portrait runtime overlay is not installed by the parent host.");
                 ownsRenderingField.SetValue(host, true);
                 localDialogueField.SetValue(host, false);
-                plannerField.SetValue(host, false);
                 prewarmField.SetValue(host, false);
                 voiceField.SetValue(host, false);
                 streamingField.SetValue(host, false);
@@ -167,9 +164,12 @@ namespace PeopleOfTheIliacBay.DFU
                     "Unregistered record 71 did not retain its native portrait fallback.");
                 VerifySourceIsUntouched(talk, missingNative, missingNativePixels);
 
-                // Exercise every currently published gallery face through native Talk identity,
-                // Unity texture decode and the visible panel, not just a synthetic compositor.
-                for (int record = 72; record <= 91; record++)
+                // Original regression faces plus all twelve newly completed portraits,
+                // through native Talk identity, Unity decode and the visible panel.
+                var galleryRecords=new List<int>();
+                for(int record=72;record<=91;record++)galleryRecords.Add(record);
+                galleryRecords.AddRange(new[]{12,13,14,46,47,195,196,197,220,236,425,452});
+                foreach(int record in galleryRecords)
                 {
                     DaggerfallUI.Instance.PopToHUD();
                     // Native TalkManager retains the previous target's portrait on reopen.
@@ -188,7 +188,7 @@ namespace PeopleOfTheIliacBay.DFU
                     VerifySourceIsUntouched(talk, catalogNative, catalogPixels);
                     Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GALLERY_PORTRAIT_PASS: record=" + record +
                         "; combinations=" + compared + "; nativeSourceRetained=true.");
-                    if (record == 72 || record == 77 || record == 91)
+                    if (record == 13 || record == 236)
                     {
                         overlay.RefreshBindingAndRender(_ => new SplitPortraitRuntimeOverlay.Presentation(
                             "neutral", SplitPortraitEyePhase.Open, PortraitMouthShape.X, "left"));
@@ -262,7 +262,6 @@ namespace PeopleOfTheIliacBay.DFU
                     if (second && second.Person) second.Person.PersonFaceRecordId = secondFaceBefore;
                     if (game && game.PlayerMotor) game.PlayerMotor.transform.position = oldPlayerPosition;
                     localDialogueField.SetValue(host, oldLocalDialogue);
-                    plannerField.SetValue(host, oldPlanner);
                     prewarmField.SetValue(host, oldPrewarm);
                     voiceField.SetValue(host, oldVoice);
                     streamingField.SetValue(host, oldStreaming);
@@ -280,7 +279,7 @@ namespace PeopleOfTheIliacBay.DFU
             }
             Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_SPLIT_PORTRAIT_PASS: registry=loaded; selected=CommonFaces/TFAC00I0.RCI/77; " +
                 "outputCombinations=" + combinationsCompared + "; actorSwitch=same-face-revision-advanced; " +
-                "galleryRecords=20; gazes=center,left,right; missing71=native-fallback; return77=valid; disableRestore=true; sourceRetained=true; " +
+                "galleryRecords=32; gazes=center,left,right; missing71=native-fallback; return77=valid; disableRestore=true; sourceRetained=true; " +
                 "idleNoModelBlink=true; idleEyePhases=3; llm=false; d3=false; prewarm=false; voice=false; streaming=false; uploads=" +
                 overlay.TextureUploadCount + "; revision=" + overlay.BindingRevision + ".");
         }

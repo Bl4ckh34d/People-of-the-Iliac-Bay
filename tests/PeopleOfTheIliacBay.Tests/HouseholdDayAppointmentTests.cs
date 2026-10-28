@@ -154,10 +154,10 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.True(!store.TryPublishHouseholdDay(plan,request.PlannedAt+2,out reason));
                 var forged=store.Snapshot();forged.Version=66;Check.Throws<ArgumentException>(()=>store.Restore(forged));
             }));
-            cases.Add(("Joint suppression refuses an active trip and schema66 still loads an unsuppressed plan",()=>{
+            cases.Add(("Joint suppression refuses an active trip",()=>{
                 var request=SharedRequest();var plan=HouseholdDayPlanTests.Create(request);var store=HouseholdDayPlanTests.Store(request);
                 Check.True(store.TryPublishHouseholdDay(plan,request.PlannedAt,out var reason));
-                var old=store.Snapshot();old.Version=66;store.Restore(old);
+                store.Restore(store.Snapshot());
                 Check.True(!store.ReadHouseholdDay(2,7,request.AbsoluteDay).JointSuppressed);
                 Check.True(!store.SuppressHouseholdJoint(plan.Id,request.AbsoluteDay*86400d+18*3600+60));
                 Check.True(!store.SuppressHouseholdJoint(plan.Id,request.AbsoluteDay*86400d+21*3600),"suppression erased a completed shared outing");

@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T10:28:46.6056162Z",
+    "portraitRecord":  74,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "angry",
+    "prompt":  "Create one production sprite atlas for NPC074 angry mouth poses, using the supplied exact 3×3 repeated-original-lower-half grid as the only reference image.\n\nUse case: stylized-concept\nAsset type: native pixel-art portrait mouth atlas\nComposition: Exactly 3 columns × 3 rows, each cell a complete lower 64×29 crop; overall 64:29 cell aspect ratio. Row-major A B C / D E F / G H X. No labels, gutters, borders, full faces, or independent feature closeups.\nExpression: Clearly angry through firm, pressed lips and restrained tension. Keep corners controlled, not extremely downturned. Preserve source mouth scale and original pale pink/terracotta lip hue.\nExact Rhubarb meanings:\nA: pressured closed P/B/M.\nB: narrow opening, teeth nearly together, consonants/EE.\nC: medium unrounded EH/AE.\nD: wide AA.\nE: slightly rounded AO/ER, no wider than C.\nF: puckered UW/OW/W.\nG: upper teeth touching lower lip, F/V.\nH: tongue raised behind upper teeth for L, opening between C and D.\nX: relaxed closed idle.\nKeep every pose recognizable at native pixel scale. Teeth must be muted gray-ivory, distinct from skin, with modest oral-cavity contrast; no tooth gaps. Show teeth only for poses that need them.\nPreserve NPC074 nose, jaw, hair, blue ornament, background, and crop registration. Maintain original muted pale palette and soft pixel shading.\nAvoid: lipstick-red lips, skin-colored teeth, bright white tooth flashes, shiny teeth, oversized mouths, black outlines, extreme frowns, changed nose/jaw/hair, blur, text, or added features.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-b28cf7df-9bd8-43bc-b036-c5422009b029.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-b28cf7df-9bd8-43bc-b036-c5422009b029.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "fb9c8ade231ed63083cb2e8913d0227f84681dca1515de3e03a14898c767e061",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-b28cf7df-9bd8-43bc-b036-c5422009b029.png",
+                      "sha256":  "3ca46a67ed4bc9a76c17c3b72cfe88f1a83803a08bb87c8e4748be5fec26f918",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/angry/raw.png",
+                "sha256":  "3ca46a67ed4bc9a76c17c3b72cfe88f1a83803a08bb87c8e4748be5fec26f918",
+                "width":  1863,
+                "height":  844
+            }
+}

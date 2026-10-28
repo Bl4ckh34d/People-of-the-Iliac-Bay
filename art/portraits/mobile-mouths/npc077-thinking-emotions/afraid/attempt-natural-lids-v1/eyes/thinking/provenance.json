@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T06:27:53.1974291Z",
+    "portraitRecord":  77,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Use case: precise-object-edit\nAsset type: DFU NPC pixel-art eye atlas\nPrimary request: Edit the supplied 3x3 reference atlas of this same woman into nine natural, clearly distinct gaze directions. Keep her afraid/worried expression in every cell, with her lifted, tense worried brows intact. Each cell is the complete upper face, 64:35 aspect, with identical framing. Return only one 3x3 atlas.\nInput image: Image 1 is the sole reference. It is the exact inspected 3x3 grid made from this portrait\u0027s own afraid open-eye source.\nDirection order: top-left=up-left, top-center=up, top-right=up-right; middle-left=left, middle-center=center, middle-right=right; bottom-left=down-left, bottom-center=down, bottom-right=down-right. Both eyes point together. Diagonal cells must visibly combine horizontal and vertical gaze; do not repeat left, center, or right.\nEye anatomy: Keep each pupil and compact iris fully inside the eye opening. For upward gaze, naturally raise the upper lid enough to make room for the higher iris; do not hold a fixed narrow slit while pushing iris through lid. Let the lid contour follow gaze while preserving eye corners and spacing. For downward gaze, lower gaze within a naturally lowered upper lid and let lid cover iris as needed. Keep iris scale coherent across all cells. Do not move brow or whole socket to fake gaze.\nIdentity and expression: Preserve this exact face, hair, skin, pixel lattice, palette, crop and fearful/worried brow tension. Do not neutralize brows or turn expression sad. Middle-center must match supplied source exactly. Keep everything outside eye features unchanged.\nStyle and constraints: Low-resolution softly shaded pixel art. Retain compact muted violet-gray irises, small pupils, tiny restrained highlights, warm subdued sclera and original brown skin/hair palette. Keep original square pixels. No vector-round eyes, giant irises, huge white areas, new highlights, labels, borders, gutters, text, or extra content.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-54ac254b-4503-48cd-a0a6-6b084a39edf8.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-54ac254b-4503-48cd-a0a6-6b084a39edf8.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "f40aa448fc8e958a3615e54c27b84cdf496a6c7e1d9fc818d5a294353bbb2a6f",
+                          "width":  1536,
+                          "height":  840
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-54ac254b-4503-48cd-a0a6-6b084a39edf8.png",
+                      "sha256":  "8fc2af64f2f7640ec8010e052bdff617ac852265326ecb3d675c6aebe29ffd28",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "8fc2af64f2f7640ec8010e052bdff617ac852265326ecb3d675c6aebe29ffd28",
+                "width":  1695,
+                "height":  928
+            }
+}

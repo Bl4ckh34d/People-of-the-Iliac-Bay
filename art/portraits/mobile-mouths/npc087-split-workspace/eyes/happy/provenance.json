@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "createdUtc": "2026-10-22T01:32:55.4990949Z",
+  "portraitRecord": 87,
+  "bank": "TFAC00I0.RCI",
+  "part": "eyes",
+  "emotion": "happy",
+  "prompt": "Use case: illustration-story\nAsset type: pixel-art NPC eye animation atlas for Daggerfall Unity\nInput image: Image 1 is the supplied eyes-reference-grid.png; use it as exact face, palette, scale, and framing reference.\nPrimary request: Create only this portrait's happy eye atlas. Keep the same woman's eyes warm and gently smiling, with subtle upward warmth at the outer/lower corners. Preserve her distinctive slight facial asymmetry.\nComposition/framing: Exactly four equal source-sized upper-face tiles in a strict 2-by-2 grid, each tile exactly 64x35 source pixels and framed identically to the reference. Row-major: open, half-closed, fully closed, repeat of the open happy pose. No gutters, labels, borders, extra panels, or crop changes.\nSubject: Preserve this NPC's original eye spacing, lid and brow shapes, iris and pupil sizes, gaze, highlights, orbital creases, hair and surrounding pixels. Keep her original muted brown/tan complexion, soft olive-brown shadows, and brown irises.\nStyle/medium: faithfully aligned low-resolution DFU pixel art. Preserve the native pixel grid and soft muted source contrast; no smooth vector shapes or painterly blur.\nPose: Keep brows gently relaxed near their original height with only mild natural lift; not high, arched, surprised, angry, or alarmed. Keep brows and orbital creases stationary and identical in all four tiles. Keep each iris, pupil, gaze, width, and highlight horizontally fixed across blink phases. Half-closed lids descend vertically over the same eyeball. Fully closed tile has no visible iris, pupil, sclera, or highlight. Repeat-open tile exactly repeats the first happy open pose.\nConstraints: Change expression only inside original eye/brow mask areas; preserve source face width and asymmetry. No enlarged eyes, no shifted gaze, no shrinking or round iris, no moving glints, no extra skin repaint, no bright white eye flashes, no heavy black brow bars, no orange halos, no text, no watermark.",
+  "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-9bd3-7e53-9a05-a02b7e03724a as C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-9bd3-7e53-9a05-a02b7e03724a\\exec-82935ce9-8b4d-491d-b564-2ebdfa71f90f.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+  "generatedPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-9bd3-7e53-9a05-a02b7e03724a\\exec-82935ce9-8b4d-491d-b564-2ebdfa71f90f.png",
+  "sourceOriginal": {
+    "path": "original.png",
+    "sha256": "b8851f9df69ee15e297ab3aa7e70025710d27bd2e84dd0ed46d7ff7e94ab7717",
+    "width": 64,
+    "height": 64
+  },
+  "referenceGrid": {
+    "path": "eyes-reference-grid.png",
+    "sha256": "e5eced47ef4d478fbdb37db34c991b62c22a3fe4a06d13ec0545bf27e0b32e7c",
+    "width": 1024,
+    "height": 560
+  },
+  "generator": {
+    "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-9bd3-7e53-9a05-a02b7e03724a\\exec-82935ce9-8b4d-491d-b564-2ebdfa71f90f.png",
+    "sha256": "3de0197d2c529eedafb23f65998ec7fe079cb95012279ad1453d6ac078dcf90f",
+    "width": 1695,
+    "height": 928
+  },
+  "raw": {
+    "path": "eyes/happy/raw.png",
+    "sha256": "3de0197d2c529eedafb23f65998ec7fe079cb95012279ad1453d6ac078dcf90f",
+    "width": 1695,
+    "height": 928
+  }
+}

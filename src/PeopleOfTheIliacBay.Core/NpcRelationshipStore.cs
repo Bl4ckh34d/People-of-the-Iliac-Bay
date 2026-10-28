@@ -66,7 +66,6 @@ namespace PeopleOfTheIliacBay.Core
 
         private static NpcRelationshipLedger CopyNpcRelationships(WorldState source, WorldState validated)
         {
-            if (source.Version < 34) return NpcRelationshipLedger.Create();
             Require(source.NpcRelationships != null, "Missing NPC relationship ledger.");
             return NpcRelationshipLedger.CopyValidated(source.NpcRelationships,
                 id => KnownNpcIdentity(validated, id, out _),

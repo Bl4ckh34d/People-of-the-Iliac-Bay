@@ -1,0 +1,1569 @@
+{
+  "schemaVersion": 2,
+  "portraitRecord": 73,
+  "bank": "TFAC00I0.RCI",
+  "status": "masked-half-prototype-visual-review-pending-not-installed",
+  "width": 64,
+  "height": 64,
+  "splitY": 35,
+  "original": "original.png",
+  "originalUpper": "source-upper.png",
+  "originalLower": "source-lower.png",
+  "eyeSets": [
+    {
+      "id": "neutral",
+      "label": "Neutral",
+      "phases": {
+        "open": {
+          "file": "eyes/neutral/open.png",
+          "difference": "eyes/neutral/open-diff.png",
+          "changedPixels": 0
+        },
+        "half": {
+          "file": "eyes/neutral/half.png",
+          "difference": "eyes/neutral/half-diff.png",
+          "changedPixels": 285
+        },
+        "closed": {
+          "file": "eyes/neutral/closed.png",
+          "difference": "eyes/neutral/closed-diff.png",
+          "changedPixels": 282
+        }
+      }
+    },
+    {
+      "id": "happy",
+      "label": "Fröhlich",
+      "phases": {
+        "open": {
+          "file": "eyes/happy/open.png",
+          "difference": "eyes/happy/open-diff.png",
+          "changedPixels": 500
+        },
+        "half": {
+          "file": "eyes/happy/half.png",
+          "difference": "eyes/happy/half-diff.png",
+          "changedPixels": 512
+        },
+        "closed": {
+          "file": "eyes/happy/closed.png",
+          "difference": "eyes/happy/closed-diff.png",
+          "changedPixels": 512
+        }
+      }
+    },
+    {
+      "id": "angry",
+      "label": "Wütend",
+      "phases": {
+        "open": {
+          "file": "eyes/angry/open.png",
+          "difference": "eyes/angry/open-diff.png",
+          "changedPixels": 573
+        },
+        "half": {
+          "file": "eyes/angry/half.png",
+          "difference": "eyes/angry/half-diff.png",
+          "changedPixels": 575,
+          "sha256": "ec7e1949950fbc2f981eaf9721ab5106b40c0c00c296cd5fc44f627bb2996cc3",
+          "reviewedRepair20261023": {
+            "candidateSha256": "ec7e1949950fbc2f981eaf9721ab5106b40c0c00c296cd5fc44f627bb2996cc3",
+            "previousSha256": "cf4469e6563b3105169507c34ff53d130c1956638c317868973451db172a394b",
+            "masterSha256": "18955738e33c90c9c1d7d7d0527fb4ad82d827cea5dc11abedab0baa32345506",
+            "allowedSourceChangeRegions": [
+              [
+                15,
+                24,
+                33,
+                32
+              ],
+              [
+                37,
+                24,
+                55,
+                32
+              ]
+            ],
+            "method": "Generated brow donor in bounded original-palette bands; generated angry HALF upper-lid donor with OPEN lower contour fixed."
+          }
+        },
+        "closed": {
+          "file": "eyes/angry/closed.png",
+          "difference": "eyes/angry/closed-diff.png",
+          "changedPixels": 575
+        }
+      }
+    },
+    {
+      "id": "sad",
+      "label": "Traurig",
+      "phases": {
+        "open": {
+          "file": "eyes/sad/open.png",
+          "difference": "eyes/sad/open-diff.png",
+          "changedPixels": 504,
+          "sha256": "1629e80e9a6e8d8b82a77618c7acc1e3172ec0598dcd7686a2b0ffccf44d8b04",
+          "reviewedRepair20261023": {
+            "candidateSha256": "1629e80e9a6e8d8b82a77618c7acc1e3172ec0598dcd7686a2b0ffccf44d8b04",
+            "previousSha256": "b90ea4bd51976ff725f675354e84de72a15070a150a361f2dd1d281239b77afd",
+            "masterSha256": "1629e80e9a6e8d8b82a77618c7acc1e3172ec0598dcd7686a2b0ffccf44d8b04",
+            "allowedSourceChangeRegions": [
+              [
+                13,
+                17,
+                30,
+                23
+              ],
+              [
+                37,
+                17,
+                53,
+                23
+              ]
+            ],
+            "method": "parent-reviewed generated brow master, consistent gaze/blink copies; explicitly recorded isolated glint repair where present"
+          }
+        },
+        "half": {
+          "file": "eyes/sad/half.png",
+          "difference": "eyes/sad/half-diff.png",
+          "changedPixels": 506,
+          "sha256": "606a5169e37f1ad06431b9b5550357e4e695b282e130c5c013b3c3681c151005",
+          "reviewedRepair20261023": {
+            "candidateSha256": "606a5169e37f1ad06431b9b5550357e4e695b282e130c5c013b3c3681c151005",
+            "previousSha256": "0e4f9ce99e21279e30992a63018eb4f83a765c09c93cfd030b8e2f99d17957f9",
+            "masterSha256": "1629e80e9a6e8d8b82a77618c7acc1e3172ec0598dcd7686a2b0ffccf44d8b04",
+            "allowedSourceChangeRegions": [
+              [
+                13,
+                17,
+                30,
+                23
+              ],
+              [
+                37,
+                17,
+                53,
+                23
+              ]
+            ],
+            "method": "parent-reviewed generated brow master, consistent gaze/blink copies; explicitly recorded isolated glint repair where present"
+          }
+        },
+        "closed": {
+          "file": "eyes/sad/closed.png",
+          "difference": "eyes/sad/closed-diff.png",
+          "changedPixels": 506,
+          "sha256": "1f207ceae293f6ed35013916f018f691f19bc242af0c82e5d7d4dde400f8b67e",
+          "reviewedRepair20261023": {
+            "candidateSha256": "1f207ceae293f6ed35013916f018f691f19bc242af0c82e5d7d4dde400f8b67e",
+            "previousSha256": "4fbc8f87e39c7b1b3c09b9167875944ced3558f59ebc2ab8b9d12dbeb1d40442",
+            "masterSha256": "1629e80e9a6e8d8b82a77618c7acc1e3172ec0598dcd7686a2b0ffccf44d8b04",
+            "allowedSourceChangeRegions": [
+              [
+                13,
+                17,
+                30,
+                23
+              ],
+              [
+                37,
+                17,
+                53,
+                23
+              ]
+            ],
+            "method": "parent-reviewed generated brow master, consistent gaze/blink copies; explicitly recorded isolated glint repair where present"
+          }
+        }
+      }
+    },
+    {
+      "id": "afraid",
+      "label": "Ängstlich",
+      "phases": {
+        "open": {
+          "file": "eyes/afraid/open.png",
+          "difference": "eyes/afraid/open-diff.png",
+          "changedPixels": 480,
+          "sha256": "8df58509e54af3488b55f4130afff2ff33182caa51360893a843419fe24d79c3",
+          "reviewedRepair20261023": {
+            "candidateSha256": "8df58509e54af3488b55f4130afff2ff33182caa51360893a843419fe24d79c3",
+            "previousSha256": "8387c9b4e70ea7c7205e471607307ad48f07ec7e1b70beca43d600c5ef53c2c3",
+            "masterSha256": "8df58509e54af3488b55f4130afff2ff33182caa51360893a843419fe24d79c3",
+            "allowedSourceChangeRegions": [
+              [
+                15,
+                16,
+                33,
+                24
+              ],
+              [
+                37,
+                16,
+                55,
+                24
+              ]
+            ],
+            "method": "parent-reviewed generated brow master, consistent gaze/blink copies; explicitly recorded isolated glint repair where present"
+          }
+        },
+        "half": {
+          "file": "eyes/afraid/half.png",
+          "difference": "eyes/afraid/half-diff.png",
+          "changedPixels": 480,
+          "sha256": "6999a01efd1a18b6fa380771dabf5943ebe83d2294fc747b20c9f9c703d212a4",
+          "reviewedRepair20261023": {
+            "candidateSha256": "6999a01efd1a18b6fa380771dabf5943ebe83d2294fc747b20c9f9c703d212a4",
+            "previousSha256": "a34d3158d14e1ce594dd1037d7f2d8ff8cf0c39b4a9932431e6a109f53106f4e",
+            "masterSha256": "8df58509e54af3488b55f4130afff2ff33182caa51360893a843419fe24d79c3",
+            "allowedSourceChangeRegions": [
+              [
+                15,
+                16,
+                33,
+                24
+              ],
+              [
+                37,
+                16,
+                55,
+                24
+              ]
+            ],
+            "method": "parent-reviewed generated brow master, consistent gaze/blink copies; explicitly recorded isolated glint repair where present"
+          }
+        },
+        "closed": {
+          "file": "eyes/afraid/closed.png",
+          "difference": "eyes/afraid/closed-diff.png",
+          "changedPixels": 482,
+          "sha256": "ff0e2d6f68143cd1dda272e5dcbcda2a3a685aaa419bcfce70100cfd633d42d7",
+          "reviewedRepair20261023": {
+            "candidateSha256": "ff0e2d6f68143cd1dda272e5dcbcda2a3a685aaa419bcfce70100cfd633d42d7",
+            "previousSha256": "aa017fa3beccf5334fef80fdb2e1997b1e3e81798d458082056f503a6717789a",
+            "masterSha256": "8df58509e54af3488b55f4130afff2ff33182caa51360893a843419fe24d79c3",
+            "allowedSourceChangeRegions": [
+              [
+                15,
+                16,
+                33,
+                24
+              ],
+              [
+                37,
+                16,
+                55,
+                24
+              ]
+            ],
+            "method": "parent-reviewed generated brow master, consistent gaze/blink copies; explicitly recorded isolated glint repair where present"
+          }
+        }
+      }
+    },
+    {
+      "id": "guarded",
+      "label": "Skeptisch",
+      "phases": {
+        "open": {
+          "file": "eyes/guarded/open.png",
+          "difference": "eyes/guarded/open-diff.png",
+          "changedPixels": 484,
+          "sha256": "85dc35d7aca1f22f7efd46cbbe1b8b1a588d12b0e3cd5daaadbf4698eec7b88c",
+          "reviewedRepair20261023": {
+            "candidateSha256": "85dc35d7aca1f22f7efd46cbbe1b8b1a588d12b0e3cd5daaadbf4698eec7b88c",
+            "previousSha256": "b6ac565b07411c6cb99b381733f30a60d575bbdb21ea9dc0c7d9a2e90a5193ec",
+            "masterSha256": "2a4f396500e783039089e094813098829ae963e5664c6d5bfa1b9f9d48d6877e",
+            "allowedSourceChangeRegions": [
+              [
+                15,
+                16,
+                33,
+                22
+              ],
+              [
+                37,
+                16,
+                55,
+                22
+              ]
+            ],
+            "method": "Generated brow donor in bounded original-palette bands; generated angry HALF upper-lid donor with OPEN lower contour fixed."
+          }
+        },
+        "half": {
+          "file": "eyes/guarded/half.png",
+          "difference": "eyes/guarded/half-diff.png",
+          "changedPixels": 486,
+          "sha256": "1182e89873c0381e59977a2d89e2b656b39f6c2e1d904c389fa94705149ed9cc",
+          "reviewedRepair20261023": {
+            "candidateSha256": "1182e89873c0381e59977a2d89e2b656b39f6c2e1d904c389fa94705149ed9cc",
+            "previousSha256": "265b7fee24f5c2c01a8d6fef33599e959acded3ea4dd2ede3e0fe119bbe37840",
+            "masterSha256": "2a4f396500e783039089e094813098829ae963e5664c6d5bfa1b9f9d48d6877e",
+            "allowedSourceChangeRegions": [
+              [
+                15,
+                16,
+                33,
+                22
+              ],
+              [
+                37,
+                16,
+                55,
+                22
+              ]
+            ],
+            "method": "Generated brow donor in bounded original-palette bands; generated angry HALF upper-lid donor with OPEN lower contour fixed."
+          }
+        },
+        "closed": {
+          "file": "eyes/guarded/closed.png",
+          "difference": "eyes/guarded/closed-diff.png",
+          "changedPixels": 485,
+          "sha256": "fa1ce71ab10c814f6951a0c5403e9f3a41a95e2c745b2453ad9a8159964bc2b7",
+          "reviewedRepair20261023": {
+            "candidateSha256": "fa1ce71ab10c814f6951a0c5403e9f3a41a95e2c745b2453ad9a8159964bc2b7",
+            "previousSha256": "a7120083b7d6909096bee4e302b52ad4d52a7f1bbcb3559d43101ce359418cd5",
+            "masterSha256": "2a4f396500e783039089e094813098829ae963e5664c6d5bfa1b9f9d48d6877e",
+            "allowedSourceChangeRegions": [
+              [
+                15,
+                16,
+                33,
+                22
+              ],
+              [
+                37,
+                16,
+                55,
+                22
+              ]
+            ],
+            "method": "Generated brow donor in bounded original-palette bands; generated angry HALF upper-lid donor with OPEN lower contour fixed."
+          }
+        }
+      }
+    }
+  ],
+  "mouths": [
+    {
+      "shape": "A",
+      "file": "mouth/A.png",
+      "difference": "mouth/A-diff.png",
+      "changedPixels": 0
+    },
+    {
+      "shape": "B",
+      "file": "mouth/B.png",
+      "difference": "mouth/B-diff.png",
+      "changedPixels": 260
+    },
+    {
+      "shape": "C",
+      "file": "mouth/C.png",
+      "difference": "mouth/C-diff.png",
+      "changedPixels": 263
+    },
+    {
+      "shape": "D",
+      "file": "mouth/D.png",
+      "difference": "mouth/D-diff.png",
+      "changedPixels": 262
+    },
+    {
+      "shape": "E",
+      "file": "mouth/E.png",
+      "difference": "mouth/E-diff.png",
+      "changedPixels": 259
+    },
+    {
+      "shape": "F",
+      "file": "mouth/F.png",
+      "difference": "mouth/F-diff.png",
+      "changedPixels": 260
+    },
+    {
+      "shape": "G",
+      "file": "mouth/G.png",
+      "difference": "mouth/G-diff.png",
+      "changedPixels": 261
+    },
+    {
+      "shape": "H",
+      "file": "mouth/H.png",
+      "difference": "mouth/H-diff.png",
+      "changedPixels": 263
+    },
+    {
+      "shape": "X",
+      "file": "mouth/X.png",
+      "difference": "mouth/X-diff.png",
+      "changedPixels": 0
+    }
+  ],
+  "mouthSets": [
+    {
+      "id": "neutral",
+      "label": "Neutral",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "mouth/neutral/A.png",
+          "difference": "mouth/neutral/A-diff.png",
+          "changedPixels": 0,
+          "sha256": "1d2ad3b1be54e56a3ac1507529eec39561d63efb051c992128b06fa0dc4a4cb5"
+        },
+        {
+          "shape": "B",
+          "file": "mouth/neutral/B.png",
+          "difference": "mouth/neutral/B-diff.png",
+          "changedPixels": 260,
+          "sha256": "7cba2693d1fc8bbd9a5c50ce22d0554d60c9b7761ccae6b24b5a1cf6bd34ef88"
+        },
+        {
+          "shape": "C",
+          "file": "mouth/neutral/C.png",
+          "difference": "mouth/neutral/C-diff.png",
+          "changedPixels": 263,
+          "sha256": "2da19612db8c2b5dcc701e23661fdbef551ad84fbb2952540e13335931e7f5bd"
+        },
+        {
+          "shape": "D",
+          "file": "mouth/neutral/D.png",
+          "difference": "mouth/neutral/D-diff.png",
+          "changedPixels": 262,
+          "sha256": "22f8a0ba2fc772e74af5fbfa98a033b1e7a1c573e1b30a15dae40697e69f24bf"
+        },
+        {
+          "shape": "E",
+          "file": "mouth/neutral/E.png",
+          "difference": "mouth/neutral/E-diff.png",
+          "changedPixels": 259,
+          "sha256": "ea7bce9be72845a22a3f8c9eb92d7caf30ee1f4d649956ebec5dbb66d24aaf5d"
+        },
+        {
+          "shape": "F",
+          "file": "mouth/neutral/F.png",
+          "difference": "mouth/neutral/F-diff.png",
+          "changedPixels": 260,
+          "sha256": "8ab15368508d9ee7db52a01ad047677324bd877a189b9a233429a2dc46063959"
+        },
+        {
+          "shape": "G",
+          "file": "mouth/neutral/G.png",
+          "difference": "mouth/neutral/G-diff.png",
+          "changedPixels": 261,
+          "sha256": "7e6f28720e22049dfd07ab9f3c3bc416408d621cd17a1aa4c2700e8e357d2be8"
+        },
+        {
+          "shape": "H",
+          "file": "mouth/neutral/H.png",
+          "difference": "mouth/neutral/H-diff.png",
+          "changedPixels": 263,
+          "sha256": "24f2d9a5e08560df854ece8f9302626ad84732130220a6e82076cfdc72d91eaa"
+        },
+        {
+          "shape": "X",
+          "file": "mouth/neutral/X.png",
+          "difference": "mouth/neutral/X-diff.png",
+          "changedPixels": 0,
+          "sha256": "1d2ad3b1be54e56a3ac1507529eec39561d63efb051c992128b06fa0dc4a4cb5"
+        }
+      ]
+    },
+    {
+      "id": "happy",
+      "label": "Fröhlich",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "mouth/happy/A.png",
+          "difference": "mouth/happy/A-diff.png",
+          "changedPixels": 264,
+          "sha256": "dbbfd3beb4288ef1343c6f4f279ae58e2ac82e43a0264b6ab2fe1da7879cb91f"
+        },
+        {
+          "shape": "B",
+          "file": "mouth/happy/B.png",
+          "difference": "mouth/happy/B-diff.png",
+          "changedPixels": 264,
+          "sha256": "83eca0160bc5c28510963bc8e0245d585fc73ab7ba576b92b7478e4b7669cc1f"
+        },
+        {
+          "shape": "C",
+          "file": "mouth/happy/C.png",
+          "difference": "mouth/happy/C-diff.png",
+          "changedPixels": 263,
+          "sha256": "5fe41441b0d5abc2991c7a0323730239412faed2b34b7c10845da26d7f557c4b"
+        },
+        {
+          "shape": "D",
+          "file": "mouth/happy/D.png",
+          "difference": "mouth/happy/D-diff.png",
+          "changedPixels": 263,
+          "sha256": "ac4b7ff8c604d648b8d6439f8b2faab99dcf8d6d27622e453c6d3ae6a49e4452"
+        },
+        {
+          "shape": "E",
+          "file": "mouth/happy/E.png",
+          "difference": "mouth/happy/E-diff.png",
+          "changedPixels": 264,
+          "sha256": "e6c8d89ae36d2bed00a01f406689b4a2f931a432fac5b9e68f6087d5028f2038"
+        },
+        {
+          "shape": "F",
+          "file": "mouth/happy/F.png",
+          "difference": "mouth/happy/F-diff.png",
+          "changedPixels": 264,
+          "sha256": "ddbdf53f7cc84b2c40bd55ed67a1109c1150e48f64416c72e303565c6845db01"
+        },
+        {
+          "shape": "G",
+          "file": "mouth/happy/G.png",
+          "difference": "mouth/happy/G-diff.png",
+          "changedPixels": 264,
+          "sha256": "6d1c9762ca89b1896a6e58000baa7109d91a3f3e49e3aa296620cf1c551f580f"
+        },
+        {
+          "shape": "H",
+          "file": "mouth/happy/H.png",
+          "difference": "mouth/happy/H-diff.png",
+          "changedPixels": 263,
+          "sha256": "6d467bc24a68883eec2656be1f41a9a15772b998310e4dbbf45fe7ca6ca0ccc8"
+        },
+        {
+          "shape": "X",
+          "file": "mouth/happy/X.png",
+          "difference": "mouth/happy/X-diff.png",
+          "changedPixels": 264,
+          "sha256": "e7e05a355700afe72461e9d6eaf75135276b7059a5f1a263cde4ef1a22ac5e9a"
+        }
+      ]
+    },
+    {
+      "id": "angry",
+      "label": "Wütend",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "mouth/angry/A.png",
+          "difference": "mouth/angry/A-diff.png",
+          "changedPixels": 264,
+          "sha256": "d706a6d74533226d83713354ae75743272814ad80b977096b847e9b077f8a940"
+        },
+        {
+          "shape": "B",
+          "file": "mouth/angry/B.png",
+          "difference": "mouth/angry/B-diff.png",
+          "changedPixels": 264,
+          "sha256": "bdfe91c1162aba2c8f520fa777d8494bd38a4402ff4416a0ca64f7576eef7ce2"
+        },
+        {
+          "shape": "C",
+          "file": "mouth/angry/C.png",
+          "difference": "mouth/angry/C-diff.png",
+          "changedPixels": 264,
+          "sha256": "10caa35143fcff7583f437283ef87c7ff4c8b7ac9daad0e5042f92bb6fed5a8d"
+        },
+        {
+          "shape": "D",
+          "file": "mouth/angry/D.png",
+          "difference": "mouth/angry/D-diff.png",
+          "changedPixels": 264,
+          "sha256": "0467916cfcda8cf347401a4bf539368b01c27bb188b925d78bf19b8e751cb737"
+        },
+        {
+          "shape": "E",
+          "file": "mouth/angry/E.png",
+          "difference": "mouth/angry/E-diff.png",
+          "changedPixels": 264,
+          "sha256": "2419aa4b5f909c92e2e387bfb867660c0261a703ec11ac473600c95c07f787ba"
+        },
+        {
+          "shape": "F",
+          "file": "mouth/angry/F.png",
+          "difference": "mouth/angry/F-diff.png",
+          "changedPixels": 264,
+          "sha256": "bfcb8edd41444e589a2e2f6212749341c9f7ebd24c4fd25d20f778c230fcc6fd"
+        },
+        {
+          "shape": "G",
+          "file": "mouth/angry/G.png",
+          "difference": "mouth/angry/G-diff.png",
+          "changedPixels": 264,
+          "sha256": "ec9e6ccd126f8602a5f41ffa488faa632ae96fb6cd4fa5f2ac10a5c550b35e73"
+        },
+        {
+          "shape": "H",
+          "file": "mouth/angry/H.png",
+          "difference": "mouth/angry/H-diff.png",
+          "changedPixels": 264,
+          "sha256": "757b7b1cb201569fec4642bb6dd964e1cf86b1040d3524b86c8d655976fb6bb9"
+        },
+        {
+          "shape": "X",
+          "file": "mouth/angry/X.png",
+          "difference": "mouth/angry/X-diff.png",
+          "changedPixels": 264,
+          "sha256": "97c74520ab0968ebd6ef3e544392e12bf9bf1d268cb343ddbfe7f17d931b6c81"
+        }
+      ]
+    },
+    {
+      "id": "sad",
+      "label": "Traurig",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "mouth/sad/A.png",
+          "difference": "mouth/sad/A-diff.png",
+          "changedPixels": 264,
+          "sha256": "98b178c69f393152ce2d42ffd37c9510a508dc5bba990f42ba8a6f93e623f458"
+        },
+        {
+          "shape": "B",
+          "file": "mouth/sad/B.png",
+          "difference": "mouth/sad/B-diff.png",
+          "changedPixels": 264,
+          "sha256": "52c442c580aff1fa65b8193d7aaa0ca617de99aad376f14344013da2258a687b"
+        },
+        {
+          "shape": "C",
+          "file": "mouth/sad/C.png",
+          "difference": "mouth/sad/C-diff.png",
+          "changedPixels": 264,
+          "sha256": "c8ea24cc85155a78c2788928905876bed9697b4fb46434e2c140ac99d87048d3"
+        },
+        {
+          "shape": "D",
+          "file": "mouth/sad/D.png",
+          "difference": "mouth/sad/D-diff.png",
+          "changedPixels": 264,
+          "sha256": "f39aff595129ebf566089c24bce5f187ca5224e1f9ac6844873ff194783d0471"
+        },
+        {
+          "shape": "E",
+          "file": "mouth/sad/E.png",
+          "difference": "mouth/sad/E-diff.png",
+          "changedPixels": 264,
+          "sha256": "12f6a4ab0c0dc256c98bcfb4a808773318b1d88b86d0386077dc6b8a6196ae37"
+        },
+        {
+          "shape": "F",
+          "file": "mouth/sad/F.png",
+          "difference": "mouth/sad/F-diff.png",
+          "changedPixels": 263,
+          "sha256": "d02b108014f69eaf67ecd5450383d48040344b5235c07d6bf7f3e1266453d341"
+        },
+        {
+          "shape": "G",
+          "file": "mouth/sad/G.png",
+          "difference": "mouth/sad/G-diff.png",
+          "changedPixels": 264,
+          "sha256": "c9fd95ddb2b4a4d708388becbc9a6c23c9cd5f5219110d3e07b00dc406dfa94d"
+        },
+        {
+          "shape": "H",
+          "file": "mouth/sad/H.png",
+          "difference": "mouth/sad/H-diff.png",
+          "changedPixels": 264,
+          "sha256": "79a3124942013eddf73c0c211442f98fe788a9167a2219cadba8f9d79d83dbc6"
+        },
+        {
+          "shape": "X",
+          "file": "mouth/sad/X.png",
+          "difference": "mouth/sad/X-diff.png",
+          "changedPixels": 264,
+          "sha256": "bd29548f70e05756cc0059fdf7e05198afd960a87680652c6145e208e73096e3"
+        }
+      ]
+    },
+    {
+      "id": "afraid",
+      "label": "Ängstlich",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "mouth/afraid/A.png",
+          "difference": "mouth/afraid/A-diff.png",
+          "changedPixels": 263,
+          "sha256": "a1c96224f715ecd0a154fe6f45a23e0af5551a67d8156424ec6e350dbb50f58e"
+        },
+        {
+          "shape": "B",
+          "file": "mouth/afraid/B.png",
+          "difference": "mouth/afraid/B-diff.png",
+          "changedPixels": 257,
+          "sha256": "ac98c76629e3f5306a33bc800ca48fd9e1a3a604874b6389a9fc5dac30343d2f"
+        },
+        {
+          "shape": "C",
+          "file": "mouth/afraid/C.png",
+          "difference": "mouth/afraid/C-diff.png",
+          "changedPixels": 260,
+          "sha256": "bd4d2ad60ca814e9875dc8a8dedd328081a75c663f8019e5d68e66ef6abd25b7"
+        },
+        {
+          "shape": "D",
+          "file": "mouth/afraid/D.png",
+          "difference": "mouth/afraid/D-diff.png",
+          "changedPixels": 254,
+          "sha256": "b01218c3ad515706d03060662ebbb588a477f86f73cac2488aaa490a689657af"
+        },
+        {
+          "shape": "E",
+          "file": "mouth/afraid/E.png",
+          "difference": "mouth/afraid/E-diff.png",
+          "changedPixels": 262,
+          "sha256": "15e3a26d926a12850cf07bbb66b580cc9da3ee3f667d6bf163fc4f8d39596f61"
+        },
+        {
+          "shape": "F",
+          "file": "mouth/afraid/F.png",
+          "difference": "mouth/afraid/F-diff.png",
+          "changedPixels": 262,
+          "sha256": "3c8dc9fd12dfacf5af2adfee6a56d4457345ed8576d11d7990966064dd187e0e"
+        },
+        {
+          "shape": "G",
+          "file": "mouth/afraid/G.png",
+          "difference": "mouth/afraid/G-diff.png",
+          "changedPixels": 260,
+          "sha256": "4485777d2bfff61da415dae4a7f165a2edbb8aab667c2fc3f5b422eeee760a7e"
+        },
+        {
+          "shape": "H",
+          "file": "mouth/afraid/H.png",
+          "difference": "mouth/afraid/H-diff.png",
+          "changedPixels": 257,
+          "sha256": "7a1b95f82dd950516fa3ecdaca34a64cd8cd96ab14c91899a29a20d70adb69fd"
+        },
+        {
+          "shape": "X",
+          "file": "mouth/afraid/X.png",
+          "difference": "mouth/afraid/X-diff.png",
+          "changedPixels": 258,
+          "sha256": "03803df48e9c49146f3c8584d66cec9a9038116fe09c56e2205f91bc3bf11a6c"
+        }
+      ]
+    },
+    {
+      "id": "guarded",
+      "label": "Skeptisch",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "mouth/guarded/A.png",
+          "difference": "mouth/guarded/A-diff.png",
+          "changedPixels": 259,
+          "sha256": "bb724a030a87ea49421a5cab737b48e8222f543eeb8bb133d8cc19b94937d7c9"
+        },
+        {
+          "shape": "B",
+          "file": "mouth/guarded/B.png",
+          "difference": "mouth/guarded/B-diff.png",
+          "changedPixels": 263,
+          "sha256": "fd6ee82fa1ab6b90c87647192dd115de0e7dd46fbd682cd4049b0170dabe342f"
+        },
+        {
+          "shape": "C",
+          "file": "mouth/guarded/C.png",
+          "difference": "mouth/guarded/C-diff.png",
+          "changedPixels": 263,
+          "sha256": "b661dff98455217c009fed57fbde653bc18640170f255ff0f273254c68555e51"
+        },
+        {
+          "shape": "D",
+          "file": "mouth/guarded/D.png",
+          "difference": "mouth/guarded/D-diff.png",
+          "changedPixels": 264,
+          "sha256": "caacc28eb10e30ca4303ce6f0b0c51e4718be64a34bbe93b8cbe4471f672ddfc"
+        },
+        {
+          "shape": "E",
+          "file": "mouth/guarded/E.png",
+          "difference": "mouth/guarded/E-diff.png",
+          "changedPixels": 258,
+          "sha256": "341bb3955f0fa5e72f5b03f319231cb47415e6bc6e19035f53b00218ed77fba3"
+        },
+        {
+          "shape": "F",
+          "file": "mouth/guarded/F.png",
+          "difference": "mouth/guarded/F-diff.png",
+          "changedPixels": 263,
+          "sha256": "a94954ffb831ca92cce284335d53979c2cb6ac1f85e88426c0b1549e427692e6"
+        },
+        {
+          "shape": "G",
+          "file": "mouth/guarded/G.png",
+          "difference": "mouth/guarded/G-diff.png",
+          "changedPixels": 260,
+          "sha256": "1855cb18a4acc611547ea16750f3b7a29bd11e2faffcbd26118f0a2cf03a4181"
+        },
+        {
+          "shape": "H",
+          "file": "mouth/guarded/H.png",
+          "difference": "mouth/guarded/H-diff.png",
+          "changedPixels": 264,
+          "sha256": "339abe96c3b54742df31f1677268d88f06f99fff4494e35ff4eae943eae9212e"
+        },
+        {
+          "shape": "X",
+          "file": "mouth/guarded/X.png",
+          "difference": "mouth/guarded/X-diff.png",
+          "changedPixels": 258,
+          "sha256": "4b4a479d813bd14c5ba856b15e0d64116cffad49a694e399e79bef288b987015"
+        }
+      ]
+    }
+  ],
+  "audio": "../sample.wav",
+  "timing": "../sample.visemes.json",
+  "visualAcceptance": "pending",
+  "browLockRows": [
+    18,
+    23
+  ],
+  "eyeRegions": [
+    {
+      "x": 15,
+      "y": 18,
+      "width": 18,
+      "height": 14
+    },
+    {
+      "x": 37,
+      "y": 18,
+      "width": 18,
+      "height": 14
+    }
+  ],
+  "eyeFeatureLocks": null,
+  "useOriginalFeaturePalette": false,
+  "thinkingEyeSetsByEmotion": {
+    "neutral": [
+      {
+        "id": "left",
+        "label": "Links",
+        "phases": {
+          "open": {
+            "file": "../npc073-thinking-emotions/neutral/attempt-horizontal-v1/eyes/thinking/left/open.png",
+            "sha256": "34da98d2f25af3b6546ab9c5453aacfd500703528ef5baa457ef4a81502c2c30"
+          },
+          "half": {
+            "file": "../npc073-thinking-emotions/neutral/attempt-horizontal-v1/eyes/thinking/left/half.png",
+            "sha256": "f853194b328d575a31fd7f282e293b9947d40efd86cc73a509e42c72663ed4f1"
+          },
+          "closed": {
+            "file": "../npc073-thinking-emotions/neutral/attempt-horizontal-v1/eyes/thinking/left/closed.png",
+            "sha256": "31c90635d4f025095a54bd402592aa7865edbe57c65691e7ed1fc919323f2d55"
+          }
+        }
+      },
+      {
+        "id": "right",
+        "label": "Rechts",
+        "phases": {
+          "open": {
+            "file": "../npc073-thinking-emotions/neutral/attempt-horizontal-v1/eyes/thinking/right/open.png",
+            "sha256": "0f542ba93348119fbb3222799503e46e3e67abb5360a26814291da2bd4e70c31"
+          },
+          "half": {
+            "file": "../npc073-thinking-emotions/neutral/attempt-horizontal-v1/eyes/thinking/right/half.png",
+            "sha256": "44d8a28b05222a101eedf606f3f56da86f6f9ce037218be7053d872cee31ad7f"
+          },
+          "closed": {
+            "file": "../npc073-thinking-emotions/neutral/attempt-horizontal-v1/eyes/thinking/right/closed.png",
+            "sha256": "31c90635d4f025095a54bd402592aa7865edbe57c65691e7ed1fc919323f2d55"
+          }
+        }
+      }
+    ],
+    "happy": [
+      {
+        "id": "left",
+        "label": "Links",
+        "phases": {
+          "open": {
+            "file": "../npc073-thinking-emotions/happy/attempt-horizontal-v1/eyes/thinking/left/open.png",
+            "sha256": "e96a9cd036607491a14aef7e77db94e36e7509878366595a085dc365b11050b0"
+          },
+          "half": {
+            "file": "../npc073-thinking-emotions/happy/attempt-horizontal-v1/eyes/thinking/left/half.png",
+            "sha256": "1524d8519af046096a9828e09b47904f30fc1581fca8d4223a94c50ca55920eb"
+          },
+          "closed": {
+            "file": "../npc073-thinking-emotions/happy/attempt-horizontal-v1/eyes/thinking/left/closed.png",
+            "sha256": "eee85742018b3a0d9f82dee7ce9f2d0b88f6bdf34143010258ab7fcbdbafa576"
+          }
+        }
+      },
+      {
+        "id": "right",
+        "label": "Rechts",
+        "phases": {
+          "open": {
+            "file": "../npc073-thinking-emotions/happy/attempt-horizontal-v1/eyes/thinking/right/open.png",
+            "sha256": "61af7fad3caa0c7a0a64261b6c60920eaf248499d0745f10a2d1b96d242113af"
+          },
+          "half": {
+            "file": "../npc073-thinking-emotions/happy/attempt-horizontal-v1/eyes/thinking/right/half.png",
+            "sha256": "057c3fba2c2db71a60a16b05e9a7fdc1c0832c283421515948a991cca02942fd"
+          },
+          "closed": {
+            "file": "../npc073-thinking-emotions/happy/attempt-horizontal-v1/eyes/thinking/right/closed.png",
+            "sha256": "fa94c385f9e930564b9f1e5d8d43289907c3467cf8288fd94430ad4dc22d9c78"
+          }
+        }
+      }
+    ],
+    "angry": [
+      {
+        "id": "left",
+        "label": "Links",
+        "phases": {
+          "open": {
+            "file": "../npc073-thinking-emotions/angry/published-coherent-v2/eyes/thinking/left/open.png",
+            "sha256": "6881ab1850ccca2ba5a01d9a7c35b12fd9cf4c9d37d69527e85c2a75d95d6c76"
+          },
+          "half": {
+            "file": "../npc073-thinking-emotions/angry/published-coherent-v2/eyes/thinking/left/half.png",
+            "sha256": "0a30a4e55322305af92424bdf4c35b351cc532d68655001fa28a6b3a80434d2b"
+          },
+          "closed": {
+            "file": "../npc073-thinking-emotions/angry/published-coherent-v2/eyes/thinking/left/closed.png",
+            "sha256": "25a66a8c5fa2094832569e008458dd79334037df1f8b155318933c80221a3e59"
+          }
+        }
+      },
+      {
+        "id": "right",
+        "label": "Rechts",
+        "phases": {
+          "open": {
+            "file": "../npc073-thinking-emotions/angry/published-coherent-v2/eyes/thinking/right/open.png",
+            "sha256": "fbeeb78dec3dd4c7b34713fa3a25016e845b95e6ed223605c05512b9a7e6612f"
+          },
+          "half": {
+            "file": "../npc073-thinking-emotions/angry/published-coherent-v2/eyes/thinking/right/half.png",
+            "sha256": "885ec781afe0a520fba1a9c8606f5f62447a7d3b05a270aba08db184841d9952"
+          },
+          "closed": {
+            "file": "../npc073-thinking-emotions/angry/published-coherent-v2/eyes/thinking/right/closed.png",
+            "sha256": "25a66a8c5fa2094832569e008458dd79334037df1f8b155318933c80221a3e59"
+          }
+        }
+      }
+    ],
+    "sad": [
+      {
+        "id": "left",
+        "label": "Links",
+        "phases": {
+          "open": {
+            "file": "../npc073-thinking-emotions/sad/published-coherent-v2/eyes/thinking/left/open.png",
+            "sha256": "7c172362cf0283b79ee15529e410d0cf75b598ba06a54ab22d83f967b7ac9ef9",
+            "changedPixels": 508,
+            "reviewedRepair20261023": {
+              "candidateSha256": "7c172362cf0283b79ee15529e410d0cf75b598ba06a54ab22d83f967b7ac9ef9",
+              "previousSha256": "61e3464a4ccc8161b8edfbef96dfe44a194cce29ac9f0d25e4536b10b77c9a27",
+              "masterSha256": "1629e80e9a6e8d8b82a77618c7acc1e3172ec0598dcd7686a2b0ffccf44d8b04",
+              "allowedSourceChangeRegions": [
+                [
+                  13,
+                  17,
+                  30,
+                  23
+                ],
+                [
+                  37,
+                  17,
+                  53,
+                  23
+                ]
+              ],
+              "method": "parent-reviewed generated brow master, consistent gaze/blink copies; explicitly recorded isolated glint repair where present"
+            }
+          },
+          "half": {
+            "file": "../npc073-thinking-emotions/sad/published-coherent-v2/eyes/thinking/left/half.png",
+            "sha256": "b7477a5748b469597916dfaf165c8c26ce37d429bf1c699de1a8be0fa3fda4a8",
+            "changedPixels": 508,
+            "reviewedRepair20261023": {
+              "candidateSha256": "b7477a5748b469597916dfaf165c8c26ce37d429bf1c699de1a8be0fa3fda4a8",
+              "previousSha256": "5e0354438a33a83264fea76f9b41d383dc9c4704636f49f199a8af82bd3aad92",
+              "masterSha256": "1629e80e9a6e8d8b82a77618c7acc1e3172ec0598dcd7686a2b0ffccf44d8b04",
+              "allowedSourceChangeRegions": [
+                [
+                  13,
+                  17,
+                  30,
+                  23
+                ],
+                [
+                  37,
+                  17,
+                  53,
+                  23
+                ]
+              ],
+              "method": "parent-reviewed generated brow master, consistent gaze/blink copies; explicitly recorded isolated glint repair where present"
+            }
+          },
+          "closed": {
+            "file": "../npc073-thinking-emotions/sad/published-coherent-v2/eyes/thinking/left/closed.png",
+            "sha256": "a409522da50090b1954d972794fe1ddde92fc93f3d6d01e25bbd2f70a1e05e05",
+            "changedPixels": 506,
+            "reviewedRepair20261023": {
+              "candidateSha256": "a409522da50090b1954d972794fe1ddde92fc93f3d6d01e25bbd2f70a1e05e05",
+              "previousSha256": "f592323f6c3d59240fb0ca4af9e93c18f00a149b901550a5368552ad9be35c38",
+              "masterSha256": "1629e80e9a6e8d8b82a77618c7acc1e3172ec0598dcd7686a2b0ffccf44d8b04",
+              "allowedSourceChangeRegions": [
+                [
+                  13,
+                  17,
+                  30,
+                  23
+                ],
+                [
+                  37,
+                  17,
+                  53,
+                  23
+                ]
+              ],
+              "method": "parent-reviewed generated brow master, consistent gaze/blink copies; explicitly recorded isolated glint repair where present"
+            }
+          }
+        }
+      },
+      {
+        "id": "right",
+        "label": "Rechts",
+        "phases": {
+          "open": {
+            "file": "../npc073-thinking-emotions/sad/published-coherent-v2/eyes/thinking/right/open.png",
+            "sha256": "ebe4e1cefe9a6a34176afbcbc30d86c5e546a577b641b10a63729a582755dcbf",
+            "changedPixels": 506,
+            "reviewedRepair20261023": {
+              "candidateSha256": "ebe4e1cefe9a6a34176afbcbc30d86c5e546a577b641b10a63729a582755dcbf",
+              "previousSha256": "dfbc9ec5a698f9fef35030048e2d8d9ce70eb46ae30673145c323adcc1a463e4",
+              "masterSha256": "1629e80e9a6e8d8b82a77618c7acc1e3172ec0598dcd7686a2b0ffccf44d8b04",
+              "allowedSourceChangeRegions": [
+                [
+                  13,
+                  17,
+                  30,
+                  23
+                ],
+                [
+                  37,
+                  17,
+                  53,
+                  23
+                ]
+              ],
+              "method": "parent-reviewed generated brow master, consistent gaze/blink copies; explicitly recorded isolated glint repair where present"
+            }
+          },
+          "half": {
+            "file": "../npc073-thinking-emotions/sad/published-coherent-v2/eyes/thinking/right/half.png",
+            "sha256": "8fe460d9734ac98ed82f02f49754b8afc475861290df7a56b8a41775337821b2",
+            "changedPixels": 508,
+            "reviewedRepair20261023": {
+              "candidateSha256": "8fe460d9734ac98ed82f02f49754b8afc475861290df7a56b8a41775337821b2",
+              "previousSha256": "ed73c2cdb916a9cf2993f973ac904965a12114bd35679285488ecce8ab20f4b4",
+              "masterSha256": "1629e80e9a6e8d8b82a77618c7acc1e3172ec0598dcd7686a2b0ffccf44d8b04",
+              "allowedSourceChangeRegions": [
+                [
+                  13,
+                  17,
+                  30,
+                  23
+                ],
+                [
+                  37,
+                  17,
+                  53,
+                  23
+                ]
+              ],
+              "method": "parent-reviewed generated brow master, consistent gaze/blink copies; explicitly recorded isolated glint repair where present"
+            }
+          },
+          "closed": {
+            "file": "../npc073-thinking-emotions/sad/published-coherent-v2/eyes/thinking/right/closed.png",
+            "sha256": "1f207ceae293f6ed35013916f018f691f19bc242af0c82e5d7d4dde400f8b67e",
+            "changedPixels": 506,
+            "reviewedRepair20261023": {
+              "candidateSha256": "1f207ceae293f6ed35013916f018f691f19bc242af0c82e5d7d4dde400f8b67e",
+              "previousSha256": "4fbc8f87e39c7b1b3c09b9167875944ced3558f59ebc2ab8b9d12dbeb1d40442",
+              "masterSha256": "1629e80e9a6e8d8b82a77618c7acc1e3172ec0598dcd7686a2b0ffccf44d8b04",
+              "allowedSourceChangeRegions": [
+                [
+                  13,
+                  17,
+                  30,
+                  23
+                ],
+                [
+                  37,
+                  17,
+                  53,
+                  23
+                ]
+              ],
+              "method": "parent-reviewed generated brow master, consistent gaze/blink copies; explicitly recorded isolated glint repair where present"
+            }
+          }
+        }
+      }
+    ],
+    "afraid": [
+      {
+        "id": "left",
+        "label": "Links",
+        "phases": {
+          "open": {
+            "file": "../npc073-thinking-emotions/afraid/attempt-horizontal-v2/eyes/thinking/left/open.png",
+            "sha256": "c24c9d6e08988ac030d7b1fe2985d6082da87fedf1f6cd63305724b2c4430997",
+            "changedPixels": 480,
+            "reviewedRepair20261023": {
+              "candidateSha256": "c24c9d6e08988ac030d7b1fe2985d6082da87fedf1f6cd63305724b2c4430997",
+              "previousSha256": "cd506fcfb34cf4ad874259bdd758db31f420d8d3fafee7bdbc6ad3c8a749153d",
+              "masterSha256": "8df58509e54af3488b55f4130afff2ff33182caa51360893a843419fe24d79c3",
+              "allowedSourceChangeRegions": [
+                [
+                  15,
+                  16,
+                  33,
+                  24
+                ],
+                [
+                  37,
+                  16,
+                  55,
+                  24
+                ]
+              ],
+              "method": "parent-reviewed generated brow master, consistent gaze/blink copies; explicitly recorded isolated glint repair where present"
+            }
+          },
+          "half": {
+            "file": "../npc073-thinking-emotions/afraid/attempt-horizontal-v2/eyes/thinking/left/half.png",
+            "sha256": "ec846eb551209d9bb77d46de3a27636d2c453aa6f46446917b04c498fe4dd41a",
+            "changedPixels": 482,
+            "reviewedRepair20261023": {
+              "candidateSha256": "ec846eb551209d9bb77d46de3a27636d2c453aa6f46446917b04c498fe4dd41a",
+              "previousSha256": "96d7d61df7cd35a5c01381e953292969c17f4eecd9dbfd4c5071c0252262ce5c",
+              "masterSha256": "8df58509e54af3488b55f4130afff2ff33182caa51360893a843419fe24d79c3",
+              "allowedSourceChangeRegions": [
+                [
+                  15,
+                  16,
+                  33,
+                  24
+                ],
+                [
+                  37,
+                  16,
+                  55,
+                  24
+                ]
+              ],
+              "method": "parent-reviewed generated brow master, consistent gaze/blink copies; explicitly recorded isolated glint repair where present"
+            }
+          },
+          "closed": {
+            "file": "../npc073-thinking-emotions/afraid/attempt-horizontal-v2/eyes/thinking/left/closed.png",
+            "sha256": "ff0e2d6f68143cd1dda272e5dcbcda2a3a685aaa419bcfce70100cfd633d42d7",
+            "changedPixels": 482,
+            "reviewedRepair20261023": {
+              "candidateSha256": "ff0e2d6f68143cd1dda272e5dcbcda2a3a685aaa419bcfce70100cfd633d42d7",
+              "previousSha256": "aa017fa3beccf5334fef80fdb2e1997b1e3e81798d458082056f503a6717789a",
+              "masterSha256": "8df58509e54af3488b55f4130afff2ff33182caa51360893a843419fe24d79c3",
+              "allowedSourceChangeRegions": [
+                [
+                  15,
+                  16,
+                  33,
+                  24
+                ],
+                [
+                  37,
+                  16,
+                  55,
+                  24
+                ]
+              ],
+              "method": "parent-reviewed generated brow master, consistent gaze/blink copies; explicitly recorded isolated glint repair where present"
+            }
+          }
+        }
+      },
+      {
+        "id": "right",
+        "label": "Rechts",
+        "phases": {
+          "open": {
+            "file": "../npc073-thinking-emotions/afraid/attempt-horizontal-v2/eyes/thinking/right/open.png",
+            "sha256": "d4ca09875a6f83af77c5129ba7203755353b938a70a2fac9f5479ab2a00b5a75",
+            "changedPixels": 481,
+            "reviewedRepair20261023": {
+              "candidateSha256": "d4ca09875a6f83af77c5129ba7203755353b938a70a2fac9f5479ab2a00b5a75",
+              "previousSha256": "42194cd9b099c30b1547c2d8e82610c6ec2ef2a538c9487f7ec266536d7051d9",
+              "masterSha256": "8df58509e54af3488b55f4130afff2ff33182caa51360893a843419fe24d79c3",
+              "allowedSourceChangeRegions": [
+                [
+                  15,
+                  16,
+                  33,
+                  24
+                ],
+                [
+                  37,
+                  16,
+                  55,
+                  24
+                ]
+              ],
+              "method": "parent-reviewed generated brow master, consistent gaze/blink copies; explicitly recorded isolated glint repair where present"
+            }
+          },
+          "half": {
+            "file": "../npc073-thinking-emotions/afraid/attempt-horizontal-v2/eyes/thinking/right/half.png",
+            "sha256": "991d354325155788d66dd92193e41f4d5fce6496b6c23cc92099bc19b4d1a02e",
+            "changedPixels": 480,
+            "reviewedRepair20261023": {
+              "candidateSha256": "991d354325155788d66dd92193e41f4d5fce6496b6c23cc92099bc19b4d1a02e",
+              "previousSha256": "f0d4a53fbc7175c6422eff513d5e62cc63ba5521477486e84b6c26a7a21703d8",
+              "masterSha256": "8df58509e54af3488b55f4130afff2ff33182caa51360893a843419fe24d79c3",
+              "allowedSourceChangeRegions": [
+                [
+                  15,
+                  16,
+                  33,
+                  24
+                ],
+                [
+                  37,
+                  16,
+                  55,
+                  24
+                ]
+              ],
+              "method": "parent-reviewed generated brow master, consistent gaze/blink copies; explicitly recorded isolated glint repair where present"
+            }
+          },
+          "closed": {
+            "file": "../npc073-thinking-emotions/afraid/attempt-horizontal-v2/eyes/thinking/right/closed.png",
+            "sha256": "ff0e2d6f68143cd1dda272e5dcbcda2a3a685aaa419bcfce70100cfd633d42d7",
+            "changedPixels": 482,
+            "reviewedRepair20261023": {
+              "candidateSha256": "ff0e2d6f68143cd1dda272e5dcbcda2a3a685aaa419bcfce70100cfd633d42d7",
+              "previousSha256": "aa017fa3beccf5334fef80fdb2e1997b1e3e81798d458082056f503a6717789a",
+              "masterSha256": "8df58509e54af3488b55f4130afff2ff33182caa51360893a843419fe24d79c3",
+              "allowedSourceChangeRegions": [
+                [
+                  15,
+                  16,
+                  33,
+                  24
+                ],
+                [
+                  37,
+                  16,
+                  55,
+                  24
+                ]
+              ],
+              "method": "parent-reviewed generated brow master, consistent gaze/blink copies; explicitly recorded isolated glint repair where present"
+            }
+          }
+        }
+      }
+    ],
+    "guarded": [
+      {
+        "id": "left",
+        "label": "Links",
+        "phases": {
+          "open": {
+            "file": "../npc073-thinking-emotions/guarded/attempt-horizontal-v2/eyes/thinking/left/open.png",
+            "sha256": "a8f4278c9ee5cb6017a7b317383f140334bc140f61451f846ad5d8041acd7bae",
+            "changedPixels": 484,
+            "reviewedRepair20261023": {
+              "candidateSha256": "a8f4278c9ee5cb6017a7b317383f140334bc140f61451f846ad5d8041acd7bae",
+              "previousSha256": "a52bc186fead5b11b7422ed95c52664cefecbaa9eeda22d376a9ab29f5099788",
+              "masterSha256": "2a4f396500e783039089e094813098829ae963e5664c6d5bfa1b9f9d48d6877e",
+              "allowedSourceChangeRegions": [
+                [
+                  15,
+                  16,
+                  33,
+                  22
+                ],
+                [
+                  37,
+                  16,
+                  55,
+                  22
+                ]
+              ],
+              "method": "Generated brow donor in bounded original-palette bands; generated angry HALF upper-lid donor with OPEN lower contour fixed."
+            }
+          },
+          "half": {
+            "file": "../npc073-thinking-emotions/guarded/attempt-horizontal-v2/eyes/thinking/left/half.png",
+            "sha256": "c116d8650149a3aa019e1106262ecf370388b76b54186868987790f5882778fb",
+            "changedPixels": 486,
+            "reviewedRepair20261023": {
+              "candidateSha256": "c116d8650149a3aa019e1106262ecf370388b76b54186868987790f5882778fb",
+              "previousSha256": "6b3b975bcd1984d74dda8e27c50e0d274ae4113f47553338dae4118766f30838",
+              "masterSha256": "2a4f396500e783039089e094813098829ae963e5664c6d5bfa1b9f9d48d6877e",
+              "allowedSourceChangeRegions": [
+                [
+                  15,
+                  16,
+                  33,
+                  22
+                ],
+                [
+                  37,
+                  16,
+                  55,
+                  22
+                ]
+              ],
+              "method": "Generated brow donor in bounded original-palette bands; generated angry HALF upper-lid donor with OPEN lower contour fixed."
+            }
+          },
+          "closed": {
+            "file": "../npc073-thinking-emotions/guarded/attempt-horizontal-v2/eyes/thinking/left/closed.png",
+            "sha256": "fa1ce71ab10c814f6951a0c5403e9f3a41a95e2c745b2453ad9a8159964bc2b7",
+            "changedPixels": 485,
+            "reviewedRepair20261023": {
+              "candidateSha256": "fa1ce71ab10c814f6951a0c5403e9f3a41a95e2c745b2453ad9a8159964bc2b7",
+              "previousSha256": "a7120083b7d6909096bee4e302b52ad4d52a7f1bbcb3559d43101ce359418cd5",
+              "masterSha256": "2a4f396500e783039089e094813098829ae963e5664c6d5bfa1b9f9d48d6877e",
+              "allowedSourceChangeRegions": [
+                [
+                  15,
+                  16,
+                  33,
+                  22
+                ],
+                [
+                  37,
+                  16,
+                  55,
+                  22
+                ]
+              ],
+              "method": "Generated brow donor in bounded original-palette bands; generated angry HALF upper-lid donor with OPEN lower contour fixed."
+            }
+          }
+        }
+      },
+      {
+        "id": "right",
+        "label": "Rechts",
+        "phases": {
+          "open": {
+            "file": "../npc073-thinking-emotions/guarded/attempt-horizontal-v2/eyes/thinking/right/open.png",
+            "sha256": "7685dd7cb9a85e3b08bd372a153669d9310e9033bab00af7da9ffa758e6db2a8",
+            "changedPixels": 486,
+            "reviewedRepair20261023": {
+              "candidateSha256": "7685dd7cb9a85e3b08bd372a153669d9310e9033bab00af7da9ffa758e6db2a8",
+              "previousSha256": "9f1450c0b7b387e0546d09148cdf2637f6dbcc2ab6a93b72f21d0e0025f8bc2b",
+              "masterSha256": "2a4f396500e783039089e094813098829ae963e5664c6d5bfa1b9f9d48d6877e",
+              "allowedSourceChangeRegions": [
+                [
+                  15,
+                  16,
+                  33,
+                  22
+                ],
+                [
+                  37,
+                  16,
+                  55,
+                  22
+                ]
+              ],
+              "method": "Generated brow donor in bounded original-palette bands; generated angry HALF upper-lid donor with OPEN lower contour fixed."
+            }
+          },
+          "half": {
+            "file": "../npc073-thinking-emotions/guarded/attempt-horizontal-v2/eyes/thinking/right/half.png",
+            "sha256": "6c66b28faea5f4bcdca38e57d4f7ac9d7bd49ed91c07e1c458dcbea2c0866ec6",
+            "changedPixels": 486,
+            "reviewedRepair20261023": {
+              "candidateSha256": "6c66b28faea5f4bcdca38e57d4f7ac9d7bd49ed91c07e1c458dcbea2c0866ec6",
+              "previousSha256": "c133fc7d751391894040d6dad1f962d38ea35cd169e839466b06613ff96858c2",
+              "masterSha256": "2a4f396500e783039089e094813098829ae963e5664c6d5bfa1b9f9d48d6877e",
+              "allowedSourceChangeRegions": [
+                [
+                  15,
+                  16,
+                  33,
+                  22
+                ],
+                [
+                  37,
+                  16,
+                  55,
+                  22
+                ]
+              ],
+              "method": "Generated brow donor in bounded original-palette bands; generated angry HALF upper-lid donor with OPEN lower contour fixed."
+            }
+          },
+          "closed": {
+            "file": "../npc073-thinking-emotions/guarded/attempt-horizontal-v2/eyes/thinking/right/closed.png",
+            "sha256": "fa1ce71ab10c814f6951a0c5403e9f3a41a95e2c745b2453ad9a8159964bc2b7",
+            "changedPixels": 485,
+            "reviewedRepair20261023": {
+              "candidateSha256": "fa1ce71ab10c814f6951a0c5403e9f3a41a95e2c745b2453ad9a8159964bc2b7",
+              "previousSha256": "a7120083b7d6909096bee4e302b52ad4d52a7f1bbcb3559d43101ce359418cd5",
+              "masterSha256": "2a4f396500e783039089e094813098829ae963e5664c6d5bfa1b9f9d48d6877e",
+              "allowedSourceChangeRegions": [
+                [
+                  15,
+                  16,
+                  33,
+                  22
+                ],
+                [
+                  37,
+                  16,
+                  55,
+                  22
+                ]
+              ],
+              "method": "Generated brow donor in bounded original-palette bands; generated angry HALF upper-lid donor with OPEN lower contour fixed."
+            }
+          }
+        }
+      }
+    ]
+  },
+  "thinkingVisualAcceptance": "parent-reviewed-user-review-pending",
+  "browPostprocess": {
+    "2026-10-23": {
+      "moods": [
+        "afraid",
+        "angry"
+      ],
+      "regions": [
+        {
+          "x": 15,
+          "y": 16,
+          "width": 18,
+          "height": 7
+        },
+        {
+          "x": 37,
+          "y": 16,
+          "width": 18,
+          "height": 7
+        }
+      ],
+      "outsideBrowChanges": 0,
+      "blinkBrowLock": true,
+      "note": "Afraid brows sharpened; angry brows narrowed. Existing gaze and eyelid pixels retained."
+    },
+    "2026-10-23-slimmer-angry": {
+      "mood": "angry",
+      "sourceSha256": "41bc3983f304ca326adb647e0abf84438986de2f09edd01e488043d245e980d5",
+      "regions": [
+        [
+          15,
+          16,
+          33,
+          23
+        ],
+        [
+          37,
+          16,
+          55,
+          23
+        ]
+      ],
+      "outsideBrowChanges": 0,
+      "sameBrowPixelsAllPhasesAndGazes": true
+    }
+  },
+  "eyeFrameRepairs": {
+    "angry/front/half/2026-10-23": {
+      "reason": "Upper-lid blink symmetry; unchanged brows and stationary lower face",
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\npc073-mouth-repairs-sol\\angry-brow-20261023\\generated-front-half-reference.png",
+      "sourceSha256": "9fc86cebf38584b19a32c24e1b377c53497d16076054ea5e6cabbeb53f1fd906",
+      "replacedBoxes": [
+        [
+          16,
+          24,
+          33,
+          31
+        ],
+        [
+          38,
+          24,
+          55,
+          31
+        ]
+      ],
+      "oldSha256": "9a1560dbaccfd32ac75da5f1fe574c31d1b6417df177f083758a0dd94ba043ff",
+      "newSha256": "d620c14aabe8c0acc0d0f816c8d93787a29ed7a181b591f6a1c7ccb8e965840c",
+      "changedPixels": 238
+    },
+    "angry/lateral/half/2026-10-23": {
+      "reason": "Upper-lid symmetry during left/right thinking-gaze blink",
+      "method": "same-portrait neutral half-lid donor, angry brows and lower face locked",
+      "replacedBoxes": [
+        [
+          16,
+          24,
+          33,
+          31
+        ],
+        [
+          38,
+          24,
+          55,
+          31
+        ]
+      ],
+      "frames": {
+        "left": "0a30a4e55322305af92424bdf4c35b351cc532d68655001fa28a6b3a80434d2b",
+        "right": "885ec781afe0a520fba1a9c8606f5f62447a7d3b05a270aba08db184841d9952"
+      }
+    }
+  },
+  "parentReviewedRepairs": {
+    "sad-afraid-master-20261023": {
+      "moods": [
+        "sad"
+      ],
+      "masterHashes": {
+        "sad": "1629e80e9a6e8d8b82a77618c7acc1e3172ec0598dcd7686a2b0ffccf44d8b04"
+      },
+      "scope": "Only listed eye frames and their playback reviewed; complete portrait acceptance remains pending.",
+      "reviewEvidence": "Parent reviewed original/current/v9c full face, all-nine contact, saved slow OPEN HALF CLOSED HALF OPEN playback and normal-speed samples; continuous generated sad brows, protected original hair pixels, no brow motion or visible feature-mask seam. All eyes below y23 preserved."
+    },
+    "guarded-brow-angry-half-20261023": {
+      "moods": [
+        "guarded",
+        "angry"
+      ],
+      "masterHashes": {
+        "guarded": "2a4f396500e783039089e094813098829ae963e5664c6d5bfa1b9f9d48d6877e",
+        "angry": "18955738e33c90c9c1d7d7d0527fb4ad82d827cea5dc11abedab0baa32345506"
+      },
+      "scope": "Only listed eye frames and their playback reviewed; complete portrait acceptance remains pending.",
+      "reviewEvidence": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\npc073-sol-current-audit-20261023\\parent-review.md"
+    }
+  }
+}

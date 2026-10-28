@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "portraitId": "common-158",
+  "profileId": "common-158-voice-race-10",
+  "profilePath": "work/portrait-female-voice-race-10/profiles/common-158.json",
+  "profileSha256": "c5a559d29ccec74d88ddbd999abbca717a8108cc0ef6801c9be4a104a0a709a0",
+  "attributes": {
+    "pitch": "an upper mezzo-soprano register",
+    "timbre": "balanced, warm and clear, with balanced natural resonance",
+    "roughness": "noticeably husky",
+    "breathiness": "with a softly airy edge",
+    "vocalFry": "with minimal habitual creak",
+    "pace": "a slightly slower than average conversational pace"
+  },
+  "latentZ": {
+    "pitch": 1.4478500454534164,
+    "brightness": -0.8255550387006888,
+    "resonance": -0.4883696494286517,
+    "roughness": 1.1669690078014037,
+    "breathiness": 1.207772268892257,
+    "vocalFry": 0.6690092997388333,
+    "pace": -1.4154426016123658
+  },
+  "stableInstruction": "An adult woman speaking standardized American English with a neutral U.S. pronunciation and natural American cadence. Keep this Redguard voice clear and grounded; use no regional North African or Middle Eastern inflection for this default profile. Her individual voice has an upper mezzo-soprano register. Its timbre is balanced, warm and clear, with balanced natural resonance; it is noticeably husky, with a softly airy edge, with minimal habitual creak. Use a slightly slower than average conversational pace. Maintain this individual vocal identity. Speak naturally without caricature, shouting, or added vocal events.",
+  "profileMapSha256": "63b08ae5d7ecf76e39d2ae89687fe17e35689197c95dd58ee47593315b80cf8e",
+  "seed": 1322519134,
+  "guidanceScale": 4.0,
+  "anchorText": "Good day. I have been in this town for many years. What brings you here today?",
+  "anchorRequestPurpose": "Breeze VoiceDesign without voice_ref; stable per-woman profile instruction and seed.",
+  "requestPayload": {
+    "model": "breeze",
+    "input": "Good day. I have been in this town for many years. What brings you here today?",
+    "response_format": "pcm",
+    "stream_format": "sse",
+    "options": {
+      "instruct": "An adult woman speaking standardized American English with a neutral U.S. pronunciation and natural American cadence. Keep this Redguard voice clear and grounded; use no regional North African or Middle Eastern inflection for this default profile. Her individual voice has an upper mezzo-soprano register. Its timbre is balanced, warm and clear, with balanced natural resonance; it is noticeably husky, with a softly airy edge, with minimal habitual creak. Use a slightly slower than average conversational pace. Maintain this individual vocal identity. Speak naturally without caricature, shouting, or added vocal events.",
+      "guidance_scale": 4.0,
+      "stream_lookahead_margin": 0,
+      "stream_chunk_policy": "grow",
+      "seed": 1322519134
+    }
+  },
+  "requestPayloadSha256": "7e2759aff2178cb7690f895e193fe9678323f2a7a4a195ef30f8e82f081ed00c",
+  "referenceWav": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait-female-voice-race-10\\anchors\\common-158\\reference.wav",
+  "referenceSha256": "262ee50d0afd2928574eaf5b4dbe3be6eca952e2c7ca695b2e30a28da8ab7d05",
+  "referenceRawWav": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait-female-voice-race-10\\anchors\\common-158\\reference.raw.wav",
+  "referenceRawSha256": "78fe24bff79065e5acc18ed64bc4261554dc43768c115d1db217355dd4a20f14",
+  "audioSampleRate": 24000,
+  "audioFrames": 124800,
+  "normalization": {
+    "schemaVersion": 1,
+    "normalizer": "pcm16-active-rms-v1",
+    "status": "normalized",
+    "targetActiveRmsDbfs": -20.0,
+    "peakCeilingDbfs": -3.0,
+    "maxBoostDb": 12.0,
+    "gateDbfs": -50.0,
+    "appliedGainDb": -6.92033166036579,
+    "input": {
+      "sha256": "78fe24bff79065e5acc18ed64bc4261554dc43768c115d1db217355dd4a20f14",
+      "sampleRate": 24000,
+      "channels": 1,
+      "sampleWidthBytes": 2,
+      "frames": 124800,
+      "peakDbfs": -0.00026507636037961915,
+      "activeRmsDbfs": -13.07966833963421,
+      "activeFrames": 92880
+    },
+    "output": {
+      "sha256": "262ee50d0afd2928574eaf5b4dbe3be6eca952e2c7ca695b2e30a28da8ab7d05",
+      "sampleRate": 24000,
+      "channels": 1,
+      "sampleWidthBytes": 2,
+      "frames": 124800,
+      "peakDbfs": -6.920800736380345,
+      "activeRmsDbfs": -19.87482555161153,
+      "activeFrames": 90240
+    }
+  },
+  "synthesis": {
+    "outputWav": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait-female-voice-race-10\\anchors\\common-158\\reference.raw.wav",
+    "pcmBytes": 249600,
+    "sampleRate": 24000,
+    "channels": 1,
+    "synthesisMs": 2544.556,
+    "firstAudioMs": 444.702,
+    "audioDeltaCount": 8,
+    "serverTiming": {
+      "ttft_ms": 419.901
+    }
+  }
+}

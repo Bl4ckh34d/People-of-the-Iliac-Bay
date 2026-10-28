@@ -9,6 +9,7 @@ namespace PeopleOfTheIliacBay.Core
         internal static Dictionary<string, SleepArtCatalog.Entry> Build()
         {
             var result = new Dictionary<string, SleepArtCatalog.Entry>();
+            CompletedSleepArtCatalog.AddTo(result);
             result.Add("b4cd53b2-2517-4ed7-9efc-1be21b2643a7:182:33", new SleepArtCatalog.Entry(182, 33, "sleep-topdown-missing-01.png.bytes", 0, "b4cd53b2-2517-4ed7-9efc-1be21b2643a7"));
             result.Add("e508f8c4-f153-4725-98d4-9dfc2a1fcf9d:1300:0", new SleepArtCatalog.Entry(1300, 0, "sleep-topdown-missing-01.png.bytes", 1, "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d"));
             result.Add("e508f8c4-f153-4725-98d4-9dfc2a1fcf9d:1300:1", new SleepArtCatalog.Entry(1300, 1, "sleep-topdown-missing-01.png.bytes", 2, "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d"));

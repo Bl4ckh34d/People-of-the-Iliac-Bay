@@ -223,7 +223,7 @@ internal static class Program
         vitals=f.Store.ReadNpcVitals(f.ResidentId,NpcArchetype.Citizen);
         var action=new NpcActionJob {Id=id,ProposalId=id,ResidentId=f.ResidentId,Kind=NpcActionKind.RestToHeal,
             Target=new NpcActionTarget {Kind=NpcActionTargetKind.IndoorPoint,SettlementId=1,BuildingKey=10,
-                ContainerId="bed:resident-room:1",X=2,Y=0,Z=4},
+                ContainerId="bed:resident-stay:1",X=2,Y=0,Z=4},
             Phase=NpcActionPhase.Accepted,Revision=1,AcceptedAt=completedAt-3,UpdatedAt=completedAt-3,
             DeadlineAt=completedAt+100,RestDurationSeconds=1,ExpectedVitalsRevision=vitals.Revision};
         string reason;

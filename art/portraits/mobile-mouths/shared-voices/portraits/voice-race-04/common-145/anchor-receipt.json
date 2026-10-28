@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "portraitId": "common-145",
+  "profileId": "common-145-voice-race-04",
+  "profilePath": "work/portrait-female-voice-race-04/profiles/common-145.json",
+  "profileSha256": "90564c76523400849544bbbc9fe0535ca05a93952a1d66d4c9c2d31206124afe",
+  "attributes": {
+    "pitch": "a natural middle female register",
+    "timbre": "balanced, warm and clear, with balanced natural resonance",
+    "roughness": "mostly clear with a little natural texture",
+    "breathiness": "with a softly airy edge",
+    "vocalFry": "with occasional audible creak at phrase endings",
+    "pace": "a slightly slower than average conversational pace"
+  },
+  "latentZ": {
+    "pitch": -0.06251574642085433,
+    "brightness": 0.16048049943938084,
+    "resonance": 0.10689697115635796,
+    "roughness": -0.7507136709512215,
+    "breathiness": 1.5041823671314483,
+    "vocalFry": 1.2377624052075287,
+    "pace": -1.457457219838432
+  },
+  "stableInstruction": "An adult woman speaking English with clearly recognizable Kenyan English pronunciation and cadence, East African English vowel shaping, even syllable rhythm and clean consonant release. Her individual voice has a natural middle female register. Its timbre is balanced, warm and clear, with balanced natural resonance; it is mostly clear with a little natural texture, with a softly airy edge, with occasional audible creak at phrase endings. Use a slightly slower than average conversational pace. Maintain this individual vocal identity. Speak naturally without caricature, shouting, or added vocal events.",
+  "profileMapSha256": "4e4108e09fbb88eef99afa5eb22f207ab0edacf38089c4ec22f31834d4d0ade4",
+  "seed": 810689071,
+  "guidanceScale": 4.0,
+  "anchorText": "Good day. I have been in this town for many years. What brings you here today?",
+  "anchorRequestPurpose": "Breeze VoiceDesign without voice_ref; stable per-woman profile instruction and seed.",
+  "requestPayload": {
+    "model": "breeze",
+    "input": "Good day. I have been in this town for many years. What brings you here today?",
+    "response_format": "pcm",
+    "stream_format": "sse",
+    "options": {
+      "instruct": "An adult woman speaking English with clearly recognizable Kenyan English pronunciation and cadence, East African English vowel shaping, even syllable rhythm and clean consonant release. Her individual voice has a natural middle female register. Its timbre is balanced, warm and clear, with balanced natural resonance; it is mostly clear with a little natural texture, with a softly airy edge, with occasional audible creak at phrase endings. Use a slightly slower than average conversational pace. Maintain this individual vocal identity. Speak naturally without caricature, shouting, or added vocal events.",
+      "guidance_scale": 4.0,
+      "stream_lookahead_margin": 0,
+      "stream_chunk_policy": "grow",
+      "seed": 810689071
+    }
+  },
+  "requestPayloadSha256": "06314e9c132c5401069057a8216cfc0ef6804eb9a1dc734ca8e3bd93fa76849f",
+  "referenceWav": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait-female-voice-race-04\\anchors\\common-145\\reference.wav",
+  "referenceSha256": "6cff864d56d6aa5fb9bc09255d0ff626fe07f1d6b89cda3c0a6e80bf3e54ba27",
+  "referenceRawWav": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait-female-voice-race-04\\anchors\\common-145\\reference.raw.wav",
+  "referenceRawSha256": "ece9221c6b78bd71075df7745805cb3b5df60a1c8f8ea2056e27f237345b750f",
+  "audioSampleRate": 24000,
+  "audioFrames": 113280,
+  "normalization": {
+    "schemaVersion": 1,
+    "normalizer": "pcm16-active-rms-v1",
+    "status": "normalized",
+    "targetActiveRmsDbfs": -20.0,
+    "peakCeilingDbfs": -3.0,
+    "maxBoostDb": 12.0,
+    "gateDbfs": -50.0,
+    "appliedGainDb": -3.73842701801723,
+    "input": {
+      "sha256": "ece9221c6b78bd71075df7745805cb3b5df60a1c8f8ea2056e27f237345b750f",
+      "sampleRate": 24000,
+      "channels": 1,
+      "sampleWidthBytes": 2,
+      "frames": 113280,
+      "peakDbfs": -3.8679223452830334,
+      "activeRmsDbfs": -16.261572981982766,
+      "activeFrames": 78720
+    },
+    "output": {
+      "sha256": "6cff864d56d6aa5fb9bc09255d0ff626fe07f1d6b89cda3c0a6e80bf3e54ba27",
+      "sampleRate": 24000,
+      "channels": 1,
+      "sampleWidthBytes": 2,
+      "frames": 113280,
+      "peakDbfs": -7.606345671658862,
+      "activeRmsDbfs": -19.919868624049293,
+      "activeFrames": 77280
+    }
+  },
+  "synthesis": {
+    "outputWav": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait-female-voice-race-04\\anchors\\common-145\\reference.raw.wav",
+    "pcmBytes": 226560,
+    "sampleRate": 24000,
+    "channels": 1,
+    "synthesisMs": 2416.406,
+    "firstAudioMs": 407.936,
+    "audioDeltaCount": 7,
+    "serverTiming": {
+      "ttft_ms": 395.522
+    }
+  }
+}

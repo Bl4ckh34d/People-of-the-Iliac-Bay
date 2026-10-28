@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "createdUtc": "2026-10-22T11:01:39.1268360Z",
+  "portraitRecord": 75,
+  "bank": "TFAC00I0.RCI",
+  "part": "eyes",
+  "emotion": "afraid",
+  "prompt": "Use case: stylized-concept\nAsset type: native-resolution sprite atlas for a Daggerfall Unity NPC portrait animation\nInput image: the single provided local eyes-reference-grid.png is the exact face, palette, placement, pixel-art style, and layout reference.\nPrimary request: Create one upper-half eye atlas for NPC075's AFRAID expression. Return a single image with exactly the same 2×2 panel arrangement and overall aspect ratio as the reference. Top-left OPEN, top-right HALF, bottom-left CLOSED, bottom-right OPEN REPEAT, in row-major order. Keep every panel aligned with the reference face and eye positions.\nSubject and expression: Same adult woman, same warm tan/brown face, dark center fringe and side locks. Preserve fearful raised/tensed inner brows and alert anxious expression in all four phases; no surprised round eyes and no neutral or sad brows.\nEyes: Keep the existing compact amber/olive-brown iris clusters, their source hue, tiny restrained pale highlights, original spacing and scale. Pupils must remain inside the eye openings. HALF must have a clearly lower upper lid and narrower aperture than OPEN, while keeping the compact iris naturally visible. CLOSED must be fully closed by continuous natural upper/lower lids with no exposed iris, sclera, or gap. OPEN REPEAT must match the top-left open anatomy and gaze.\nConstraints: Preserve exact pixel-art cluster scale and muted palette. Keep eyelids narrow and anatomically coherent. Do not brighten glints, enlarge the eyes or pupils, add broad white bands, move the gaze, alter the mouth, redraw the face, change hair/fringe, add text or borders, or change the reference's panel alignment. No labels.",
+  "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-21c2700a-1b2c-41f9-8200-94be35990500.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+  "generatedPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-21c2700a-1b2c-41f9-8200-94be35990500.png",
+  "sourceOriginal": {
+    "path": "original.png",
+    "sha256": "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98",
+    "width": 64,
+    "height": 64
+  },
+  "referenceGrid": {
+    "path": "eyes-reference-grid.png",
+    "sha256": "e2e7919bfc72eb52738873b46bffa3a1eb3ca2b503bd62101ac973e8f30cd8b3",
+    "width": 1024,
+    "height": 560
+  },
+  "generator": {
+    "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-21c2700a-1b2c-41f9-8200-94be35990500.png",
+    "sha256": "4c696689b4012316424044e912974f9a215556078cccee5657bb446ab3f731f9",
+    "width": 1695,
+    "height": 928
+  },
+  "raw": {
+    "path": "eyes/afraid/raw.png",
+    "sha256": "4c696689b4012316424044e912974f9a215556078cccee5657bb446ab3f731f9",
+    "width": 1695,
+    "height": 928
+  }
+}

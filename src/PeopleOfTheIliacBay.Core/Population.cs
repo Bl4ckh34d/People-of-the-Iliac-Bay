@@ -43,6 +43,8 @@ namespace PeopleOfTheIliacBay.Core
         public ResidentAgeGroup AgeGroup;
         public ResidentSex Sex;
         public string PartnerId, MotherId, FatherId;
+        public bool GuildIdentityKnown;
+        public int GuildFactionId, GuildRank = -1, GuildHomeKey = -1;
     }
 
     [Serializable]

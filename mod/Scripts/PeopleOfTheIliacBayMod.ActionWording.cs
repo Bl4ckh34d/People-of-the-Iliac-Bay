@@ -9,7 +9,6 @@ namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class PeopleOfTheIliacBayMod
     {
-        private const string ActionWordingSwitch = "-peopleoftheiliacbay-action-wording";
         private const string ActionWordingProbeSwitch = "-peopleoftheiliacbay-action-wording-probe";
 
         private sealed class PendingConversationActionWording
@@ -46,7 +45,7 @@ namespace PeopleOfTheIliacBay.DFU
         private bool SubmitConversationActionReply(DaggerfallTalkWindow window, string playerText,
             ConversationContextSnapshot snapshot, ConversationActionReply reply)
         {
-            if (!HasCommandLineSwitch(ActionWordingSwitch) ||
+            if (!isActiveAndEnabled || !options.Enabled || !localDialogueEnabled || !localDialogue || saveFault ||
                 reply == null || reply.Status == ConversationActionReplyStatus.Unknown ||
                 (!IsNoSourceWordingReceipt(reply) &&
                     reply.Source != ConversationActionReplySource.Action && reply.Source != ConversationActionReplySource.Task))

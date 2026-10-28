@@ -73,6 +73,10 @@ namespace PeopleOfTheIliacBay.DFU
             else
             {
                 string leisure;
+                var marketNpc=speaker.NativeObject as StaticNPC;
+                if(streets.TryMarketVisitContext(speaker.ManagedActor,now,out leisure) ||
+                    marketNpc && streets.TryMarketCommuterContext(marketNpc,now,out leisure,ConversationBuildingName))
+                    return ConversationContextFact<string>.Verified(leisure.Length>384?leisure.Substring(0,384):leisure,ConversationContextFactSource.LiveObservation,now);
                 if(streets.TryClosedShopContext(speaker.ManagedActor,now,ConversationBuildingName,out leisure))
                     return ConversationContextFact<string>.Verified(leisure.Length>384?leisure.Substring(0,384):leisure,ConversationContextFactSource.LiveObservation,now);
                 int destination;
@@ -141,10 +145,10 @@ namespace PeopleOfTheIliacBay.DFU
         }
 
         private void OnConversationSceneLoaded(Scene scene, LoadSceneMode mode)
-        { CancelDecisionShadow(); EndConversationCommandSession(); EndConversationSpeechSession(); AdvanceConversationSceneRevision(scene.handle); }
+        { CancelConversationWork(); EndConversationCommandSession(); EndConversationSpeechSession(); AdvanceConversationSceneRevision(scene.handle); }
 
         private void OnConversationSceneUnloaded(Scene scene)
-        { CancelDecisionShadow(); EndConversationCommandSession(); EndConversationSpeechSession(); AdvanceConversationSceneRevision(scene.handle); }
+        { CancelConversationWork(); EndConversationCommandSession(); EndConversationSpeechSession(); AdvanceConversationSceneRevision(scene.handle); }
 
         private void AdvanceConversationSceneRevision(int sceneHandle)
         {
@@ -170,7 +174,7 @@ namespace PeopleOfTheIliacBay.DFU
             InvalidatePendingAcceptedSpeechReveal();
             EndTrialReplayForConversation(conversationContextSessionId);
             if (breezeTtsTrial) breezeTtsTrial.EndConversation(conversationContextSessionId);
-            CancelDecisionShadow();
+            CancelConversationWork();
             if (conversationSaveEpoch == long.MaxValue)
                 throw new InvalidOperationException("Conversation save epoch exhausted.");
             conversationSaveEpoch++;
@@ -188,7 +192,7 @@ namespace PeopleOfTheIliacBay.DFU
             InvalidatePendingAcceptedSpeechReveal();
             EndTrialReplayForConversation(conversationContextSessionId);
             if (breezeTtsTrial) breezeTtsTrial.EndConversation(conversationContextSessionId);
-            CancelDecisionShadow();
+            CancelConversationWork();
             conversationContextSessionId = Guid.NewGuid().ToString("N");
             BeginConversationCommandSession();
             BeginConversationSpeechSession();
@@ -211,7 +215,7 @@ namespace PeopleOfTheIliacBay.DFU
             InvalidatePendingAcceptedSpeechReveal();
             EndTrialReplayForConversation(conversationContextSessionId);
             if (breezeTtsTrial) breezeTtsTrial.EndConversation(conversationContextSessionId);
-            CancelDecisionShadow();
+            CancelConversationWork();
             conversationContextSessionId = null;
             ClearSelectedConversationMemoryRead();
             conversationContextSessionSpeaker = null;
@@ -763,6 +767,12 @@ namespace PeopleOfTheIliacBay.DFU
             string terminalAction=activeStore==null?string.Empty:
                 ConversationTerminalActionContext.Format(activeStore.LatestNpcAction(speaker.PersonId));
             if(!string.IsNullOrEmpty(terminalAction))bodyContext+=" "+terminalAction;
+            var rosterGuard = speaker.Transform ? speaker.Transform.GetComponentInParent<GuardActor>() : null;
+            if (rosterGuard && guards != null)
+            {
+                string duty = guards.DutyDescription(rosterGuard.GuardId, gameTime);
+                if (!string.IsNullOrEmpty(duty)) bodyContext += " Verified city-watch assignment: " + duty;
+            }
             return new ConversationContextPersonalState(race, gender, familiar, playerName, grieving, alarmed,
                 activeStore == null ? null : activeStore.ReadNpcHouseholdKnowledge(speaker.PersonId),
                 VerifiedString(bodyContext,
@@ -815,7 +825,9 @@ namespace PeopleOfTheIliacBay.DFU
                     Gender = mobile.Gender.ToString(),
                     PersonalitySeed = managed && managed.Resident != null
                         ? (uint?)managed.Resident.AppearanceSeed : null,
-                    Role = managed ? (ConversationDialogueRole?)(store!=null && store.Traveler(managed.Resident.Id)!=null
+                    Role = managed ? (ConversationDialogueRole?)(game.PlayerGPS.HasCurrentLocation &&
+                        TravelerConversationContext.IsCurrentVisit(store,managed.Resident.Id,game.PlayerGPS.CurrentLocation.MapTableData.MapId,
+                            DaggerfallUnity.Instance.WorldTime.Now.ToSeconds(),observed:true)
                         ? ConversationDialogueRole.Traveler : ConversationDialogueRole.ManagedResident) :
                         mobile.IsGuard ? (ConversationDialogueRole?)ConversationDialogueRole.Guard : null
                 };

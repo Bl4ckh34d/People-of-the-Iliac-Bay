@@ -366,21 +366,17 @@ namespace PeopleOfTheIliacBay.Core
         private static List<ConversationAttitude> CopyConversationAttitudes(WorldState source)
         {
             var result = new List<ConversationAttitude>();
-            // Optional additive field: old schema-20 saves have no conversation records.
-            if (source.ConversationAttitudes == null) return result;
+            Require(source.ConversationAttitudes != null,"Missing conversation attitudes.");
             var ids = new HashSet<string>(StringComparer.Ordinal);
             foreach (var item in source.ConversationAttitudes)
             {
-                bool legacy = source.Version < 31;
-                int offset = legacy ? Math.Min(5, item == null ? 0 : item.Offset) : item == null ? 0 : item.Offset;
-                int legacyPositive = Math.Max(0, Math.Min(5, offset));
-                double positiveCredit = legacy ? 5 - legacyPositive : item == null ? 0 : item.PositiveCredit;
-                double positiveCreditUpdatedAt = legacy && item != null ? Math.Max(item.LastEncounterAt, item.Day * 86400) :
-                    item == null ? 0 : item.PositiveCreditUpdatedAt;
-                int positiveEarned = legacy ? legacyPositive : item == null ? 0 : item.PositiveEarned;
-                int progressionStage = legacy ? 0 : item == null ? 0 : item.PositiveProgressionStage;
-                double stageProgress = legacy ? 0 : item == null ? 0 : item.PositiveStageProgress;
-                int positiveThisEncounter = legacy ? legacyPositive : item == null ? 0 : item.PositiveThisEncounter;
+                int offset = item == null ? 0 : item.Offset;
+                double positiveCredit = item == null ? 0 : item.PositiveCredit;
+                double positiveCreditUpdatedAt = item == null ? 0 : item.PositiveCreditUpdatedAt;
+                int positiveEarned = item == null ? 0 : item.PositiveEarned;
+                int progressionStage = item == null ? 0 : item.PositiveProgressionStage;
+                double stageProgress = item == null ? 0 : item.PositiveStageProgress;
+                int positiveThisEncounter = item == null ? 0 : item.PositiveThisEncounter;
                 Require(item != null && !string.IsNullOrWhiteSpace(item.PersonId) && item.PersonId.Length <= 240 && ids.Add(item.PersonId) &&
                     offset >= -200 && offset <= 100 && Finite(item.Day) && item.Day >= 0 && item.Day == Math.Floor(item.Day) &&
                     (!item.HasNativeBaseline || (item.NativeBaseline >= -100 && item.NativeBaseline <= 100)) &&
@@ -409,9 +405,6 @@ namespace PeopleOfTheIliacBay.Core
                     (item.FamilyThreatClassification == null ||
                         IsValidFamilyThreatClassification(item.FamilyThreatClassification, item.PersonId,
                             source.NpcFrameworkScopeId)) &&
-                    (item.Boundary == null || source.Version >= 60) &&
-                    (item.Boundary == null || source.Version>=63 ||
-                        item.Boundary.PolicyVersion==0 && item.Boundary.RefusalSeconds==0) &&
                     item.Utterances != null && item.Utterances.Count <= 32, "Invalid conversation attitude.");
                 var copy = new ConversationAttitude { PersonId = item.PersonId, Offset = offset,
                     NativeBaseline = item.NativeBaseline, HasNativeBaseline = item.HasNativeBaseline,

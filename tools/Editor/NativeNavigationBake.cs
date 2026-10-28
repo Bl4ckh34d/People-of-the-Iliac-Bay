@@ -39,6 +39,13 @@ public static class NativeNavigationBake
         const string output="Assets/Game/Mods/PeopleOfTheIliacBay/Navigation";
         Directory.CreateDirectory(output);
         string manifestPath=Path.Combine(input,"navigation-manifest.json");
+        // Captures are optional build inputs. The checked-in baked catalogue
+        // remains usable after disposable capture output has been cleaned up.
+        if(!File.Exists(manifestPath))
+        {
+            input=PeopleOfTheIliacBayPaths.Repository("mod/Navigation");
+            manifestPath=Path.Combine(input,"navigation-manifest.json");
+        }
         var manifest=File.Exists(manifestPath)?NativeNavigationManifest.Read(File.ReadAllText(manifestPath)):new NativeNavigationManifest();
         // Only captures keyed by native static records and exact variants may
         // ship. Runtime additionally checks the whole city's native terrain.

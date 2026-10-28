@@ -275,11 +275,10 @@ namespace PeopleOfTheIliacBay.Tests
                 home => home == "home:duty-test", (id, category, revision) => true,
                 (id, revision, kind, start, end) => true, out var terms));
             var funding = NpcServiceTransferReceipt.Create("receipt:" + contractId, contractId,
-                NpcServiceTransferKind.Funding, payer, "contract:" + contractId + ":escrow", 120, acceptedAt);
+                NpcServiceTransferKind.Funding, payer, owner, 120, acceptedAt);
             Check.True(NpcServiceContractLedger.TryReserve(ticket.SourceLedger, ticket.ExpectedLedgerRevision,
                 terms, funding, out var reserved));
-            Check.True(store.TryCommitNpcServiceContracts(ticket, reserved,
-                new List<NpcServiceTransferReceipt> { funding }, new List<NpcServiceRenewalAuthorization>(), out string error), error);
+            Check.True(NpcDailyPaymentFixture.Commit(store,ticket,reserved,funding,out string error), error);
             ticket = store.CaptureNpcServiceContractWriteTicket();
             reserved = ticket.SourceLedger;
             Check.True(reserved.Read(contractId).TryStart(reserved.Read(contractId).Revision, startAt, out var active));

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 76,
+  "bank": "TFAC00I0.RCI",
+  "width": 64,
+  "height": 64,
+  "splitY": 35,
+  "browLockEndY": 24,
+  "eyeRegions": [
+    {"x": 15, "y": 16, "width": 15, "height": 15},
+    {"x": 33, "y": 16, "width": 16, "height": 15}
+  ],
+  "mouthRegion": {"x": 22, "y": 37, "width": 20, "height": 12},
+  "calibrationStatus": "provisional-source-only; parent review and generated-phase visual review pending",
+  "calibrationEvidence": "work/portrait076-full-preflight/annotated-source-8x.png; work/portrait076-full-preflight/report.md",
+  "source": {
+    "path": "art/portraits/mobile-mouths/split-mask-prototype/catalog/common-076.png",
+    "sha256": "732830dbc9a0f5d46622b8b74db022f97b141cea462c81fcd0604b1a206590ae"
+  },
+  "calibrationReason": "The eye masks start about two native rows above the visible low brows, retain the full brow ends, and extend below the narrow apertures without reaching hair or nose. The mouth mask moves upward and grows from the earlier tight proposal to cover the lips around rows41-46 with several antialiasing rows above and below; it ends above the neck. SplitY35 keeps the eyes above and mouth below the horizontal partition. Brow lock end24 preserves the brow shape while leaving the eye aperture free to move. Geometry uses x,y,width,height with right and bottom edges exclusive."
+}

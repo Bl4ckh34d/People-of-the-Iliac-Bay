@@ -18,7 +18,7 @@ namespace PeopleOfTheIliacBay.DFU
                 try
                 {
                     Dictionary<int,string> markers,occupants;
-                    TavernRoomSurvey.Read(interior,out markers,out occupants,out shopBedrooms);
+                    TavernBedSurvey.Read(interior,out markers,out occupants,out shopBedrooms);
                 }
                 catch(Exception error)
                 { Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_SHOP_BEDROOM_REPLACEMENT_SKIPPED: "+interior.EntryDoor.buildingKey+"; "+error.Message); }

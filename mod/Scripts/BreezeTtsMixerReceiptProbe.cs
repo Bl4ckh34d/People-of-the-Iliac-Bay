@@ -30,7 +30,7 @@ namespace PeopleOfTheIliacBay.DFU
 
         internal static IEnumerator Run(string character, string saveName)
         {
-            if (character != "PeopleOfTheIliacBayTest-9a5f197b" || saveName != "People - Gothway Garden")
+            if (character != "Hakon Ironhand" || saveName != "People - Gothway Garden")
                 throw new InvalidOperationException("Mixer receipt probe requires the exact owned character and save.");
 
             RunScenario("counted-before-update", true, false, true);

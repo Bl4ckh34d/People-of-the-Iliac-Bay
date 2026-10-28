@@ -16,6 +16,7 @@ namespace PeopleOfTheIliacBay.DFU
         private NativeNpcInventoryBinding binding;
         private bool releasedAtDeath;
         public NativeNpcInventoryBinding Binding {get{return binding;}}
+        internal bool IsBoundTo(WorldStateStore world){return ReferenceEquals(store,world);}
         public void Bind(DaggerfallEntity owner,WorldStateStore world,Resident resident)
         {
             if(resident==null)throw new ArgumentNullException(nameof(resident));

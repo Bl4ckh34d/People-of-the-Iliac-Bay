@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T04:11:48.0911391Z",
+    "portraitRecord":  90,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "guarded",
+    "prompt":  "Use case: stylized-concept. Asset type: pixel-art animation atlas for a native 64×35 upper portrait half. Edit the supplied local reference grid only. Image 1 is the inspected exact 2×2 grid of four identical original upper halves, nearest-neighbor enlarged 8×. Preserve a 2×2 row-major atlas: open, half closed, closed, repeated open. Use exact same crop, upper-half proportions and 64:35 canvas ratio. No borders, labels, grid lines, padding, or extra cells.\n\nMake guarded / skeptical expression restrained and clearly asymmetric: one brow is raised higher than the other, with cautious uneven lid tension. Never use angry V brows or an angry scowl. Preserve full brow thickness and endpoints in every cell; do not clip, thin, shorten, relocate or change brow shape across phases. Brows and creases stay stationary and pixel-identical across blink phases. Keep both pupils aimed as in source. The open cells match. Animate only lids moving vertically over fixed eyes. Never move, scale, widen, round, recolor or reshape irises or pupils. Keep muted olive-green irises consistent through all four phases, with subdued source highlights and no bright white flashes.\n\nMatch the original source\u0027s subdued tan-brown skin and soft contrast exactly. In particular, avoid added orange/copper saturation and preserve source\u0027s muted skin hue. Keep natural dark-brown brows and muted olive-green eyes. Do not add blue or cyan pixels, stray marks, make-up, red accents or harsh black outlines. Preserve person, hair, shading, crop, face scale and pixel-art clusters. No smoothing, photography, labels or full face. Return clean atlas only.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161cc-e1ce-7d23-a48b-7b5d73a7b8a6 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161cc-e1ce-7d23-a48b-7b5d73a7b8a6\\exec-6b2e49b9-59d4-490c-b0aa-bfa55a64f2a4.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161cc-e1ce-7d23-a48b-7b5d73a7b8a6\\exec-6b2e49b9-59d4-490c-b0aa-bfa55a64f2a4.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "b8b0a0da8a68fea050774dbe95633fcb561aa0d4a4b316a787b9831b46247489",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "6ab5ede4469b2edecb63c4b4f5238c7808248ee7f5afc1a45b7f4730465acf9b",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161cc-e1ce-7d23-a48b-7b5d73a7b8a6\\exec-6b2e49b9-59d4-490c-b0aa-bfa55a64f2a4.png",
+                      "sha256":  "09290cb4b3991c6d4e1fae81876de864cf8ac0c1d1c86136988a3b12ca22be94",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/guarded/raw.png",
+                "sha256":  "09290cb4b3991c6d4e1fae81876de864cf8ac0c1d1c86136988a3b12ca22be94",
+                "width":  1695,
+                "height":  928
+            }
+}

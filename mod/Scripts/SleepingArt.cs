@@ -20,6 +20,7 @@ namespace PeopleOfTheIliacBay.DFU
         // source once for this art owner's lifetime, including unsupported sources.
         private readonly Dictionary<long, SleepArtCatalog.Entry> resolvedEntries = new Dictionary<long, SleepArtCatalog.Entry>();
         public SleepingArt(Mod mod) { this.mod = mod; }
+        public Atlas ForCityWatch() { return LoadEntry(Resolve(399, 15)); }
         public Atlas ForNative(NativePerson person)
         {
             return person==null?null:LoadEntry(Resolve(person.TextureArchive,person.TextureRecord));

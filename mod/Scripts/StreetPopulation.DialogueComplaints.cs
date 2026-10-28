@@ -48,13 +48,7 @@ namespace PeopleOfTheIliacBay.DFU
             Vector3 local = directory.transform.InverseTransformPoint(origin);
             if (!guardPopulation || !guardPopulation.TryFindNearestComplaintGuard(origin, out guardId,
                     out guardPosition, out route))
-            {
-                if (receiptId == null) return false;
-                guardId = null;
-                route = new List<SavedRoutePoint> {
-                    new SavedRoutePoint { X = local.x, Z = local.z },
-                    new SavedRoutePoint { X = local.x, Z = local.z } };
-            }
+                return false;
             Vector3 crime = directory.transform.InverseTransformPoint(GameManager.Instance.PlayerMotor.transform.position);
             if (receiptId != null && !worldStore.TryMarkNpcConversationBoundaryReport(personId,
                     receiptId, NpcConversationBoundaryReportStatus.Started)) return false;
@@ -166,7 +160,8 @@ namespace PeopleOfTheIliacBay.DFU
                     (float)complaint.CrimeY, (float)complaint.CrimeZ));
                 bool dispatched = complaint.SourceReceiptId == null ?
                     guards.TryReportLegacyDialogueComplaintAt(incident) :
-                    guards.TryReportConversationBoundaryAt(complaint.SourceReceiptId, complaint.PersonId, incident);
+                    guards.TryReportConversationBoundaryAtGuard(complaint.SourceReceiptId, complaint.PersonId, incident,
+                        complaint.GuardId,actor);
                 if (dispatched)
                 {
                     worldStore.RemoveDialogueComplaint(complaint.PersonId);
@@ -236,22 +231,9 @@ namespace PeopleOfTheIliacBay.DFU
                 position = Vector3.MoveTowards(position, next, elapsed * 3.4f);
                 var local = directory.transform.InverseTransformPoint(position);
                 complaint.X = local.x; complaint.Y = local.y; complaint.Z = local.z;
-                if (Vector3.Distance(position, guardPosition) <= 2.25f)
-                {
-                    Vector3 incident = directory.transform.TransformPoint(new Vector3((float)complaint.CrimeX,
-                        (float)complaint.CrimeY, (float)complaint.CrimeZ));
-                    bool dispatched = complaint.SourceReceiptId == null ?
-                        guards.TryReportLegacyDialogueComplaintAt(incident) :
-                        guards.TryReportConversationBoundaryAt(complaint.SourceReceiptId, complaint.PersonId, incident);
-                    if (dispatched)
-                    {
-                        worldStore.RemoveDialogueComplaint(complaint.PersonId);
-                        Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DIALOGUE_COMPLAINT_ARRIVED: resident=" + complaint.PersonId +
-                            "; guard=" + complaint.GuardId + "; offscreen=true");
-                    }
-                    else worldStore.SetDialogueComplaint(complaint);
-                }
-                else worldStore.SetDialogueComplaint(complaint);
+                // Saved route progress is not physical contact. Delivery waits
+                // for actual bodies and the normal mutual-facing conversation.
+                worldStore.SetDialogueComplaint(complaint);
             }
         }
 

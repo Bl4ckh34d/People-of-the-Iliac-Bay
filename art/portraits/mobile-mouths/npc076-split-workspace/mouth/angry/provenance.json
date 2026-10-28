@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T12:15:03.1837509Z",
+    "portraitRecord":  76,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "angry",
+    "prompt":  "Create one exact 3x3 native pixel-art mouth atlas for the same NPC\u0027s angry expression, using only the supplied local mouth reference grid. Preserve the full lower portrait crop and composition; each cell is the complete 64x29 source crop. Layout row-major: A B C / D E F / G H X. Output 192x87 total, with no separators, gutters, borders, labels or extra panels.\n\nKeep the assigned anger controlled: lips firmly pressed with a slight tense set at the corners, not an exaggerated downturn, snarl, grimace, grin or oversized open mouth. Keep the small source mouth scale and muted brown-rose lip hue. Match the original face, skin, nose, chin, jaw, neck, hair, shading and native stepped pixel clusters. Teeth, only where required, are subdued neutral gray-ivory with a few pixels; never warm orange/skin-colored, shiny, pure white or flashing. Preserve the source lip color; do not add saturated lipstick, black outline or broad skin repaint.\n\nUse these exact phoneme poses:\nA: pressed closed lips with light pressure for P/B/M.\nB: narrow opening with teeth nearly together for common consonants/EE.\nC: medium unrounded EH/AE opening.\nD: wide vertical AA opening, wider than C but still proportionate and not a huge grin.\nE: slightly rounded AO/ER opening, no wider than C.\nF: small forward-puckered UW/OW/W opening, not a tooth bite.\nG: upper teeth touching the lower lip for F/V, not a wide vowel.\nH: raised tongue behind upper teeth for long L, with an opening between C and D.\nX: relaxed closed idle lips, retaining the assigned angry tension subtly.\n\nKeep every mouth pose consistent in scale and position. No extra rows or cropped chin/neck changes.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-6f41bd60-7a5f-4917-8eca-741695fb587e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-6f41bd60-7a5f-4917-8eca-741695fb587e.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "732830dbc9a0f5d46622b8b74db022f97b141cea462c81fcd0604b1a206590ae",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "a53462011331deaa1e7922a1305fe439a226e401f543639a6c4f8cbd0f7d1c82",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-6f41bd60-7a5f-4917-8eca-741695fb587e.png",
+                      "sha256":  "675de571dcf2429507b404ab95a0e0fc93a591e185e1d0cc9639c25cce280c6f",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/angry/raw.png",
+                "sha256":  "675de571dcf2429507b404ab95a0e0fc93a591e185e1d0cc9639c25cce280c6f",
+                "width":  1863,
+                "height":  844
+            }
+}

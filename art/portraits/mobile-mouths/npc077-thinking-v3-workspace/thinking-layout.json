@@ -1,0 +1,18 @@
+{
+  "halfLidRegions": [
+    {
+      "x": 18,
+      "y": 23,
+      "width": 11,
+      "height": 2
+    },
+    {
+      "x": 37,
+      "y": 23,
+      "width": 11,
+      "height": 2
+    }
+  ],
+  "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+  "rationale": "V3 test: keep upper iris track open so explicitly raised up-gaze pixels remain visible in half pose; validate visual half closure from native output."
+}

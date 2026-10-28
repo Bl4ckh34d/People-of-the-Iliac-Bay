@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "createdUtc": "2026-10-22T13:49:11.2352937Z",
+  "portraitRecord": 75,
+  "bank": "TFAC00I0.RCI",
+  "part": "eyes",
+  "emotion": "angry",
+  "prompt": "Use only the attached exact original-source reference grid to create one crisp pixel-art eye atlas for NPC075. Make four equal 64×35 cells in a 2×2 grid, row-major OPEN / HALF / CLOSED / OPEN REPEAT. No labels, gutters, borders, extra margins, zoom, or crop changes.\n\nMake the angry expression clearly distinct from the neutral source: lower both inner eyebrow ends toward the nose and give each brow a subtle inward descending angle with slight pinched-root tension. Draw one continuous, softly stepped natural brown brow per eye. Keep the brow shape coherent through all four phases. Do not make it a neutral brow, add a detached second brow/parallel stripe, create black graphic lines, or exaggerate into a severe scowl.\n\nPreserve the source face, warm muted palette, center fringe, side hair, eye spacing, narrow original eye opening, small dark amber-olive irises, and tiny pale glints. Do not widen the eyes, enlarge or round the irises, brighten whites, or add any broad pale bands. Eyelids remain narrow and natural. HALF lowers only the upper lids to cover the top of the irises; CLOSED naturally closes the eyes fully; OPEN REPEAT matches OPEN. Brows remain angry and consistent across phases.\n\nSubtle nose-root tension may be expressed only inside the existing eye envelopes, at the inner brow ends. Leave the central nose-bridge gap between the eye masks unchanged; do not expand or smudge the wrinkle into the nose, cheeks, forehead, or hair. Preserve the source hair pixels and fringe cutouts. Keep all pixel clusters crisp and nearest-neighbor, with no smoothing, blur, painterly blending, makeup, or added highlights.",
+  "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-8e6e0d22-6c4c-4cdd-b91c-2b234dbab913.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+  "generatedPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-8e6e0d22-6c4c-4cdd-b91c-2b234dbab913.png",
+  "sourceOriginal": {
+    "path": "original.png",
+    "sha256": "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98",
+    "width": 64,
+    "height": 64
+  },
+  "referenceGrid": {
+    "path": "eyes-reference-grid.png",
+    "sha256": "986e638aa3a7013b1c00da31e9aac054f32b249711efef96b6638dee3c902e4f",
+    "width": 1024,
+    "height": 560
+  },
+  "generator": {
+    "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-8e6e0d22-6c4c-4cdd-b91c-2b234dbab913.png",
+    "sha256": "732ec7d6d16f83a8f64ecda802e568ac86413d5d9243e35f4a4bfef361138f54",
+    "width": 1695,
+    "height": 928
+  },
+  "raw": {
+    "path": "eyes/angry/raw.png",
+    "sha256": "732ec7d6d16f83a8f64ecda802e568ac86413d5d9243e35f4a4bfef361138f54",
+    "width": 1695,
+    "height": 928
+  }
+}

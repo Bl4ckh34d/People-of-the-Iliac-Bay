@@ -95,6 +95,10 @@ namespace PeopleOfTheIliacBay.Tests
                 NpcActionDecision decision;string reason;
                 Check.True(NpcGoalBinding.TryBindStep(proposal,0,filtered,8,new NpcActionDecision[0],out decision,out reason),reason);
                 Check.Equal(86400,decision.DurationSeconds);
+                var naturalDay=Proposal(new StepSpec("Follow","hire you for one day","you",
+                    new NpcGoalDuration(24,NpcGoalTimeUnit.GameHours,"one day")));
+                Check.True(NpcGoalBinding.TryBindStep(naturalDay,0,new[]{paid},8,new NpcActionDecision[0],out decision,out reason),reason);
+                Check.Equal(86400,decision.DurationSeconds);
                 var implicitDay=Proposal(new StepSpec("Follow","hire you","you"));
                 Check.True(NpcGoalBinding.TryBindStep(implicitDay,0,new[]{paid},8,new NpcActionDecision[0],out decision,out reason),reason);
                 Check.Equal(86400,decision.DurationSeconds);

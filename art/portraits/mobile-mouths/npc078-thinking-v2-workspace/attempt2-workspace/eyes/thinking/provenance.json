@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T05:46:58.4811871Z",
+    "portraitRecord":  78,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "stylized-concept. Create one clean 3-by-3 gaze atlas from this exact 1536x840 nearest-neighbor reference grid. The atlas has nine equal cells, each a complete native 64x35 upper portrait, row-major with no gutters, labels, text, borders, or padding. Do not reproduce nine identical outputs.\n\nThe portrait is narrow-eyed. Preserve its small hooded eye openings, original face, hair, skin, lighting, texture, brows, and the source\u0027s compact olive-gold iris/pupil size and pixel structure. Do not enlarge the eyes or irises.\n\nFollow this exact gaze matrix. Every gaze in the top row must move both iris/pupil clusters UP by one clearly visible native pixel relative to the gaze directly below it in the same column. Every gaze in the bottom row must move both iris/pupil clusters DOWN by one clearly visible native pixel relative to the gaze directly above it in the same column. Apply this vertical movement to diagonals too; do not let diagonal direction collapse into horizontal-only motion:\nUP-LEFT = left + up; UP = up; UP-RIGHT = right + up.\nLEFT = left; CENTER = centered; RIGHT = right.\nDOWN-LEFT = left + down; DOWN = down; DOWN-RIGHT = right + down.\nBoth eyes must agree. Move the iris and pupil themselves vertically, not just the lid or eyelid shadow. Keep the lower lid/source eye identity fixed. You may move the upper lid with a downward gaze by no more than one native pixel, but retain the visibly lower iris above the lower lid. Keep each horizontal glance distinct.\n\nAt native 64x35 scale, retain the source\u0027s compact olive-gold iris and dark pupil footprint, about four pixels across including the tiny highlight. Do not make it rounder, larger, brighter, or more saturated. Keep sclera and highlights tiny and source-like. No broad white crescents, giant whites, bright flashes, added detail, or changed expression. Use source palette and pixel texture. Return only the 3x3 atlas.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-5307e0b1-1be6-4374-9493-0e6ee1f8abba.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-5307e0b1-1be6-4374-9493-0e6ee1f8abba.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "4cfab5dce8d40ff0246728c2c28922d9b5627cec9549f9b5252f2f601e4978ce",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "63430030c4d9ccd4d7c3a2e735537d01160bee5ac0046bd83773b8aeec0a0fba",
+                          "width":  1536,
+                          "height":  840
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-5307e0b1-1be6-4374-9493-0e6ee1f8abba.png",
+                      "sha256":  "ec594a864788825e341e9e1bf6192f99d1ae86148ae555dac8fc18d9798751a6",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "ec594a864788825e341e9e1bf6192f99d1ae86148ae555dac8fc18d9798751a6",
+                "width":  1695,
+                "height":  928
+            }
+}

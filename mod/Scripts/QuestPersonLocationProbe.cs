@@ -24,7 +24,7 @@ namespace PeopleOfTheIliacBay.DFU
         public static IEnumerator Run(Quest quest)
         {
             var game=GameManager.Instance;
-            Require(game.PlayerEntity.Name.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal),
+            Require(NativeProbeText.IsTestCharacter(game.PlayerEntity.Name),
                 "Disposable character required.");
             Require(quest!=null && QuestMachine.Instance.GetQuest(quest.UID)==quest,
                 "Current native ledger quest required.");

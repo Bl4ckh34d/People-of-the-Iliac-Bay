@@ -1,0 +1,25 @@
+{
+  "emotionId": "guarded",
+  "referenceUpperFile": "eyes/guarded/open.png",
+  "browSourceFile": "eyes/guarded/open.png",
+  "halfSourceFile": "eyes/guarded/half.png",
+  "closedSourceFile": "eyes/guarded/closed.png",
+  "halfLidRegions": [
+    {
+      "x": 18,
+      "y": 25,
+      "width": 11,
+      "height": 2
+    },
+    {
+      "x": 36,
+      "y": 25,
+      "width": 11,
+      "height": 2
+    }
+  ],
+  "sourceSha256": "c3a6864435906b99aac22f58bd30c06218030656df6346648a8db72579459503",
+  "referenceSha256": "30727832f6015f9b661a288b47b3fc486af7a3ad237188662b5bcda841f31cef",
+  "candidateOnly": true,
+  "rationale": "Provisional from npc078 portrait-specific neutral candidate, narrowed to y25..26 after viewing all six source emotion open/half/closed eye crops at native nearest-neighbor scale. Sclera/iris remain below this band in the inspected crops. Parent must verify mood-specific brow adjacency, especially angry/sad/afraid. Applies to guarded only after inspecting its source phase RGB; not an approval to build or publish."
+}

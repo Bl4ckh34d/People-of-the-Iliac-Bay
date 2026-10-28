@@ -12,7 +12,6 @@ namespace PeopleOfTheIliacBay.Tests
         {
             cases.Add(("Historical families roundtrip without replacing current occupants", Roundtrip));
             cases.Add(("Historical household corruption is rejected transactionally", Corruption));
-            cases.Add(("Schema 19 migrates without inventing historical families", Legacy));
             cases.Add(("Household archive requires confirmed extinction and keeps original identity", Archive));
         }
         private static WorldState Fixture()

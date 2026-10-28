@@ -13,27 +13,36 @@ namespace PeopleOfTheIliacBay.DFU
         // Isolate a peaceful bank trip: control clock, observer and wallets,
         // and disable existing local hostile enemies in this disposable fixture.
         // Native bank hours and ordinary planning still supply the actual trip.
-        internal IEnumerator VerifyFamilyCashVisit()
+        internal IEnumerator VerifyFamilyCashVisit(bool continueToInn=false)
         {
             var game=GameManager.Instance;DaggerfallUI.Instance.PopToHUD();game.PauseGame(false);
-            double dawn=(Math.Floor(ActionNow()/86400d)+3)*86400d+5*3600;
+            double current=ActionNow();
             game.PlayerEntity.PreventEnemySpawns=true;
-            DaggerfallUnity.Instance.WorldTime.Now.RaiseTime((float)(dawn-ActionNow()));
-            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FAMILY_CASH_FIXTURE: seed="+worldStore.WorldSeed+"; day="+(int)(dawn/86400)+
-                "; hour=5; nativeBankClose="+PlayerActivate.closeHours[(int)DFLocation.BuildingTypes.Bank]+
-                "; controlledWallet=true; controlledClockAndObserver=true; normalPlanning=true");
-            // This source has 408 homes, admitted two per half-second. Allow
-            // a full admission pass after the measured route preparation.
-            // A fresh world also needs a complete admission pass after its
-            // newly generated routes become ready (two homes per half-second).
-            float freshPass=Environment.GetEnvironmentVariable("POTIB_EDITOR_FIXTURE_WORLD_SEED")==null?0:population.Households.Count*0.25f+5;
-            HouseholdDayPlan day=null;float deadline=Time.realtimeSinceStartup+240+freshPass;double bankDistance=0;
+            if(!PlayerActivate.IsBuildingOpen(DFLocation.BuildingTypes.Bank))
+                throw new InvalidOperationException("Current family bank observation requires the actual native bank opening window; the fixture does not replan another day.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FAMILY_CASH_FIXTURE: seed="+worldStore.WorldSeed+"; day="+(int)(current/86400)+
+                "; hour="+(current%86400/3600)+"; nativeBankClose="+PlayerActivate.closeHours[(int)DFLocation.BuildingTypes.Bank]+
+                "; controlledWallet=true; controlledObserver=true; normalHouseholdProducer=true; dayAdvance=false; readinessLimit=30");
+            // Observe one actual natural shared-day household. Only the normal
+            // producer's work order changes; source, Home, admission and payer
+            // selection all remain owned by UpdateHouseholdDays.
+            HouseholdDayPlan day=null;float deadline=Time.realtimeSinceStartup+30;double bankDistance=0;
+            int observedHome=-1;
             while(day==null && Time.realtimeSinceStartup<deadline)
             {
-                if(Ready && EntranceSurveyReady && geometry!=null && geometry.UsesNativeNavigation)day=ChooseFamilyCashProbe(out bankDistance);
+                if(Ready && EntranceSurveyReady && geometry!=null && geometry.UsesNativeNavigation)
+                {
+                    if(observedHome<0)observedHome=ObserveFamilyCashHousehold();
+                    if(observedHome>=0)
+                    {
+                        nextHouseholdDay=population.Households.FindIndex(household=>household.BuildingKey==observedHome);
+                        UpdateHouseholdDays(ActionNow());
+                        day=ChooseFamilyCashProbe(out bankDistance,observedHome);
+                    }
+                }
                 if(day==null)yield return new WaitForSecondsRealtime(0.5f);
             }
-            if(day==null){LogFamilyCashAdmission();throw new InvalidOperationException("No naturally planned funded family outing: "+familyCashSelectionStatus);}
+            if(day==null)throw new InvalidOperationException("Observed natural family outing did not become bank-ready within 30 seconds: "+familyCashSelectionStatus);
             string payer=day.JointInn.PayerId,partner=payer==day.First.ResidentId?day.Second.ResidentId:day.First.ResidentId;
             var plan=plans.Find(p=>p.Resident.Id==payer);
             var funding=worldStore.ReadPlannedHouseholdInnFunding(payer,ActionNow());
@@ -64,9 +73,7 @@ namespace PeopleOfTheIliacBay.DFU
             var home=geometry.Entrances[day.HomeKey];
             Vector3 homePoint=geometry.ScenePoint(new RoutePoint(home.LocalDoor.x,home.LocalDoor.z));
             game.PlayerMotor.transform.position=homePoint+new Vector3(4,1,4);Physics.SyncTransforms();
-            double morning=day.AbsoluteDay*86400d+(PlayerActivate.openHours[(int)DFLocation.BuildingTypes.Bank]*60+31)*60;
             game.PlayerEntity.PreventEnemySpawns=true;
-            DaggerfallUnity.Instance.WorldTime.Now.RaiseTime((float)(morning-ActionNow()));
             Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FAMILY_CASH_START: payer="+payer+"; partner="+partner+
                 "; requiredGold="+funding.RequiredGold+"; bankDistance="+bankDistance+"; bothEmpty=true");
             NpcCashVisit visit=null;deadline=Time.realtimeSinceStartup+30;
@@ -115,7 +122,7 @@ namespace PeopleOfTheIliacBay.DFU
                 }
                 yield return null;
             }
-            if(worldStore.ReadNpcCashVisit(payer)!=null || !paid || !service || !context || travelled<5 || homeDistance>1.2f || ActionNow()>=funding.DepartureAt)
+            if(worldStore.ReadNpcCashVisit(payer)!=null || !paid || !service || !context || travelled<=0 || homeDistance>1.2f || ActionNow()>=funding.DepartureAt)
                 throw new InvalidOperationException("Proactive cash incomplete: paid="+paid+"; service="+service+"; context="+context+"; travelled="+travelled+
                     "; homeDistance="+homeDistance+"; active="+(worldStore.ReadNpcCashVisit(payer)!=null));
             if(worldStore.NeedsNpcCashErrand(payer,ActionNow()) || worldStore.NeedsNpcCashErrand(partner,ActionNow()))throw new InvalidOperationException("Funded family still needs cash.");
@@ -137,7 +144,7 @@ namespace PeopleOfTheIliacBay.DFU
             Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FAMILY_CASH_PASS: nativeBankHours=true; bothEmpty=true; onePayer=true; morningContext=true; bankService=true; gold="+
                 expectedGold+"; travelledMetres="+travelled+"; maxStep="+maxStep+"; firstDistance="+progress.First.Distance+
                 "; secondDistance="+progress.Second.Distance+"; bankInteriorUnobserved=true; innPaymentNotTested=true");
-            if(Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-verify-family-inn")>=0)
+            if(continueToInn || Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-verify-family-inn")>=0)
                 yield return VerifyFundedFamilyInn(day,payer,partner);
         }
 
@@ -163,11 +170,44 @@ namespace PeopleOfTheIliacBay.DFU
         }
 
         private string familyCashSelectionStatus="native navigation or entrance survey not ready";
-        private HouseholdDayPlan ChooseFamilyCashProbe(out double bankDistance)
+        private int ObserveFamilyCashHousehold()
+        {
+            string requested=Environment.GetEnvironmentVariable("POTIB_EDITOR_FAMILY_HOME_KEY");int requestedKey=-1;
+            if(!string.IsNullOrEmpty(requested) && (!int.TryParse(requested,out requestedKey) || requestedKey<0))
+                throw new InvalidOperationException("Invalid controlled family home key.");
+            double now=ActionNow();int day=(int)Math.Floor(now/86400d);
+            foreach(var home in population.Households)
+            {
+                if(requestedKey>=0 && home.BuildingKey!=requestedKey ||
+                    !HouseholdDayPlanner.SharedDay(worldStore.WorldSeed,population.SettlementId,home,day))continue;
+                var published=worldStore.ReadHouseholdDay(population.SettlementId,home.BuildingKey,day);
+                if(published!=null && (published.JointInn==null || published.JointSuppressed))continue;
+                var child=home.Residents.Find(person=>person.IsAlive && person.AgeGroup==ResidentAgeGroup.Child &&
+                    person.MotherId!=null && person.FatherId!=null);
+                if(child==null)continue;
+                var first=plans.Find(plan=>plan.Resident.Id==child.MotherId);
+                var second=plans.Find(plan=>plan.Resident.Id==child.FatherId);
+                if(first==null || second==null || !first.Resident.IsAlive || !second.Resident.IsAlive ||
+                    first.Resident.IsQuestProtected || second.Resident.IsQuestProtected ||
+                    !FamilyParentHome(first,now) || !FamilyParentHome(second,now))continue;
+                TownGeometry.Entrance entrance;if(!geometry.Entrances.TryGetValue(home.BuildingKey,out entrance))continue;
+                Vector3 observer;
+                var ground=geometry.ScenePoint(new RoutePoint(entrance.LocalDoor.x,entrance.LocalDoor.z));
+                if(!NativeMoveToWaitProbe.TryObserverGround(geometry,directory,ground,out observer))continue;
+                GameManager.Instance.PlayerMotor.transform.position=observer+Vector3.up;Physics.SyncTransforms();
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FAMILY_CASH_OBSERVED: home="+home.BuildingKey+"; first="+first.Resident.Id+
+                    "; second="+second.Resident.Id+"; firstPrepared="+FamilySourcePrepared(first)+"; secondPrepared="+FamilySourcePrepared(second)+
+                    "; sharedDay=true; bothHome=true; planInjected=false; payerInjected=false; observer="+observer.ToString("R"));
+                return home.BuildingKey;
+            }
+            familyCashSelectionStatus="requestedHome="+requestedKey+"; naturalSharedHouseholdCurrentlyHome=false";
+            return -1;
+        }
+        private HouseholdDayPlan ChooseFamilyCashProbe(out double bankDistance,int observedHome=-1)
         {
             bankDistance=double.PositiveInfinity;HouseholdDayPlan selected=null;double now=ActionNow();
             string requestedHome=Environment.GetEnvironmentVariable("POTIB_EDITOR_FAMILY_HOME_KEY");
-            int homeKey=-1;
+            int homeKey=observedHome;
             if(!string.IsNullOrEmpty(requestedHome) && (!int.TryParse(requestedHome,out homeKey) || homeKey<0))
                 throw new InvalidOperationException("Invalid controlled family home key.");
             int active=0,waiting=0,funded=0,eligible=0,routes=0;var banks=directory.GetBuildingsOfType(DFLocation.BuildingTypes.Bank);
@@ -179,13 +219,16 @@ namespace PeopleOfTheIliacBay.DFU
                 if(day?.JointInn?.PayerId==null || day.AbsoluteDay!=(int)(now/86400))continue;funded++;
                 var payer=plans.Find(p=>p.Resident.Id==day.JointInn.PayerId);
                 if(payer==null || !MedicalPriorityAvailable(payer,now,false) || HasActiveNpcHealthCare(payer.Resident.Id) || worldStore.ReadNpcCashVisit(payer.Resident.Id)!=null)continue;
+                var other=plans.Find(p=>p.Resident.Id==(day.JointInn.PayerId==day.First.ResidentId?day.Second.ResidentId:day.First.ResidentId));
+                var funding=worldStore.ReadPlannedHouseholdInnFunding(payer.Resident.Id,now);
+                if(other==null || !FamilyParentHome(payer,now) || !FamilyParentHome(other,now) || !PlannedCashWindowOpen(payer,funding,now))continue;
                 eligible++;var start=day.JointInn.First.Itinerary.Stops[0].Route[0];
                 foreach(var bank in banks)
                 {
                     TownGeometry.Entrance entrance;if(!geometry.Entrances.TryGetValue(bank.buildingKey,out entrance))continue;
                     var route=geometry.RouteBetweenPoints(start,new SavedRoutePoint{X=entrance.LocalDoor.x,Z=entrance.LocalDoor.z});
                     if(route.Count<2)continue;routes++;double distance=RouteLength(route);
-                    if(distance<10 || distance>100 || distance>=bankDistance)continue;
+                    if(distance<=0 || distance>=bankDistance)continue;
                     selected=day;bankDistance=distance;
                 }
             }

@@ -26,7 +26,7 @@ namespace PeopleOfTheIliacBay.DFU
 
         public static IEnumerator Run(PeopleOfTheIliacBayMod host,StreetPopulation streets,string character,string save)
         {
-            Need(Array.IndexOf(Environment.GetCommandLineArgs(),RunFlag)>=0 && character=="PeopleOfTheIliacBayTest-9a5f197b",
+            Need(Array.IndexOf(Environment.GetCommandLineArgs(),RunFlag)>=0 && character=="Hakon Ironhand",
                 "explicit owned fixture required");
             yield return ConversationMoodProbe.LoadSave(host,streets,character,save,false);
             var game=GameManager.Instance;var player=game.PlayerEntity;

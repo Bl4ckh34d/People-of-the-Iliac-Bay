@@ -17,7 +17,7 @@ namespace PeopleOfTheIliacBay.DFU
             string selected=Environment.GetEnvironmentVariable("POTIB_ROADMAP_PROBE");
             Require(Environment.GetEnvironmentVariable("POTIB_COMPANION_CAST")=="1" &&
                 (selected=="companion-health" || selected=="starting-spells") &&
-                !string.IsNullOrEmpty(character) && character.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal) &&
+                !string.IsNullOrEmpty(character) && NativeProbeText.IsTestCharacter(character) &&
                 GameManager.Instance.PlayerEntity.Name==character,"Starting spell probe needs the isolated disposable cast fixture.");
             Require(world!=null && actor && actor.Resident!=null && world.Traveler(actor.Resident.Id)!=null,
                 "Starting spell probe needs a real generated traveler.");

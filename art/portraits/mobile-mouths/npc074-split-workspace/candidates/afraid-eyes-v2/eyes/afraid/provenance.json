@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T10:41:34.6863319Z",
+    "portraitRecord":  74,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "afraid",
+    "prompt":  "Use case: precise pixel-art animation correction\nAsset type: NPC074 afraid eye-phase atlas\nInput images: (1) the attached exact local source `eyes-reference-grid.png`, with repeated original open eyes on the top row and source half-lidded eyes on the bottom row; (2) the attached exact local `baseline-eyes-afraid-v1.png`, the prior afraid atlas. Retain the prior atlas\u0027s good fearful expression and native pixel-art style, but correct its too-open HALF phase.\n\nCreate one clean exact 2×2 atlas of complete upper-face crops, same framing and scale as a 64×35 portrait half. No labels, gutters, borders, margins, text, extra panels, or decorations. Required row-major order: top-left OPEN; top-right HALF; bottom-left CLOSED; bottom-right OPEN REPEAT.\n\nKeep the lifted, tense fearful inner brows and their exact shape stable across all four cells. Preserve NPC074\u0027s low-set eye spacing, compact blue-gray iris clusters, pale subdued glints, warm muted skin, light brown/blond hairline and blue ornament registration. Keep irises compact and do not shift or enlarge them.\n\nMake HALF clearly and naturally more closed than OPEN: lower each upper lid to cover about half of the visible eyeball height, leaving a narrow but readable slit with the compact iris still inside it. Both upper lids must move down together. Do not leave HALF nearly identical to OPEN. Do not close the eye fully, hide all iris color, create a fixed black slit, widen the whites, enlarge the eyes, or move pupils outside the lid opening. Keep lower-lid contour and fearful brows stable. CLOSED must be fully shut and opaque with the same fearful brow expression. OPEN REPEAT should match OPEN.\n\nChange only eye lids and minimal eye pixels required for the phases. Keep the surrounding face, hair, ornament, framing, palette and hard-edged native pixel clusters consistent with the references. No blur, smoothing, gradients, oversized highlights, broad white bands, or vector-like circles.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-14375ad0-8bdd-412a-9548-095456bcb7d0.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-14375ad0-8bdd-412a-9548-095456bcb7d0.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "2efaad16ffae3fc9541f3d14137095db7cddeb908310fef80410ce201fd2ad84",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-14375ad0-8bdd-412a-9548-095456bcb7d0.png",
+                      "sha256":  "0d60d1bd053b382869c89a97b62e9c2d7effc072f811dfb598f255879ccb7ece",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/afraid/raw.png",
+                "sha256":  "0d60d1bd053b382869c89a97b62e9c2d7effc072f811dfb598f255879ccb7ece",
+                "width":  1695,
+                "height":  928
+            }
+}

@@ -22,6 +22,7 @@ namespace PeopleOfTheIliacBay.DFU
             var field=typeof(PeopleOfTheIliacBayMod).GetField("store",BindingFlags.NonPublic|BindingFlags.Instance);
             var store=(WorldStateStore)field.GetValue(adapter);
             var clock=DaggerfallUnity.Instance.WorldTime.Now;
+            yield return TravelerIdentityAdapter.PrepareOrigins(directory.MapID,()=>directory);
             var proposal=TravelerIdentityAdapter.Create(42,directory.MapID,inn,(int)(clock.ToSeconds()/86400d),777,access);
             proposal.Visit.DesiredArrival=clock.ToSeconds();
             store.RegisterTraveler(proposal.Person); store.RegisterTravelerVisit(proposal.Visit);
@@ -173,9 +174,9 @@ namespace PeopleOfTheIliacBay.DFU
             store.RegisterTraveler(proposal.Person); store.RegisterTravelerVisit(proposal.Visit);
             var planned=store.TravelerJourneyFor(proposal.Visit.Id);
             var lodging=store.Snapshot().Lodgings.Find(l=>l.SettlementId==directory.MapID && l.BuildingKey==inn);
-            foreach(var room in lodging.Rooms)
-                store.TryBookLodging(directory.MapID,inn,"full:"+proposal.Visit.Id+":"+room.Id,"full-guest:"+room.Id,
-                    proposal.Person.HomeSettlement,false,1,planned.CheckInAt,planned.CheckOutAt,room.Id);
+            foreach(var bed in lodging.Beds)
+                store.TryBookLodging(directory.MapID,inn,"full:"+proposal.Visit.Id+":"+bed.Id,"full-guest:"+bed.Id,
+                    proposal.Person.HomeSettlement,false,1,planned.CheckInAt,planned.CheckOutAt,bed.Id);
             clock.RaiseTime((float)(planned.CheckInAt+10-clock.ToSeconds()));
             DaggerfallUI.Instance.PopToHUD();
             float deadline=Time.realtimeSinceStartup+60;

@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T09:25:22.4118677Z",
+    "portraitRecord":  72,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "afraid",
+    "prompt":  "Create one clean 3x3 pixel-art mouth atlas for NPC072 in the afraid mood. Use the single attached 3x3 source grid as the exact portrait identity, original lower-half crop, mouth scale and center, jaw, nose base, neck, hair/background registration, palette, and pixel scale reference. Preserve the source muted brown/terracotta lips and warm skin. Add only restrained fear through tense lip corners and slight mouth tension; do not make every pose a grimace, an exaggerated downturned mouth, or a smile. Keep each pose recognizable and faithful to its phoneme shape.\n\nCanvas: seamless three-column by three-row grid, each cell the same complete 64x29 lower-half crop and the overall 64:29 cell aspect ratio. No labels, borders, gutters, margins, extra face panels, text, or decoration. Cell order is A B C / D E F / G H X.\n\nUse these Rhubarb mouth-shape definitions and sounds exactly:\nA: Closed lips with light pressure (P, B, M).\nB: Slightly open, nearly together teeth; narrow horizontal opening (most consonants, EE).\nC: Medium open mouth, relaxed unrounded lips (EH, AE).\nD: Wide vertical opening for an open vowel; larger opening than C (AA).\nE: Slightly rounded lips; opening no wider than C (AO, ER).\nF: Puckered rounded lips, small forward opening; not a tooth bite (UW, OW, W).\nG: Upper teeth touch lower lip; not a wide open vowel (F, V).\nH: Tongue raised behind upper teeth, opening between C and D; tongue may be invisible at native scale (long L).\nX: Closed relaxed idle lips (silence).\n\nOnly change expression within the mouth region and preserve the source face registration. Teeth should be muted neutral ivory/gray, distinct from skin, with modest cavity contrast: no warm skin-colored teeth, tooth gaps, bright shiny teeth, lipstick-red lips, excessive black cavity, or large surrounding skin patches. Preserve original lip scale; keep teeth and mouth interiors proportional. Avoid smoothing, antialiasing, blur, or any added content.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-b1244522-d331-4333-89a0-429f610b7936.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-b1244522-d331-4333-89a0-429f610b7936.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "4af6922ef7f8345a11ae8418761144f64dcaaa8b836f461486a2fb206cbebd85",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "439016eece9c19baa01534109a73a9de37ac5555ae9f7e4d5bbbcdc6fbcbe550",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-b1244522-d331-4333-89a0-429f610b7936.png",
+                      "sha256":  "faf84eed7b32ba694965d700ff2386fab8c5a1043482d483d2d6fd65d76fc023",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/afraid/raw.png",
+                "sha256":  "faf84eed7b32ba694965d700ff2386fab8c5a1043482d483d2d6fd65d76fc023",
+                "width":  1863,
+                "height":  844
+            }
+}

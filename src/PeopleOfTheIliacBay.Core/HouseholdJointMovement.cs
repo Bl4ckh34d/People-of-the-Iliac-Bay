@@ -64,15 +64,6 @@ namespace PeopleOfTheIliacBay.Core
                 !PointValid(cursor.Position))throw new ArgumentException("Invalid shared route cursor.");
             return new HouseholdRouteCursor{Segment=cursor.Segment,Distance=cursor.Distance,Position=Point(cursor.Position)};
         }
-        internal static HouseholdJointProgress CopyLegacy69(HouseholdJointProgress source)
-        {
-            if(source==null || source.EnteredAt!=0)throw new ArgumentException("Old schema contains future shared Inn entry fields.");
-            var legacy=(HouseholdJointProgress)source.MemberwiseClone();
-            // Visiting had no intermediate position updates in schema69; its
-            // last observation is exactly the accepted EnterInn transition.
-            if(legacy.Phase==HouseholdJointPhase.Visiting)legacy.EnteredAt=legacy.ObservedAt;
-            return Copy(legacy);
-        }
         internal static SavedRoutePoint Point(SavedRoutePoint p){return new SavedRoutePoint{X=p.X,Z=p.Z};}
         internal static bool PointValid(SavedRoutePoint p)
         {return p!=null && Finite(p.X) && Finite(p.Z) && Math.Abs(p.X)<=10000000 && Math.Abs(p.Z)<=10000000;}

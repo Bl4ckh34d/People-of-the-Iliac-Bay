@@ -34,6 +34,7 @@ namespace PeopleOfTheIliacBay.Core
         private void PutNpcTask(NpcTaskPlan task)
         {
             EnsureNpcTaskIndex();int index=state.NpcTasks.FindIndex(t=>t.Id==task.Id);
+            bool releasesFollow=index>=0 && !NpcTaskContract.IsTerminal(state.NpcTasks[index]) && NpcTaskContract.IsTerminal(task);
             if(index<0) state.NpcTasks.Add(task);else state.NpcTasks[index]=task;
             npcTasksById[task.Id]=task;
             if(NpcTaskContract.IsTerminal(task))
@@ -48,6 +49,11 @@ namespace PeopleOfTheIliacBay.Core
             {ids.Remove(task.Id);if(ids.Count==0)npcTaskFailureReceiptsByResident.Remove(task.ResidentId);}
             if(task.Phase==NpcTaskPhase.Failed && task.FailureReceipt!=null && !task.FailureReceipt.Delivered)
                 AddPendingTaskReceipt(task.ResidentId,task.Id);
+            if(task.PaidFollowActionId!=null)
+            {
+                if(releasesFollow)ReleasePaidFollowTravelTask(task);
+                npcActionIndexOwner=null;
+            }
         }
         public NpcTaskPlan ReadNpcTask(string id)
         {EnsureNpcTaskIndex();NpcTaskPlan task;return id!=null && npcTasksById.TryGetValue(id,out task)?NpcTaskContract.Copy(task):null;}
@@ -144,7 +150,12 @@ namespace PeopleOfTheIliacBay.Core
                 {reason="The goal generation is no longer active or available.";return false;}
             }
             var previousAction=ActiveNpcAction(proposed.ResidentId);
-            if(ActiveNpcTask(proposed.ResidentId)!=null || previousAction!=null && !NpcActionExecutor.IsTerminal(previousAction))
+            bool paidTravel=proposed.PaidFollowActionId!=null && ValidPaidTravelTaskBinding(state,proposed) &&
+                previousAction!=null && previousAction.Id==proposed.PaidFollowActionId &&
+                ReadPaidFollowForTravelTask(proposed.ResidentId,proposed.AcceptedAt)!=null;
+            if(proposed.PaidFollowActionId!=null && !paidTravel)
+            {reason="The original paid travel service is no longer available.";return false;}
+            if(ActiveNpcTask(proposed.ResidentId)!=null || previousAction!=null && !NpcActionExecutor.IsTerminal(previousAction) && !paidTravel)
             {reason="The NPC is already carrying out another action or task.";return false;}
             if(state.NpcTasks.Exists(t=>t.Id==proposed.Id || t.ResidentId==proposed.ResidentId && t.ProposalId==proposed.ProposalId))
             {reason="This task proposal was already handled.";return false;}
@@ -157,6 +168,7 @@ namespace PeopleOfTheIliacBay.Core
         {
             reason="The task step is no longer dispatchable.";var task=ReadNpcTask(id);
             if(!MutableTask(task,expectedRevision,now) || task.Phase!=NpcTaskPhase.Ready || now>=task.DeadlineAt || job==null) return false;
+            if(!ValidPaidTravelTaskBinding(state,task))return false;
             var step=task.Steps[task.CurrentStepIndex];
             if(job.Id!=NpcTaskContract.ActionId(task) || job.ProposalId!=job.Id || job.ResidentId!=task.ResidentId || job.Kind!=step.Kind ||
                 !NpcTaskContract.TargetMatches(ResolveNpcTaskTarget(task,task.CurrentStepIndex),job.Target) || job.AcceptedAt!=now || job.DeadlineAt>task.DeadlineAt ||
@@ -188,9 +200,13 @@ namespace PeopleOfTheIliacBay.Core
                 if(action.Phase==NpcActionPhase.Completed)
                 {
                     task.Steps[task.CurrentStepIndex].CompletedEffectId=action.CompletedEffectId;task.CurrentStepIndex++;task.ActiveActionId=null;
-                    task.Phase=task.CurrentStepIndex==task.Steps.Count?NpcTaskPhase.Completed:NpcTaskPhase.Ready;
+                    SkipDependentStepsAfterFailure(task);
+                    task.Phase=task.CurrentStepIndex==task.Steps.Count?
+                        task.FailureReason==null?NpcTaskPhase.Completed:NpcTaskPhase.Failed:NpcTaskPhase.Ready;
                 }
-                else {task.Phase=action.Phase==NpcActionPhase.Cancelled?NpcTaskPhase.Cancelled:NpcTaskPhase.Failed;task.FailureReason=action.FailureReason;}
+                else if(action.Phase==NpcActionPhase.Cancelled)
+                {task.Phase=NpcTaskPhase.Cancelled;task.FailureReason=action.FailureReason;}
+                else ApplyTaskStepFailure(task,action.FailureReason,now);
             }
             else if(now>=task.DeadlineAt)
             {
@@ -227,8 +243,10 @@ namespace PeopleOfTheIliacBay.Core
                     NpcActionObservation.Success(accepted.Id+":offscreen"),out completed))return false;
             state.NpcActions.Add(completed);IndexNpcAction(completed);
             task.Steps[task.CurrentStepIndex].CompletedEffectId=completed.CompletedEffectId;
-            task.CurrentStepIndex++;task.ActiveActionId=null;task.Phase=task.CurrentStepIndex==task.Steps.Count?
-                NpcTaskPhase.Completed:NpcTaskPhase.Ready;task.UpdatedAt=now;task.Revision++;
+            task.CurrentStepIndex++;task.ActiveActionId=null;SkipDependentStepsAfterFailure(task);
+            task.Phase=task.CurrentStepIndex==task.Steps.Count?
+                task.FailureReason==null?NpcTaskPhase.Completed:NpcTaskPhase.Failed:NpcTaskPhase.Ready;task.UpdatedAt=now;task.Revision++;
+            if(task.Phase==NpcTaskPhase.Failed)task.FailureReceipt=CreateTaskFailureReceipt(task,now);
             NpcTaskContract.Validate(task);PutNpcTask(task);return true;
         }
         public bool CancelNpcTask(string id,long expectedRevision,double now,string reason)
@@ -245,8 +263,32 @@ namespace PeopleOfTheIliacBay.Core
             var task=ReadNpcTask(id);
             if(!MutableTask(task,expectedRevision,now) || task.Phase!=NpcTaskPhase.Ready ||
                 string.IsNullOrWhiteSpace(reason) || reason.Length>1000)return false;
-            task.Phase=NpcTaskPhase.Failed;task.FailureReason=reason;task.UpdatedAt=now;task.Revision++;
-            task.FailureReceipt=CreateTaskFailureReceipt(task,now);NpcTaskContract.Validate(task);PutNpcTask(task);return true;
+            ApplyTaskStepFailure(task,reason,now);task.UpdatedAt=now;task.Revision++;
+            if(task.Phase==NpcTaskPhase.Failed)task.FailureReceipt=CreateTaskFailureReceipt(task,now);
+            NpcTaskContract.Validate(task);PutNpcTask(task);return true;
+        }
+        private static void ApplyTaskStepFailure(NpcTaskPlan task,string reason,double now)
+        {
+            var failed=task.Steps[task.CurrentStepIndex];failed.FailureReason=reason;
+            if(task.FailureReason==null)task.FailureReason=reason;
+            int next=-1;
+            if(now<task.DeadlineAt)
+                for(int i=task.CurrentStepIndex+1;i<task.Steps.Count;i++)
+                    if(task.Steps[i].ContinueAfterFailure && task.Steps[i].ItemSourceStep==0 && task.Steps[i].Kind!=NpcActionKind.Wait)
+                    {next=i;break;}
+            if(next<0){task.Phase=NpcTaskPhase.Failed;return;}
+            for(int i=task.CurrentStepIndex+1;i<next;i++)
+            {task.Steps[i].Blocked=true;task.Steps[i].FailureReason="A required earlier task step failed.";}
+            task.CurrentStepIndex=next;task.ActiveActionId=null;task.Phase=NpcTaskPhase.Ready;
+        }
+        private static void SkipDependentStepsAfterFailure(NpcTaskPlan task)
+        {
+            if(task.FailureReason==null)return;
+            while(task.CurrentStepIndex<task.Steps.Count && !task.Steps[task.CurrentStepIndex].ContinueAfterFailure)
+            {
+                var step=task.Steps[task.CurrentStepIndex];step.Blocked=true;
+                step.FailureReason="A required earlier task step failed.";task.CurrentStepIndex++;
+            }
         }
         private static List<NpcTaskPlan> CopyNpcTasks(WorldState source,WorldState validated)
         {
@@ -257,12 +299,9 @@ namespace PeopleOfTheIliacBay.Core
             var actions=new Dictionary<string,NpcActionJob>(StringComparer.Ordinal);foreach(var action in validated.NpcActions)actions.Add(action.Id,action);
             foreach(var sourceTask in source.NpcTasks)
             {
-                Require(sourceTask!=null && sourceTask.Steps!=null &&
-                    (source.Version>=59 || !sourceTask.Steps.Exists(step=>step!=null && step.MagicHealing!=null)),
-                    "Legacy task has future magic-healing metadata.");
                 var task=NpcTaskContract.Copy(sourceTask);
-                if(source.Version<46){task.GoalId=null;task.GoalStartRevision=0;}
                 NpcTaskContract.Validate(task);
+                Require(ValidPaidTravelTaskBinding(validated,task),"Invalid paid travel task binding.");
                 Require(CachedKnownNpcIdentity(validated,task.ResidentId,knownOwners) && ids.Add(task.Id) && proposals.Add(task.ResidentId+"\n"+task.ProposalId),"Unknown or duplicate NPC task.");
                 if(task.GoalId!=null)
                 {
@@ -274,6 +313,23 @@ namespace PeopleOfTheIliacBay.Core
                 for(int i=0;i<task.Steps.Count;i++)
                 {
                     var step=task.Steps[i];NpcActionJob action;bool exists=actions.TryGetValue(task.Id+":step:"+i,out action);
+                    if(i<task.CurrentStepIndex && step.FailureReason!=null)
+                    {
+                        var failedTarget=NpcActionExecutor.CopyTarget(step.Target);
+                        if(exists && step.ItemSourceStep>0)
+                        {
+                            NpcActionJob sourceAction;
+                            Require(actions.TryGetValue(task.Id+":step:"+(step.ItemSourceStep-1),out sourceAction) &&
+                                NpcTaskContract.ConfirmsAcquiredItem(task.Steps[step.ItemSourceStep-1],sourceAction),
+                                "Failed task handover has no confirmed acquired item.");
+                            failedTarget.ItemId=sourceAction.AcquiredItemId;
+                        }
+                        Require(step.Blocked?!exists:!exists || action.ResidentId==task.ResidentId && action.Kind==step.Kind &&
+                            action.ProposalId==action.Id && action.Phase==NpcActionPhase.Failed && action.FailureReason==step.FailureReason &&
+                            NpcTaskContract.TargetMatches(action.Target,failedTarget) && action.AcceptedAt>=task.AcceptedAt &&
+                            action.DeadlineAt<=task.DeadlineAt,"Task failure has an invalid action receipt.");
+                        continue;
+                    }
                     if(i<task.CurrentStepIndex || task.ActiveActionId==task.Id+":step:"+i)
                     {
                         var target=NpcActionExecutor.CopyTarget(step.Target);

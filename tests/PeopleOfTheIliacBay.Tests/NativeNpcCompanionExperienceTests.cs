@@ -143,10 +143,10 @@ namespace PeopleOfTheIliacBay.Tests
                 id=>id=="player" || id==resident,id=>id=="home:100:10",
                 (id,category,revision)=>false,(id,revision,kind,start,end)=>false,out terms));
             var funding=NpcServiceTransferReceipt.Create("fund:skill-use",contractId,NpcServiceTransferKind.Funding,
-                "player","contract:"+contractId+":escrow",120,100);
+                "player",resident,120,100);
             var ticket=store.CaptureNpcServiceContractWriteTicket();NpcServiceContractLedger reserved;string reason;
             Check.True(NpcServiceContractLedger.TryReserve(ticket.SourceLedger,ticket.ExpectedLedgerRevision,terms,funding,out reserved));
-            Check.True(store.TryCommitNpcServiceContracts(ticket,reserved,new[]{funding},new NpcServiceRenewalAuthorization[0],out reason),reason);
+            Check.True(NpcDailyPaymentFixture.Commit(store,ticket,reserved,funding,out reason),reason);
             Check.True(ClassifiedAdmissionFixture.TryAcceptAction(store,follow,true,true,true,out reason),reason);
             Check.True(store.TryBindPaidFollowAction(follow.Id,follow.Revision,contractId,out reason),reason);
             follow=store.ReadNpcAction(follow.Id);return store;
@@ -197,9 +197,9 @@ namespace PeopleOfTheIliacBay.Tests
                 (value,category,revision)=>false,(value,revision,kind,start,end)=>false,out terms));
             var ticket=store.CaptureNpcServiceContractWriteTicket();NpcServiceContractLedger ledger;string reason;
             var funding=NpcServiceTransferReceipt.Create("fund:uncovered-combat",id,NpcServiceTransferKind.Funding,
-                "player","contract:"+id+":escrow",120,100);
+                "player",resident,120,100);
             Check.True(NpcServiceContractLedger.TryReserve(ticket.SourceLedger,ticket.ExpectedLedgerRevision,terms,funding,out ledger));
-            Check.True(store.TryCommitNpcServiceContracts(ticket,ledger,new[]{funding},new NpcServiceRenewalAuthorization[0],out reason),reason);
+            Check.True(NpcDailyPaymentFixture.Commit(store,ticket,ledger,funding,out reason),reason);
             ticket=store.CaptureNpcServiceContractWriteTicket();NpcServiceContract started;
             var contract=ticket.SourceLedger.Read(id);
             Check.True(contract.TryStart(contract.Revision,100,out started));

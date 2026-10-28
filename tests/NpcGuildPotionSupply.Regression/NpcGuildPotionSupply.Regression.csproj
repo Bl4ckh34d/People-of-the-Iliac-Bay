@@ -7,10 +7,6 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="../PeopleOfTheIliacBay.Tests/ClassifiedAdmissionFixture.cs" Link="ClassifiedAdmissionFixture.cs" />
     <ProjectReference Include="../../src/PeopleOfTheIliacBay.Core/PeopleOfTheIliacBay.Core.csproj" />
-    <Reference Include="FullSerializer - Unity">
-      <HintPath>../../../Player/DaggerfallUnity_Data/Managed/FullSerializer - Unity.dll</HintPath>
-    </Reference>
   </ItemGroup>
 </Project>

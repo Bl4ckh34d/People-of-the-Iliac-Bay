@@ -7,7 +7,7 @@ namespace PeopleOfTheIliacBay.Core
     public sealed partial class WorldStateStore
     {
         /// <summary>Checks saved admission provenance against retained source cursors and work owners.</summary>
-        private static void ValidateNpcOperationAdmissions(WorldState validated, int sourceVersion)
+        private static void ValidateNpcOperationAdmissions(WorldState validated)
         {
             var cursors = new Dictionary<string, NpcConversationCommandCursor>(StringComparer.Ordinal);
             foreach (var cursor in validated.NpcConversationCommandCursors)
@@ -19,8 +19,7 @@ namespace PeopleOfTheIliacBay.Core
             foreach (var task in validated.NpcTasks)
             {
                 var source = task.Admission;
-                if (source == null) continue; // Already accepted legacy rows may continue after migration.
-                Require(sourceVersion >= 48, "Legacy task has future admission metadata.");
+                if (source == null) continue;
                 NpcOperationAdmission.CopyValidated(source);
                 if (source.Kind == NpcOperationAdmissionKind.Conversation)
                 {
@@ -45,7 +44,6 @@ namespace PeopleOfTheIliacBay.Core
             {
                 var source = action.Admission;
                 if (source == null) continue;
-                Require(sourceVersion >= 48, "Legacy action has future admission metadata.");
                 NpcOperationAdmission.CopyValidated(source);
                 if (source.Kind == NpcOperationAdmissionKind.Conversation)
                 {

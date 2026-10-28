@@ -5,7 +5,7 @@ namespace PeopleOfTheIliacBay.Tests
 {
     internal static class Program
     {
-        private static int Main()
+        private static int Main(string[] args)
         {
             var cases = new List<(string Name, Action Body)>();
             NpcCompanionWageTests.Add(cases);
@@ -140,6 +140,7 @@ namespace PeopleOfTheIliacBay.Tests
             HouseholdRecoveryStoreTests.Add(cases);
             HouseholdGenerationTests.Add(cases);
             HouseholdDayPlanTests.Add(cases);
+            FamilySimplificationTests.Add(cases);
             HouseholdJointMovementTests.Add(cases);
             HouseholdJointStoreTests.Add(cases);
             HouseholdOutingConversationTests.Add(cases);
@@ -201,6 +202,7 @@ namespace PeopleOfTheIliacBay.Tests
             HouseholdAccessTests.Add(cases);
             EntryReportTests.Add(cases);
             NativePeopleTests.Add(cases);
+            NativeMarketHouseholdsTests.Add(cases);
             PathTests.Add(cases);
             OutdoorNavigationTests.Add(cases);
             StreetLaneRouteTests.Add(cases);
@@ -233,12 +235,11 @@ namespace PeopleOfTheIliacBay.Tests
             FamilyThreatTests.Add(cases);
             HouseholdLootConsentTests.Add(cases);
             DispositionPricingTests.Add(cases);
-            ClockMigrationTests.Add(cases);
             MovementClockTests.Add(cases);
             MovementVariationTests.Add(cases);
             WalkingHeadingTests.Add(cases);
             OccupiedApproachTests.Add(cases);
-            ResidentClockMigrationTests.Add(cases);
+            if(Array.IndexOf(args,"--home-actions-only")>=0){cases.Clear();NpcHomeActionPolicyTests.Add(cases);}
             int failures = 0;
             foreach (var test in cases)
             {

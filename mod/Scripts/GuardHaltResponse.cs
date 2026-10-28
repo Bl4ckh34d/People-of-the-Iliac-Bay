@@ -15,7 +15,8 @@ namespace PeopleOfTheIliacBay.DFU
             bool player=target==GameManager.Instance.PlayerEntityBehaviour;
             if(player&&GameManager.Instance.PlayerEntity.CrimeCommitted==PlayerEntity.Crimes.None)return;
             var source=Roster.Guards.Find(guard=>guard.Id==caller.GuardId);
-            if(source!=null && Roster.Reports.Exists(report=>report.Id==source.IncidentId && report.HasCorpseInquiryWindow))
+            if(source==null || !source.IsAlive || source.Duty!=GuardDuty.Engaged || !caller.gameObject.activeInHierarchy)return;
+            if(!player && Roster.Reports.Exists(report=>report.Id==source.IncidentId && report.HasCorpseInquiryWindow))
             {
                 // Hearing a lawful Halt does not create another unbounded report.
                 RecruitNearbyCorpseSearchGuards(Now(),caller);
@@ -24,12 +25,13 @@ namespace PeopleOfTheIliacBay.DFU
             string threat=player?null:RegisterHostileThreat(target);
             if(!player&&threat==null)return;
             var destination=Local(target.transform.position);double now=Now();
+            float hearingRadius=player?200f:100f;
             var routes=new Dictionary<string,List<SavedRoutePoint>>();
             foreach(var guard in Roster.Guards)
             {
                 if(guard.Id==caller.GuardId||!guard.IsAlive||guard.Duty!=GuardDuty.Posted||guard.Interior!=null||guard.Refuge!=null)continue;
                 var from=Roster.Position(guard.Id,now);var scene=geometry.ScenePoint(new RoutePoint(from.X,from.Z));
-                if((scene-caller.transform.position).sqrMagnitude>100*100)continue;
+                if((scene-caller.transform.position).sqrMagnitude>hearingRadius*hearingRadius)continue;
                 var route=geometry.RouteBetweenPoints(from,destination);if(route.Count>=2)routes.Add(guard.Id,route);
             }
             if(routes.Count==0)return;

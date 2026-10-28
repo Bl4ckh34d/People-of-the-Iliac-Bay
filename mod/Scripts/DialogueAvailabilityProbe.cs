@@ -52,7 +52,7 @@ namespace PeopleOfTheIliacBay.DFU
         public static IEnumerator Run(PeopleOfTheIliacBayMod host,StreetPopulation streets,string character,string fixtureSave)
         {
             var game=GameManager.Instance;
-            if(!host||!streets||!game||character!="PeopleOfTheIliacBayTest-9a5f197b"||
+            if(!host||!streets||!game||character!="Hakon Ironhand"||
                 game.PlayerEntity.Name!=character||fixtureSave!="People - Gothway Garden")
                 throw new InvalidOperationException("Dialogue availability probe requires the owned People - Gothway Garden disposable fixture.");
 

@@ -5,6 +5,53 @@ namespace PeopleOfTheIliacBay.Core
 {
     public sealed partial class GuardRoster
     {
+        public bool PauseSearchForInquiry(string id,double now,double seconds)
+        {
+            Require(Time(now) && Time(seconds) && seconds>0 && Time(now+seconds),"Invalid inquiry pause.");
+            var guard=Find(id);var report=Reports.Find(r=>r.Id==guard.IncidentId);
+            if(!guard.IsAlive || guard.Duty!=GuardDuty.Searching || guard.Interior!=null || guard.DoorPursuit!=null ||
+                report==null || !report.HasCorpseInquiryWindow || report.SearchRoute==null ||
+                now<guard.ArrivesAt || now<guard.SearchPauseUntil || now+seconds>guard.SearchUntil ||
+                guard.SearchDelaySeconds+seconds>1800)return false;
+            guard.SearchPauseUntil=now+seconds;guard.SearchDelaySeconds+=seconds;
+            return true;
+        }
+        public void EndSearchInquiryPause(string id,double now)
+        {
+            Require(Time(now),"Invalid inquiry pause end.");
+            var guard=Find(id);
+            if(guard.SearchPauseUntil<=now)return;
+            double unused=guard.SearchPauseUntil-now;
+            if(unused>guard.SearchDelaySeconds)return;
+            guard.SearchDelaySeconds-=unused;guard.SearchPauseUntil=now;
+            if(guard.SearchDelaySeconds==0)guard.SearchPauseUntil=0;
+        }
+        // Reuse response timing for a brief physical report; no extra saved state.
+        public bool PauseResponseForReport(string id,double now,double seconds)
+        {
+            Require(Time(now) && Time(seconds) && seconds>0 && Time(now+seconds),"Invalid report pause.");
+            var guard=Find(id);var report=Reports.Find(r=>r.Id==guard.IncidentId);
+            if(!guard.IsAlive || guard.Duty!=GuardDuty.Responding || guard.Interior!=null ||
+                guard.DoorPursuit!=null || report==null || now<guard.DepartedAt || now>guard.ArrivesAt)return false;
+            double arrival=guard.ArrivesAt+seconds;
+            if(!Time(arrival) || report.DepartureInvestigation && arrival>InvestigationDeadline(report,arrival))return false;
+            double duration=guard.ArrivesAt-guard.DepartedAt;
+            double fraction=duration<=0?0:(now-guard.DepartedAt)/duration;
+            guard.Route=Remaining(guard.Route,Length(guard.Route)*fraction);
+            guard.ResponseOrigin=CopyPoint(guard.Route[0]);
+            guard.DepartedAt=now+seconds;guard.ArrivesAt=arrival;
+            foreach(var evidence in report.Arrivals)if(evidence.GuardId==id)evidence.ScheduledAt=arrival;
+            if(report.OccupiesScene)
+            {
+                if(!report.DepartureInvestigation && !report.HasCorpseInquiryWindow)report.InvestigationUntil=0;
+                report.InvestigationUntil=InvestigationDeadline(report,arrival);
+                foreach(var responder in Guards)
+                    if(responder.IncidentId==report.Id && (responder.Duty==GuardDuty.Responding || responder.Duty==GuardDuty.Searching))
+                        responder.SearchUntil=report.InvestigationUntil;
+            }
+            else guard.SearchUntil=arrival+300;
+            return true;
+        }
         public List<GuardRecord> DispatchOutdoorInvestigation(string incidentId, double now,
             IDictionary<string, List<SavedRoutePoint>> approaches, List<SavedRoutePoint> patrol,
             int maximumResponders, double speed, double timeScale)
@@ -53,7 +100,7 @@ namespace PeopleOfTheIliacBay.Core
         private static SavedRoutePoint SearchPosition(GuardReport report, GuardRecord guard, double now)
         {
             if (report == null || report.SearchRoute == null) return CopyPoint(guard.Route[guard.Route.Count - 1]);
-            double phase = (now - guard.ArrivesAt) * report.SearchLaps / UnwitnessedScene.OccupationSeconds;
+            double phase = (Math.Max(now,guard.SearchPauseUntil) - guard.SearchDelaySeconds - guard.ArrivesAt) * report.SearchLaps / UnwitnessedScene.OccupationSeconds;
             double along = (phase - Math.Floor(phase)) * Length(report.SearchRoute);
             for (int i = 1; i < report.SearchRoute.Count; i++)
             {

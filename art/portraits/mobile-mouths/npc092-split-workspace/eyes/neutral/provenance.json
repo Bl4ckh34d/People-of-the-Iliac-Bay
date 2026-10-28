@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T15:45:21.6401687Z",
+    "portraitRecord":  92,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Create exactly one 2-by-2 pixel-art eye atlas from the supplied 1024x560 reference grid, using it as the only visual reference. Return a single 128x70 atlas made of four complete 64x35 native upper-face crops, arranged row-major: OPEN, HALF CLOSED / FULLY CLOSED, OPEN REPEAT. Every cell keeps the same complete face crop, scale, framing, hair, brows, nose bridge, skin and background. No labels, gutters, border, padding, added rows, zooming, rescaling, or transparency.\n\nThis is NPC092\u0027s neutral eye animation. Preserve the exact source identity, soft native pixel clusters, neutral brow shape and position, actual source iris hue and compact stepped iris/pupil size. Keep the source\u0027s narrow eye aperture, subtle shaded sclera and tiny muted highlights. Do not enlarge the eyes, create broad white bands, brighten the irises, or add glossy glints. All non-eye pixels, including the forehead, hairline, cheek and face framing, should remain source-matched.\n\nOPEN: match the source\u0027s neutral open eyes. HALF CLOSED: use skin-toned upper lids descending over the upper portion of both stationary irises; keep each iris and pupil at precisely the same x/y position as OPEN. The lower lids and cheek strip remain anchored and unchanged. FULLY CLOSED: close both eyes with continuous natural upper/lower lid contours; fully cover every iris and sclera pixel. OPEN REPEAT: reproduce OPEN exactly. Brows stay neutral and fixed across all four phases. Keep native stepped contours, compact features, and the same muted source palette; no cheek motion, vertical eyeball shift, or framing changes.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54 as C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-91ff55ac-2bf4-4124-b3f7-2d079d571fd6.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-91ff55ac-2bf4-4124-b3f7-2d079d571fd6.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "d3b90a135e6dee3135ed00fbdd0ce1dd9182d1d1a7120b2ee75c9c9dd5f82db8",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "1bfb6d5e454175a84df56e5f9b51bf4953ef23623bfb4b8860dd4720b6d9c058",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-91ff55ac-2bf4-4124-b3f7-2d079d571fd6.png",
+                      "sha256":  "56798a4c87707a1d95a8ec6fda55abbe268eb180134a6d97ad0953c992244c6b",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "56798a4c87707a1d95a8ec6fda55abbe268eb180134a6d97ad0953c992244c6b",
+                "width":  1695,
+                "height":  928
+            }
+}

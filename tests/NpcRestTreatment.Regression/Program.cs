@@ -17,7 +17,7 @@ internal static class Program
             ("two-night Inn booking debits NPC wallet once and survives reload", TwoNightBookingSurvivesReload),
             ("zero-price Inn booking reserves without debiting", ZeroPriceBooking),
             ("insufficient NPC funds publish neither booking nor debit", InsufficientFundsAreAtomic),
-            ("full room does not debit the player or NPC", FullRoomDoesNotChargeAnyone),
+            ("full bed does not debit the player or NPC", FullBedDoesNotChargeAnyone),
             ("ordinary local lodging booking cannot claim healthcare authority", OrdinaryLocalBookingRemainsRejected)
         };
 
@@ -78,7 +78,6 @@ internal static class Program
         object loaded = ActiveReservation(restored, fixture.ResidentId, fixture.Care.Id, Now + 1);
         True(loaded != null, "verified health reservation should reload");
         Equal("bed:4", (string)Field(loaded, "BedId"));
-        Equal("room:4", (string)Field(loaded, "RoomId"));
         Equal(Now + 2 * 86400d, (double)Field(loaded, "EndsAt"));
     }
 
@@ -93,13 +92,13 @@ internal static class Program
         Equal(0, Bookings(fixture.Store).Count);
     }
 
-    private static void FullRoomDoesNotChargeAnyone()
+    private static void FullBedDoesNotChargeAnyone()
     {
         var fixture = CreateFixture(100);
         True(fixture.Store.TryBookLodging(1, 99, "player-booking", "player", 1, true, 1,
-            Now, Now + 2 * 86400d, "room:4"), "the player fixture should reserve the room first");
+            Now, Now + 2 * 86400d, "bed:4"), "the player fixture should reserve the bed first");
         object result;
-        True(!Reserve(fixture, 2, 14, out result), "healthcare cannot displace a player's room");
+        True(!Reserve(fixture, 2, 14, out result), "healthcare cannot displace a player's bed");
         Equal(null, result);
         Equal(100, fixture.Store.ReadNpcInventory(fixture.ResidentId).WalletGold);
         Equal(0L, fixture.Store.ReadNpcInventory(fixture.ResidentId).Revision);
@@ -110,10 +109,10 @@ internal static class Program
     {
         var store = new WorldStateStore(42);
         store.GetOrCreate(1, new[] { 10 }, 1);
-        store.RegisterLodging(1, 99, Rooms());
+        store.RegisterLodgingBeds(1, 99, Beds());
         bool rejected = false;
         try { store.TryBookLodging(1, 99, "ordinary-local", "visitor", 1, false, 1,
-            Now, Now + 86400d, "room:4"); }
+            Now, Now + 86400d, "bed:4"); }
         catch (ArgumentException) { rejected = true; }
         True(rejected, "the general lodging API cannot use a string prefix as healthcare authority");
         Equal(0, Bookings(store).Count);
@@ -143,13 +142,13 @@ internal static class Program
         string reason;
         True(store.TryAcceptAndBindNpcHealthCareTask(resident.Id, care.Revision, task, Now - 4, out reason), "rest task should accept and bind: " + reason);
         care = store.ReadNpcHealthCare(resident.Id);
-        store.RegisterLodging(1, 99, Rooms());
+        store.RegisterLodgingBeds(1, 99, Beds());
         return new Fixture { Store = store, ResidentId = resident.Id, Care = care, Task = task };
     }
 
-    private static List<LodgingRoom> Rooms()
+    private static List<LodgingBed> Beds()
     {
-        return new List<LodgingRoom> { new LodgingRoom { Id = "room:4", Beds = new List<string> { "bed:4" } } };
+        return new List<LodgingBed> { new LodgingBed { Id = "bed:4" } };
     }
 
     private static bool Reserve(Fixture fixture, int nights, int price, out object result)
@@ -166,7 +165,6 @@ internal static class Program
         Put(request, "ExpectedCareRevision", fixture.Care.Revision);
         Put(request, "SettlementId", 1);
         Put(request, "BuildingKey", 99);
-        Put(request, "RoomId", "room:4");
         Put(request, "BedId", "bed:4");
         Put(request, "StartsAt", Now);
         Put(request, "Nights", nights);

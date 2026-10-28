@@ -122,17 +122,6 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.Throws<ArgumentException>(() => store.PrepareQuestBindings(new[] { a, a }));
                 Check.Equal(0, store.Snapshot().QuestBindings.Count);
             }));
-            cases.Add(("Legacy schema three migrates family deaths and routes with empty bindings", () => {
-                var store = Filled(); var old = store.Snapshot(); old.Version = 3; old.QuestBindings = null;
-                var actor = old.Settlements[0].Households[0].Residents[0]; actor.IsAlive = false;
-                old.Routines.Add(new TownRoutineState { SettlementId = 100, Residents = new List<ResidentRoutine> {
-                    new ResidentRoutine { ResidentId = actor.Id } } });
-                store.Restore(old); var saved = store.Snapshot();
-                Check.Equal(new WorldState().Version, saved.Version); Check.Equal(0, saved.QuestBindings.Count);
-                Check.Equal(actor.Id, saved.Routines[0].Residents[0].ResidentId);
-                Check.True(!saved.Settlements[0].Households[0].Residents[0].IsAlive);
-                Check.Equal(old.Settlements[0].Households[0].SurnameSeed, saved.Settlements[0].Households[0].SurnameSeed);
-            }));
             var corruptions = new Dictionary<string, Action<QuestResidentBinding>> {
                 { "quest UID beyond native serializer range", b => b.QuestUid = ulong.MaxValue },
                 { "missing quest name", b => b.QuestName = " " }, { "missing symbol", b => b.PersonSymbol = null },

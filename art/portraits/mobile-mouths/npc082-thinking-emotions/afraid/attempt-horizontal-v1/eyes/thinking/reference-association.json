@@ -1,0 +1,69 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T08:20:47.8746310Z",
+    "purpose":  "thinking-eye raw generation; standard helper receipt retained unchanged",
+    "emotionId":  "afraid",
+    "referenceSource":  {
+                            "file":  "eyes/afraid/open.png",
+                            "sha256":  "e7781059eb1da08cef4e9659ad5fe84510d992d4d3604456c0d359e11551d7b7",
+                            "width":  64,
+                            "height":  35
+                        },
+    "portraitRecord":  82,
+    "bank":  "TFAC00I0.RCI",
+    "actualReference":  {
+                            "path":  "../../thinking-reference-grid.png",
+                            "absolutePath":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc082-thinking-emotions\\afraid\\attempt-horizontal-v1\\thinking-reference-grid.png",
+                            "sha256":  "d78f5dee06dd5ec2b21821247606388bdf52940ca254635c375ea5dc26d4518e",
+                            "width":  1024,
+                            "height":  560
+                        },
+    "actualArguments":  {
+                            "path":  "arguments.json",
+                            "sourcePath":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait082-horizontal-afraid-v1\\arguments.json",
+                            "sha256":  "5640fd86b95ef356c9433035357ec4db9a26cd4b0f046e79be334c4912807225",
+                            "referencedImagePath":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc082-thinking-emotions\\afraid\\attempt-horizontal-v1\\thinking-reference-grid.png",
+                            "normalizedReferencedImagePath":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc082-thinking-emotions\\afraid\\attempt-horizontal-v1\\thinking-reference-grid.png",
+                            "transparentBackground":  false,
+                            "numLastImagesToInclude":  null
+                        },
+    "actualRequest":  {
+                          "path":  "request.json",
+                          "sourcePath":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait082-horizontal-afraid-v1\\request.json",
+                          "sha256":  "0e9cbc31d90f3928bff7f49b5be9a806a5fd21d9b6cb48b874a3d2d923a4844a"
+                      },
+    "helperStage":  {
+                        "portraitRoot":  "C:\\Users\\Daniel\\AppData\\Local\\Temp\\portrait-thinking-stage-a3c66db129d0475ca8194e15aa29619a",
+                        "part":  "eyes",
+                        "emotion":  "neutral",
+                        "referencePath":  "eyes-reference-grid.png",
+                        "referenceSha256":  "d78f5dee06dd5ec2b21821247606388bdf52940ca254635c375ea5dc26d4518e",
+                        "sourceOriginalSha256":  "37270c9eb3e1260c3774263d512bfd0bab8e144fef129b32a0f065c92aa48d26",
+                        "provenance":  "provenance.json"
+                    },
+    "transferred":  {
+                        "rawPath":  "raw.png",
+                        "rawSha256":  "0ee95edf74ff64723cb8898dcf2d8334fa3b24564b9a40186f7059dfa0df7b13",
+                        "rawSize":  "1695x928",
+                        "helperProvenancePath":  "provenance.json",
+                        "savedReferencePath":  "eyes-reference-grid.png"
+                    },
+    "helperProvenanceNote":  "provenance.json is the unchanged SavePortraitRawOutput receipt from the isolated helper stage. Its eyes/neutral labels and eyes-reference-grid.png path describe that stage; this wrapper maps those bytes to eyes/thinking and the actual thinking grid.",
+    "gazeLayout":  "horizontal-pair",
+    "referenceSources":  [
+                             {
+                                 "phase":  "open",
+                                 "file":  "eyes/afraid/open.png",
+                                 "sha256":  "e7781059eb1da08cef4e9659ad5fe84510d992d4d3604456c0d359e11551d7b7",
+                                 "width":  64,
+                                 "height":  35
+                             },
+                             {
+                                 "phase":  "half",
+                                 "file":  "eyes/afraid/half.png",
+                                 "sha256":  "e651bc8f65d35e938e6d7412ef8000053e52e9f9b377e05cf23258576b677ce9",
+                                 "width":  64,
+                                 "height":  35
+                             }
+                         ]
+}

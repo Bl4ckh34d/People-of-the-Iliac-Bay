@@ -68,6 +68,7 @@ namespace PeopleOfTheIliacBay.Core
             var stepActionIds = new HashSet<string>(StringComparer.Ordinal);
             foreach (var task in state.NpcTasks)
             {
+                if(task.PaidFollowActionId!=null)stepActionIds.Add(task.PaidFollowActionId);
                 for (int step = 0; step < task.Steps.Count; step++)
                     stepActionIds.Add(task.Id + ":step:" + step);
                 signature = HashSweep(signature, task.Id, task.Revision, (int)task.Phase,

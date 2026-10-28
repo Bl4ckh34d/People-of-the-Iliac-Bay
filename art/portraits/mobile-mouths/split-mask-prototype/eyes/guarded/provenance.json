@@ -1,0 +1,33 @@
+{
+  "emotion": "guarded / skeptical",
+  "generator": "built-in image_gen",
+  "status": "prototype; user-review-pending; not installed",
+  "source_images": [
+    {
+      "role": "edit-target",
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\eyes-reference-grid.png",
+      "sha256": "A533A7BD5E93C132A22191FB9C4EC35466840A8B0BAC4218064DB6BC5F4FAACC"
+    },
+    {
+      "role": "native-upper-identity-reference",
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\source-upper.png",
+      "sha256": "1AC0547D22FDEFB5DDA5874ACD21AEF2069BC8D55D05513B7724211FF9187DB4"
+    },
+    {
+      "role": "supporting-identity-palette-reference",
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\original.png",
+      "sha256": "4BBB1C9F6BEA7561D316FA6587A93FD0C9BCBFA3C9AA0992BB85B804AA213125"
+    }
+  ],
+  "generated_original": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-626e-7471-95f3-109617bb3581\\exec-ab1bd07c-562e-4850-8e2e-df6419ed7695.png",
+  "output": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\eyes\\guarded\\raw.png",
+    "dimensions": "1695x928",
+    "aspect_ratio": "1.82651",
+    "sha256": "D238A2DEF9D7C0A5300D12029FD312C44A279DB19D91C1017B20DF373E056D21"
+  },
+  "prompt": "Image 1 is the EDIT TARGET: preserve its complete 2x2 atlas layout and proportions. Image 2 is the exact native upper-half identity reference. Image 3 is supporting full-portrait identity and palette reference only; output upper halves, not full portraits. Create exactly one raw 2x2 eye atlas for GUARDED / SKEPTICAL expression. Keep original soft muted pixel palette, native face scale, brow position, framing, geometry, hairline, skin shading and proportions. No face or head rotation. Both brows must remain fully visible in all four cells. Row-major cells: OPEN guarded eyes / HALF blink / FULLY CLOSED blink / repeat of OPEN guarded eyes. Open expression: suspicious sideways glance toward viewer's right, with clearly readable pupils and irises, narrowed but alert eyes, gentle asymmetric brow tension (one brow slightly raised, the other nearly level). Suspicion, not anger. No symmetrical scowl, no sharply furrowed brows, no harsh black brows, no heavy eyeliner, no smeared shadows, no blur, no airbrushing, no sharpened outlines, no enlarged eyes, no added facial details, no text, no gutters, no labels. Preserve soft low-contrast original game shading. In HALF cell, upper lids cover about half of each iris; keep brows and gaze identical to OPEN. In CLOSED cell, lids fully hide all iris and sclera; keep brow placement and sideward expression identical. Fourth cell duplicates OPEN. No other changes. Return one complete 2x2 sheet with all four upper-half cells unchanged in size and aligned to the target's approximately 1.82857 aspect ratio.",
+  "grid_order": "open / half blink / closed blink / duplicate open (row-major)",
+  "generation_count": 1,
+  "visible_deviations": "All four upper-face cells remain present and brows visible; output aspect closely matches 1.82857 target. Sideward glance is visible, but brows retain strong symmetric downward angles and can read stern or angry."
+}

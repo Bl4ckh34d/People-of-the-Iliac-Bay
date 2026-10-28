@@ -45,12 +45,20 @@ namespace PeopleOfTheIliacBay.Core
         }
         private sealed class Interval{internal double From,Until;}
         private sealed class Candidate{internal int Member,Index;internal ResidentDailyOuting Outing;}
+        public static bool RequiresChildcare(uint seed,int settlement,Household household,int day)
+        {
+            if(household==null || settlement<0 || household.BuildingKey<0 || household.Generation<0 || day<0)
+                throw new ArgumentException("Invalid household/day childcare selection.");
+            uint basis=StableSeed.Combine(seed,(uint)settlement,(uint)household.BuildingKey,(uint)household.Generation);
+            return (StableSeed.Combine(basis,(uint)day,0x63617265u,0x64617973u)&1)!=0;
+        }
         public static bool SharedDay(uint seed,int settlement,Household household,int day)
         {
             if(household==null || settlement<0 || household.BuildingKey<0 || household.Generation<0 || day<0)
                 throw new ArgumentException("Invalid household/day selection.");
             uint basis=StableSeed.Combine(seed,(uint)settlement,(uint)household.BuildingKey,(uint)household.Generation);
-            return StableSeed.Combine(basis,(uint)day,0x66616d69u,0x6c796461u)%100<10;
+            return !RequiresChildcare(seed,settlement,household,day) &&
+                StableSeed.Combine(basis,(uint)day,0x66616d69u,0x6c796461u)%100<20;
         }
         public static bool TryCreate(HouseholdDayRequest request,out HouseholdDayPlan plan,out string reason)
         {
@@ -73,6 +81,7 @@ namespace PeopleOfTheIliacBay.Core
                 children.Add(child.Id);
             }
             children.Sort(StringComparer.Ordinal);
+            bool coverage=children.Count>0 && RequiresChildcare(request.WorldSeed,request.SettlementId,home,request.AbsoluteDay);
             double day=request.AbsoluteDay*86400d,localNow=Math.Max(0,request.PlannedAt-day);
             var result=new HouseholdDayPlan{Id=HouseholdDayPlan.Identity(request.SettlementId,home.BuildingKey,home.Generation,request.AbsoluteDay),
                 SettlementId=request.SettlementId,HomeKey=home.BuildingKey,Generation=home.Generation,AbsoluteDay=request.AbsoluteDay,
@@ -139,10 +148,10 @@ namespace PeopleOfTheIliacBay.Core
                         double end=ResidentVisitJourney.Create(departure,candidate.Outing.Itinerary).EndsAt;
                         if(!Fits(candidate.Outing.Itinerary,departure,request.WakeMinute,request.SleepMinute))break;
                         double next=AfterConflicts(occupied[member],departure,end);
-                        if(children.Count>0)next=Math.Max(next,AfterConflicts(occupied[other],departure,end));
+                        if(coverage)next=Math.Max(next,AfterConflicts(occupied[other],departure,end));
                         if(next>departure){departure=next+60;continue;}
                         if(request.IsAvailable!=null && !request.IsAvailable(members[member].ResidentId,day+departure,day+end) ||
-                            children.Count>0 && request.CanCoverChildren!=null &&
+                            coverage && request.CanCoverChildren!=null &&
                             !request.CanCoverChildren(members[other].ResidentId,day+departure,day+end))
                         {departure+=900;continue;}
                         members[member].Outings.Add(new HouseholdOutingSelection{SourceOutingIndex=candidate.Index,DepartureSeconds=departure});
@@ -230,7 +239,7 @@ namespace PeopleOfTheIliacBay.Core
                     var original=outings[selected.SourceOutingIndex];
                     double end=ResidentVisitJourney.Create(selected.DepartureSeconds,original.Itinerary).EndsAt;
                     if(end<=localNow)continue;
-                    if(selected.DepartureSeconds<localNow || actualChildren.Count>0 &&
+                    if(selected.DepartureSeconds<localNow || actualChildren.Count>0 && RequiresChildcare(seed,plan.SettlementId,home,plan.AbsoluteDay) &&
                         !schedules[1-member].IsHomeThroughout(day+selected.DepartureSeconds,day+end))
                         throw new ArgumentException("Household optional outing lacks full parental coverage.");
                 }

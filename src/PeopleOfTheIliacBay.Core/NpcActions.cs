@@ -24,7 +24,10 @@ namespace PeopleOfTheIliacBay.Core
         // Local coordinates are qualified by a stable loaded space. No Unity references.
         public NpcActionTarget LastPosition;
         public NpcFollowTransition FollowTransition;
+        public NpcCompanionRecovery CompanionRecovery;
+        public NpcCompanionEnterprise CompanionEnterprise;
         public NpcPaidTravelHandoff PaidTravelHandoff;
+        public bool FastTravelFollowOwner;
         public NpcRoutineRecoveryTransition RoutineRecoveryTransition;
         public bool ReturningToRoutine;
         public long ExpectedInventoryRevision;
@@ -243,6 +246,10 @@ namespace PeopleOfTheIliacBay.Core
             if(now>=current.DeadlineAt) {phase=NpcActionPhase.Failed;reason="The action deadline expired.";}
             if(current.FollowTransition!=null && phase!=NpcActionPhase.Failed && phase!=NpcActionPhase.Cancelled)return false;
             if(current.Kind==NpcActionKind.RestToHeal && current.FinishAt>0 && phase==NpcActionPhase.Approaching)return false;
+            // Recreated bodies can physically rejoin their trainer after time
+            // catch-up. Their already paid lesson keeps its original timer.
+            if(current.ServiceCode==NpcShopCommerce.TrainingServiceCode && current.ServiceStep==1 &&
+                current.FinishAt>0 && phase==NpcActionPhase.Approaching)return false;
             if(!NpcActionContract.CanTransition(current.Phase,phase,observation.Confirmed)) return false;
             if(phase==NpcActionPhase.Completed &&
                 ((current.Kind==NpcActionKind.UseHealingItem || current.Kind==NpcActionKind.RestToHeal || current.Kind==NpcActionKind.CastSpell && current.MagicHealing!=null) && observation.TreatmentReceipt==null ||
@@ -266,6 +273,12 @@ namespace PeopleOfTheIliacBay.Core
             if(phase==NpcActionPhase.Completed)updated.BuildingTransitionReceipt=NpcBuildingTransitionReceipt.CopyFields(observation.BuildingTransitionReceipt);
             if(updated.FollowTransition!=null && IsTerminal(updated))
             {updated.LastPosition=updated.FollowTransition.SourcePosition(now);updated.FollowTransition=null;}
+            if(IsTerminal(updated) && updated.CompanionRecovery!=null &&
+                updated.CompanionRecovery.Phase!=NpcCompanionRecoveryPhase.Following &&
+                updated.CompanionRecovery.Phase!=NpcCompanionRecoveryPhase.ResumedRoutine)
+                updated.ReturningToRoutine=true;
+            if(IsTerminal(updated) && updated.CompanionEnterprise!=null)
+            {updated.CompanionEnterprise.Active=false;updated.CompanionEnterprise.OwnDefeatedEnemies=false;updated.CompanionEnterprise.Containers=false;}
             Validate(updated);return true;
         }
         public static void Validate(NpcActionJob value)
@@ -282,6 +295,8 @@ namespace PeopleOfTheIliacBay.Core
                 value.Kind!=NpcActionKind.RestToHeal && value.ExpectedVitalsRevision!=0)
                 throw new ArgumentException("Vitals revision binding is only valid for rest treatment actions.");
             NpcActionContract.ValidateTarget(value.Target);
+            if(value.FastTravelFollowOwner && (value.Kind!=NpcActionKind.Follow || value.Target.Kind!=NpcActionTargetKind.Person || value.Target.PersonId!="player"))
+                throw new ArgumentException("Fast travel ownership requires the existing player Follow action.");
             if(value.Kind==NpcActionKind.ReportMurder && (value.Target.Kind!=NpcActionTargetKind.Person ||
                 value.Target.SettlementId<0 || value.Target.PersonId=="player" || value.Target.PersonId==value.ResidentId))
                 throw new ArgumentException("A murder report needs a specific guard in a known settlement.");
@@ -456,6 +471,8 @@ namespace PeopleOfTheIliacBay.Core
                     throw new ArgumentException("Invalid confirmed acquired item.");
             }
             NpcFollowTransition.Validate(value);
+            NpcCompanionRecovery.Validate(value);
+            NpcCompanionEnterprise.Validate(value);
             NpcPaidTravelHandoff.Validate(value);
             NpcRoutineRecoveryTransition.Validate(value);
         }
@@ -465,7 +482,9 @@ namespace PeopleOfTheIliacBay.Core
                 Target=CopyTarget(value.Target),Phase=value.Phase,Revision=value.Revision,AcceptedAt=value.AcceptedAt,
                 DeadlineAt=value.DeadlineAt,UpdatedAt=value.UpdatedAt,FinishAt=value.FinishAt,FailureReason=value.FailureReason,CompletedEffectId=value.CompletedEffectId,
                 LastPosition=CopyTarget(value.LastPosition),FollowTransition=NpcFollowTransition.Copy(value.FollowTransition),
+                CompanionRecovery=NpcCompanionRecovery.Copy(value.CompanionRecovery),CompanionEnterprise=NpcCompanionEnterprise.Copy(value.CompanionEnterprise),
                 PaidTravelHandoff=NpcPaidTravelHandoff.Copy(value.PaidTravelHandoff),
+                FastTravelFollowOwner=value.FastTravelFollowOwner,
                 RoutineRecoveryTransition=NpcRoutineRecoveryTransition.Copy(value.RoutineRecoveryTransition),ReturningToRoutine=value.ReturningToRoutine,InteractionMemoryRecorded=value.InteractionMemoryRecorded,ExpectedInventoryRevision=value.ExpectedInventoryRevision,
                 InteractionProjectionDisposition=value.InteractionProjectionDisposition,
                 InteractionProjectionReason=value.InteractionProjectionReason,
@@ -504,13 +523,13 @@ namespace PeopleOfTheIliacBay.Core
             npcActionsById=new Dictionary<string,NpcActionJob>(StringComparer.Ordinal);
             npcActionsByResident=new Dictionary<string,NpcActionJob>(StringComparer.Ordinal);
             foreach(var job in state.NpcActions)
-            {npcActionsById.Add(job.Id,job);if(!NpcActionExecutor.IsTerminal(job) || job.ReturningToRoutine) npcActionsByResident.Add(job.ResidentId,job);}
+            {npcActionsById.Add(job.Id,job);if((!NpcActionExecutor.IsTerminal(job) || job.ReturningToRoutine) && !PaidFollowHeldByTravelTask(state,job)) npcActionsByResident.Add(job.ResidentId,job);}
             npcActionIndexOwner=state;
         }
         private void IndexNpcAction(NpcActionJob job)
         {
             EnsureNpcActionIndex();npcActionsById[job.Id]=job;
-            if(!NpcActionExecutor.IsTerminal(job) || job.ReturningToRoutine) npcActionsByResident[job.ResidentId]=job;
+            if((!NpcActionExecutor.IsTerminal(job) || job.ReturningToRoutine) && !PaidFollowHeldByTravelTask(state,job)) npcActionsByResident[job.ResidentId]=job;
             else
             {
                 NpcActionJob active;
@@ -532,7 +551,7 @@ namespace PeopleOfTheIliacBay.Core
         public List<NpcActionJob> PendingNpcActions()
         {
             var result=new List<NpcActionJob>();
-            foreach(var job in state.NpcActions) if(!NpcActionExecutor.IsTerminal(job) || job.ReturningToRoutine) result.Add(NpcActionExecutor.Copy(job));
+            foreach(var job in state.NpcActions) if((!NpcActionExecutor.IsTerminal(job) || job.ReturningToRoutine) && !PaidFollowHeldByTravelTask(state,job)) result.Add(NpcActionExecutor.Copy(job));
             return result;
         }
         public bool TryAcceptNpcAction(NpcActionJob proposed,bool adapterAvailable,bool consent,bool scheduleCompatible,out string reason)
@@ -588,7 +607,10 @@ namespace PeopleOfTheIliacBay.Core
                 var released=NpcActionExecutor.Copy(state.NpcActions[index]);released.ReturningToRoutine=false;
                 released.Revision++;state.NpcActions[index]=released;IndexNpcAction(released);
             }
-            var accepted=NpcActionExecutor.Copy(proposed);state.NpcActions.Add(accepted);IndexNpcAction(accepted);reason="accepted";return true;
+            var accepted=NpcActionExecutor.Copy(proposed);
+            if(accepted.Kind==NpcActionKind.Follow && accepted.Target.PersonId=="player" && accepted.LastPosition!=null)
+                accepted.CompanionRecovery=new NpcCompanionRecovery {RecruitmentOrigin=NpcActionExecutor.CopyTarget(accepted.LastPosition)};
+            state.NpcActions.Add(accepted);IndexNpcAction(accepted);reason="accepted";return true;
         }
         public bool ObserveNpcAction(string id,long expectedRevision,double now,NpcActionObservation observation)
         {
@@ -843,26 +865,14 @@ namespace PeopleOfTheIliacBay.Core
             var knownOwners=new HashSet<string>(StringComparer.Ordinal);
             foreach(var job in source.NpcActions)
             {
-                Require(source.Version>=59 || job.MagicHealing==null,
-                    "Legacy action has future magic-healing metadata.");
                 NpcActionExecutor.Validate(job);
                 var copy=NpcActionExecutor.Copy(job);
-                if(source.Version<48 && copy.Kind==NpcActionKind.Interact)
-                {
-                    if(copy.InteractionMemoryRecorded)copy.InteractionProjectionDisposition=NpcInteractionProjectionDisposition.Recorded;
-                    else if(NpcActionExecutor.IsTerminal(copy))
-                    {
-                        copy.InteractionProjectionDisposition=NpcInteractionProjectionDisposition.Unavailable;
-                        copy.InteractionProjectionReason="Historical physical encounter evidence was not saved.";
-                    }
-                }
-                if(source.Version>=48)
-                    Require(copy.InteractionMemoryRecorded==
-                        (copy.InteractionProjectionDisposition==NpcInteractionProjectionDisposition.Recorded),
-                        "Interaction projection flag disagrees with disposition.");
+                Require(copy.InteractionMemoryRecorded==
+                    (copy.InteractionProjectionDisposition==NpcInteractionProjectionDisposition.Recorded),
+                    "Interaction projection flag disagrees with disposition.");
                 NpcActionExecutor.Validate(copy);
                 Require(CachedKnownNpcIdentity(validated,copy.ResidentId,knownOwners) && ids.Add(copy.Id) && proposals.Add(copy.ResidentId+"\n"+copy.ProposalId),"Unknown or duplicate NPC action owner/proposal.");
-                if(!NpcActionExecutor.IsTerminal(copy) || copy.ReturningToRoutine) Require(active.Add(copy.ResidentId),"Multiple actions own one NPC.");
+                if((!NpcActionExecutor.IsTerminal(copy) || copy.ReturningToRoutine) && !PaidFollowHeldByTravelTask(source,copy)) Require(active.Add(copy.ResidentId),"Multiple actions own one NPC.");
                 result.Add(copy);
             }
             return result;

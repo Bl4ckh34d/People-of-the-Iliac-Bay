@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T12:16:12.1879609Z",
+    "portraitRecord":  76,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "guarded",
+    "prompt":  "Create one native pixel-art viseme atlas for NPC076\u0027s guarded/skeptical expression, using the attached exact local mouth-reference-grid.png as the sole reference. Output a 3×3 atlas row-major A B C / D E F / G H X; every cell is the complete lower 64:29 crop with identical framing and registration. No gutters, labels, borders, zooms, or extra panels. Keep the mouth small and centered at the source\u0027s scale; preserve the muted natural brown-rose lip color, skin, nose/jaw, hair/cap framing and face identity. Expression is restrained, slightly doubtful lip tension, never a smile or scowl. Teeth, where visible, are subdued neutral gray-ivory, clearly distinct from the warm skin and not shiny white. Use these exact Rhubarb meanings: A pressured closed lips for P/B/M; B narrow opening with teeth nearly together for consonants/EE; C medium unrounded opening for EH/AE; D wide vertical AA opening, wider than C; E slightly rounded AO/ER, no wider than C; F small forward puckered UW/OW/W, not a bite; G upper teeth touching lower lip for F/V, not a wide vowel; H raised tongue behind upper teeth for long L, opening between C and D; X relaxed closed idle lips. Keep all nine poses clearly distinct but modest. Do not use lipstick-red color, glossy lips, oversized mouth, bright white teeth, orange/skin-colored teeth, or repaint skin/chin/nose/hair. No text.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-a3c87bfe-fea8-4e3a-97d5-aff69671701e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-a3c87bfe-fea8-4e3a-97d5-aff69671701e.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "732830dbc9a0f5d46622b8b74db022f97b141cea462c81fcd0604b1a206590ae",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "a53462011331deaa1e7922a1305fe439a226e401f543639a6c4f8cbd0f7d1c82",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-a3c87bfe-fea8-4e3a-97d5-aff69671701e.png",
+                      "sha256":  "7ff1177d75c6fd47f3cb546aa990ad729102c8c0f11603f0e706949f90e7b2d5",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/guarded/raw.png",
+                "sha256":  "7ff1177d75c6fd47f3cb546aa990ad729102c8c0f11603f0e706949f90e7b2d5",
+                "width":  1863,
+                "height":  844
+            }
+}

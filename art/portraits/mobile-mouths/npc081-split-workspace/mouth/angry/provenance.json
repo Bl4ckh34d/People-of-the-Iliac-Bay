@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 81,
+  "emotion": "angry",
+  "assetType": "3x3 A-H/X mouth atlas",
+  "imageTool": "built-in image_gen",
+  "sourceReferences": [
+    {
+      "sha256": "195f9a431b7a6509ca0c701eb5057672431e11ab58037bef41cc61402bbe851f",
+      "file": "../../mouth-reference-grid.png"
+    },
+    {
+      "sha256": "f0ce9ef9054d82053f83b82e79f85ba69a9f55bd0f30aead74d8189741c53594",
+      "file": "../../source-lower.png"
+    },
+    {
+      "sha256": "eb0f7dcd1d390a6ff58d1bc0bba7a3855b5930ee824aa54e2f749211721e8ba0",
+      "file": "../../original.png"
+    }
+  ],
+  "prompt": "Use case: pixel-art angry speech-mouth atlas for Daggerfall Unity NPC 081.\nImage 1 is the exact 3x3 repeated-original lower-face grid and layout reference. Image 2 is the exact native original lower half. Image 3 is the complete original portrait and palette authority.\nCreate one complete 3x3 atlas of nine angry speech poses, exact row-major order A B C / D E F / G H X. Equal full lower-half crops, identical scale, framing, face geometry and mouth position. Preserve hair, nose, cheeks, jaw, chin, neck, background and original soft pixel-art style.\nArticulation: A = closed tense lips; B = small visible upper teeth; C = small open mouth; D = wide open speech mouth; E = rounded open mouth; F = puckered narrow opening; G = parted lips with small upper teeth; H = open mouth with a small tongue cue; X = closed resting lips. Each shape must be visibly distinct and anatomically natural at the portrait's original small lip width. No giant mouths. Teeth only in B and G; tongue cue only in H.\nEmotion: controlled anger through pressed lip corners and subtle tension in closed forms. Do not turn A or X into a comic frown.\nPalette: match exact subdued original terracotta-brown lips and muted skin. No lipstick-red, no orange skin, no saturation or contrast increase. Keep teeth and inner-mouth colors soft and low contrast, consistent with original.\nKeep native 64x29 lower-cell proportions and 3x3 grid. Change lips and mouth interiors only; preserve surrounding half-frame pixels and all cell positions. No heavy outlines, hard shadows, smudging, blur, text, labels, borders, gutters, extra cells or watermark.",
+  "rawFile": "raw.png",
+  "rawSha256": "f35adc417f7c7e0dc77e2cc04a4cd71e3977555bc5f2d057322611da7a7fdb6f",
+  "dimensions": {
+    "width": 1863,
+    "height": 844
+  },
+  "visibleIssues": [
+    "A-H/X articulation is differentiated; requested teeth B/G and tongue H cues are present. Lips appear redder and skin warmer/oranger than original at enlarged view; palette drift remains open. No reroll."
+  ],
+  "generatedOutput": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-bfa3-7821-8c10-1973507e5744\\exec-cc45f766-3e89-4b92-bbb4-9a8dcc7b6f50.png"
+}

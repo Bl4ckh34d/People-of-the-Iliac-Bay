@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T10:52:11.3116119Z",
+    "portraitRecord":  74,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Create one horizontal thinking-gaze atlas for NPC074 guarded, using the attached exact local thinking-reference-grid.png as the only reference image. Output a 2×2 atlas of identical complete upper face crops, row-major: viewer-left gaze OPEN, viewer-right gaze OPEN / viewer-left gaze HALF-CLOSED, viewer-right gaze HALF-CLOSED. Each cell uses same 64:35 framing and registration, no gutters, labels, borders, zooms or alternate face layouts. Both eyes move together; shift each compact blue-gray iris gently about one native pixel toward the named viewer direction, clearly distinguishing left and right while keeping pupils centered inside their original apertures. Preserve the selected guarded v2 asymmetric skeptical expression: viewer-left brow raised, viewer-right brow flatter/lower, appraising gaze. Keep brows fixed, including full brow ends, across both directions and blink phases. Keep pale source glints, muted warm pixel palette, light hair, blue ornament, face identity and eye spacing. HALF-CLOSED row must preserve the selected v2 half aperture, not reuse open eyes. Do not widen eye whites, round or enlarge irises, redesign lids, change brow shape, add angry symmetry, or alter hair, ornament, skin, background, or any other pixels. No text.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-cb2b593a-b563-4afd-848b-90b4de38253c.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-cb2b593a-b563-4afd-848b-90b4de38253c.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "b86c101c5f7e3775db6403e1b40860988839e52edf08ea04482662e306e21617",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-cb2b593a-b563-4afd-848b-90b4de38253c.png",
+                      "sha256":  "5b7af726170e288f535909d4034a6b658067118c6f5a5c1dd576ea0f2b7391ea",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "5b7af726170e288f535909d4034a6b658067118c6f5a5c1dd576ea0f2b7391ea",
+                "width":  1695,
+                "height":  928
+            }
+}

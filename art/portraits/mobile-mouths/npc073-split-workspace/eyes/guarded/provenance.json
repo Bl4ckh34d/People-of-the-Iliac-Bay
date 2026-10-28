@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T10:12:50.7731092Z",
+    "portraitRecord":  73,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "guarded",
+    "prompt":  "Create one production sprite atlas for NPC073\u0027s guarded/skeptical eyes, using the supplied exact 2×2 repeated-original-upper-half grid as the only reference image.\n\nUse case: stylized-concept\nAsset type: native pixel-art portrait eye atlas\nPrimary request: Show a guarded, appraising expression distinct from neutral and angry.\nComposition: Exactly four equal cells, each a complete 64×35 upper-half crop. Overall canvas ratio 64:35. Row-major: top-left OPEN; top-right HALF CLOSED; bottom-left FULLY CLOSED; bottom-right OPEN REPEAT. No labels, gutters, borders, panels, extra views, or zoomed features.\nExpression: Asymmetric brows in every cell. The NPC\u0027s left eyebrow (viewer\u0027s right) lifts slightly; the other brow lowers slightly. Use a subtle skeptical asymmetry, not an angry V and not an exaggerated arch. Keep this same brow placement in open, half, closed, and repeated-open cells. Appraising eyes remain calm, with both pupils forward and unchanged in size, spacing, color, and location.\nSubject and style: Preserve NPC073 face, eye spacing, hair, blue wand, original crop, muted skin palette, warm brown/amber compact iris clusters, and small soft source highlights. Native crisp pixel art with softened stepped shading.\nConstraints: Change only the brows and eyelids within the eye feature area. Half and closed eyelids cover eyes naturally while preserving the guarded brow asymmetry. Keep all other face, wand, hair, forehead, nose and background registered and unchanged.\nAvoid: Symmetric angry brows, a neutral expression, extreme raised brow, enlarged eyes, eye widening, pupil movement, bright whites, shiny highlights, thick dark outlines, blur, text, or changed head shape.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-3f17b7dd-19ae-4949-86c9-8285b6bae8a3.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-3f17b7dd-19ae-4949-86c9-8285b6bae8a3.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "8505d9e9fde3c536cf08958e97076aba44aa5d60e2e76ba6fc3fdb1384b8d643",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "c6d813083b72162535d946fdab92c8327e91b20edef562492001ed6bf5d023ce",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-3f17b7dd-19ae-4949-86c9-8285b6bae8a3.png",
+                      "sha256":  "cacac3aced86d1ca2d6821883fd24ab3406ab7db02e688250068f810d735d982",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/guarded/raw.png",
+                "sha256":  "cacac3aced86d1ca2d6821883fd24ab3406ab7db02e688250068f810d735d982",
+                "width":  1695,
+                "height":  928
+            }
+}

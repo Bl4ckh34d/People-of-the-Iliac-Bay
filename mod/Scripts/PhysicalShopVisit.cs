@@ -127,7 +127,8 @@ namespace PeopleOfTheIliacBay.DFU
                     {
                         var live=activityGeometry?.Seating?.Find(Journey.SeatId(leg));
                         CaptureFailure="connection leg="+leg+"; from="+from.ToString("R")+"; to="+to.ToString("R")+
-                            "; seat="+Journey.SeatId(leg)+"; liveSeat="+(live==null?"missing":interior.transform.InverseTransformPoint(live.Ground).ToString("R"));
+                            "; seat="+Journey.SeatId(leg)+"; liveSeat="+(live==null?"missing":interior.transform.InverseTransformPoint(live.Ground).ToString("R"))+
+                            "; routeFailure="+activityGeometry?.ActivityRouteFailure;
                         return null;
                     }
                 }

@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 80,
+  "emotion": "angry",
+  "assetType": "2x2 angry eye atlas correction",
+  "imageTool": "built-in image_gen",
+  "sourceReferences": [
+    {
+      "sha256": "7bbe649fbebc616cd696f8cffe7d2cff50e0390e44193e8d970eb827e3f8e29a",
+      "file": "raw.png (prior angry atlas edit target)"
+    },
+    {
+      "sha256": "4ea9b975047475ae696146fbd02a9b005b16c4baab7e1c1e1c3651ee287f4b0b",
+      "file": "../../original.png"
+    },
+    {
+      "sha256": "68275f3a970329cd449c3a75313210237ae84fe4ade1b0a18e6be6b93e7ee842",
+      "file": "../../eyes-reference-grid.png"
+    }
+  ],
+  "prompt": "Use case: precise pixel-art eye-expression edit for NPC 080.\nImage 1 is edit target: preserve its exact 2x2 atlas, cell boundaries, crops and OPEN / HALF-CLOSED / CLOSED / repeated OPEN order. Image 2 is the immutable complete original portrait and authority for brow color, thickness, geometry, iris and palette. Image 3 is the original 2x2 eye reference grid.\nCorrect the weak angry expression only through the eyebrows and upper lids. In both brows, make inner ends clearly lowered and drawn together toward the bridge; lift outer ends slightly. Create a clear, tense V shape across the two brows, with a focused, narrowed gaze. Keep original brow width and exact soft dark-warm-brown color. Change brow angle and placement within the original brow footprint; do not thicken, blacken or extend brows.\nKeep brow shape and position identical in all four cells. Keep the original compact irises, iris width, pupil position, color, and straight-ahead gaze fixed in OPEN and HALF-CLOSED. Half phase must cover the stationary irises with continuous upper lids. CLOSED phase shuts lids naturally; repeated OPEN matches first OPEN.\nPreserve original face geometry, eye spacing, forehead, hair, skin shading, palette and pixel texture. Change only eyebrows and upper lids. No black blocks, heavy eyeliner, extra shadow, blur, smudging, orange/red skin, contrast boost, iris drift, larger eyes, white flashes, text, labels, borders, gutters or watermark.",
+  "rawFile": "raw-v2.png",
+  "rawSha256": "f87914a8041ca604c552b1c8e364c143863da985e71591bfc10e0de2261475d6",
+  "dimensions": {
+    "height": 928,
+    "width": 1695
+  },
+  "imagegenOutput": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-bfa3-7821-8c10-1973507e5744\\exec-8ab266fe-34a2-42c0-be19-c215be1fb7fb.png",
+  "visibleIssues": [
+    "V-shaped brows read more clearly. At enlarged atlas view, brow strokes may look heavier than original; parent should compare original color and native thickness. No further generation performed."
+  ]
+}

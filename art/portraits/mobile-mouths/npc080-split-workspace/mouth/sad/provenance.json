@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 80,
+  "emotion": "sad",
+  "asset": "mouth/sad/raw.png",
+  "tool": "built-in image_gen",
+  "prompt": "Create exactly one SAD speech-mouth atlas for Daggerfall Unity portrait record 80, using the original portrait and mouth-reference grid. The sheet must be a precise 3-column × 3-row contact sheet, row-major A B C / D E F / G H X. Each tile shows the same complete native 64×29 lower portrait half at identical scale, alignment and framing; retain this face, nose, cheeks, chin, neck, hair and background consistently. Change only the mouth/lips and required interior. The nine poses must be distinctly articulated, not all closed: A closed lips; B narrow opening with slight tooth contact; C medium open with muted visible teeth; D wide open Ah; E rounded O; F smaller protruded U; G lower lip touching upper teeth F/V; H visible tongue tip L; X relaxed closed sad rest. Keep the mouth compact at the source's native lip size. SAD is restrained and low-energy, with only subtly downturned corners/soft tension; sadness must not collapse the speech shapes. Match original palette exactly in spirit: same muted brown-red lip hue, no stronger/saturated lipstick red, no orange/brightened skin, no bright white teeth/highlights. Use subdued source-like cream/dark interior pixels. No other facial changes, head or mouth drift, extra crop, tears, props, captions, labels, separators, blur, or exaggeration. Return only the 3×3 atlas.",
+  "promptSha256": "eff5524403e4e15cbd3591d5e2acb7df9ef51effa4dc38cc8c518ba43c40f60e",
+  "references": [
+    {
+      "path": "original.png",
+      "sha256": "4ea9b975047475ae696146fbd02a9b005b16c4baab7e1c1e1c3651ee287f4b0b"
+    },
+    {
+      "path": "mouth-reference-grid.png",
+      "sha256": "360fbbced7a02766a36b31374267af4e8c05702708815d7720b030712a5bd435"
+    }
+  ],
+  "generationOutputPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-fb9b-7322-8190-74bf6fb54c9d\\exec-a2976b5d-92a5-4812-b45f-17e6b419be26.png",
+  "resultSha256": "b5e58e08eebeb3a31616e88301fdd7b612607158fa1d92e53918ba3e91f6913a",
+  "dimensions": {
+    "height": 844,
+    "width": 1863
+  },
+  "rawCopiedUnchanged": true,
+  "visibleDefects": [
+    "Nine poses show useful distinct articulation: closed A/X, slim and medium openings, wide Ah, rounded O/U, F/V and tongue L.",
+    "Several lip areas look somewhat more saturated/red than the original, and tooth pixels are brighter than requested; compare native-size palette before use.",
+    "No obvious large head, hair or neck drift at enlarged sheet view; native cell sampling still needed."
+  ]
+}

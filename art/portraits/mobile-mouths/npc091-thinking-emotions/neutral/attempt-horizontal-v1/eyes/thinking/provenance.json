@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T15:40:47.3119386Z",
+    "portraitRecord":  91,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Create one exact 2-by-2 pixel-art atlas using the supplied 128x70 reference grid as the only visual reference. The reference is a contact sheet of four 64x35 native-pixel cells, arranged LEFT OPEN, RIGHT OPEN on the top row and LEFT HALF, RIGHT HALF on the bottom row. Return a single 128x70 image with exactly that same arrangement and cell size; do not add margins, labels, borders, gutters, scaling, extra frames, or transparency.\n\nThis is the same neutral NPC eye pose in all four cells. Preserve the face identity, skin/hair palette, framing, pixel-cluster style, neutral brows, exact lid contours and eye aperture, and all hair and facial pixels. Keep the original compact dark olive-brown/amber iris clusters and tiny muted warm glints. Keep the sclera subdued and shaded like the source; do not enlarge the eyes, add broad pale white bands, brighten the iris, or add shiny glints.\n\nOnly change gaze horizontally. In both OPEN cells, shift both colored iris/dark-pupil clusters together about one native pixel toward the named canvas side: in LEFT OPEN, both eyes look toward the left edge of the image; in RIGHT OPEN, both look toward the right edge. Make the paired movement unmistakable but modest and anatomically coordinated; neither pupil may stay centered while the other moves, and do not cross the eyes. Preserve source-like convergence.\n\nIn each HALF cell, reproduce the corresponding OPEN iris and pupil at exactly the same x/y positions. Change only the upper eyelids to the source\u0027s narrow half-closed aperture so the upper lid naturally covers the top of the iris. Keep lower lids and cheek pixels fixed to the source, with no cheek lift, vertical eye jump, widened aperture, or changed brows. Maintain clean stepped pixel contours at native scale.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54 as C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-72f7496b-615d-41a4-b956-5cb35ff5d327.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-72f7496b-615d-41a4-b956-5cb35ff5d327.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "428f65da65c68b7c50b7cefcf4fde03aa83505c54de6ccbb2ac3ab018f8a5c51",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "a8ff6fa552490f05cec4a5ed3a5785601ea45a78728fcb7ffb7e474cbbef0b2a",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-72f7496b-615d-41a4-b956-5cb35ff5d327.png",
+                      "sha256":  "7a6935b6e78c532caaaad08b48083692bca61bae3c4aecc2353b51ca33e52c13",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "7a6935b6e78c532caaaad08b48083692bca61bae3c4aecc2353b51ca33e52c13",
+                "width":  1695,
+                "height":  928
+            }
+}

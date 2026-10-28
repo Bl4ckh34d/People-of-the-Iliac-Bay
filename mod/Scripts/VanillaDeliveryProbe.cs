@@ -42,7 +42,7 @@ namespace PeopleOfTheIliacBay.DFU
         public static IEnumerator Run()
         {
             var game = GameManager.Instance;
-            Require(game.PlayerEntity.Name.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal), "Disposable character required.");
+            Require(NativeProbeText.IsTestCharacter(game.PlayerEntity.Name), "Disposable character required.");
             var adapter = UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
             var town = ((WorldState)adapter.GetSaveData()).Settlements.Find(t => t.SettlementId == game.PlayerGPS.CurrentMapID);
             var directory = game.StreamingWorld.GetCurrentBuildingDirectory();

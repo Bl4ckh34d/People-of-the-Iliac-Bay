@@ -1,0 +1,25 @@
+{
+  "emotionId": "neutral",
+  "referenceUpperFile": "eyes/neutral/open.png",
+  "browSourceFile": "eyes/neutral/open.png",
+  "halfSourceFile": "eyes/neutral/half.png",
+  "closedSourceFile": "eyes/neutral/closed.png",
+  "halfLidRegions": [
+    {
+      "x": 18,
+      "y": 24,
+      "width": 11,
+      "height": 2
+    },
+    {
+      "x": 36,
+      "y": 24,
+      "width": 11,
+      "height": 2
+    }
+  ],
+  "sourceSha256": "56e245ef622dfa895f1f53ea6b1639aa6bdc91835faa90d41e5613a1be6b77ec",
+  "referenceSha256": "56e245ef622dfa895f1f53ea6b1639aa6bdc91835faa90d41e5613a1be6b77ec",
+  "candidateOnly": true,
+  "rationale": "Provisional from npc080 portrait-specific candidate y24..25. Inspected all six mood phase crops; selected band is the narrow skin/lid strip above retained eye colors. Parent must check composed atlas before use. Applies to neutral only after inspecting its source phase RGB; not an approval to build or publish."
+}

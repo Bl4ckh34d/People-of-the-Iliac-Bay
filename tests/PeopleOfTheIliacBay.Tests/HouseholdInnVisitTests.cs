@@ -22,6 +22,7 @@ namespace PeopleOfTheIliacBay.Tests
         private static Fixture Create(bool ordinaryInn=false,Action<Fixture> waiting=null,Action<HouseholdDayRequest> prepare=null)
         {
             var request=HouseholdDayAppointmentTests.SharedRequest();
+            request.JointInn.PayerId="mother";request.JointInn.ReserveGold=10;
             if(ordinaryInn)
             {
                 request.FirstRoutine.DestinationKey=10;request.FirstRoutine.Route=HouseholdDayPlanTests.Visit(10).Stops[0].Route;
@@ -103,8 +104,7 @@ namespace PeopleOfTheIliacBay.Tests
             }));
             cases.Add(("Observed shared Inn purchases charge the planned payer and retain both receipts",()=>{
                 var f=Create(prepare:r=>{
-                    r.JointInn.PayerId="mother";r.JointInn.FirstMenuIndex=1;r.JointInn.SecondMenuIndex=1;
-                    r.JointInn.FirstPriceGold=5;r.JointInn.SecondPriceGold=5;
+                    r.JointInn.PayerId="mother";r.JointInn.ReserveGold=10;
                 });
                 var wallet=f.Store.ReadNpcInventory("father");
                 Check.True(f.Store.CommitNpcInventoryTransaction("empty-partner",new[]{new NpcInventoryUpdate{
@@ -179,12 +179,6 @@ namespace PeopleOfTheIliacBay.Tests
                 visit=Visit(f);Set(visit,"HouseholdSeatId","family-chair-a");Set(visit,"HouseholdDayId",null);Set(visit,"HouseholdSourceFingerprint",null);
                 Check.Throws<ArgumentException>(()=>ObservedVisit.Copy(visit));
             }));
-            cases.Add(("Schema70 rejects future chair intent but migrates visits with no chair metadata",()=>{
-                var f=Create();f.Store.StoreObservedVisit(Visit(f));var saved=f.Store.Snapshot();saved.Version=70;
-                var restored=new WorldStateStore(0);restored.Restore(saved);
-                Set(saved.ObservedVisits[0],"HouseholdSeatId","family-chair-a");Check.Throws<ArgumentException>(()=>restored.Restore(saved));
-                Check.True(Text(restored.GetObservedVisit("mother"),"HouseholdSeatId")==null);
-            }));
             cases.Add(("Shared seating waits for two successful source-bound purchases across reload",()=>{
                 var f=Create();Check.Equal("Pending",Service(f,f.EnteredAt+1));
                 f.Store.StoreObservedVisit(Visit(f));f.Store.StoreObservedVisit(Visit(f,"father"));
@@ -193,7 +187,7 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.Equal("Pending",Service(f,f.EnteredAt+2));
                 Check.True(f.Store.TryBuyNpcInnConsumption("father",f.Keeper.Id,f.EnteredAt+3,NpcInnConsumptionKind.Drink,1,"Beer",5,out var second));
                 Check.Equal("Ready",Service(f,f.EnteredAt+3));f.Store=Reload(f.Store);
-                Check.Equal("Ready",Service(f,f.EnteredAt+4));Check.Equal(15,f.Store.ReadNpcInventory("mother").WalletGold);
+                Check.Equal("Ready",Service(f,f.EnteredAt+4));Check.Equal(10,f.Store.ReadNpcInventory("mother").WalletGold);
             }));
             cases.Add(("One failed parent purchase aborts joint seating even before the partner reaches service",()=>{
                 var f=Create();f.Store.StoreObservedVisit(Visit(f));
@@ -316,13 +310,6 @@ namespace PeopleOfTheIliacBay.Tests
                 var restored=Reload(f.Store);Check.Equal(receipt.VisitId,restored.Snapshot().NpcInnConsumptionCursors.Find(c=>c.BuyerId=="mother").Receipt.VisitId);
                 Check.Equal(15,restored.ReadNpcInventory("mother").WalletGold);
             }));
-            cases.Add(("Schema69 visiting migration infers entry only from the accepted visiting observation",()=>{
-                var f=Create();var saved=f.Store.Snapshot();saved.Version=69;saved.HouseholdJointProgress[0].EnteredAt=0;
-                var restored=new WorldStateStore(0);restored.Restore(saved);
-                Check.Near(f.EnteredAt,restored.ReadHouseholdJointProgress(2,7).EnteredAt);
-                saved=f.Store.Snapshot();saved.Version=69;
-                Check.Throws<ArgumentException>(()=>restored.Restore(saved));
-            }));
             cases.Add(("A door-only return cannot invent a historical shared Inn checkpoint",()=>{
                 var f=Create();var saved=f.Store.Snapshot();var progress=saved.HouseholdJointProgress[0];
                 progress.Phase=HouseholdJointPhase.Returning;progress.EnteredAt=0;progress.ReturnStartedAt=f.EnteredAt+5;progress.ObservedAt=progress.ReturnStartedAt;
@@ -354,12 +341,12 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.True(f.Store.TryBuyNpcInnConsumption("mother",f.Keeper.Id,f.EnteredAt+2,NpcInnConsumptionKind.Drink,1,"Beer",5,out var receipt));
                 ordinary.InnConsumption=receipt;Check.Throws<ArgumentException>(()=>ObservedVisit.Copy(ordinary));
             }));
-            cases.Add(("Both parents pay separately and native visit provenance survives consumption cursor reload",()=>{
+            cases.Add(("One parent pays both purchases and native visit provenance survives consumption cursor reload",()=>{
                 var f=Create();f.Store.StoreObservedVisit(Visit(f));f.Store.StoreObservedVisit(Visit(f,"father"));
                 Check.True(f.Store.TryBuyNpcInnConsumption("mother",f.Keeper.Id,f.EnteredAt+2,NpcInnConsumptionKind.Drink,1,"Beer",5,out var first));
                 Check.True(f.Store.TryBuyNpcInnConsumption("father",f.Keeper.Id,f.EnteredAt+2,NpcInnConsumptionKind.Food,4,"Bread",3,out var second));
-                Check.True(first.VisitId!=second.VisitId);Check.Equal(15,f.Store.ReadNpcInventory("mother").WalletGold);
-                Check.Equal(17,f.Store.ReadNpcInventory("father").WalletGold);Check.Equal(40,f.Store.ReadNpcInventory(f.Keeper.Id).WalletGold);
+                Check.True(first.VisitId!=second.VisitId);Check.Equal(12,f.Store.ReadNpcInventory("mother").WalletGold);
+                Check.Equal(20,f.Store.ReadNpcInventory("father").WalletGold);Check.Equal(40,f.Store.ReadNpcInventory(f.Keeper.Id).WalletGold);
                 var restored=Reload(f.Store);Check.Equal(first.VisitId,restored.ReadNpcInnConsumption("mother").VisitId);
                 var cursor=restored.Snapshot().NpcInnConsumptionCursors.Find(c=>c.BuyerId=="mother");
                 Check.Equal(f.Plan.Id,Text(cursor,"HouseholdDayId"));

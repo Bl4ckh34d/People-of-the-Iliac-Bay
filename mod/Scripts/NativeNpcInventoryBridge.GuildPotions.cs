@@ -8,20 +8,15 @@ namespace PeopleOfTheIliacBay.DFU
 {
     public static partial class NativeNpcInventoryBridge
     {
-        /// <summary>
-        /// Completes one exact-UID purchase from a persisted NPC-owned guild
-        /// stock row. Unlike shelf stock, the source item remains under the
-        /// seller's inventory ownership until the two-wallet/two-inventory
-        /// transaction commits.
-        /// </summary>
+        /// <summary>Creates and purchases one native potion without an artificial stock ledger.</summary>
         public static bool TryCompleteActionGuildPotionPurchase(WorldStateStore store, NpcActionJob requested,
-            double now, long gameDay, NativeNpcInventoryBinding buyer, NativeNpcInventoryBinding seller,
+            double now, NativeNpcInventoryBinding buyer, NativeNpcInventoryBinding seller,
             StaticNPC providerNpc, Func<StaticNPC, NativePerson> resolveProvider,
             Func<DaggerfallUnityItem, int> quoteUnitPrice, Func<bool> arrivalAccessIsValid, out string reason)
         {
-            reason = "The guild purchase, provider stock, price or inventory revision changed.";
+            reason = "The guild purchase, provider recipe, price or inventory revision changed.";
             if (store == null || requested == null || buyer == null || seller == null || providerNpc == null ||
-                resolveProvider == null || quoteUnitPrice == null || arrivalAccessIsValid == null || gameDay < 0 ||
+                resolveProvider == null || quoteUnitPrice == null || arrivalAccessIsValid == null ||
                 double.IsNaN(now) || double.IsInfinity(now)) return false;
 
             NpcActionJob job = store.ReadNpcAction(requested.Id);
@@ -50,16 +45,8 @@ namespace PeopleOfTheIliacBay.DFU
             if (!NpcGuildPotionSupply.CanOffer(store, job.ResidentId, archetype, provider.Id, job.ServicePrice, now))
                 return false;
 
-            NpcGuildPotionStockState stock = NpcGuildPotionSupply.ReadStock(store, provider.Id);
-            bool reservedForTask = IsGuildPotionPurchaseReserved(store, provider.Id, job.ResidentId, uid);
-            bool reservedByAnotherPatient = IsGuildPotionPurchaseReservedByAnotherPatient(store, provider.Id,
-                job.ResidentId, uid);
-            bool listedStock = stock != null &&
-                (stock.ItemUids.Contains(uid) || stock.ReservedItemUids.Contains(uid));
-            bool currentStock = stock != null && stock.ItemUids.Contains(uid) && stock.RestockedDay == gameDay;
-            bool carriedReservation = stock != null && stock.ReservedItemUids.Contains(uid) && reservedForTask;
-            if (stock == null || !listedStock || reservedByAnotherPatient || gameDay < stock.RestockedDay ||
-                (!currentStock && !carriedReservation && !reservedForTask)) return false;
+            int recipeKey;
+            if (!NpcGuildPotionSupply.TryRecipeKey(uid, out recipeKey)) return false;
 
             string failure = null;
             bool completed = store.TryCompleteNpcActionEffect(job.Id, job.Revision, now, () =>
@@ -75,14 +62,13 @@ namespace PeopleOfTheIliacBay.DFU
                 if (!access || !NpcGuildPotionSupply.CanOffer(store, job.ResidentId, archetype,
                         provider.Id, job.ServicePrice, now)) return false;
 
-                DaggerfallUnityItem item = seller.Items == null ? null : seller.Items.GetItem(uid);
+                DaggerfallUnityItem item = ItemBuilder.CreatePotion(recipeKey);
                 if (item == null || !NativeNpcHealingItem.IsSupportedPotion(item)) return false;
                 int currentPrice;
                 try { currentPrice = quoteUnitPrice(item); }
                 catch (Exception error) { failure = error.Message; return false; }
-                if (currentPrice != job.ServicePrice || !TryPurchaseOwnedGuildPotion(store, buyer, seller, item,
-                    job.ServicePrice, job.Id + ":purchase", out failure)) return false;
-                store.ReleaseNpcGuildPotionReservationAfterTransfer(provider.Id, uid);
+                if (currentPrice != job.ServicePrice || !TryPurchaseCreatedItem(store, buyer, seller.PersonId, seller.Revision, item,
+                    job.ServicePrice, arrivalAccessIsValid, job.Id + ":purchase", out failure)) return false;
                 return true;
             });
             if (failure != null) reason = failure;
@@ -90,111 +76,5 @@ namespace PeopleOfTheIliacBay.DFU
             return completed;
         }
 
-        private static bool TryPurchaseOwnedGuildPotion(WorldStateStore store, NativeNpcInventoryBinding buyer,
-            NativeNpcInventoryBinding seller, DaggerfallUnityItem item, int price, string transactionId, out string reason)
-        {
-            reason = "The exact native potion or either persisted inventory changed.";
-            bool touched = false;
-            bool committed = false;
-            DaggerfallUnityItem moved = null;
-            try
-            {
-                if (store == null || buyer == null || seller == null || item == null || buyer.Items == null ||
-                    seller.Items == null || ReferenceEquals(buyer.Items, seller.Items) || buyer.PersonId == seller.PersonId ||
-                    price < 1 || price > NpcInventoryLimits.MaximumWalletGold || string.IsNullOrWhiteSpace(transactionId))
-                    return false;
-
-                NpcInventoryState buyerState = CheckBinding(store, buyer, transactionId);
-                NpcInventoryState sellerState = CheckBinding(store, seller, transactionId);
-                if (buyerState == null || sellerState == null || buyerState.WalletGold < price ||
-                    sellerState.WalletGold > NpcInventoryLimits.MaximumWalletGold - price ||
-                    sellerState.Revision >= NpcInventoryLimits.MaximumRevision ||
-                    buyerState.Revision >= NpcInventoryLimits.MaximumRevision ||
-                    store.NpcInventoryItemOwner(item.UID) != seller.PersonId ||
-                    seller.Items.GetItem(item.UID) != item || item.stackCount != 1 || item.IsQuestItem ||
-                    item.IsEquipped || item.IsSummoned || buyer.Items.GetItem(item.UID) != null ||
-                    !NativeNpcHealingItem.IsSupportedPotion(item)) return false;
-
-                touched = true;
-                seller.Items.RemoveItem(item);
-                buyer.Items.AddItem(item, noStack: true);
-                moved = item;
-                if (seller.Items.Contains(item) || !ReferenceEquals(buyer.Items.GetItem(item.UID), item))
-                    throw new InvalidOperationException("DFU did not transfer the exact healing potion UID.");
-
-                var updates = new[]
-                {
-                    new NpcInventoryUpdate { PersonId = buyer.PersonId, ExpectedRevision = buyerState.Revision,
-                        WalletGold = buyerState.WalletGold - price, Items = CaptureItems(buyer.Items) },
-                    new NpcInventoryUpdate { PersonId = seller.PersonId, ExpectedRevision = sellerState.Revision,
-                        WalletGold = sellerState.WalletGold + price, Items = CaptureItems(seller.Items) }
-                };
-                if (!store.CommitNpcInventoryTransaction(transactionId, updates))
-                    throw new InvalidOperationException("The native potion and wallet transaction was rejected.");
-
-                committed = true;
-                buyer.Revision++;
-                seller.Revision++;
-                reason = null;
-                return true;
-            }
-            catch (Exception error)
-            {
-                reason = error.Message;
-                return false;
-            }
-            finally
-            {
-                if (touched && !committed && moved != null)
-                {
-                    buyer.Items.RemoveItem(moved);
-                    if (!seller.Items.Contains(moved)) seller.Items.AddItem(moved, noStack: true);
-                }
-            }
-        }
-
-        private static bool IsGuildPotionPurchaseReserved(WorldStateStore store, string providerId,
-            string patientId, ulong uid)
-        {
-            foreach (NpcTaskPlan task in store.PendingNpcTasks())
-            {
-                if (task == null || task.ResidentId != patientId || task.Phase == NpcTaskPhase.Completed ||
-                    task.Phase == NpcTaskPhase.Failed || task.Phase == NpcTaskPhase.Cancelled || task.Steps == null) continue;
-                for (int index = task.CurrentStepIndex; index < task.Steps.Count; index++)
-                {
-                    NpcTaskStep step = task.Steps[index];
-                    NpcActionTarget target = step == null ? null : step.Target;
-                    ulong requested;
-                    if (step != null && step.Kind == NpcActionKind.Purchase && target != null &&
-                        target.Kind == NpcActionTargetKind.IndoorPoint && target.PersonId == providerId &&
-                        target.ContainerId == NpcGuildPotionSupply.GuildPotionContainerId.ToString(CultureInfo.InvariantCulture) &&
-                        ulong.TryParse(target.ItemId, NumberStyles.None, CultureInfo.InvariantCulture, out requested) &&
-                        requested == uid) return true;
-                }
-            }
-            return false;
-        }
-
-        private static bool IsGuildPotionPurchaseReservedByAnotherPatient(WorldStateStore store,
-            string providerId, string patientId, ulong uid)
-        {
-            foreach (NpcTaskPlan task in store.PendingNpcTasks())
-            {
-                if (task == null || task.ResidentId == patientId || task.Phase == NpcTaskPhase.Completed ||
-                    task.Phase == NpcTaskPhase.Failed || task.Phase == NpcTaskPhase.Cancelled || task.Steps == null) continue;
-                for (int index = task.CurrentStepIndex; index < task.Steps.Count; index++)
-                {
-                    NpcTaskStep step = task.Steps[index];
-                    NpcActionTarget target = step == null ? null : step.Target;
-                    ulong requested;
-                    if (step != null && step.Kind == NpcActionKind.Purchase && target != null &&
-                        target.Kind == NpcActionTargetKind.IndoorPoint && target.PersonId == providerId &&
-                        target.ContainerId == NpcGuildPotionSupply.GuildPotionContainerId.ToString(CultureInfo.InvariantCulture) &&
-                        ulong.TryParse(target.ItemId, NumberStyles.None, CultureInfo.InvariantCulture, out requested) &&
-                        requested == uid) return true;
-                }
-            }
-            return false;
-        }
     }
 }

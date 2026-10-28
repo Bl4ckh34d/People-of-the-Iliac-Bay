@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "source": "https://github.com/DanielSWolf/rhubarb-lip-sync#mouth-shapes",
+  "verifiedDate": "2026-10-22",
+  "cellOrder": ["A","B","C","D","E","F","G","H","X"],
+  "shapes": {
+    "A": {"pose":"Closed lips with light pressure", "sounds":["P","B","M"]},
+    "B": {"pose":"Slightly open, nearly together teeth; narrow horizontal opening", "sounds":["most consonants","EE"]},
+    "C": {"pose":"Medium open mouth, relaxed unrounded lips", "sounds":["EH","AE"]},
+    "D": {"pose":"Wide vertical opening for an open vowel; larger opening than C", "sounds":["AA"]},
+    "E": {"pose":"Slightly rounded lips; opening no wider than C", "sounds":["AO","ER"]},
+    "F": {"pose":"Puckered rounded lips, small forward opening; not a tooth bite", "sounds":["UW","OW","W"]},
+    "G": {"pose":"Upper teeth touch lower lip; not a wide open vowel", "sounds":["F","V"]},
+    "H": {"pose":"Tongue raised behind upper teeth, opening between C and D; tongue may be invisible at native scale", "sounds":["long L"]},
+    "X": {"pose":"Closed relaxed idle lips", "sounds":["silence"]}
+  },
+  "reviewPolicy": "Letters alone are insufficient prompts. Require these pose meanings, then inspect actual native art. Distinct hashes/counts and correct timestamps do not prove correct mouth geometry. Emotion changes corners/tension while retaining the pose family; preserve original lip scale and palette."
+}

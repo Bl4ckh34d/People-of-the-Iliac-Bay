@@ -47,6 +47,9 @@ namespace PeopleOfTheIliacBay.DFU
             double deadline=now%86400<5*3600 ? day+5*3600 :
                 now%86400>=19*3600 ? day+86400+5*3600 : now;
             expires.Add(actor,deadline);
+            var targets=actor.GetComponent<NativeHauntingTargets>();
+            if(!targets) targets=actor.AddComponent<NativeHauntingTargets>();
+            targets.Install(enabledBySettings);
             var activation=actor.GetComponent<HauntingActivation>();
             if(!activation) activation=actor.AddComponent<HauntingActivation>();
             activation.Watch(this);

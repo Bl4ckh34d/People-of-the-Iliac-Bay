@@ -177,37 +177,6 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.True(readA.ConversationTranscript("alice", 20).All(entry => !entry.PlayerText.Contains("branch B")));
                 Check.True(readB.ConversationTranscript("alice", 20).Any(entry => entry.PlayerText == "future"));
             })));
-            cases.Add(Test("Schema 31 restores neutral mood while schema 32 validates saved moods", () =>
-            {
-                var legacy = new WorldStateStore(42).Snapshot();
-                legacy.Version = 31;
-                legacy.ConversationMoods.Add(new ConversationMood { PersonId = "alice", Value = 55, AcceptedTurnSequence = 9 });
-                var restored = new WorldStateStore(1);
-                restored.Restore(legacy);
-                Check.Equal(0, restored.CaptureConversationMood("alice").Value);
-                Check.Equal(0L, restored.CaptureConversationMood("alice").AcceptedTurnSequence);
-                Check.Equal(new WorldState().Version, restored.Snapshot().Version);
-
-                var current = new WorldStateStore(42);
-                WorldState invalidRange = current.Snapshot();
-                invalidRange.ConversationMoods.Add(new ConversationMood { PersonId = "alice", Value = 101 });
-                Check.Throws<ArgumentException>(() => current.Restore(invalidRange));
-                WorldState invalidSequence = current.Snapshot();
-                invalidSequence.ConversationMoods.Add(new ConversationMood { PersonId = "alice", Value = 0, AcceptedTurnSequence = -1 });
-                Check.Throws<ArgumentException>(() => current.Restore(invalidSequence));
-                WorldState duplicate = current.Snapshot();
-                duplicate.ConversationMoods.Add(new ConversationMood { PersonId = "alice" });
-                duplicate.ConversationMoods.Add(new ConversationMood { PersonId = "alice" });
-                Check.Throws<ArgumentException>(() => current.Restore(duplicate));
-                WorldState invalidId = current.Snapshot();
-                invalidId.ConversationMoods.Add(new ConversationMood { PersonId = new string('x', 241) });
-                Check.Throws<ArgumentException>(() => current.Restore(invalidId));
-                WorldState missingMoods = current.Snapshot();
-                missingMoods.ConversationMoods = null;
-                Check.Throws<ArgumentException>(() => current.Restore(missingMoods));
-                Check.Equal(0, current.CaptureConversationMood("alice").Value);
-                Check.Equal(0, current.Snapshot().ConversationMoods.Count);
-            }));
         }
 
         private static (string Name, Action Body) Test(string name, Action body)

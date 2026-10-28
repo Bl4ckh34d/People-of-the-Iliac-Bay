@@ -2,7 +2,10 @@ param([string]$DfuRoot = (Split-Path $PSScriptRoot -Parent | Split-Path -Parent)
 . (Join-Path $PSScriptRoot 'TextProtocol.ps1')
 
 $ErrorActionPreference = 'Stop'
+if (Get-Process DaggerfallUnity,Unity -ErrorAction SilentlyContinue) { throw 'Close the game and Unity before deploying runtime assets.' }
 $repo = Split-Path $PSScriptRoot -Parent
+& python (Join-Path $PSScriptRoot 'BuildCompletedNpcSprites.py') --check
+if ($LASTEXITCODE -ne 0) { throw 'Completed NPC sprite selection changed or package is incomplete; rebuild and review its receipt before deployment.' }
 $destination = Join-Path $DfuRoot 'daggerfall-unity/Assets/Game/Mods/PeopleOfTheIliacBay'
 if (-not (Test-Path -LiteralPath (Join-Path $DfuRoot 'daggerfall-unity/ProjectSettings/ProjectVersion.txt'))) { throw 'DFU Unity project missing.' }
 New-Item -ItemType Directory -Path "$destination/Core", "$destination/Scripts", "$destination/Editor", "$destination/Textures", "$destination/Libraries" -Force | Out-Null
@@ -65,6 +68,16 @@ $manifest.Files += @(Get-ChildItem -LiteralPath "$destination/Textures" -Filter 
 $manifest.Files += @('Assets/Game/Mods/PeopleOfTheIliacBay/Libraries/0Harmony.dll.bytes', 'Assets/Game/Mods/PeopleOfTheIliacBay/Libraries/PeopleOfTheIliacBay.QuestHooks.dll.bytes', 'Assets/Game/Mods/PeopleOfTheIliacBay/Libraries/Harmony-LICENSE.txt')
 # Virtual editor mods need the same pre-baked navigation assets as the bundle.
 # Runtime validates their geometry profile; deployment never silently rebakes.
+$navigationSource = Join-Path $repo 'mod/Navigation'
+if (Test-Path -LiteralPath (Join-Path $navigationSource 'navigation-manifest.json')) {
+    New-Item -ItemType Directory -Path "$destination/Navigation" -Force | Out-Null
+    Get-ChildItem -LiteralPath $navigationSource -File | Where-Object { $_.Extension -eq '.asset' } | Copy-Item -Destination "$destination/Navigation" -Force
+    # A newer capture manifest is selected by NativeNavigationBake. Do not
+    # replace an existing editor catalogue before that explicit build step.
+    if (-not (Test-Path -LiteralPath "$destination/Navigation/navigation-manifest.json")) {
+        Copy-Item -LiteralPath (Join-Path $navigationSource 'navigation-manifest.json') -Destination "$destination/Navigation/navigation-manifest.json"
+    }
+}
 if (Test-Path -LiteralPath "$destination/Navigation/navigation-manifest.json") {
     $manifest.Files += 'Assets/Game/Mods/PeopleOfTheIliacBay/Navigation/navigation-manifest.json'
     $manifest.Files += @(Get-ChildItem -LiteralPath "$destination/Navigation" -Filter '*.asset' | Sort-Object Name | ForEach-Object { "Assets/Game/Mods/PeopleOfTheIliacBay/Navigation/$($_.Name)" })

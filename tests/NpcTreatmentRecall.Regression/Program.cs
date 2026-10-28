@@ -86,7 +86,7 @@ internal static class Program
         {
             Id = id, ProposalId = id, ResidentId = fixture.ResidentId, Kind = NpcActionKind.RestToHeal,
             Target = new NpcActionTarget { Kind = NpcActionTargetKind.IndoorPoint, SettlementId = 1, BuildingKey = 10,
-                ContainerId = "bed:resident-room:1", X = 2, Y = 0, Z = 4 },
+                ContainerId = "bed:resident-stay:1", X = 2, Y = 0, Z = 4 },
             Phase = NpcActionPhase.Accepted, Revision = 1, AcceptedAt = 2, UpdatedAt = 2, DeadlineAt = 100,
             RestDurationSeconds = 30, ExpectedVitalsRevision = vitals.Revision
         };

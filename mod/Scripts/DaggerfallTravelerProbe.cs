@@ -40,6 +40,7 @@ namespace PeopleOfTheIliacBay.DFU
                 yield break;
             }
             var geometry=new TownGeometry(directory,game.StreamingWorld.GetCurrentCityNavigation());
+            yield return TravelerIdentityAdapter.PrepareOrigins(directory.MapID,()=>directory);
             var inns=directory.GetBuildingsOfType(DFLocation.BuildingTypes.Tavern);
             int connected=0; TownGeometry.TravelerAccess selected=null; int selectedInn=-1;
             foreach(var inn in inns)

@@ -203,11 +203,10 @@ namespace PeopleOfTheIliacBay.Core
             return copy;
         }
 
-        /// <summary>WorldState save-copy hook. WorldState owns schema migration and calls this only after identity indexes exist.</summary>
+        /// <summary>WorldState save-copy hook, called only after identity indexes exist.</summary>
         private static List<NpcMotivationState> CopyNpcMotivations(WorldState source, WorldState validated)
         {
             var result = new List<NpcMotivationState>();
-            if (source.Version < 38) return result;
             Require(source.NpcMotivations != null, "Missing NPC motivation state list.");
             var identities = new HashSet<string>(StringComparer.Ordinal);
             foreach (var saved in source.NpcMotivations)
@@ -215,28 +214,14 @@ namespace PeopleOfTheIliacBay.Core
                 Require(saved != null, "Null NPC motivation state.");
                 Require(!saved.Needs.Exists(n=>n.Id=="need:observed-meal-due") && !saved.Goals.Exists(g=>g.Id=="goal:meal"),
                     "This development state contains a removed need; start with fresh mod data.");
-                var item = NpcMotivationState.CopyValidated(saved, source.Version < 46);
-                Require(source.Version < 47 ? item.Version == 1 : item.Version == NpcMotivationState.VersionCurrent,
+                var item = NpcMotivationState.CopyValidated(saved);
+                Require(item.Version == NpcMotivationState.VersionCurrent,
                     "Motivation state version does not match save schema.");
-                if (source.Version < 46)
-                {
-                    // Old saves did not retain activation generations. Anchor each surviving row to
-                    // its latest accepted update without claiming when its lifetime originally began.
-                    foreach (var goal in item.Goals)
-                        if (goal.Status != NpcMotivationGoalStatus.Unknown)
-                        {
-                            goal.GoalStartRevision = goal.StateRevision;
-                            item.AcceptedUpdates[(int)goal.StateRevision - 1].GoalGenerationOrigin = true;
-                            item.AcceptedUpdates[(int)goal.StateRevision - 1].GoalStartRevision = goal.StateRevision;
-                        }
-                    item = NpcMotivationState.CopyValidated(item);
-                }
                 var pins = new HashSet<string>(StringComparer.Ordinal);
-                if (source.Version >= 46 && source.NpcTasks != null)
+                if (source.NpcTasks != null)
                     foreach (var task in source.NpcTasks)
                         if (task != null && task.ResidentId == item.OwnerPersonId && task.GoalId != null && task.GoalStartRevision > 0)
                             pins.Add(NpcMotivationState.OriginKey(task.GoalId, task.GoalStartRevision));
-                if (source.Version < 47) item = NpcMotivationState.MigrateV1(item, pins, validated.AlarmIncidents);
                 NpcMotivationState.ValidateOriginAnchors(item, pins);
                 foreach (var incident in validated.AlarmIncidents)
                 {

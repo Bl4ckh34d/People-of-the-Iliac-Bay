@@ -34,12 +34,6 @@ namespace PeopleOfTheIliacBay.Core
         private static List<NpcMoodCauseHistoryFloor> CopyNpcMoodCauseHistoryFloors(WorldState source,
             WorldState validated)
         {
-            if (source.Version < 54)
-            {
-                Require(source.NpcMoodCauseHistoryFloors == null || source.NpcMoodCauseHistoryFloors.Count == 0,
-                    "Legacy save contains future mood-cause history floors.");
-                return new List<NpcMoodCauseHistoryFloor>();
-            }
             Require(source.NpcMoodCauseHistoryFloors != null,
                 "Missing mood-cause history floors.");
             var rows = new List<NpcMoodCauseHistoryFloor>(source.NpcMoodCauseHistoryFloors.Count);

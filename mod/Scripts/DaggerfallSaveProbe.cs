@@ -13,7 +13,7 @@ namespace PeopleOfTheIliacBay.DFU
         public static IEnumerator Run(PeopleOfTheIliacBayMod mod,StreetPopulation streets,GuardPopulation guards)
         {
             var game=GameManager.Instance;
-            if(!game.PlayerEntity.Name.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal))
+            if(!NativeProbeText.IsTestCharacter(game.PlayerEntity.Name))
                 throw new InvalidOperationException("City save probe requires the dedicated test character.");
             var before=(WorldState)mod.GetSaveData();
             var town=before.Settlements.Find(t=>t.SettlementId==1291010263);

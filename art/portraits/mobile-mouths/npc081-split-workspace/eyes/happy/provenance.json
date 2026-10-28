@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "portrait": "npc081",
+  "emotion": "happy",
+  "artifact": "eyes-2x2",
+  "generatedDate": "2026-10-22",
+  "tool": "built-in image_gen",
+  "toolCallCountForThisArtifact": 1,
+  "prompt": "Edit Image 1, the NPC081 eye reference grid. Return exactly one 2×2 sprite atlas, same 1024×560 canvas and same four equal cells, no text or labels. Each cell is one complete original upper portrait half, not an eye-only crop: preserve the exact head size, face identity, hair silhouette, forehead, skin, background, eye spacing and framing from the reference. Row-major cells: open, half-closed, fully closed, repeat the open pose. Keep the same warm, friendly happy expression in every phase: gently lifted relaxed brows, softly smiling eyes and subtly raised lower lids. Brows keep identical shape, height and angle in all four cells. For half-closed, upper lids descend over stationary eyeballs; keep both irises and pupils the same size and horizontal position as open. Fully closed lids cover both eyes; no iris or pupil remnants. Repeat-open should visually match open. Use soft muted colors and pixel clusters from the original art; no blur, no harsh contrast, no black eyeliner or thick brow bars, no extra orange skin, no face repaint, no shifted gaze, no altered hair or head geometry. Output must remain crisp native pixel art enlarged in each cell, with cell boundaries and source framing unchanged.",
+  "sourceOriginal": {
+    "path": "art/portraits/mobile-mouths/npc081-split-workspace/original.png",
+    "sha256": "eb0f7dcd1d390a6ff58d1bc0bba7a3855b5930ee824aa54e2f749211721e8ba0",
+    "dimensions": [
+      64,
+      64
+    ]
+  },
+  "referenceGrid": {
+    "path": "art/portraits/mobile-mouths/npc081-split-workspace/eyes-reference-grid.png",
+    "sha256": "ec8e562898b5c269e5484294666940fd3d06392155fc32134d53d585209636f5",
+    "dimensions": [
+      1024,
+      560
+    ],
+    "expectedLayout": "2x2 open, half-closed, closed, repeated open"
+  },
+  "generatedCandidates": [
+    {
+      "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-fb9b-7322-8190-74bf6fb54c9d\\exec-d3cdd182-ee9c-4c59-bb7d-551fb8ad4949.png",
+      "sha256": "5649d22d6ec879ca2118f77d67d3b8dfe0aeb080b4b3077359be814240f6e72a",
+      "dimensions": [
+        1695,
+        928
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-8b98-7181-a1df-84e7b766303c\\exec-e6db179c-e641-4846-a0b0-eb059224e336.png",
+      "sha256": "46bcf439f06982f717e6e1aee6b9dcf336205522e4ad07cce83b4a075a5f1eac",
+      "dimensions": [
+        1695,
+        928
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-5744-7b43-9b03-e8cced819bb7\\exec-92f6ace1-149c-4cad-b0e6-76f7a0c18b25.png",
+      "sha256": "c6ba7f0bd9a72bd754152f8726fc929a9565f07b98f2f1b91de0c9f65417281a",
+      "dimensions": [
+        1695,
+        928
+      ],
+      "mode": "RGB"
+    }
+  ],
+  "selectedCandidateSha256": "46bcf439f06982f717e6e1aee6b9dcf336205522e4ad07cce83b4a075a5f1eac",
+  "savedRaw": {
+    "path": "art/portraits/mobile-mouths/npc081-split-workspace/eyes/happy/raw.png",
+    "sha256": "46bcf439f06982f717e6e1aee6b9dcf336205522e4ad07cce83b4a075a5f1eac",
+    "dimensions": [
+      1695,
+      928
+    ],
+    "mode": "RGB",
+    "copiedByteForByteFromSelectedCandidate": true,
+    "resizedOrPostProcessed": false
+  },
+  "geometryNotes": {
+    "referenceAspectRatio": 1.828571,
+    "selectedAspectRatio": 1.826509,
+    "canvasDimensionsMatchReferenceExactly": false,
+    "aspectRatioMatchesWithin0_2Percent": true
+  },
+  "reviewNotes": "Four cells are present in expected order. Eye expression reads gently warm; brow line stays fairly strong/dark but close to source palette. Half/open pupils appear horizontally steady at atlas scale; verify native crops during composition. Output is larger than reference grid, so parent must sample whole cells.",
+  "limitations": [
+    "No native compositing or pixel-position verification performed.",
+    "ImageGen changed pixel resolution; aspect ratio is close, exact grid geometry and feature coordinates still require parent inspection.",
+    "Generated appearance is a draft; no user visual acceptance claimed."
+  ],
+  "recovery": {
+    "status": "unconfirmed; parent review pending",
+    "outputHintRetained": false,
+    "method": "Recovered candidate by saved output directory, generation-time context, expected 2x2 sheet content/dimensions, and same generated_images directory as the exact-confirmed mouth call. This is circumstantial attribution, not tool-result confirmation.",
+    "directory": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-8b98-7181-a1df-84e7b766303c",
+    "pngDirectoryInspection": "Directory contained multiple PNGs, not only the eye and mouth files; no global latest-file search was used.",
+    "candidatePath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-8b98-7181-a1df-84e7b766303c\\exec-e6db179c-e641-4846-a0b0-eb059224e336.png",
+    "candidateDimensions": [
+      1695,
+      928
+    ],
+    "candidateSha256": "46bcf439f06982f717e6e1aee6b9dcf336205522e4ad07cce83b4a075a5f1eac",
+    "note": "Existing raw PNG left byte-for-byte unchanged. Do not treat provenance as confirmed without parent review."
+  }
+}

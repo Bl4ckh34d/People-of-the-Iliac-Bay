@@ -279,40 +279,6 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.Equal(2L, after.Revision);
             }));
 
-            cases.Add(("Schema 41 migration preserves resentment without inventing a recovery anchor", () =>
-            {
-                var store = new WorldStateStore(43);
-                string observer = store.GetOrCreate(21, new[] { 210 }, 1).Households[0].Residents[0].Id;
-                var evidence = Native(observer, "outcome:schema41-resentment", 500,
-                    NpcExperienceEventKind.AppointmentAttended);
-                Check.True(store.TryCommitNpcRelationship(LedgerProposal(0, observer, 0, evidence,
-                    trust: 2, resentment: 10, fear: 9), 0));
-                foreach (int schemaVersion in new[] { 40, 41 })
-                {
-                    var legacy = store.Snapshot();
-                    HistoricalNpcExperienceFixture.PrepareLegacyEnvelope(legacy, schemaVersion);
-                    legacy.NpcRelationships.Version = 2;
-                    var row = legacy.NpcRelationships.Relationships[0];
-                    row.Version = 2;
-                    row.HasResentmentRecoveryAnchor = false;
-                    row.ResentmentRecoveryAnchorGameTime = -1;
-                    row.ResentmentRecoveryHalfLifeSeconds = 0;
-                    row.ResentmentRecoveryBaselineRemainder = 0;
-
-                    var restored = new WorldStateStore(0);
-                    restored.Restore(legacy);
-                    var migrated = restored.ReadNpcRelationship(observer, "player");
-
-                    Check.Equal(10, migrated.Resentment);
-                    Check.True(!migrated.HasResentmentRecoveryAnchor);
-                    Check.Equal(-1d, migrated.ResentmentRecoveryAnchorGameTime);
-                    Check.Equal(9, migrated.StoredInterpersonalFear);
-                    Check.True(migrated.HasFearRecoveryAnchor);
-                    Check.Equal(52, migrated.ReliabilityTrust);
-                    Check.Equal(1L, migrated.Revision);
-                    Check.Equal(1, restored.Snapshot().NpcRelationships.AcceptedOutcomes.Count);
-                }
-            }));
         }
 
         private static NpcDirectedRelationship RecoveryRow(string observer, int resentment,

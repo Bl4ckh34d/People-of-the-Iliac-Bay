@@ -97,7 +97,7 @@ namespace PeopleOfTheIliacBay.DFU
             var options=new List<IList<NpcActionOption>>(clauses.Count);
             var outputs=new List<string>(clauses.Count);
             var decisions=new List<NpcActionDecision>(clauses.Count);
-            bool separateWillingness=DecisionWillingnessEnabled || QwenWillingnessEnabled;
+            bool separateWillingness=true;
             var rawCandidates=streets.ConversationActionCandidates(person);
             if(rawCandidates==null || rawCandidates.Count==0)
             {
@@ -212,7 +212,7 @@ namespace PeopleOfTheIliacBay.DFU
                         }
                         if(!prepared)
                         {SubmitUnresolvedSemanticAction(window,originalText,history,rejected+" "+reason,snapshot);return;}
-                        ResolveProposedActionWillingness(actor,window,originalText,history,snapshot,separateWillingness,bound,agreed=>
+                        ResolveProposedActionWillingness(actor,window,originalText,history,snapshot,bound,agreed=>
                         {
                         string proposal="dialogue-semantic-task:"+Guid.NewGuid().ToString("N");
                         bool saved=streets.TryAcceptConversationTask(person,proposal,agreed,

@@ -1,0 +1,69 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T13:22:46.6042327Z",
+    "purpose":  "thinking-eye raw generation; standard helper receipt retained unchanged",
+    "emotionId":  "happy",
+    "referenceSource":  {
+                            "file":  "eyes/happy/open.png",
+                            "sha256":  "e2b62a460680f631c0a2980714188de4f7befe91745365f3e06d84a7762bb847",
+                            "width":  64,
+                            "height":  35
+                        },
+    "portraitRecord":  76,
+    "bank":  "TFAC00I0.RCI",
+    "actualReference":  {
+                            "path":  "../../thinking-reference-grid.png",
+                            "absolutePath":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc076-thinking-emotions\\happy\\attempt-horizontal-v2\\thinking-reference-grid.png",
+                            "sha256":  "811bbe24d6efe471613700023c5f139db8228c7cf5de4a1bf1731227e77cdaaa",
+                            "width":  1024,
+                            "height":  560
+                        },
+    "actualArguments":  {
+                            "path":  "arguments.json",
+                            "sourcePath":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait076-horizontal-happy-v2\\thinking-arguments.json",
+                            "sha256":  "a52671f54fcfc334ce7a7caba3a739cb6a88e5351622f67b1f3fa37bbab534bc",
+                            "referencedImagePath":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc076-thinking-emotions\\happy\\attempt-horizontal-v2\\thinking-reference-grid.png",
+                            "normalizedReferencedImagePath":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc076-thinking-emotions\\happy\\attempt-horizontal-v2\\thinking-reference-grid.png",
+                            "transparentBackground":  false,
+                            "numLastImagesToInclude":  null
+                        },
+    "actualRequest":  {
+                          "path":  "request.json",
+                          "sourcePath":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait076-horizontal-happy-v2\\thinking-request.json",
+                          "sha256":  "f654c51be27fe18260372cd8f3205eb4219f459d0058cfc07c22f243b45b67df"
+                      },
+    "helperStage":  {
+                        "portraitRoot":  "C:\\Users\\Daniel\\AppData\\Local\\Temp\\portrait-thinking-stage-8f17b5b66aaa4cb8bdf8cf471cfa36bc",
+                        "part":  "eyes",
+                        "emotion":  "neutral",
+                        "referencePath":  "eyes-reference-grid.png",
+                        "referenceSha256":  "811bbe24d6efe471613700023c5f139db8228c7cf5de4a1bf1731227e77cdaaa",
+                        "sourceOriginalSha256":  "732830dbc9a0f5d46622b8b74db022f97b141cea462c81fcd0604b1a206590ae",
+                        "provenance":  "provenance.json"
+                    },
+    "transferred":  {
+                        "rawPath":  "raw.png",
+                        "rawSha256":  "54101afea4a95fd90332b741f22e435dc8c46575d380e62a94ccab001e03bdf0",
+                        "rawSize":  "1695x928",
+                        "helperProvenancePath":  "provenance.json",
+                        "savedReferencePath":  "eyes-reference-grid.png"
+                    },
+    "helperProvenanceNote":  "provenance.json is the unchanged SavePortraitRawOutput receipt from the isolated helper stage. Its eyes/neutral labels and eyes-reference-grid.png path describe that stage; this wrapper maps those bytes to eyes/thinking and the actual thinking grid.",
+    "gazeLayout":  "horizontal-pair",
+    "referenceSources":  [
+                             {
+                                 "phase":  "open",
+                                 "file":  "eyes/happy/open.png",
+                                 "sha256":  "e2b62a460680f631c0a2980714188de4f7befe91745365f3e06d84a7762bb847",
+                                 "width":  64,
+                                 "height":  35
+                             },
+                             {
+                                 "phase":  "half",
+                                 "file":  "eyes/happy/half.png",
+                                 "sha256":  "41f60126105d7cf379941548c9cb2621df34b41440bad8b47ad11e4114a0d871",
+                                 "width":  64,
+                                 "height":  35
+                             }
+                         ]
+}

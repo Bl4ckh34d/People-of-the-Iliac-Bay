@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Same-text, same-reference long-utterance emotion set to exercise speech viseme coverage.",
+  "sourceAudio": "work/portrait-female-voice-normal-03/anchors/common-084/reference.wav",
+  "sourceAudioSha256": "a29654782ca8ec5087d7d650bafa02c4a2c41cd7114a662b1834c642b05c0b67",
+  "exactText": "Before you leave, let me tell you about the old mill beyond the village. Follow the little yellow lanterns across the blue bridge, then turn left by the willow tree. The miller brings fresh bread, warm apple pies, and five fine bottles of wine to the market every morning. Oh, and do look out for the wolves near the ruined tower. If you hear a low howl, keep your bow close and walk home quietly. We can talk about your journey over a cup of tea when you return.",
+  "voice": {
+    "profileId": "common-084-voice-normal-03",
+    "stableInstruction": "An adult woman speaking British English with a neutral southern English accent. Her individual voice has an upper mezzo-soprano register. Its timbre is balanced, warm and clear, with balanced natural resonance; it is mostly clear with a little natural texture, with balanced natural breath support, without audible vocal fry. Use a normal unhurried conversational pace. Maintain this individual vocal identity. Speak naturally without caricature, shouting, or added vocal events.",
+    "seed": 1254757890,
+    "guidanceScale": 4.0,
+    "referenceWav": "work/portrait-female-voice-normal-03/anchors/common-084/reference.wav",
+    "referenceText": "Good day. I have been in this town for many years. What brings you here today?",
+    "referenceSha256": "a29654782ca8ec5087d7d650bafa02c4a2c41cd7114a662b1834c642b05c0b67",
+    "profileSha256": "750c76fea480b24378c4a6bef43f09bc1a40f2c36ca5d3e05f3aefc618627ae1"
+  },
+  "backend": {
+    "endpoint": "http://127.0.0.1:8094",
+    "apiPath": "/v1/audio/speech",
+    "modelId": "breeze",
+    "expectedModelFile": "breeze-tts-2-q4_0.gguf",
+    "expectedModelSha256": "56b3cc598b1f9220b6fb23dc9eaa098a9a1d0cc6604298a76faac79eef4824b8",
+    "audioCppRelease": "v0.9.2-drama3-base-small",
+    "requestOptions": [
+      "instruct",
+      "guidance_scale",
+      "seed"
+    ],
+    "streamFormat": "sse",
+    "responseFormat": "pcm"
+  },
+  "postprocess": {
+    "normalizer": "pcm16-active-rms-v1",
+    "targetActiveRmsDbfs": -20.0,
+    "peakCeilingDbfs": -3.0,
+    "maxBoostDb": 12.0,
+    "gateDbfs": -50.0,
+    "rhubarbRecognizer": "pocketSphinx",
+    "rhubarbThreads": 1,
+    "rhubarbTimeoutSeconds": 180
+  },
+  "samples": [
+    {
+      "id": "neutral",
+      "emotion": "neutral",
+      "deliveryText": "neutral, calm, and conversational"
+    },
+    {
+      "id": "happy",
+      "emotion": "joy",
+      "deliveryText": "happy and warmly upbeat, with a light natural lift"
+    },
+    {
+      "id": "angry",
+      "emotion": "anger",
+      "deliveryText": "angry but controlled, firm and restrained; do not shout"
+    },
+    {
+      "id": "sad",
+      "emotion": "grief",
+      "deliveryText": "sad and subdued, with restrained low-key warmth"
+    },
+    {
+      "id": "afraid",
+      "emotion": "fear",
+      "deliveryText": "afraid and tense, alert and anxious, without panic"
+    },
+    {
+      "id": "guarded",
+      "emotion": null,
+      "deliveryText": "guarded, cautious, reserved, and emotionally contained"
+    }
+  ],
+  "controlPolicy": "Only deliveryText changes between requests. Keep exactText, reference audio and transcript, stableInstruction, seed, guidance scale, model id, and normal delivery mode fixed. Do not reroll samples. Guarded is a prose-only instruction because the current coordinator emotion enum has no guarded value and the pinned Breeze server API has no typed emotion field.",
+  "seedExperiment": {
+    "portraitId": "common-084",
+    "profileMapSha256": "acacbea9d947b909c5de6741690e8cf64f8df94ada4f61979e7b6f35eaa75e59",
+    "profileSha256": "750c76fea480b24378c4a6bef43f09bc1a40f2c36ca5d3e05f3aefc618627ae1",
+    "referenceSha256": "a29654782ca8ec5087d7d650bafa02c4a2c41cd7114a662b1834c642b05c0b67",
+    "referenceText": "Good day. I have been in this town for many years. What brings you here today?",
+    "sameSeedAcrossSixMoods": true,
+    "sameOwnReferenceAcrossSixMoods": true,
+    "attributes": {
+      "pitch": "an upper mezzo-soprano register",
+      "timbre": "balanced, warm and clear, with balanced natural resonance",
+      "roughness": "mostly clear with a little natural texture",
+      "breathiness": "with balanced natural breath support",
+      "vocalFry": "without audible vocal fry",
+      "pace": "a normal unhurried conversational pace"
+    },
+    "latentZ": {
+      "pitch": 1.0084758372188274,
+      "brightness": -0.24920689003528795,
+      "resonance": -0.7296186699143979,
+      "roughness": 0.6855697712510945,
+      "breathiness": 0.6129064043490551,
+      "vocalFry": -2.0903322844503816,
+      "pace": -0.20300340261658423
+    }
+  }
+}

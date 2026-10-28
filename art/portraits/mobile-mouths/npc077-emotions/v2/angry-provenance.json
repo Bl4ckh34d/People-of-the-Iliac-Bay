@@ -1,0 +1,68 @@
+{
+  "revision": 2,
+  "emotion": "angry",
+  "subject": "NPC077",
+  "source": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\tfac-077-full-frame-v5.png",
+    "sha256": "D2BD017E7773336DE704BF3E4C935AB1EF7D0FC84DD4BBC551A61E22AF322223"
+  },
+  "generator": "built-in image_gen",
+  "generation_count": 3,
+  "atlas": {
+    "dimensions": "1254x1254",
+    "grid": "3x3",
+    "mouth_order": "A B C / D E F / G H X"
+  },
+  "phase_order": [
+    "open",
+    "half",
+    "closed"
+  ],
+  "phases": [
+    {
+      "phase": "open",
+      "generated": {
+        "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-bfa3-7821-8c10-1973507e5744\\exec-435d8e26-7d87-446e-a58c-73cb45e953a2.png",
+        "sha256": "6A0FBD15EB296CD8AF477C90F30AE2AFA2E2861CA824C5C2644FF12AB34ECEBC"
+      },
+      "output": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\angry-open.png",
+        "sha256": "6A0FBD15EB296CD8AF477C90F30AE2AFA2E2861CA824C5C2644FF12AB34ECEBC",
+        "dimensions": "1254x1254"
+      },
+      "input": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\tfac-077-full-frame-v5.png",
+      "prompt": "Use case: stylized-concept\nAsset type: full-frame 3×3 pixel-art talking portrait atlas, game NPC 077\nPrimary request: Create a fresh ANGRY OPEN-EYE atlas by editing Image 1, the approved full-frame version-5 atlas. Make anger unmistakable through sharp, inward-and-downward furrowed eyebrows, tense eyelids, and tight mouth corners. Preserve her identity, long wavy brown hair, warm muted skin, framing, head size, coarse pixel-art structure, and exact face alignment in every cell.\nInput images: Image 1 is the approved full-frame source and edit target.\nComposition/framing: retain complete square atlas with exact 3×3 grid and same cell framing. Row-major mouths A B C / D E F / G H X.\nStyle/medium: coarse retro pixel art with hard-edged pixel clusters. At a 64×64 face display, eyes must read cleanly and sharply: clear iris and pupil, tiny restrained sclera highlight, crisp eyelid edge, distinct block-pixel eyebrow. Use small discrete color clusters; no airbrushed gradients around eyes.\nConstraints: Keep all nine mouth poses individually legible and speech-ready: A closed M/B/P; B narrow consonant with slight teeth; C medium EH; D moderately open AH; E rounded OH; F small OO/W; G upper teeth touching lower lip for F/V; H raised tongue behind teeth for L; X relaxed closed angry mouth. Leave open speech mouths naturally open. Eye/brow anger must match across all nine cells. Preserve original muted palette, coarse pixel scale, hair, identity, lighting, and background. Eyes need visible distinct irises and pupils at native 64×64 scale. Eyebrows angle sharply down toward nose; eyelids tense but not covering irises. Use crisp dark contours. No blurry dark eye shadow, smudged smoky eyes, soft airbrushed eye gradients, painted extra eye detail, high-resolution smooth painting, anatomical exaggeration, changed haircut, framing, head size, identity, skin tone, lighting, background, giant mouths, oversized teeth, yawn, protruding tongue, added objects, labels, border, gutters, missing rows, or reordered poses."
+    },
+    {
+      "phase": "half",
+      "generated": {
+        "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-bfa3-7821-8c10-1973507e5744\\exec-52d56730-e455-43c5-a4a4-acb7d3ddd9ad.png",
+        "sha256": "E740CB692D44175654D977D08A4280E228AB57AA5222DC77ADF9B65672DC1B93"
+      },
+      "output": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\angry-half.png",
+        "sha256": "E740CB692D44175654D977D08A4280E228AB57AA5222DC77ADF9B65672DC1B93",
+        "dimensions": "1254x1254"
+      },
+      "input": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\angry-open.png",
+      "prompt": "Use case: stylized-concept\nAsset type: complete square 3×3 pixel-art NPC talking portrait atlas\nPrimary request: Create ANGRY HALF-EYE blink atlas by editing Image 1, the finished angry open-eye v2 atlas. Change eyelids only so each upper eyelid covers roughly half of the iris. Keep angry expression and every corresponding speech mouth unchanged.\nInput images: Image 1 is the approved angry-open v2 atlas and edit target.\nComposition/framing: same complete square 3×3 sheet, exact row-major mouth order A B C / D E F / G H X.\nStyle/medium: retain crisp coarse pixel art. At 64×64 face size, eye features must remain clean, legible pixel clusters with hard edges.\nConstraints: Only eyelids change. Keep sharply furrowed angry brows exactly fixed; keep eyes crisp, visible irises and pupils, clear pixel outline, no smudged shadow or airbrushed gradients. Half-lowered upper lids cover about half of each iris; leave the lower half visible. Preserve identity, face, hair, skin, lighting, background, all nine matching mouth poses, mouth scale, alignment, and grid boundaries. No other facial changes, no blurry smoky eyes, no smoothing, no text, no crop."
+    },
+    {
+      "phase": "closed",
+      "generated": {
+        "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-bfa3-7821-8c10-1973507e5744\\exec-ae277cc4-855b-4667-ace9-53ee9d87d915.png",
+        "sha256": "B67B96E9E80491CAE6761EBA64395FBACFCA94647137EABE80E3C0F58D2741C0"
+      },
+      "output": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\angry-closed.png",
+        "sha256": "B67B96E9E80491CAE6761EBA64395FBACFCA94647137EABE80E3C0F58D2741C0",
+        "dimensions": "1254x1254"
+      },
+      "input": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\angry-open.png",
+      "prompt": "Use case: stylized-concept\nAsset type: complete square 3×3 pixel-art NPC talking portrait atlas\nPrimary request: Create ANGRY CLOSED-EYE blink atlas by editing Image 1, the finished angry open-eye v2 atlas. Fully close both eyelids in all nine cells, hiding all irises and sclera. Preserve angry expression and all corresponding speech mouths exactly.\nInput images: Image 1 is the approved angry-open v2 atlas and edit target.\nComposition/framing: same complete square 3×3 sheet, exact row-major mouth order A B C / D E F / G H X.\nStyle/medium: retain crisp coarse pixel art and hard-edged pixel clusters.\nConstraints: Only eyelids change. Keep sharply furrowed angry brows exactly fixed. Closed lids must cover every iris and all sclera, with clean deliberate pixel outlines. Preserve identity, face, hair, skin, lighting, background, framing, all nine matching mouth poses and alignment, mouth scale and grid boundaries. Retain open speech mouths; do not close lips in speaking cells. No blurry shadows, smudging, airbrush, smoothing, extra facial changes, text, or crop."
+    }
+  ],
+  "visible_deviations": [],
+  "inspection": "Full-atlas visual inspection at 64x64 per face: eyes read as crisp pixel clusters with visible iris/pupil and no smudged shadow; brows read sharply angry; half phase retains visible iris; closed phase hides iris/sclera; all speech mouths remain distinct and open where required.",
+  "status": "revision2-prototype-user-review-pending-not-installed"
+}

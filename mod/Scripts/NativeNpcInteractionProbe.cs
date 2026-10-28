@@ -123,7 +123,7 @@ namespace PeopleOfTheIliacBay.DFU
         public static IEnumerator Run(StreetPopulation streets,string expectedCharacter)
         {
             if(Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-npc-interaction-probe")<0 ||
-                string.IsNullOrWhiteSpace(expectedCharacter) || !expectedCharacter.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal))
+                string.IsNullOrWhiteSpace(expectedCharacter) || !NativeProbeText.IsTestCharacter(expectedCharacter))
                 throw new InvalidOperationException("NPC interaction acceptance requires its explicit owned-fixture flag.");
             var game=GameManager.Instance;
             if(!streets || !streets.Ready || game.PlayerEntity.Name!=expectedCharacter || game.IsPlayerInside)

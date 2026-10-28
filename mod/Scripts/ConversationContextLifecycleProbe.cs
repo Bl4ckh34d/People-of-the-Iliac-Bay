@@ -42,8 +42,8 @@ namespace PeopleOfTheIliacBay.DFU
 
         internal static IEnumerator Run(PeopleOfTheIliacBayMod host, StreetPopulation streets, string character)
         {
-            if (string.IsNullOrEmpty(character) || character != "PeopleOfTheIliacBayTest-9a5f197b")
-                throw new InvalidOperationException("Context lifecycle probe requires owned disposable character PeopleOfTheIliacBayTest-9a5f197b.");
+            if (string.IsNullOrEmpty(character) || character != "Hakon Ironhand")
+                throw new InvalidOperationException("Context lifecycle probe requires owned disposable character Hakon Ironhand.");
 
             Exception testFailure = null;
             Evidence evidence = new Evidence();
@@ -577,31 +577,12 @@ namespace PeopleOfTheIliacBay.DFU
             FieldInfo freeText = RequireHostField("localDialogueEnabled");
             FieldInfo clientField = RequireHostField("localDialogue");
             FieldInfo optionsField = RequireHostField("options");
-            FieldInfo routingField = RequireHostField("decisionRoutingSession");
             MethodInfo ready = RequireInstanceMethod("ExperienceAppraisalRuntimeReady");
             LocalDialogueClient client = clientField.GetValue(host) as LocalDialogueClient;
             RuntimeOptions options = optionsField.GetValue(host) is RuntimeOptions
                 ? (RuntimeOptions)optionsField.GetValue(host) : null;
-            if (!Convert.ToBoolean(freeText.GetValue(host)) || client == null || options == null || !options.Enabled)
-                return false;
-
-            object oldRouting = routingField.GetValue(host);
-            var probeRouting = new LocalDecisionSession { Enabled = true };
-            try
-            {
-                routingField.SetValue(host, probeRouting);
-                bool withD3GateSatisfied = Convert.ToBoolean(ready.Invoke(host, new object[] { store }));
-                if (!withD3GateSatisfied) return false;
-                routingField.SetValue(host, null);
-                if (!Convert.ToBoolean(ready.Invoke(host, new object[] { store })))
-                    throw new InvalidOperationException("Qwen appraisal readiness still requires D3 routing when all other native workload gates pass.");
-                return true;
-            }
-            finally
-            {
-                routingField.SetValue(host, oldRouting);
-                probeRouting.Dispose();
-            }
+            return Convert.ToBoolean(freeText.GetValue(host)) && client != null && options != null && options.Enabled &&
+                Convert.ToBoolean(ready.Invoke(host,new object[] {store}));
         }
 
         private static int CountTranscript(WorldStateStore store, string personId)

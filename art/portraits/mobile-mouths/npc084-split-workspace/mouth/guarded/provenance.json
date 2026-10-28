@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "createdUtc": "2026-10-21T23:45:19.8008774Z",
+  "portraitRecord": 84,
+  "bank": "TFAC00I0.RCI",
+  "part": "mouth",
+  "emotion": "guarded",
+  "prompt": "Edit the supplied original portrait and mouth-reference grid into one pixel-art 3x3 atlas for record084. Use source lower-half framing exactly: each cell is the complete 64x29 lower portrait half, no crop, no gutters, no resizing of the tiny lips. Row-major Rhubarb order is A B C / D E F / G H X. Source has small muted-brown lips, warm brown skin, golden wavy hair at sides, soft low-contrast pixel clusters. Preserve original face, nose boundary, jaw, chin, neck, hair, background, palette and framing. Modify only mouth and its immediate lip pixels. Emotion: skeptical/guarded, shown through restrained asymmetric corners and mild questioning tension; retain that emotional corner asymmetry while shaping each exact viseme below. Every cell must follow its own sound-shape contract; letters alone do not define shapes. Definitions: A = closed lips with light pressure for P/B/M. B = slightly open, nearly together teeth with narrow horizontal opening for most consonants/EE. C = medium-open mouth with relaxed unrounded lips for EH/AE. D = wide vertical opening, clearly larger than C, for AA. E = slightly rounded lips with opening no wider than C for AO/ER. F = puckered rounded lips with small forward opening, not a tooth bite, for UW/OW/W. G = upper teeth touching lower lip, not a wide-open vowel, for F/V. H = tongue raised behind upper teeth, opening between C and D; tongue may be invisible at native pixel scale, for long L. X = closed relaxed idle lips for silence. A and X both closed but differ: A lightly pressed with skeptical asymmetry, X relaxed while keeping subtle corner asymmetry. Make B,C,D,E,F,G,H clearly distinct according to these exact descriptions; do not repeat closed lines, thin teeth strips, or clenched grins as substitutes. Keep all mouth shapes at original small lip scale. Teeth and tongue must remain restrained, with no glare or extra whites. No lipstick red, orange halo, enlarged lips, black outlines, added facial changes, text, borders, or any other grid layout.",
+  "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a160c7-5d26-7712-a755-f48a9dd0f80d as C:\\Users\\Daniel\\.codex\\generated_images\\01a160c7-5d26-7712-a755-f48a9dd0f80d\\exec-56e50f2e-ff09-4bad-8fce-7e2dc1cc476e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+  "generatedPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c7-5d26-7712-a755-f48a9dd0f80d\\exec-56e50f2e-ff09-4bad-8fce-7e2dc1cc476e.png",
+  "sourceOriginal": {
+    "path": "original.png",
+    "sha256": "10ec019f2359c6e700ebcba2286778ad666255ba107e21849cbe885f65de2d88",
+    "width": 64,
+    "height": 64
+  },
+  "referenceGrid": {
+    "path": "mouth-reference-grid.png",
+    "sha256": "47a9646b4ccc362eba8f1855ca36d8b0a14294103b22c6a2f9ede335c0459d47",
+    "width": 1536,
+    "height": 696
+  },
+  "generator": {
+    "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c7-5d26-7712-a755-f48a9dd0f80d\\exec-56e50f2e-ff09-4bad-8fce-7e2dc1cc476e.png",
+    "sha256": "5413bf37df617cca10e57894e7121ba3c4e04c91e94cbd63d5bcb047deb7e065",
+    "width": 1863,
+    "height": 844
+  },
+  "raw": {
+    "path": "mouth/guarded/raw.png",
+    "sha256": "5413bf37df617cca10e57894e7121ba3c4e04c91e94cbd63d5bcb047deb7e065",
+    "width": 1863,
+    "height": 844
+  }
+}

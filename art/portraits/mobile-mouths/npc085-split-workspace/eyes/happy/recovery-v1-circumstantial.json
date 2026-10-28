@@ -1,0 +1,25 @@
+{
+  "record": 85,
+  "part": "eyes",
+  "emotion": "happy",
+  "status": "recovered_circumstantial_unapproved",
+  "exactToolResultLink": false,
+  "output_hint": null,
+  "promptExactFromExecInput": true,
+  "prompt": "Use case: illustration-story\nAsset type: DFU retro-game NPC facial eye animation atlas, record 85\nPrimary request: Edit the supplied NPC 085 eye reference grid into one HAPPY eyes atlas. Keep the same warm brown-skinned pixel-art woman, exact face identity, eye spacing, iris and pupil size, horizontal position, gaze direction, highlights, nose bridge, forehead, hood, and native framing. Make the open eyes read warmly friendly and gently happy, with relaxed lids, softly lifted outer eye corners and lower lids. Keep brows close to their original height and nearly straight with only a mild natural curve; no high arch, no raised surprised inner brow, no worried or startled expression. Brows stay at the same fixed coordinates and shape in every blink phase. The only expression changes are subtle lid/corner adjustments and the restrained happy brow expression.\nComposition/framing: One 2x2 atlas, four equal cells in row-major order: open, half-closed, fully closed, repeated open. Each cell depicts the same upper portrait half at native 64x35 proportions; target whole atlas ratio 128:35. Match the reference grid scale and placement exactly. Half and closed lids descend over the same unchanged eyeballs; the iris and pupil do not shrink, shift sideways, or jitter. Fully closed phase has no visible iris or pupil. Repeated open must match the first open pose.\nStyle/medium: Preserve the supplied original's low-resolution pixel-art style, muted brown skin, brown brows, gray-blue irises, soft contrast, and restrained shading.\nConstraints: Use the supplied reference as identity and geometry authority. Keep nose, surrounding skin, hair/hood, colors, face proportions, and all non-eye pixels conceptually unchanged; only the eye/brow feature region may express the requested mood. No oversized brows, dramatic arches, surprised inner-brow lift, cartoon grin, orange skin halos, bright white eye flashes, hard black brow bars, enlarged eyes/head/neck, text, borders, extra panels, or watermark.",
+  "recoveryEvidence": {
+    "candidatePath": "art/portraits/mobile-mouths/npc085-split-workspace/eyes/happy/raw-recovered-circumstantial.png",
+    "candidateSha256": "cbce4020741e1f8a11a0ccbcd07b749ebbfac463d02460b1616b611761949499",
+    "candidateDimensions": [1695, 928],
+    "candidateByteLength": 1294430,
+    "candidateLastWriteTimeLocal": "2026-10-22T08:52:45.4431600+08:00",
+    "searchedOutputDirectory": "C:/Users/Daniel/.codex/generated_images/01a160c6-9bd3-7e53-9a05-a02b7e03724a",
+    "knownDirectoryBasis": "The previous v1-rejected provenance recorded its generator file in this same generated_images directory.",
+    "boundedSearchWindowLocal": ["2026-10-22T08:52:20+08:00", "2026-10-22T08:53:20+08:00"],
+    "pngCandidatesInBoundedWindow": 1,
+    "candidateGeneratorPath": "C:/Users/Daniel/.codex/generated_images/01a160c6-9bd3-7e53-9a05-a02b7e03724a/exec-92214586-410a-4a42-a87a-acd7bc544d51.png",
+    "visualInspection": "Single 1695x928 2x2 upper-eye atlas matching the reference identity and palette. Brows appear closer to source height and less arched than v1; no exact tool-result association is available.",
+    "helperUsed": false,
+    "standardDefaultUpdated": false
+  }
+}

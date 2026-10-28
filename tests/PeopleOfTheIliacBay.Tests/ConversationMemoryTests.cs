@@ -262,8 +262,6 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.True(!restored.RecallConversation("bob", "lute", 86500, 2000).Contains("silver lute"));
                 saved.ConversationMemories[0].Entries.Clear();
                 Check.True(restored.RecallConversation("alice", "lute", 86500, 2000).Contains("silver lute"));
-                restored.Restore(new WorldState { Version = 21, WorldSeed = 7, ConversationMemories = null });
-                Check.True(!restored.RecallConversation("alice", "lute", 86500, 2000).Contains("silver lute"));
             }));
             cases.Add(("Memory retrieves relevant old exchanges beyond recent conversation without exceeding budget", () => {
                 var store = new WorldStateStore(12);

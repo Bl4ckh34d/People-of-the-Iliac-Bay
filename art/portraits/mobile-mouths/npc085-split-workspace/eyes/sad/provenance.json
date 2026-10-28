@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T00:47:09.1781718Z",
+    "portraitRecord":  85,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "sad",
+    "prompt":  "Use case: stylized-concept\nAsset type: DFU 64x35 pixel-art NPC upper-half eye atlas\nInput images: Image 1 is the exact full portrait source for identity and original palette. Image 2 is the 2x2 original upper-half reference grid; use it for atlas cell layout, face scale, eye spacing, iris shape and source pixel texture.\nPrimary request: Create exactly one seamless 2x2 atlas for the sad eye animation. Row-major cells: open, half-closed, closed, repeated open. Each cell shows the same original upper 64x35 half at the same scale and alignment. Make a restrained, clearly sad expression: inner brow tips gently raised with soft worried tension and gaze slightly downcast. Keep the expression and brows fixed across all four cells.\nStyle and palette: Match the source\u0027s muted pixel art, subdued brown brows, warm tan skin and original subdued gray-brown eyes. Preserve soft pixel contrast and original eye spacing, pupil direction, iris width, iris and pupil geometry.\nConstraints: Only adjust brows for the sad expression and eyelid coverage. Iris and pupil remain identical in size, shape, position and color in open, half-closed, and repeated-open cells; lids cover the eye vertically without shrinking the iris, moving it sideways, stretching it or crossing the lower lid. Half-closed is visibly intermediate. Closed lids cover the full eyeball with no visible iris or sclera. Repeat the open pose exactly in cell four. Keep hair, forehead, nose, face width, cheeks, mouth, neck, clothing and background aligned to Image 1. No cell borders, gutters, labels or text.\nAvoid: afraid-wide stare, anime eyes, round widened eyes, gaze change, bright white flashes, enlarged sclera, black thick brows, red/orange skin, smoothing, changed framing, extra features, watermark.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-f89c-7311-8494-3e110d1dc05c as C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-f89c-7311-8494-3e110d1dc05c\\exec-04c74b55-410a-4a2e-8f05-6ac5828743ae.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-f89c-7311-8494-3e110d1dc05c\\exec-04c74b55-410a-4a2e-8f05-6ac5828743ae.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "8381f07edb8751dd0dfa93e4049c5ae00563c75ba9b0bb1fb5dfa80ca2a001d4",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "63042ef3fe7255f699c50c2394f06652bb51a5f0d1324094cd24d8d3d6dcfbe6",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-f89c-7311-8494-3e110d1dc05c\\exec-04c74b55-410a-4a2e-8f05-6ac5828743ae.png",
+                      "sha256":  "4962d851e32e82c3188a3b4c255ee9ec605a30b8c82fd244b9ff12ee0d937ebf",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/sad/raw.png",
+                "sha256":  "4962d851e32e82c3188a3b4c255ee9ec605a30b8c82fd244b9ff12ee0d937ebf",
+                "width":  1695,
+                "height":  928
+            }
+}

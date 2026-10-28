@@ -8,6 +8,24 @@ namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class GuardPopulation
     {
+        internal GuardActor BeginBodyReportConversation(string id,ResidentActor witness,double now)
+        {return BeginWitnessReportConversation(id,witness,now,"There is a body nearby.","I will go and look.");}
+        private GuardActor BeginWitnessReportConversation(string id,ResidentActor witness,double now,string account,string answer)
+        {
+            var guard=Roster.Guards.Find(g=>g.Id==id);
+            if(guard==null || !witness)return null;
+            float seconds=UnityEngine.Random.Range(2f,5f);
+            if(!Roster.PauseResponseForReport(id,now,seconds*DaggerfallUnity.Instance.WorldTime.TimeScale))return null;
+            var actor=View(guard,now);actor.gameObject.SetActive(true);
+            actor.BeginReportConversation(witness,seconds);actor.HoldReportConversation();
+            if((actor.transform.position-GameManager.Instance.PlayerMotor.transform.position).sqrMagnitude<=625)
+            {
+                DaggerfallUI.AddHUDText(witness.DisplayName+": "+account,3f);
+                DaggerfallUI.AddHUDText("Guard: "+answer,3f);
+            }
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_REPORT_CONVERSATION_STARTED: witness="+witness.Resident.Id+"; guard="+id+"; realSeconds="+seconds);
+            return actor;
+        }
         public bool FindBodyReportGuard(Vector3 from,bool visibleOnly,out string id,out Vector3 position,string incidentId=null)
         {
             id=null;position=Vector3.zero;if(!OwnsExterior)return false;
@@ -53,7 +71,7 @@ namespace PeopleOfTheIliacBay.DFU
     }
     public sealed partial class StreetPopulation
     {
-        private sealed class BodyReportMotion { public List<SavedRoutePoint> Route; public int Next; public float Repath,GuardSearchAt; public Vector3 Target; }
+        private sealed class BodyReportMotion { public List<SavedRoutePoint> Route; public int Next; public float Repath,GuardSearchAt; public Vector3 Target; public GuardActor TalkingGuard; }
         private float nextBodyGuardSearch;
         private readonly Dictionary<string,BodyReportMotion> bodyReportMotion=new Dictionary<string,BodyReportMotion>();
         private bool ApplyOutdoorBodyReport(Plan plan,ref ResidentActor actor,double now,AlarmPerson reaction)
@@ -119,8 +137,18 @@ namespace PeopleOfTheIliacBay.DFU
                     {
                         guards.ReceiveMurderIdentity(incident,plan.Resident.Id);
                     }
-                    bodyReportMotion.Remove(plan.Resident.Id);
+                    motion.TalkingGuard=guards.BeginBodyReportConversation(report.GuardId,actor,now);
                 }
+            }
+            if(motion.TalkingGuard)
+            {
+                if(motion.TalkingGuard.HoldReportConversation())
+                {
+                    actor.Place(actor.transform.position-Vector3.up,motion.TalkingGuard.transform.position-actor.transform.position,true);
+                    return true;
+                }
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_REPORT_CONVERSATION_FINISHED: witness="+plan.Resident.Id+"; guard="+report.GuardId);
+                motion.TalkingGuard=null;
             }
             bool seeking=!report.Delivered && report.GuardId!=null && guards.BodyReportGuardPosition(report.GuardId,out destination,reportCase);
             if(!seeking)

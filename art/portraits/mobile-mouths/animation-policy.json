@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "updated": "2026-10-22",
+  "source": "Explicit user review of the portrait catalog",
+  "defaultPolicy": "standard-eyes-and-mouth-after-source-inspection",
+  "difficultPortraitPolicy": "Record the limitation and continue to the next canonical face. Do not spend repeated generations trying to force the standard six-emotion treatment.",
+  "familyPolicy": "Generate an uncovered canonical face first. Find hooded counterparts through visible face regions, including lower-face pixels outside shadow. Candidate matches require full intended mask/occlusion checks before reuse; preserve each derivative's original hood and shadows.",
+  "entries": [
+    {"id":"special-011","bank":"FACES.CIF","record":11,"mode":"eyes-only","status":"queued-special","reason":"No visible mouth; animate eyes only."},
+    {"id":"special-008","bank":"FACES.CIF","record":8,"mode":"deferred","status":"deferred","reason":"Finger near the mouth complicates lip animation. Skip for the initial rollout."},
+    {"id":"special-005","bank":"FACES.CIF","record":5,"mode":"eyes-only","status":"queued-special","reason":"Only eyes need animation; keep the remaining portrait unchanged."},
+    {"id":"special-003","bank":"FACES.CIF","record":3,"mode":"deferred","status":"deferred","reason":"Special geometry. Later consider eyes plus a simple opening/closing mouth; skip the standard viseme rollout initially."},
+    {"id":"special-000","bank":"FACES.CIF","record":0,"mode":"experimental-no-eyes","status":"experimental-pending","reason":"No eyes. A limited portrait-specific attempt is optional; do not invent eyes or force blink/emotion frames."},
+    {"id":"common-482","bank":"TFAC00I0.RCI","record":482,"mode":"experimental-dark-face","status":"experimental-pending","reason":"Dark, blurry face. Try only if the source supports a convincing limited animation; otherwise defer."},
+    {"id":"common-398","bank":"TFAC00I0.RCI","record":398,"mode":"eye-glimmer-only","status":"queued-special","reason":"Consider a subtle looping eye sparkle rather than the standard eyes/mouth/emotion pipeline."},
+    {"id":"common-410","bank":"TFAC00I0.RCI","record":410,"mode":"excluded-placeholder","status":"excluded","reason":"User identifies this as a placeholder. Do not generate animation."}
+  ]
+}

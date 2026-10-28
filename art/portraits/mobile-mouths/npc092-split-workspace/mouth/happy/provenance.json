@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T15:46:43.6979707Z",
+    "portraitRecord":  92,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "happy",
+    "prompt":  "Create a 3×3 pixel-art mouth atlas from the single supplied NPC092 reference grid. Each cell is one complete aligned 64×29 lower-face crop. Keep the source framing, curly hair edges, skin, jaw, nose edge, and native pixel clusters. Use row-major order A B C / D E F / G H X. Show clear but natural happiness: gentle lifted mouth corners and a warm smile in closed and open poses. Preserve the source\u0027s muted terracotta lip color and small mouth scale. No lipstick red, saturated pink, or oversized grin. Teeth must be subdued neutral gray-ivory, not skin-colored or shiny white. Use modest cavities and clear separation among lips, teeth, and tongue.\n\nRender all nine poses with their actual Rhubarb meanings:\nA: pressured closed lips for P/B/M, keeping a light happy corner lift.\nB: narrow opening with teeth nearly together for consonants/EE.\nC: medium unrounded opening for EH/AE.\nD: wide AA opening.\nE: slightly rounded AO/ER opening, no wider than C.\nF: puckered UW/OW/W lips.\nG: upper teeth touching lower lip for F/V.\nH: raised tongue behind upper teeth for L, with an opening between C and D.\nX: relaxed closed idle mouth with a subtle happy smile.\n\nKeep all nine poses distinct, correctly aligned, and inside the mouth area. Preserve face identity, muted source palette, and pixels outside the mouth shape; do not move cheeks, jaw, or chin. No fourth row, extra neck band, labels, gutters, text, watermark, or added background.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-ab8a687a-1725-4188-91b4-10f0f4ad773f.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-ab8a687a-1725-4188-91b4-10f0f4ad773f.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "d3b90a135e6dee3135ed00fbdd0ce1dd9182d1d1a7120b2ee75c9c9dd5f82db8",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "3d6e76052d3cc4db8e05d7906797b0d0c86dbe3e53567e6c567958c75044fd29",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-ab8a687a-1725-4188-91b4-10f0f4ad773f.png",
+                      "sha256":  "9df35a37470bfc1d8f2eb5a01e547eeabd7223ca4eb30ceaf179af78589f7d04",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/happy/raw.png",
+                "sha256":  "9df35a37470bfc1d8f2eb5a01e547eeabd7223ca4eb30ceaf179af78589f7d04",
+                "width":  1863,
+                "height":  844
+            }
+}

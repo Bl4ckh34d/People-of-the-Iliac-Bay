@@ -122,9 +122,6 @@ namespace PeopleOfTheIliacBay.Core
             {
                 var copy = ObservedVisit.Copy(value);
                 Require(residents.Add(copy.ResidentId), "Duplicate observed visit resident.");
-                Require(source.Version>=70 || copy.HouseholdDayId==null && copy.HouseholdSourceFingerprint==null,
-                    "Old schema contains future shared Inn visit fields.");
-                Require(source.Version>=71 || copy.HouseholdSeatId==null,"Old schema contains future shared Inn chair intent.");
                 // Family cross-references are checked after both dated plans
                 // and movement records have been copied and validated.
                 if(copy.HouseholdDayId==null)ValidateObservedVisitOwnerAndTarget(source, copy);

@@ -22,7 +22,7 @@ namespace PeopleOfTheIliacBay.Core
         public List<SavedRoutePoint> Route = new List<SavedRoutePoint>();
     }
 
-    // A one-day continuation, created only for an interrupted resident. Times are
+    // A continuation for an interrupted resident, including a late home return. Times are
     // absolute; rebuilding or loading the day cannot move a booked meeting.
     [Serializable]
     public sealed class RoutineRecoveryPlan
@@ -45,7 +45,7 @@ namespace PeopleOfTheIliacBay.Core
                 source.WakeMinute>=source.SleepMinute || !Finite(source.CreatedAt) || !Finite(source.DepartAt) ||
                 !Finite(source.EndsAt) || source.CreatedAt<source.AbsoluteDay*86400d ||
                 source.CreatedAt>source.DepartAt || source.DepartAt>source.EndsAt ||
-                source.EndsAt>source.AbsoluteDay*86400d+source.SleepMinute*60d || source.Legs==null ||
+                source.Legs==null ||
                 source.AppointmentPointRoutes!=null && source.AppointmentPointRoutes.Count>32 ||
                 source.Legs.Count<1 || source.Legs.Count>65 || source.SkippedStopIndices==null || source.SkippedStopIndices.Count>32)
                 throw new ArgumentException("Invalid routine recovery identity, day, or times.");
@@ -153,10 +153,8 @@ namespace PeopleOfTheIliacBay.Core
 
         public ActivitySnapshot Evaluate(double now)
         {
-            if(!Finite(now) || now<AbsoluteDay*86400d || now>=(AbsoluteDay+1d)*86400d)
+            if(!Finite(now) || now<AbsoluteDay*86400d || now>=Math.Max((AbsoluteDay+1d)*86400d,EndsAt+1))
                 throw new ArgumentOutOfRangeException(nameof(now));
-            if(now>=AbsoluteDay*86400d+SleepMinute*60d || now<AbsoluteDay*86400d+WakeMinute*60d)
-                return Interior(Activity.Sleep,HomeBuildingKey);
             int origin=OriginBuildingKey;bool originPoint=false;RoutePoint originPointTarget=default(RoutePoint);
             bool first=true;
             foreach(var leg in Legs)
@@ -182,7 +180,8 @@ namespace PeopleOfTheIliacBay.Core
                 if(originPoint){var target=leg.Route[leg.Route.Count-1];originPointTarget=new RoutePoint(target.X,target.Z);}
                 first=false;
             }
-            return Interior(Activity.Home,HomeBuildingKey);
+            double minute = now % 86400d / 60d;
+            return Interior(minute >= SleepMinute || minute < WakeMinute ? Activity.Sleep : Activity.Home,HomeBuildingKey);
         }
         private static ActivitySnapshot Interior(Activity activity,int building) {return new ActivitySnapshot(activity,building,new RoutePoint(),0);}
         private static RoutePoint Along(List<SavedRoutePoint> route,double fraction)
@@ -221,8 +220,7 @@ namespace PeopleOfTheIliacBay.Core
             Add(text,plan.JointInn==null?-1:plan.JointInn.InnKey);
             if(plan.JointInn?.PayerId!=null)
             {
-                Add(text,plan.JointInn.PayerId);Add(text,plan.JointInn.FirstMenuIndex);Add(text,plan.JointInn.SecondMenuIndex);
-                Add(text,plan.JointInn.FirstPriceGold);Add(text,plan.JointInn.SecondPriceGold);
+                Add(text,plan.JointInn.PayerId);Add(text,plan.JointInn.ReserveGold);
             }
             if(plan.JointInn!=null)foreach(var outing in new[]{plan.JointInn.First,plan.JointInn.Second})
                 Add(text,Fingerprint(new ResidentRoutine{ResidentId="joint",Itinerary=outing.Itinerary,

@@ -1,3 +1,4 @@
+using DaggerfallWorkshop.Game;
 using PeopleOfTheIliacBay.Core;
 
 namespace PeopleOfTheIliacBay.DFU
@@ -13,7 +14,11 @@ namespace PeopleOfTheIliacBay.DFU
                 action.ResidentId!=actor.Resident.Id || !NpcPaidCompanionAction.IsPaidFollowJob(action) || source==null ||
                 !ReferenceEquals(source(),store))return false;
             current=store;
-            actor.TransferOwner(transform,navigation);
+            // Retiring inside a building must not carry its body outside when
+            // DFU destroys that interior. Keep the native scene as lifetime owner.
+            var scene=GameManager.Instance.PlayerEnterExit;
+            if(!scene.IsPlayerInsideBuilding || !scene.Interior || !actor.transform.IsChildOf(scene.Interior.transform))
+                actor.TransferOwner(transform,navigation);
             paidActions[actor.Resident.Id]=action.Id;
             paidCompanions[actor.Resident.Id]=actor;
             return HoldRetiredPaidCompanion(actor.Resident.Id,store,action,now);

@@ -19,7 +19,7 @@ namespace PeopleOfTheIliacBay.DFU
     internal static class SocialDuplicateReplyProbe
     {
         internal const string RunFlag = "-peopleoftheiliacbay-social-duplicate-reply-probe";
-        private const string OwnedCharacter = "PeopleOfTheIliacBayTest-9a5f197b";
+        private const string OwnedCharacter = "Hakon Ironhand";
         private const string BaselineSave = "People - Gothway Garden";
         private const BindingFlags Members = BindingFlags.Instance | BindingFlags.Static |
             BindingFlags.Public | BindingFlags.NonPublic;

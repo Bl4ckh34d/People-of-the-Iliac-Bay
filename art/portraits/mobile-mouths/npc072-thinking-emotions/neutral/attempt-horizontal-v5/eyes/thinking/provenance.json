@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T14:51:04.7956175Z",
+    "portraitRecord":  72,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Use case: stylized-concept\nAsset type: Daggerfall Unity pixel-art NPC horizontal thinking-eye atlas\nPrimary request: Make a 2x2 atlas of complete 64x35 upper-face cells in this exact row-major order: LEFT OPEN, RIGHT OPEN / LEFT HALF, RIGHT HALF. Preserve NPC072 identity and the source\u0027s restrained neutral expression. Use only the supplied prepared local grid.\nComposition: Same exact face crop, registration, lighting, hair, adornments, scale, and crisp pixel clusters in all four cells. No labels, gaps, borders, extra margins, or transparency.\nLateral gaze: LEFT means both colored irises and dark pupil cores move together toward the LEFT image edge by approximately one native pixel from the reference. RIGHT means both move together toward the RIGHT image edge by approximately one native pixel. The two pupils must move in the same canvas direction by similar amounts; do not leave one centered or shift the eyes opposite ways. Track pupil/iris centers, not glints. There is no vertical gaze. Keep the same iris x/y in each matching HALF frame as its OPEN frame: LEFT HALF matches LEFT OPEN, RIGHT HALF matches RIGHT OPEN.\nBlink: HALF lowers only the upper lid enough to partly cover the upper iris edge. Preserve selected narrow half-closed aperture; do not repeat the open phase. Keep the lower lid and cheeks stable. Preserve the original cheek pixels locked at rows 25-27 and leave rows 28 onward unchanged.\nPalette and anatomy: Preserve this face\u0027s compact dark olive/amber irises, dark pupils, tiny muted glints, shaded eye whites, neutral brows, hairline and native pixel texture. Keep original eye size and aperture, no broad pale horizontal bands or round/vector eyes.\nAvoid: Cross-eyed gaze, a stationary eye, opposite-direction movement, more than a modest ~1 native pixel shift from source, any vertical pupil jump, enlarged iris, bright flashes, broad white bands, changed neutral expression, eyelid or cheek lifting, and changed hair or exterior pixels.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54 as C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-662395aa-f532-4fb0-a682-5c56608560ee.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-662395aa-f532-4fb0-a682-5c56608560ee.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "4af6922ef7f8345a11ae8418761144f64dcaaa8b836f461486a2fb206cbebd85",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "311723091834e46e3c91451bae5ef10d9bcd780245af137986e14f4bfaeea839",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-662395aa-f532-4fb0-a682-5c56608560ee.png",
+                      "sha256":  "cd2f2d1e3e1634d2e9bda9ea9caf523de84aa7beb29e7bb0e70246e3826a949a",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "cd2f2d1e3e1634d2e9bda9ea9caf523de84aa7beb29e7bb0e70246e3826a949a",
+                "width":  1695,
+                "height":  928
+            }
+}

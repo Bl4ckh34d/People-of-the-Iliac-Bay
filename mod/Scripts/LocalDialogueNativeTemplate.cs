@@ -122,6 +122,23 @@ namespace PeopleOfTheIliacBay.DFU
                 root.IsDictionary && root.AsDictionary.TryGetValue("truncated",out value) && value.IsBool && value.AsBool;
         }
 
+        internal static string ReadCompletionContent(string json)
+        {
+            fsData root,value;
+            return !string.IsNullOrEmpty(json) && !fsJsonParser.Parse(json,out root).Failed && root.IsDictionary &&
+                root.AsDictionary.TryGetValue("content",out value) && value.IsString?value.AsString:string.Empty;
+        }
+
+        internal static bool HasContextLimitError(string json)
+        {
+            fsData root,error,type;
+            if(string.IsNullOrEmpty(json) || fsJsonParser.Parse(json,out root).Failed || !root.IsDictionary ||
+                !root.AsDictionary.TryGetValue("error",out error))return false;
+            if(error.IsString)return error.AsString=="context budget exceeded"; // Internal context-fit failure.
+            return error.IsDictionary && error.AsDictionary.TryGetValue("type",out type) && type.IsString &&
+                type.AsString=="exceed_context_size_error";
+        }
+
         private static fsData Message(string role, string content)
         {
             return new fsData(new Dictionary<string, fsData> {

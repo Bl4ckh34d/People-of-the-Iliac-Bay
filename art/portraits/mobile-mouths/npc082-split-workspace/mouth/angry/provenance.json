@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 82,
+  "emotion": "angry",
+  "asset": "mouth",
+  "generatedUtc": "2026-10-21T22:51:48.7702401Z",
+  "prompt": "Create a pixel-art sprite atlas for NPC082 angry speech mouths, using the attached original portrait and 3x3 mouth-reference grid as strict identity, palette, scale, and framing references. Output exactly one 3-column by 3-row sheet, row-major cells A B C / D E F / G H X. Every cell is the complete original lower face half in the same framing as the reference cells, not a cropped mouth sticker. Keep the original face geometry, nose, jaw, chin, neck, brown curly hair edges, background, and soft muted pixel palette. Modify only the mouth expression in the original mouth region. Emotion reads as controlled anger through tense pressed lip corners and firm lips, not exaggerated cartoon rage. Use the original muted terracotta-brown lip colors: no lipstick red, no brighter saturation, no orange skin, no hard black outlines, no glossy highlights, no giant mouth. Keep mouth size and placement consistent with the original native face. Make nine clearly distinct articulation shapes: A closed tense mouth; B narrow parted mouth with a restrained strip of teeth; C small open mouth; D wide open speech mouth with natural dark interior and modest teeth; E rounded vowel; F pursed lips; G upper-teeth-on-lower-lip shape; H open mouth with visible tongue; X closed resting mouth with a slight angry tension. Teeth/interior appear only where the pose calls for them. Preserve the exact 3x3 atlas grid and row-major ordering; keep each face cell aligned and identically framed. Crisp pixel-art edges, no text, labels, borders, or extra features.",
+  "references": [
+    {
+      "path": "original.png",
+      "sha256": "37270c9eb3e1260c3774263d512bfd0bab8e144fef129b32a0f065c92aa48d26"
+    },
+    {
+      "path": "mouth-reference-grid.png",
+      "sha256": "8ea66062585e7c7159318ec4a9cf0f55485324ebfcbd412fdb6e841179667724"
+    }
+  ],
+  "tool": "built-in image_gen",
+  "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-bfa3-7821-8c10-1973507e5744 as C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-bfa3-7821-8c10-1973507e5744\\exec-18dcda66-527e-45f8-81c4-0691df1f8fbd.png by default.",
+  "generatedOutputPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-bfa3-7821-8c10-1973507e5744\\exec-18dcda66-527e-45f8-81c4-0691df1f8fbd.png",
+  "rawPath": "raw.png",
+  "rawSha256": "a9016d7cceea4a614fd8799737c9246bac4b23a1b2d6424a41245f20be21b07d",
+  "generatedOutputSha256": "a9016d7cceea4a614fd8799737c9246bac4b23a1b2d6424a41245f20be21b07d",
+  "dimensionsPx": [
+    1863,
+    844
+  ],
+  "grid": "3x3: A B C / D E F / G H X",
+  "visualNotes": [
+    "All nine articulation types are visually distinct and atlas framing appears consistent.",
+    "The generated lips and skin read warmer/redder than the muted reference; parent should palette-check before native assembly."
+  ],
+  "notes": [
+    "Raw output copied unchanged from exact output path returned by this image_gen call.",
+    "No retry made. Parent visual review required before native assembly."
+  ]
+}

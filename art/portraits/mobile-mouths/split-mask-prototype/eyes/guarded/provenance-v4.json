@@ -1,0 +1,25 @@
+{
+  "emotion": "guarded / skeptical v4",
+  "generator": "built-in image_gen",
+  "status": "prototype; user-review-pending; not installed",
+  "input": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\eyes\\guarded\\raw-v3.png",
+    "sha256": "29E4FFDD01559D52D280986CCD4DD45FB262140651CEB2B1AF44AD51DC853F1F"
+  },
+  "neutral_comparison_reference": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\eyes\\neutral\\raw.png",
+    "sha256": "22730D7E8B85147D436CAD19E0D6D67BB36B297C4F017EEDE185E68201979636"
+  },
+  "generated_original": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-626e-7471-95f3-109617bb3581\\exec-73f0a7d0-a0e8-493e-bd2d-76faf662e76b.png",
+  "output": {
+    "dimensions": "1697x927",
+    "sha256": "5852D82D022560FAB07276AF6C351AE8842160729D4039AA92B0898D36128245",
+    "aspect_ratio": "1.83064",
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\eyes\\guarded\\raw-v4.png"
+  },
+  "prompt": "Make exactly one subtle skeptical-expression edit to this 2x2 upper-half eye sheet, starting from raw v3. Preserve original face geometry, eye size, pupil positions, centered forward gaze, hair, soft palette, skin shading, background, and exact open / half / closed / duplicate-open cell order. Do not shift pupils left or right; both pupils must stay centered, forward-facing, same position and size in every open-eye cell. No side gaze, eyeroll, crossed eyes, head rotation, or changed framing. Make only a small brow and eyelid expression adjustment across all four cells, keeping brow placement consistent between phases: raise the viewer-left brow by about one additional native pixel (about two native pixels total above neutral), and gently lower or flatten the viewer-right brow by about one native pixel. Add slight questioning narrowing to the open upper lids. This should read a little more skeptical than raw v3 while staying natural and restrained. No angry inward V, no scowl, no high cartoon arches, no exaggeration. Keep both brows visible. Preserve current half-blink coverage and fully closed lower-left cell; alter only expression details. Keep original soft pixel-art palette and contrast; do not sharpen, blur, airbrush, repaint skin, alter hair/neck/background, crop, resize, or add labels/text. Return complete 2x2 sheet.",
+  "grid_order": "open / half blink / closed blink / duplicate open (row-major)",
+  "generation_count": 1,
+  "visible_deviations": "Eyes remain forward-facing. Viewer-left brow appears slightly higher; viewer-right brow flatter/lower. Brow and lid shift is subtle.",
+  "native_quality_limits": "Exact +1 native-pixel adjustment and total +2 vs neutral need parent confirmation at native 64x35 size; large sheet view cannot establish pixel-level magnitude. Keep eye size and color close to raw v3."
+}

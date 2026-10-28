@@ -1,0 +1,38 @@
+{
+  "emotion": "angry",
+  "subject": "record77",
+  "generator": "built-in image_gen",
+  "generation_count": 1,
+  "source": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\eyes-reference-grid.png",
+    "sha256": "A533A7BD5E93C132A22191FB9C4EC35466840A8B0BAC4218064DB6BC5F4FAACC",
+    "dimensions": "1024x560"
+  },
+  "generated": {
+    "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-bfa3-7821-8c10-1973507e5744\\exec-ac9bd939-b9a5-482f-ab4f-3e079c155937.png",
+    "sha256": "6014BCAF82772D7F2789602B10D2D5B2444A360DF3BA058A7BED5FCF41DA1C90",
+    "dimensions": "1695x928"
+  },
+  "output": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\eyes\\angry\\raw.png",
+    "sha256": "6014BCAF82772D7F2789602B10D2D5B2444A360DF3BA058A7BED5FCF41DA1C90",
+    "dimensions": "1695x928"
+  },
+  "grid": {
+    "rows": 2,
+    "columns": 2,
+    "row_major_order": [
+      "open-angry",
+      "half-blink",
+      "closed-blink",
+      "open-angry-duplicate"
+    ],
+    "target_dimensions": "1024x560",
+    "target_aspect_ratio": 1.828571
+  },
+  "prompt": "Use case: stylized-concept\nAsset type: upper-half sprite sheet for one retro pixel-art NPC\nPrimary request: Edit Image 1 into an ANGRY eye-and-brow variant sheet. Preserve four complete upper-face cells in the exact same 2×2 layout and aspect ratio as input, ideally 1024×560. Each cell is one complete original 64×35 upper portrait enlarged 8×. Row-major cell order: A open angry eyes; B half blink; C fully closed blink; D duplicate open angry eyes. Use one consistent angry expression in all cells.\nInput images: Image 1 is the sole edit target and exact palette, size, framing, face, hair, and background reference.\nComposition/framing: preserve each full upper portrait cell and exact 2×2 grid. Do not crop, reposition, stretch, enlarge, or add spacing or dividers. Keep original eye size and positions.\nStyle/medium: match original softly shaded, muted, coarse pixel-art palette and pixel scale. Eyes remain clearly readable with small crisp iris and pupil pixels, restrained highlights, natural soft shading, and clean edges. Keep contrast close to the original.\nConstraints: Make anger readable through inward/downward slightly furrowed brows and tense upper lids, using restrained dark brown pixels that match original brow color. Keep brows slim and natural, eye size unchanged, irises distinct. A: both eyes open with angry brows. B: upper lids cover about half each iris, angry brows unchanged. C: lids fully closed and hide all iris/sclera, angry brows unchanged. D: repeat A exactly in phase and expression. Preserve original identity, face geometry, hairline, skin palette, framing, and background. No thick black brows, hard eyeliner, heavy dark eye shadow, blur, airbrush, sharpened high-contrast edges, extra detail, added text, labels, gutters, or objects. Output only the complete 2×2 sheet.",
+  "visible_deviations": [
+    "Output is 1695x928, aspect ratio 1.826509; ratio differs slightly from 1024x560 target."
+  ],
+  "status": "prototype-user-review-pending-not-installed"
+}

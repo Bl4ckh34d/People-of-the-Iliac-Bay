@@ -1,0 +1,45 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T05:46:58.5086645Z",
+    "purpose":  "thinking-eye raw generation; standard helper receipt retained unchanged",
+    "portraitRecord":  78,
+    "bank":  "TFAC00I0.RCI",
+    "actualReference":  {
+                            "path":  "../../thinking-reference-grid.png",
+                            "absolutePath":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc078-thinking-v2-workspace\\attempt2-workspace\\thinking-reference-grid.png",
+                            "sha256":  "63430030c4d9ccd4d7c3a2e735537d01160bee5ac0046bd83773b8aeec0a0fba",
+                            "width":  1536,
+                            "height":  840
+                        },
+    "actualArguments":  {
+                            "path":  "arguments.json",
+                            "sourcePath":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait078-thinking-v2-attempt2-imagegen-arguments.json",
+                            "sha256":  "05ab662464d141447a987e4ac2769822a9315141eb9a7920dc657f2956e016b4",
+                            "referencedImagePath":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc078-thinking-v2-workspace\\attempt2-workspace\\thinking-reference-grid.png",
+                            "normalizedReferencedImagePath":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc078-thinking-v2-workspace\\attempt2-workspace\\thinking-reference-grid.png",
+                            "transparentBackground":  false,
+                            "numLastImagesToInclude":  null
+                        },
+    "actualRequest":  {
+                          "path":  "request.json",
+                          "sourcePath":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait078-thinking-v2-attempt2-request.json",
+                          "sha256":  "1cb6681741aaa2bee424693c67acb4a02e2b5e6dd753fd7e36465f538d2c5d50"
+                      },
+    "helperStage":  {
+                        "portraitRoot":  "C:\\Users\\Daniel\\AppData\\Local\\Temp\\portrait-thinking-stage-431b8bf150a046ebaf19214790636831",
+                        "part":  "eyes",
+                        "emotion":  "neutral",
+                        "referencePath":  "eyes-reference-grid.png",
+                        "referenceSha256":  "63430030c4d9ccd4d7c3a2e735537d01160bee5ac0046bd83773b8aeec0a0fba",
+                        "sourceOriginalSha256":  "4cfab5dce8d40ff0246728c2c28922d9b5627cec9549f9b5252f2f601e4978ce",
+                        "provenance":  "provenance.json"
+                    },
+    "transferred":  {
+                        "rawPath":  "raw.png",
+                        "rawSha256":  "ec594a864788825e341e9e1bf6192f99d1ae86148ae555dac8fc18d9798751a6",
+                        "rawSize":  "1695x928",
+                        "helperProvenancePath":  "provenance.json",
+                        "savedReferencePath":  "eyes-reference-grid.png"
+                    },
+    "helperProvenanceNote":  "provenance.json is the unchanged SavePortraitRawOutput receipt from the isolated helper stage. Its eyes/neutral labels and eyes-reference-grid.png path describe that stage; this wrapper maps those bytes to eyes/thinking and the actual thinking grid."
+}

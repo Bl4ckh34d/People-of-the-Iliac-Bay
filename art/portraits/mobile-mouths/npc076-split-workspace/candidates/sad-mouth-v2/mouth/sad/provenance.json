@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T12:20:54.4136120Z",
+    "portraitRecord":  76,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "sad",
+    "prompt":  "Create one 3x3 pixel-art sad-mouth atlas for NPC076 by adapting the exact nine neutral pose examples in the attached local reference grid. This grid contains nine selected neutral mouth poses, not nine copies of the original. Preserve each corresponding pose\u0027s registration, opening size, anatomy, lip proportions, nose/jaw/skin/hair/background crop, and native pixel clusters. Output cells row-major A B C / D E F / G H X; each complete cell is a 64x29 lower portrait crop in a 3x3 atlas, with no zoom, gutters, labels, borders, extra neck band, or face rescaling. Add only subtle sad corner tension and restrained sadness; do not make a deep frown, upside-down V, exaggerated downturn, grin, or oversized mouth. Most important: preserve the muted brown-rose lip hue from the selected neutral poses. Do not turn the lips lipstick-red, vivid red, or bright pink. Keep highlights soft and low contrast. Use subdued neutral gray-ivory teeth only where needed; no pure-white, shiny, or high-contrast tooth bars, and never make teeth skin-colored. Keep the same pose anatomy and meanings: A pressed closed lips for P/B/M; B narrow opening with teeth nearly together for consonants and EE; C medium unrounded opening for EH/AE; D wide vertical AA opening without widening the mouth; E slightly rounded AO/ER, no wider than C; F puckered UW/OW/W lips; G upper teeth touching lower lip for F/V; H raised tongue behind upper teeth for L with opening between C and D; X relaxed closed idle pose with subtle sad corners. Preserve identity, palette, shadow softness, pixel-art edge steps, and source framing. No other alterations and no text. Output only opaque pixel-art atlas.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-efcc68f7-751b-4a44-97b0-db1110a8349e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-efcc68f7-751b-4a44-97b0-db1110a8349e.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "732830dbc9a0f5d46622b8b74db022f97b141cea462c81fcd0604b1a206590ae",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "f010b543045a347a9c2220a8b19edb897b03250636674f331f5caf670819c98c",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-efcc68f7-751b-4a44-97b0-db1110a8349e.png",
+                      "sha256":  "bf9b75d1d82e4b209b2e25d893bbb74a68875a206f675b7f48252e77ddbe98c0",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/sad/raw.png",
+                "sha256":  "bf9b75d1d82e4b209b2e25d893bbb74a68875a206f675b7f48252e77ddbe98c0",
+                "width":  1863,
+                "height":  844
+            }
+}

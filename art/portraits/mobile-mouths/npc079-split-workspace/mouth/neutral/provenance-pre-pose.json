@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 79,
+  "bank": "TFAC00I0.RCI",
+  "emotion": "neutral",
+  "assetType": "mouth atlas",
+  "tool": "built-in image_gen",
+  "generationMode": "one edit call; generated PNG copied byte-for-byte; no resize, processing, or reroll",
+  "sourceOriginal": {
+    "path": "art/portraits/mobile-mouths/npc079-split-workspace/original.png",
+    "sha256": "70b1b52df73159543afd5776eae7565bfd3619fd31bc5fd90af674e42520d460",
+    "dimensionsPx": [
+      64,
+      64
+    ]
+  },
+  "sourceReferences": [
+    {
+      "path": "art/portraits/mobile-mouths/npc079-split-workspace/mouth-reference-grid.png",
+      "sha256": "51b7d166c01001213d48e19be135f463e41b6a9892da5abe9c686cf1ae53ca2a",
+      "dimensionsPx": [
+        1536,
+        696
+      ]
+    },
+    {
+      "path": "art/portraits/mobile-mouths/npc079-split-workspace/original.png",
+      "sha256": "70b1b52df73159543afd5776eae7565bfd3619fd31bc5fd90af674e42520d460",
+      "dimensionsPx": [
+        64,
+        64
+      ]
+    }
+  ],
+  "prompt": "Image 1 is NPC079's complete 3x3 lower-half mouth reference grid; Image 2 is the original NPC079 portrait for identity, native lip scale, geometry, soft palette, and pixel texture. Return one complete 3x3 atlas of whole lower-face halves only. Each equal cell represents the original native 64x29 lower half, with the same framing and proportions as Image 1. Preserve exact row-major order A, B, C / D, E, F / G, H, X. No margins, labels, gutters, borders, or extra cells.\n\nCreate nine restrained neutral speech mouth poses at the original small lip scale. A and X are closed neutral mouth poses; keep them visually closed and as close to the original lips as possible because the final neutral A/X will be copied from the immutable original. Make B through H distinct, moderate viseme shapes, with natural small changes in lip opening and rounding: include slight opening, rounded O-like opening, medium vertical opening, wider horizontal opening, a restrained teeth-visible opening, and other clearly distinct but plausible speech shapes. Avoid huge mouths, oversized teeth, exaggerated jaw drop, smile, frown, emotional expression, or dramatic color/contrast changes.\n\nChange only the lips and immediately necessary inner-mouth pixels. Keep the same NPC face, skin shading, nose, chin, jaw, neck, hair, background, crop, lighting, soft muted palette, and native-scale pixel clusters unchanged in every cell. Preserve lips at exactly the original position and size. Keep the rest of each entire 64x29 lower-half cell intact. Do not blur, smudge, smooth, add makeup, add details, text, or alter framing.",
+  "promptSha256Utf8": "e50712026ea6a0e54db860875258cd97ee718c172a77cf4cf1c2b7b8469c3349",
+  "grid": {
+    "rows": 3,
+    "columns": 3,
+    "rowMajorOrder": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "X"
+    ],
+    "nativeCellDimensionsPx": [
+      64,
+      29
+    ],
+    "completeHalfCells": true,
+    "cellSemantics": "A-X speech forms; neutral A/X requested closed, but parent uses exact original for final A/X.",
+    "generatedCanvasDimensionsPx": [
+      1863,
+      844
+    ],
+    "equalIntegerCellDivisionPossible": false,
+    "samplingLimitation": "Generated canvas dimensions are not divisible by the requested row/column grid; cell boundaries require parent review before sampling. This raw atlas was not resized or altered."
+  },
+  "generatedOutput": {
+    "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-5744-7b43-9b03-e8cced819bb7\\exec-a7ee39f1-be7b-42f9-834e-18a653d88a53.png",
+    "sha256": "7a6b51cbe9e6382103e7833921e92a6014622b0f48fa94f64e05bb0199e55ffa",
+    "dimensionsPx": [
+      1863,
+      844
+    ],
+    "mode": "RGB"
+  },
+  "savedRaw": {
+    "path": "art/portraits/mobile-mouths/npc079-split-workspace/mouth/neutral/raw.png",
+    "sha256": "7a6b51cbe9e6382103e7833921e92a6014622b0f48fa94f64e05bb0199e55ffa",
+    "dimensionsPx": [
+      1863,
+      844
+    ],
+    "mode": "RGB",
+    "bytewiseSameAsGenerated": true
+  },
+  "rawReview": {
+    "status": "generated raw; parent review pending",
+    "notes": "One raw 3x3 edit was generated; B-H show visibly distinct speech openings at the atlas scale. A is closed. X is closed but curves into a small smile rather than matching the neutral original; parent should use the immutable original for final neutral A/X as requested. Exact 64x29 resampling and lip-mask integration remain for parent QA. No reroll or resampling performed. Generated canvas is 1863x844; exact equal integer division by 3 columns and 3 rows is False. Parent should confirm cell boundaries before native sampling.",
+    "nativeScaleOrMaskAcceptance": false,
+    "generatedCellDivisionExact": false
+  }
+}

@@ -139,8 +139,10 @@ namespace PeopleOfTheIliacBay.DFU
             if (!string.IsNullOrEmpty(person) && !saveFault && store != null)
                 store.RememberConversation(person, DaggerfallUnity.Instance.WorldTime.Now.ToSeconds(),
                     memoryDate ?? CurrentConversationTimestamp(), ConversationMemoryPlace(), playerText, reply, "action");
+            string speakerName = GameManager.Instance.TalkManager.NameNPC;
+            string hudReply = string.IsNullOrWhiteSpace(speakerName) ? reply : speakerName + ": " + reply;
             DaggerfallUI.Instance.PopToHUD();
-            DaggerfallUI.AddHUDText(reply);
+            DaggerfallUI.AddHUDText(hudReply);
             return true;
         }
     }

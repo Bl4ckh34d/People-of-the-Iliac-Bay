@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DaggerfallConnect;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
@@ -12,22 +13,22 @@ namespace PeopleOfTheIliacBay.DFU
     public sealed partial class StreetPopulation
     {
         internal static void RegisterSurveyedInnCatalog(WorldStateStore store,int settlement,DFLocation location,
-            StaticDoor entry,TavernRoomSurvey.Result inventory,double now)
+            StaticDoor entry,TavernBedSurvey.Result inventory,double now)
         {
             var source=inventory.ServiceCatalog;
-            if(source==null)return;
-            if(location.MapTableData.MapId!=settlement || source.BuildingKey!=entry.buildingKey || source.BlockIndex!=entry.blockIndex ||
-                source.RecordIndex!=entry.recordIndex || source.Climate!=(int)ClimateSwaps.FromAPIClimateBase(location.Climate.ClimateType) ||
-                !inventory.KeeperHash.HasValue || inventory.KeeperHash.Value!=source.KeeperHash)
+            if(!inventory.KeeperHash.HasValue)return;
+            if(location.MapTableData.MapId!=settlement || source!=null &&
+                (source.BuildingKey!=entry.buildingKey || source.BlockIndex!=entry.blockIndex || source.RecordIndex!=entry.recordIndex ||
+                source.Climate!=(int)ClimateSwaps.FromAPIClimateBase(location.Climate.ClimateType) || inventory.KeeperHash.Value!=source.KeeperHash))
                 throw new ArgumentException("Unloaded Inn service source does not match its destination.");
-            var keeper=store.NativePeopleFor(settlement).Find(p=>p.WorkKey==entry.buildingKey && p.NativeHash==source.KeeperHash && p.IsAlive);
+            var keeper=store.NativePeopleFor(settlement).Find(p=>p.WorkKey==entry.buildingKey && p.NativeHash==inventory.KeeperHash.Value && p.IsAlive);
             string[] menu;byte[] prices;int opens,closes;int type=(int)DFLocation.BuildingTypes.Tavern;
             if(keeper==null || !TryReadNativeTavernMenuTemplate(out menu,out prices) ||
                 !NativeInnCalendar.TryServiceHours(PlayerActivate.openHours[type],PlayerActivate.closeHours[type],out opens,out closes))return;
-            var catalog=new NpcInnServiceCatalog{SettlementId=settlement,BuildingKey=source.BuildingKey,BlockIndex=source.BlockIndex,
-                RecordIndex=source.RecordIndex,Climate=source.Climate,RegionIndex=location.RegionIndex,KeeperId=keeper.Id,
+            var catalog=new NpcInnServiceCatalog{SettlementId=settlement,BuildingKey=entry.buildingKey,BlockIndex=entry.blockIndex,
+                RecordIndex=entry.recordIndex,Climate=(int)ClimateSwaps.FromAPIClimateBase(location.Climate.ClimateType),RegionIndex=location.RegionIndex,KeeperId=keeper.Id,
                 KeeperHash=keeper.NativeHash,CapturedAt=now,OpenMinute=opens,CloseMinute=closes,
-                EntryToCounter=source.EntryToCounter,Pairs=source.Pairs};
+                EntryToCounter=source?.EntryToCounter??new List<GuardPoint3>(),Pairs=source?.Pairs??new List<NpcInnServiceSeatPair>()};
             for(int i=0;i<menu.Length;i++)catalog.Menu.Add(new NpcInnMenuItem{MenuIndex=i,ProductName=menu[i],BasePriceGold=prices[i],
                 Kind=i<4?NpcInnConsumptionKind.Drink:NpcInnConsumptionKind.Food});
             store.RegisterNpcInnServiceCatalog(NpcInnServiceCatalog.Seal(catalog));
@@ -95,6 +96,8 @@ namespace PeopleOfTheIliacBay.DFU
                 KeeperId=keeper.Id,KeeperHash=keeper.NativeHash,CapturedAt=now,OpenMinute=opens,CloseMinute=closes};
             for(int i=0;i<menu.Length;i++)draft.Menu.Add(new NpcInnMenuItem{MenuIndex=i,ProductName=menu[i],BasePriceGold=prices[i],
                 Kind=i<4?NpcInnConsumptionKind.Drink:NpcInnConsumptionKind.Food});
+            // Publish factual menu/keeper immediately; offscreen purchases need no seat geometry.
+            store.RegisterNpcInnServiceCatalog(NpcInnServiceCatalog.Seal(draft));
             var capture=activities.CaptureInnServiceGeometry(draft,Current);
             try{while(capture.MoveNext())yield return capture.Current;}
             finally{(capture as IDisposable)?.Dispose();}

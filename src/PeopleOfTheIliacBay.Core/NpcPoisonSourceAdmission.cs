@@ -204,7 +204,6 @@ namespace PeopleOfTheIliacBay.Core
         {
             var result = new List<NpcPoisonOnsetState>();
             var byPerson = new Dictionary<string, NpcPoisonOnsetState>(StringComparer.Ordinal);
-            if (source.Version >= 50)
             {
                 Require(source.NpcPoisonOnsets != null, "Missing NPC poison source states.");
                 foreach (var raw in source.NpcPoisonOnsets)
@@ -216,8 +215,6 @@ namespace PeopleOfTheIliacBay.Core
                     byPerson.Add(item.PersonId, item); result.Add(item);
                 }
             }
-            else Require(source.NpcPoisonOnsets == null || source.NpcPoisonOnsets.Count == 0,
-                "Legacy save contains future NPC poison source state.");
             var canonicalSequences = new HashSet<string>(StringComparer.Ordinal);
             foreach (var row in validated.NpcExperienceInbox.Entries)
             {
@@ -236,17 +233,9 @@ namespace PeopleOfTheIliacBay.Core
                 Require(canonicalSequences.Add(row.ObserverId + ":" + suffix),
                     "Duplicate canonical NPC poison source sequence.");
                 NpcPoisonOnsetState item;
-                if (!byPerson.TryGetValue(row.ObserverId, out item))
-                {
-                    Require(source.Version < 50, "Canonical poison receipt lacks a source cursor.");
-                    item = new NpcPoisonOnsetState { PersonId = row.ObserverId };
-                    byPerson.Add(item.PersonId, item); result.Add(item);
-                }
-                if (source.Version >= 50)
-                    Require(row.StatusOnsetSequence <= item.LastProjectedSequence,
-                        "Retained poison receipt exceeds projected source cursor.");
-                else if (row.StatusOnsetSequence > item.LastIssuedSequence)
-                    item.LastIssuedSequence = item.LastProjectedSequence = row.StatusOnsetSequence;
+                Require(byPerson.TryGetValue(row.ObserverId, out item), "Canonical poison receipt lacks a source cursor.");
+                Require(row.StatusOnsetSequence <= item.LastProjectedSequence,
+                    "Retained poison receipt exceeds projected source cursor.");
             }
             // A noncanonical imported row may collide on a pending assignment's key.
             // The key alone never proves that exact physical assignment projected.

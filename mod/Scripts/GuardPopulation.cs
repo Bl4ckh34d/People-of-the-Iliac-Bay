@@ -14,6 +14,12 @@ namespace PeopleOfTheIliacBay.DFU
     public sealed partial class GuardPopulation : MonoBehaviour
     {
         public GuardRoster Roster { get; private set; }
+        private SleepingArt guardSleepingArt;
+        public void SetSleepingArt(DaggerfallWorkshop.Game.Utility.ModSupport.Mod mod)
+        {
+            if (guardSleepingArt != null) guardSleepingArt.Dispose();
+            guardSleepingArt = new SleepingArt(mod);
+        }
         public int MaximumResponders = 4;
         public int ActorRadius = 160;
         public bool NightTorches = true;
@@ -79,7 +85,7 @@ namespace PeopleOfTheIliacBay.DFU
         }
         public void SetTown(BuildingDirectory town, CityNavigation navigation, SettlementPopulation population, WorldStateStore store)
         {
-            if(!SettlementClassification.SupportsPopulation((int)town.LocationData.MapTableData.LocationType) ||
+            if(!SettlementClassification.SupportsGuards((int)town.LocationData.MapTableData.LocationType) ||
                 (town.MapID==1291010263 && DaggerfallPopulationProbe.SuppressCityActors)) { Clear(); return; }
             if (directory == town && Roster != null)
             {
@@ -87,7 +93,7 @@ namespace PeopleOfTheIliacBay.DFU
                 {
                     // Finishing a deferred survey must not destroy active pursuers.
                     int occupants=0; foreach(var home in population.Households) occupants+=home.Residents.Count;
-                    baseGuardTarget=GuardRoster.TargetCount(SettlementClassification.FromLocationType((int)town.LocationData.MapTableData.LocationType),occupants);
+                    baseGuardTarget=GuardRoster.TargetCount(SettlementClassification.GuardScale((int)town.LocationData.MapTableData.LocationType),occupants);
                     if(setupSurvey==null) setupSurvey=StartCoroutine(PrepareDeferredGuardSetup(town,navigation));
                 }
                 return;
@@ -107,11 +113,9 @@ namespace PeopleOfTheIliacBay.DFU
             var preparedEntrances=setupDirectory==town ? setupEntrances : null;
             Clear();
             if (GameManager.Instance.PlayerEnterExit.IsPlayerInside && store.GetGuards(town.MapID) == null) return;
-            var routines = store.GetRoutines(town.MapID);
-            if (routines == null) return;
             int residents = 0;
             foreach (var home in population.Households) residents += home.Residents.Count;
-            baseGuardTarget = GuardRoster.TargetCount(SettlementClassification.FromLocationType((int)town.LocationData.MapTableData.LocationType), residents);
+            baseGuardTarget = GuardRoster.TargetCount(SettlementClassification.GuardScale((int)town.LocationData.MapTableData.LocationType), residents);
             var savedRoster = store.GetGuards(town.MapID);
             var postSurvey=preparedGeometry ?? new TownGeometry(town,navigation,false);
             publicPostSurveyPending=GameManager.Instance.PlayerEnterExit.IsPlayerInside;
@@ -130,6 +134,7 @@ namespace PeopleOfTheIliacBay.DFU
             directory = town; geometry = postSurvey;
             refugeGeometry=preparedEntrances;
             Roster = store.GetOrCreateGuards(town.MapID, count, selected);
+            Roster.AssignShifts();
             Roster.Advance(Now());
             long gateSetupStarted=RuntimeTiming.Start();
             try { InitializeGateGuardPosts(); }
@@ -148,7 +153,11 @@ namespace PeopleOfTheIliacBay.DFU
                 if (guard.IsAlive && guard.IncidentId != null) { reportId = guard.IncidentId; break; }
             var type = Type.GetType("PeopleOfTheIliacBay.QuestHooks.NativeGuardHooks, PeopleOfTheIliacBay.QuestHooks", true);
             hooks = (IDisposable)Activator.CreateInstance(type, new object[] { new Func<bool>(OwnsTown),
-                new Action<bool>(immediate => ReportNative(immediate)), new Func<Vector3, Vector3, GameObject>(ResolveNative) });
+                new Action<bool>(immediate => ReportNative(immediate)), new Func<Vector3, Vector3, GameObject>(ResolveNative),
+                new Action<DaggerfallEntityBehaviour,DaggerfallEntityBehaviour>((target,source)=> {
+                    var victim=target?target.GetComponent<GuardActor>():null;
+                    if(victim)ObserveGuardAttack(victim,source);
+                }) });
             // Existing transient municipal reinforcements predate roster ownership.
             // Retire them once; quest-owned actors retain their native ownership.
             foreach (var body in UnityEngine.Object.FindObjectsOfType<DaggerfallEnemy>())
@@ -550,7 +559,8 @@ namespace PeopleOfTheIliacBay.DFU
             {
                 if (!guard.IsAlive) continue;
                 bool indoors = GameManager.Instance.PlayerEnterExit.IsPlayerInsideBuilding;
-                if (indoors ? guard.Interior == null || !interior || guard.Interior.BuildingKey != interior.EntryDoor.buildingKey : guard.Interior != null)
+                if (indoors ? guard.Interior == null || !interior || guard.Interior.BuildingKey != interior.EntryDoor.buildingKey :
+                    guard.Interior != null || GuardActor.RefugeIndoors(guard,now))
                     continue;
                 var point = Roster.Position(guard.Id, now);
                 var indoor = guard.Interior == null ? null : Roster.InteriorPosition(guard.Id, now);
@@ -621,6 +631,7 @@ namespace PeopleOfTheIliacBay.DFU
             {
                 actor = indoors ? GuardActor.CreateInterior(Roster, guard.Id, interior.transform, now) :
                     GuardActor.Create(Roster, guard.Id, directory.transform, geometry, now);
+                if (actor) actor.SetSleepingArt(guardSleepingArt);
                 actors[guard.Id] = actor;
                 actor.AttachPopulation(this);
                 BindCityWatchCombatRole(actor);
@@ -693,6 +704,7 @@ namespace PeopleOfTheIliacBay.DFU
                 entryGround = interiorNavigation == null ? (Vector3?)null : interiorNavigation.EntryGround;
             }
             Roster.Advance(now);
+            UpdateShiftDuty(now);
             ReleaseSafeRefuges(now);
             long gateStarted=RuntimeTiming.Start();
             try { UpdateGateGuardDuty(now); }
@@ -705,7 +717,7 @@ namespace PeopleOfTheIliacBay.DFU
                 patrolSurvey = StartCoroutine(SurveyPatrols());
             }
             if (Time.unscaledTime >= nextPatrolTick)
-            { nextPatrolTick = Time.unscaledTime + 1; UpdateNightPatrols(now); UpdateDayRest(now); }
+            { nextPatrolTick = Time.unscaledTime + 1; UpdateNightPatrols(now); UpdateWallWatch(now); UpdateDayRest(now); }
             if (game.PlayerEntity.CrimeCommitted == PlayerEntity.Crimes.None)
             {
                 reportId = null; awaitingSight = false;
@@ -738,7 +750,10 @@ namespace PeopleOfTheIliacBay.DFU
                 if (!close && guard.Duty != GuardDuty.Engaged)
                 { if (actors.TryGetValue(guard.Id, out actor) && actor) actor.gameObject.SetActive(false); continue; }
                 actor = View(guard, now); actor.gameObject.SetActive(true);
-                if (guard.Refuge!=null) { actor.EndCombat(); actor.Place(now); continue; }
+                if(NativeNpcCustody.HoldGuard(actor,now)){actor.Capture(now);continue;}
+                if (guard.Refuge!=null) { actor.Place(now); DefendWallWatch(guard,actor,now); continue; }
+                if(HauntingShelterNow(now))
+                { actor.Capture(now);actor.EndCombat();actor.Place(now);continue; }
                 if (actor.GetComponent<EnemyMotor>().IsHostile && (actor.DefenseTarget ||
                     guard.Duty != GuardDuty.Engaged && actor.GetComponent<EnemySenses>().Target == game.PlayerEntityBehaviour))
                 {
@@ -756,6 +771,7 @@ namespace PeopleOfTheIliacBay.DFU
                     if (defense != null) defense.ThreatId = null;
                     actor.BeginCombat(now);
                 }
+                if(actor.HoldReportConversation())continue;
                 if(UpdateNativeCorpseCleanup(guard,actor,now))continue;
                 if(UpdateWitnessedDoorApproach(guard,actor,now))continue;
                 if(UpdateCorpseSuspectSearch(guard,actor,now,routeTick))continue;
@@ -825,7 +841,7 @@ namespace PeopleOfTheIliacBay.DFU
                 if (!guard.IsAlive) continue;
                 if (guard.Refuge!=null)
                 {
-                    if (GuardActor.RefugeIndoors(guard,now) && guard.Refuge.BuildingKey==interior.EntryDoor.buildingKey)
+                    if (!guard.Refuge.RestPending && GuardActor.RefugeIndoors(guard,now) && guard.Refuge.BuildingKey==interior.EntryDoor.buildingKey)
                     { var refugeActor=View(guard,now); refugeActor.gameObject.SetActive(true); refugeActor.EndCombat(); refugeActor.Place(now); }
                     continue;
                 }
@@ -847,6 +863,7 @@ namespace PeopleOfTheIliacBay.DFU
                 }
                 if (guard.Interior == null || guard.Interior.BuildingKey != interior.EntryDoor.buildingKey) continue;
                 var actor = View(guard, now); actor.gameObject.SetActive(true);
+                if(NativeNpcCustody.HoldGuard(actor,now)){actor.Capture(now);continue;}
                 if (guard.Interior.Returning) { actor.EndCombat(); actor.Place(now); continue; }
                 if(UpdateWitnessedDoorInterior(guard,actor,now))continue;
                 if(UpdateInteriorEnemyDefense(guard,actor,report,now)) continue;
@@ -884,7 +901,9 @@ namespace PeopleOfTheIliacBay.DFU
             crimeSceneMotions.Clear();
         }
         private void HideViews()
-        { foreach (var pair in actors) if (pair.Value && pair.Value.gameObject.activeSelf) { pair.Value.Capture(Now()); pair.Value.EndCombat(); pair.Value.gameObject.SetActive(false); } }
+        { foreach (var pair in actors) if (pair.Value && pair.Value.gameObject.activeSelf)
+            {if(pair.Value.CustodyEscort && pair.Value.CustodyEscort.OwnsLoadedDungeon)continue;
+                pair.Value.Capture(Now());pair.Value.EndCombat();pair.Value.gameObject.SetActive(false);} }
         private bool destroyingPopulation;
         public void Clear()
         {
@@ -900,11 +919,16 @@ namespace PeopleOfTheIliacBay.DFU
             setupDirectory=null; setupGeometry=null; setupEntrances=null; setupPosts=null;
             CancelGateDutyWork();
             gateDutySurveyed=false; gateDutyPosts.Clear(); gateDutyPairs.Clear(); nextGateDutyTick=0; gateApproachesDirty=false;
+            nextShiftDutyTick=0; nextRestGuard=0;
+            if(wallWatchWork!=null){StopCoroutine(wallWatchWork);wallWatchWork=null;}
+            wallWatchSites.Clear();wallWatchSurveyed=false;wallAssignmentFailures.Clear();wallWatchBlocks.Clear();wallIntruders.Clear();
+            if (dayRestSurvey != null) { StopCoroutine(dayRestSurvey); dayRestSurvey=null; }
+            nextDayRestAttempt=0;
             if (approachSurvey != null) { StopCoroutine(approachSurvey); approachSurvey = null; }
             if (patrolSurvey != null) { StopCoroutine(patrolSurvey); patrolSurvey = null; }
             patrolTemplates.Clear();
             defenseEnemies.Clear();
-            refugeInteriors.Clear(); wallBedRoutes.Clear(); refugeGeometry=null;
+            refugeInteriors.Clear(); refugeGeometry=null;
             if (hooks != null) { hooks.Dispose(); hooks = null; }
             ClearViews(); interior = null; entryGround = null;
             cityWatchRetreatRetryAt.Clear();
@@ -915,6 +939,6 @@ namespace PeopleOfTheIliacBay.DFU
             lastVisibilityScene = null;
             visibilityDiagnosticReason = null; visibilityDiagnosticAt = 0;
         }
-        private void OnDestroy() { destroyingPopulation=true; Clear(); }
+        private void OnDestroy() { destroyingPopulation=true; Clear(); if (guardSleepingArt != null) guardSleepingArt.Dispose(); }
     }
 }

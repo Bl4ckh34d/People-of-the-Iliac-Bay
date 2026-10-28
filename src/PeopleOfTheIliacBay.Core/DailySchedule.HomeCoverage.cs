@@ -40,7 +40,7 @@ namespace PeopleOfTheIliacBay.Core
             if(recoveryPlan!=null)
             {
                 recoverySource.CollectHomeBoundaries(day,boundaries);
-                boundaries.Add(recoveryPlan.CreatedAt);boundaries.Add((recoveryPlan.AbsoluteDay+1d)*86400d);
+                boundaries.Add(recoveryPlan.CreatedAt);boundaries.Add(Math.Max((recoveryPlan.AbsoluteDay+1d)*86400d,recoveryPlan.EndsAt+1));
                 foreach(var leg in recoveryPlan.Legs)
                 {boundaries.Add(leg.WalkAt);boundaries.Add(leg.ArriveAt);boundaries.Add(leg.EnterAt);boundaries.Add(leg.LeaveAt);}
                 return;

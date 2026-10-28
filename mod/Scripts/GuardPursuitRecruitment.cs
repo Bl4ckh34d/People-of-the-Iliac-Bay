@@ -43,21 +43,27 @@ namespace PeopleOfTheIliacBay.DFU
             foreach(var caller in callers)
             {
                 var source=Roster.Guards.Find(g=>g.Id==caller.GuardId);
-                if(source==null || source.LastSeenSuspect==null ||
-                    Roster.Reports.Exists(report=>report.Id==source.IncidentId && report.HasCorpseInquiryWindow)) continue;
+                if(source==null || source.LastSeenSuspect==null)continue;
+                bool corpseInquiry=Roster.Reports.Exists(report=>report.Id==source.IncidentId && report.HasCorpseInquiryWindow);
                 foreach(var candidate in actors.Values)
                 {
                     if(!candidate || !candidate.gameObject.activeInHierarchy || candidate.CombatReady || candidate.DefenseTarget) continue;
                     float distance=Vector3.Distance(caller.transform.position,candidate.transform.position);
-                    if(distance>12 || !Roster.CanRecruitPursuit(caller.GuardId,candidate.GuardId,now,distance) ||
-                        !CivilianResponses.Sees(caller.transform.position,candidate.transform.position,12)) continue;
-                    var route=geometry.RouteBetweenPoints(Roster.Position(candidate.GuardId,now),source.LastSeenSuspect);
+                    bool seesPursuit=!game.PlayerEntity.IsInvisible &&
+                        CivilianResponses.Sees(candidate.transform.position,game.PlayerMotor.transform.position,20) &&
+                        CivilianResponses.Sees(candidate.transform.position,caller.transform.position,40);
+                    bool contact=!corpseInquiry && distance<=12 &&
+                        CivilianResponses.Sees(caller.transform.position,candidate.transform.position,12);
+                    if((!seesPursuit && !contact) ||
+                        !Roster.CanRecruitPursuit(caller.GuardId,candidate.GuardId,now,distance,seesPursuit))continue;
+                    var sighting=seesPursuit?Local(game.PlayerMotor.transform.position):source.LastSeenSuspect;
+                    var route=geometry.RouteBetweenPoints(Roster.Position(candidate.GuardId,now),sighting);
                     if(route.Count<2) continue;
                     string incident="pursuit:"+candidate.GuardId+":"+now.ToString("R",System.Globalization.CultureInfo.InvariantCulture);
                     var sent=Roster.Dispatch(incident,now,new Dictionary<string,List<SavedRoutePoint>> {
                         {candidate.GuardId,route} },1,2.8,DaggerfallUnity.Instance.WorldTime.TimeScale);
                     if(sent.Count==0) continue;
-                    candidate.BeginCombat(now,source.LastSeenSuspect);
+                    candidate.BeginCombat(now,sighting);
                     // Passing the alarm along must not renew stale knowledge.
                     sent[0].SearchUntil=Math.Min(sent[0].SearchUntil,source.SearchUntil);
                     Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_PURSUIT_RECRUIT: caller="+caller.GuardId+"; guard="+candidate.GuardId+"; metres="+distance);

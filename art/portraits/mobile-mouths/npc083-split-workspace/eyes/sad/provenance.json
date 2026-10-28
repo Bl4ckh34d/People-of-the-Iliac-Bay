@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-21T23:24:19.0822342Z",
+    "portraitRecord":  83,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "sad",
+    "prompt":  "Edit the supplied 2x2 reference grid into a clean 2x2 pixel-art animation atlas for the same Daggerfall Unity portrait. Each cell is one complete original upper-face half; preserve the exact 2x2 cell layout, framing, pixel scale, face identity, hair/background boundaries and skin palette. Make the four phases in row-major order: open, half-closed, closed, repeated open. Create a subdued sad, tender downcast expression, with slightly lifted inner brows and gently lowered upper lids; the open eyes should look softly down, never wide or fearful. Keep brows fixed and identical in all four cells. Keep each iris and pupil the same size, shape, color and horizontal position in all cells; only eyelids cover the iris vertically as the lids close. No iris shrink, pupil shift, bright white flash, or extra eye highlight. Retain gray-blue irises, muted brown skin, soft low-contrast pixel shading and the original pixel-art treatment. No red/orange halo, no black brows, no changed jaw, hair, neck, face framing, or unrelated repaint. Do not add labels, borders or text.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-f89c-7311-8494-3e110d1dc05c as C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-f89c-7311-8494-3e110d1dc05c\\exec-a4b68142-550b-4bb4-a0ae-3d36e4f921cc.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-f89c-7311-8494-3e110d1dc05c\\exec-a4b68142-550b-4bb4-a0ae-3d36e4f921cc.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "e46c900779f687610af7b821b988300b998aea48632c829537f88cb829b5acfb",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "2744ee08ff7932c1ab5b295847612b1fafa442a2518db98dae88f5e84b392bd9",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-f89c-7311-8494-3e110d1dc05c\\exec-a4b68142-550b-4bb4-a0ae-3d36e4f921cc.png",
+                      "sha256":  "c5851d8f6d68d543721f301a43ee0c0b5ef4b2bc3e804f1ec5ad815687ad2a02",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/sad/raw.png",
+                "sha256":  "c5851d8f6d68d543721f301a43ee0c0b5ef4b2bc3e804f1ec5ad815687ad2a02",
+                "width":  1695,
+                "height":  928
+            }
+}

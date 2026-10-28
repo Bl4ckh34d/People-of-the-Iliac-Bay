@@ -34,7 +34,7 @@ internal static class Program
             ("verified partial rest immediately reopens care without failure backoff", PartialTreatmentContinuesImmediately),
             ("native self healing uses bound care task and typed receipt", MagicHealingUsesBoundCareTask),
             ("cancelled treatment cannot fast replan and retains failure backoff", CancelledTreatmentKeepsBackoff),
-            ("FullSerializer roundtrip retains care and schema 43 migrates empty", FullSerializerAndLegacyMigration),
+            ("FullSerializer roundtrip retains current care and rejects obsolete schema", FullSerializerAndObsoleteSchema),
             ("restore rejects duplicate residents and dynamic paused targets", RestoreRejectsCorruptCareRows),
             ("paused points reject dynamic item and person metadata", PausedPointsRejectDynamicMetadata)
         };
@@ -693,7 +693,7 @@ internal static class Program
         Equal(104d + NpcHealthCare.RetryDelaySeconds, store.ReadNpcHealthCare(id).RetryAt);
     }
 
-    private static void FullSerializerAndLegacyMigration()
+    private static void FullSerializerAndObsoleteSchema()
     {
         string id; WorldStateStore store = Create(out id);
         Injure(store, id, 100d, 90d);
@@ -707,18 +707,8 @@ internal static class Program
 
         WorldState legacy = store.Snapshot();
         legacy.Version = 43;
-        legacy.NpcHealthCares = null;
-        // This fixture represents an actual schema-43 payload. A current snapshot
-        // carries the schema-54 v5 inbox header even when this test does not care
-        // about experience rows; relabelling that header as v43 must fail closed.
-        legacy.ConversationCueArchive = null;
-        legacy.NpcExperienceInbox = NpcExperienceInbox.Create();
-        legacy.NpcExperienceInbox.Version = 4;
         WorldState legacyWire = FullSerializerRoundtrip(legacy);
-        var migrated = new WorldStateStore(0);
-        migrated.Restore(legacyWire);
-        True(migrated.ReadNpcHealthCare(id) == null, "schema 43 loads with no care rows");
-        Equal(WorldState.CurrentVersion, migrated.Snapshot().Version);
+        Throws<ArgumentException>(() => new WorldStateStore(0).Restore(legacyWire));
     }
 
     private static void RestoreRejectsCorruptCareRows()

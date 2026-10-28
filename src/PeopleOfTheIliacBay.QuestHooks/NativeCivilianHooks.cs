@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using DaggerfallWorkshop.Game;
+using DaggerfallWorkshop.Game.Entity;
 using HarmonyLib;
 using UnityEngine;
 
@@ -13,6 +14,7 @@ namespace PeopleOfTheIliacBay.QuestHooks
         public static Transform CurrentTarget { get; private set; }
         private readonly Harmony harmony = new Harmony(Owner);
         private readonly Func<Transform, Action<Exception>> begin;
+        private readonly Func<Transform, Action<Exception>> beginHealth;
         private sealed class HitScope
         {
             public Transform Previous;
@@ -25,14 +27,20 @@ namespace PeopleOfTheIliacBay.QuestHooks
             if (hit == null) throw new ArgumentNullException(nameof(hit));
             return target => { hit(target); return null; };
         }
-        public NativeCivilianHooks(Func<Transform, Action<Exception>> begin)
+        public NativeCivilianHooks(Func<Transform, Action<Exception>> begin) : this(begin,null) { }
+        public NativeCivilianHooks(Func<Transform, Action<Exception>> begin,Func<Transform, Action<Exception>> beginHealth)
         {
             if (active != null) throw new InvalidOperationException("Civilian hook already installed.");
             this.begin = begin ?? throw new ArgumentNullException(nameof(begin));
+            this.beginHealth=beginHealth;
             active = this;
             try { harmony.Patch(typeof(WeaponManager).GetMethod("WeaponDamage"), prefix:
                 new HarmonyMethod(typeof(NativeCivilianHooks).GetMethod("BeforeDamage", BindingFlags.Static | BindingFlags.NonPublic)),
-                finalizer: new HarmonyMethod(typeof(NativeCivilianHooks).GetMethod("AfterDamage", BindingFlags.Static | BindingFlags.NonPublic))); }
+                finalizer: new HarmonyMethod(typeof(NativeCivilianHooks).GetMethod("AfterDamage", BindingFlags.Static | BindingFlags.NonPublic)));
+                if(beginHealth!=null)harmony.Patch(typeof(DaggerfallEntityBehaviour).GetMethod("DamageHealthFromSource",new[]{typeof(DaggerfallEntityBehaviour),typeof(int),typeof(bool),typeof(Vector3)}),
+                    prefix:new HarmonyMethod(typeof(NativeCivilianHooks).GetMethod("BeforeHealthDamage",BindingFlags.Static|BindingFlags.NonPublic)),
+                    finalizer:new HarmonyMethod(typeof(NativeCivilianHooks).GetMethod("AfterDamage",BindingFlags.Static|BindingFlags.NonPublic)));
+            }
             catch { Dispose(); throw; }
         }
         private static void BeforeDamage(Transform hitTransform, out HitScope __state)
@@ -40,6 +48,13 @@ namespace PeopleOfTheIliacBay.QuestHooks
             __state = new HitScope { Previous = CurrentTarget };
             CurrentTarget = hitTransform;
             if (active != null) __state.Complete = active.begin(hitTransform);
+        }
+        private static void BeforeHealthDamage(DaggerfallEntityBehaviour __instance,DaggerfallEntityBehaviour sourceEntityBehaviour,int amount,out HitScope __state)
+        {
+            __state=new HitScope {Previous=CurrentTarget};
+            if(active!=null && active.beginHealth!=null && amount>0 && __instance.GetComponent<StaticNPC>() &&
+                sourceEntityBehaviour==GameManager.Instance.PlayerEntityBehaviour)
+                __state.Complete=active.beginHealth(__instance.transform);
         }
         private static Exception AfterDamage(Exception __exception, HitScope __state)
         {

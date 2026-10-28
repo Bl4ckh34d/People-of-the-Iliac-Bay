@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "emotionId": "angry",
+  "referenceUpperFile": "eyes/angry/open.png",
+  "browSourceFile": "eyes/angry/open.png",
+  "halfSourceFile": "eyes/angry/half.png",
+  "closedSourceFile": "eyes/angry/closed.png",
+  "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+  "referenceUpperSha256": "0eb0f97c4923cc2e927c00da5f428da6061819cea78ffcde5f82d6a42f72be38",
+  "browSourceSha256": "0eb0f97c4923cc2e927c00da5f428da6061819cea78ffcde5f82d6a42f72be38",
+  "halfSourceSha256": "548570818ae91851b3f9a6724677defe3aa7eb4c524923031e663b3c630569aa",
+  "closedSourceSha256": "2c0447861c32779d42b9b65be8c51e439d7c49ed235302a87eee8511e5d18ccd",
+  "halfLidRegions": [
+    {
+      "x": 15,
+      "y": 23,
+      "width": 16,
+      "height": 3
+    },
+    {
+      "x": 34,
+      "y": 23,
+      "width": 17,
+      "height": 3
+    }
+  ],
+  "rationale": "Calibrated against both angry open and half native RGB rows. Proposed overlay rows y23-25 are below the y22 brow-lock boundary, and contain no detected violet iris-palette or pale highlight pixels in either source phase in either eye. First detected iris/highlight row is y27; preserve it and all lower gaze pixels. Exact open/half RGB rows are in work/portrait077-emotional-thinking-preflight/source-row-rgb-evidence.json."
+}

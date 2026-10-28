@@ -145,7 +145,6 @@ namespace PeopleOfTheIliacBay.Core
         private static List<RoutineRecoveryPlan> CopyRoutineRecoveries(WorldState source,WorldState copied)
         {
             var result = new List<RoutineRecoveryPlan>();
-            if (source.Version < 30) return result;
             Require(source.RoutineRecoveries != null, "Missing routine recovery ledger.");
             var residents = new HashSet<string>(StringComparer.Ordinal);
             foreach (var raw in source.RoutineRecoveries)

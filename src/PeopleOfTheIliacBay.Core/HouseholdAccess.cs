@@ -33,9 +33,12 @@ namespace PeopleOfTheIliacBay.Core
                 position.BuildingKey, new RoutePoint(position.X, position.Z), 0);
         }
         public static bool RoutineLocked(Household household, Func<Resident, ActivitySnapshot> state)
+        {return RoutineLocked(household,state,false);}
+        public static bool RoutineLocked(Household household, Func<Resident, ActivitySnapshot> state,bool night)
         {
             if (household == null) throw new ArgumentNullException(nameof(household));
             if (state == null) throw new ArgumentNullException(nameof(state));
+            if(night)return true;
             foreach (var resident in household.Residents)
             {
                 if (!resident.IsAlive || resident.AgeGroup!=ResidentAgeGroup.Adult) continue;

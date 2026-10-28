@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "createdUtc": "2026-10-22T11:03:08.0503178Z",
+  "portraitRecord": 75,
+  "bank": "TFAC00I0.RCI",
+  "part": "mouth",
+  "emotion": "afraid",
+  "prompt": "Use case: stylized-concept\nAsset type: native-resolution sprite atlas for a Daggerfall Unity NPC portrait animation\nInput image: the single provided local mouth-reference-grid.png is the exact NPC075 face, mouth placement, framing, palette, pixel-art style, and atlas reference.\nPrimary request: Generate one 3×3 lower-face mouth atlas with the same aspect ratio, crop size, alignment, and panel arrangement as the provided reference. Row-major order is A B C / D E F / G H X. No labels or extra panels.\nSubject: Same adult woman and warm tan/brown face, dark brown center fringe and side locks, with the same small muted brown-rose lips and proportions. Preserve the source face identity and fearful expression around the mouth.\nPose meanings, visually distinct and exact: A closed lips with light pressure for P/B/M. B slight opening with nearly together teeth and a narrow horizontal gap for most consonants/EE. C medium relaxed unrounded opening for EH/AE. D wide vertical AA opening, visibly wider/taller than C. E slightly rounded AO/ER opening, no wider than C. F small forward-puckered UW/OW/W, not a tooth bite. G upper teeth touch the lower lip for F/V, not a wide vowel. H raised tongue behind upper teeth for long L, opening between C and D. X relaxed closed idle lips.\nConstraints: Keep original mouth size, lip outline, muted brown-rose lip hue and restrained contrast; exposed teeth must be subdued gray-ivory. Keep skin, nose, chin, hair and surrounding geometry consistent. Do not add saturated lipstick, huge openings, thick outlines, bright white teeth, broad skin repaint, blur, gradients, labels, borders, or change fearful expression. Preserve crisp pixel clusters.",
+  "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-44aca97c-bac8-4cc0-9874-257ed1b2f6b6.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+  "generatedPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-44aca97c-bac8-4cc0-9874-257ed1b2f6b6.png",
+  "sourceOriginal": {
+    "path": "original.png",
+    "sha256": "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98",
+    "width": 64,
+    "height": 64
+  },
+  "referenceGrid": {
+    "path": "mouth-reference-grid.png",
+    "sha256": "38a9654e68f7a8e9995b0ac18f1abb0a44a4973ea2fdcc464a14185685328f53",
+    "width": 1536,
+    "height": 696
+  },
+  "generator": {
+    "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-44aca97c-bac8-4cc0-9874-257ed1b2f6b6.png",
+    "sha256": "bfb354842564ccffbc36395ec513e8869224f93ce240f429571327bdba821263",
+    "width": 1863,
+    "height": 844
+  },
+  "raw": {
+    "path": "mouth/afraid/raw.png",
+    "sha256": "bfb354842564ccffbc36395ec513e8869224f93ce240f429571327bdba821263",
+    "width": 1863,
+    "height": 844
+  }
+}

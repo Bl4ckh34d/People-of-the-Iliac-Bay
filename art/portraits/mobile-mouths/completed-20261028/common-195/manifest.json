@@ -1,0 +1,650 @@
+{
+  "schemaVersion": 2,
+  "portraitRecord": 195,
+  "bank": "TFAC00I0.RCI",
+  "width": 64,
+  "height": 64,
+  "splitY": 35,
+  "original": "b4f0b406ef17cc23-common-195.png",
+  "eyeSets": [
+    {
+      "id": "neutral",
+      "label": "Neutral",
+      "phases": {
+        "open": {
+          "file": "f3f62d19435cfe30-front-open.png",
+          "sha256": "d8ac3a6182ce39ffe8d6fd9782fde59e1a29e578d0be2b6db7c918d98e2398b2"
+        },
+        "half": {
+          "file": "0b4a4a7eaf40ee12-front-half.png",
+          "sha256": "a473fcf8f60bfb1f2e257ec897a13e9d0b0d6bbcd6e23700ca525022171a61d7"
+        },
+        "closed": {
+          "file": "989d4c158c5a599f-front-closed.png",
+          "sha256": "dbd11d5e8807931a13cd13b4c448733ff235b13ff3342e812fbbabb50ba1a787"
+        }
+      }
+    },
+    {
+      "id": "happy",
+      "label": "Happy",
+      "phases": {
+        "open": {
+          "file": "c50ed3c0cd846b03-front-open.png",
+          "sha256": "36b8ebd597ac0e8111d6b8080237c5ecb22c4d60bb3083db6cfb7eb09d3b477c"
+        },
+        "half": {
+          "file": "37040c1db521e60d-front-half.png",
+          "sha256": "4eda782196ad8b25700be292eeaa937ff2854dd5a0e7c4a5de5105e1d5523db5"
+        },
+        "closed": {
+          "file": "0abf468a9b33f283-front-closed.png",
+          "sha256": "f8219d13adf19e2a6d3e9f8d37578d482bd07805d0ff0bfa49b9cb49969c6702"
+        }
+      }
+    },
+    {
+      "id": "angry",
+      "label": "Angry",
+      "phases": {
+        "open": {
+          "file": "3c9933b29b856f81-front-open.png",
+          "sha256": "72ae88a9db6c2ead495d0dcb0790eec0ae4a87583f95fe1215878b73a96ea961"
+        },
+        "half": {
+          "file": "22984d2b87a728b8-front-half.png",
+          "sha256": "7da166337e476a16b4c041554ce75fa83087f835594453e475d7091dc745727f"
+        },
+        "closed": {
+          "file": "dd46fd635c5547b4-front-closed.png",
+          "sha256": "852a09a12f5efa3bb843aed5fb9bdcce5d38931c1e54509c8a68878133004055"
+        }
+      }
+    },
+    {
+      "id": "sad",
+      "label": "Sad",
+      "phases": {
+        "open": {
+          "file": "60bcd4362912420b-front-open.png",
+          "sha256": "06fbd288b5160fba73dc2d65624e06153d2febd730d0c139dace11b3ef60cc5a"
+        },
+        "half": {
+          "file": "c4af6b3aaa43f99f-front-half.png",
+          "sha256": "4454b80e77d6f822c43aed766651407482dd5ecadaa45cc3f8819e469c451884"
+        },
+        "closed": {
+          "file": "c45e8b6f131a2553-front-closed.png",
+          "sha256": "040f12bd2c2f8542a602789672e0d14c9c374daf69b3be546e9ab442baa4a04b"
+        }
+      }
+    },
+    {
+      "id": "afraid",
+      "label": "Afraid",
+      "phases": {
+        "open": {
+          "file": "74caaccb7123dc98-front-open.png",
+          "sha256": "084869c1aaa8fcd6b788dab350f6766c87e9111d72c704420527226da502951a"
+        },
+        "half": {
+          "file": "938bfb92d3a78221-front-half.png",
+          "sha256": "7de94b141ddf3d2586d24d16c2a600211f204369b768187874335935db2cd432"
+        },
+        "closed": {
+          "file": "8f742c138328c612-front-closed.png",
+          "sha256": "ba439d617586b22f23513dbdad742379286ad31a0ff98aef456d1fcf3b66ac13"
+        }
+      }
+    },
+    {
+      "id": "guarded",
+      "label": "Guarded",
+      "phases": {
+        "open": {
+          "file": "493ca3f403109d54-front-open.png",
+          "sha256": "72c15731cc4c2fc53d189af86852ad1e726a2c1768ebeef28476956bb7ad5b11"
+        },
+        "half": {
+          "file": "019cb6c4b466d9d8-front-half.png",
+          "sha256": "fcf25b79801fa79ea788e9b0cc704ee4937c02b430dc695fa8751345b6f19131"
+        },
+        "closed": {
+          "file": "145b8eb2b5b30fcc-front-closed.png",
+          "sha256": "62bd69e9e9bb2a640f01d819e891d8b531893fba2deb057e9f6518925618a49c"
+        }
+      }
+    }
+  ],
+  "mouthSets": [
+    {
+      "id": "neutral",
+      "label": "Neutral",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "83161e2f4afc7958-A.png",
+          "sha256": "ef07097c4028cb86550a737847e0e01144c318ab4e60202a62a838f0d6ff05c6"
+        },
+        {
+          "shape": "B",
+          "file": "9caf3dd6c2196e3d-B.png",
+          "sha256": "9f523615cfc16e0bf05772d9f6784e614610f9971af8842e84c2b04780f78343"
+        },
+        {
+          "shape": "C",
+          "file": "08673ca92d179f48-C.png",
+          "sha256": "2b603f46e5e371a1473e6d5a39efc6a99a3dedf52684f952bd59032c64737fa4"
+        },
+        {
+          "shape": "D",
+          "file": "89b5ee7ac06a1ae4-D-v3-candidate.png",
+          "sha256": "8f52922284ddde79dcc1822f9836bd05e31d420fdd079c36f390663152f48be5"
+        },
+        {
+          "shape": "E",
+          "file": "eaa27cd308c641a0-E.png",
+          "sha256": "e77a5ad920a5cc54c2eeb26d654a4a436fa49ce05fba4ffa7c32bb0c6294efb1"
+        },
+        {
+          "shape": "F",
+          "file": "a02c7cf01269b377-F.png",
+          "sha256": "d43a6414f6a611cb0212742b7224ad5ffef0407bd11aed17a879dff9b6d47623"
+        },
+        {
+          "shape": "G",
+          "file": "f627d960ce33a721-G.png",
+          "sha256": "a5e7a3a23203d7286f9e1ef2a23e913d424d58103feebacc7d4ae6d98e012f80"
+        },
+        {
+          "shape": "H",
+          "file": "799d969e645a279d-H-v3-candidate.png",
+          "sha256": "d084e08fe54519ef87ddce170572cd17130e16e927c8acff4f48e90e35ae7648"
+        },
+        {
+          "shape": "X",
+          "file": "e0422c8a76d36a45-X.png",
+          "sha256": "ef07097c4028cb86550a737847e0e01144c318ab4e60202a62a838f0d6ff05c6"
+        }
+      ]
+    },
+    {
+      "id": "happy",
+      "label": "Happy",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "a6165dc803f43633-A.png",
+          "sha256": "fb022747932cb0ea9dfb138aae3d3ea00654fa04a43b4b343bd263b1a8f99c04"
+        },
+        {
+          "shape": "B",
+          "file": "82f1975b64745b58-B.png",
+          "sha256": "2b336043abaf75b0b3dff086d4ea81fcdeaae440e66d9d337f3421721744e129"
+        },
+        {
+          "shape": "C",
+          "file": "7b0ea17cf846a7fd-C.png",
+          "sha256": "1ff6c3946b2bc0e14985d2c3e1f4d1dd8f3afdadfe1bf576917535fa63b3b905"
+        },
+        {
+          "shape": "D",
+          "file": "da40f0bf238d37f0-D.png",
+          "sha256": "7bd277e5ff0a9ab1c3e8776e95621c4673cc2f8a821a553ef66d23c547db2e5e"
+        },
+        {
+          "shape": "E",
+          "file": "41aeb9c4c4c4d22b-E.png",
+          "sha256": "d92f977cfee9428d1afeee86ec00184c7b0660b05551afab11dfc50e16b864f1"
+        },
+        {
+          "shape": "F",
+          "file": "a8893d72d8d421a1-F.png",
+          "sha256": "946ad2d1e7936e083f32b522d1c5d160380065c84588e6460472329b7dfddb99"
+        },
+        {
+          "shape": "G",
+          "file": "e213d28473830a68-G.png",
+          "sha256": "9a6d19078f669b20aa7109911c250a168324cf04f0a015a83eb331858e4373ce"
+        },
+        {
+          "shape": "H",
+          "file": "f10aadde6a85217b-H.png",
+          "sha256": "e81f80042d72b38a825ccedd011639e172b1f6e044f49e85297655510b83afad"
+        },
+        {
+          "shape": "X",
+          "file": "a506b97d231599ed-X.png",
+          "sha256": "e4eee091fabd44c8407e4b95efeb5fde9675ffb541e04d9331d1d2089aaf89d1"
+        }
+      ]
+    },
+    {
+      "id": "angry",
+      "label": "Angry",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "845e637d2bb12bd5-A.png",
+          "sha256": "7570a7789fa2fce9a79d8401c95355efe8fc6bd3b0230165075997ece2d1a903"
+        },
+        {
+          "shape": "B",
+          "file": "0b19008415bfe585-B.png",
+          "sha256": "a3031456cdd3c80e4fde7ae0c9956730166c1433f9a84078eb5aefe34db54547"
+        },
+        {
+          "shape": "C",
+          "file": "3e41b1e4ac10185e-C.png",
+          "sha256": "d4620fdcd21a5fbb00cdc8b535044d2954cc23a81540dc8ff2b67103acee61fa"
+        },
+        {
+          "shape": "D",
+          "file": "75bb92a85c62c1e5-D.png",
+          "sha256": "ed56cc5942756d76e38daf41a845b46a3d9c619f3868c7615ac6630ed0258152"
+        },
+        {
+          "shape": "E",
+          "file": "0840526b610bc48c-E.png",
+          "sha256": "40217af5581c6090254455fda5aa34b876f81f7249501da6c54f3bd30423b222"
+        },
+        {
+          "shape": "F",
+          "file": "8755de075b9734b4-F.png",
+          "sha256": "252137a71ac38b6d5ad812b70567b2b5da8c1736fb3a3bf7a65c7358e99cbdbc"
+        },
+        {
+          "shape": "G",
+          "file": "6defa2f80652f634-G.png",
+          "sha256": "bd492cfc4772b0a801ee5d03551f381827522f24b3662876055c225bec446e98"
+        },
+        {
+          "shape": "H",
+          "file": "02b723639721a2d3-H.png",
+          "sha256": "eb06836c11c67132e2bd351d315c15d65f15f0e6f86002e2bec19e41d2ad578d"
+        },
+        {
+          "shape": "X",
+          "file": "4ae5bd3cb1ced763-X.png",
+          "sha256": "c722eaad2cf7ccbdd80efa450777beeb2ff6cce62c42e2a93a910515d78e2546"
+        }
+      ]
+    },
+    {
+      "id": "sad",
+      "label": "Sad",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "370a9726309a0cdb-A.png",
+          "sha256": "8e4353c7264289478df09fdd1fc0659ac2cf0e1827887f7e092c515941754e1b"
+        },
+        {
+          "shape": "B",
+          "file": "65a9a39de3c7d957-B.png",
+          "sha256": "287d25de8ee8c9807e5b6ab9e11554e6d40de8f08d31b6f2b79754c00295a7ca"
+        },
+        {
+          "shape": "C",
+          "file": "65be402aacdad4bc-C.png",
+          "sha256": "05c7eea8e1cd878d834acce5b11e3b13e3205bcfbc0904f46ad55be136f338ba"
+        },
+        {
+          "shape": "D",
+          "file": "177ceb7170d7b421-D.png",
+          "sha256": "ba365e25ad0dedad2b6ea19c4bc024a2d442ee298f1435a36ad0ef05ffe61020"
+        },
+        {
+          "shape": "E",
+          "file": "d57ba9217afb7f21-E.png",
+          "sha256": "c3b69bbc71511bd36cc8c88f1ca62c9b25391ae4d05b05e844499624eae5f306"
+        },
+        {
+          "shape": "F",
+          "file": "9eb169697b506569-F.png",
+          "sha256": "0cd78492db7f8ffdc4493be21c065dc883c78b98da44b9eec62895a132ad8c8e"
+        },
+        {
+          "shape": "G",
+          "file": "22dbbb9a002f68f3-G.png",
+          "sha256": "ba80187d58d8081b0d61a1afdd6f5c4006f52f3245451937a87cc73eced5f8ed"
+        },
+        {
+          "shape": "H",
+          "file": "73299bcfa07d28ef-H.png",
+          "sha256": "75ad70fcbedb6ea69eb3875c6e58f095e8e6b585301c5bff43880f346781d416"
+        },
+        {
+          "shape": "X",
+          "file": "02325ff215acf4a7-X.png",
+          "sha256": "aa46b086416837377ddbe85c9cbdce61382d0f49020d25c897132ea0a737c7b2"
+        }
+      ]
+    },
+    {
+      "id": "afraid",
+      "label": "Afraid",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "4bb8bfbe021fe350-A.png",
+          "sha256": "16370cdaaed74c93cd33cbd74285db4c2d84fb7f132d259cb82ce86b0ce65905"
+        },
+        {
+          "shape": "B",
+          "file": "c819e63b959e4b7c-B.png",
+          "sha256": "a74e0aaee6ab4af912a7f629df30a67f5d1c88c8842dd3218bd2a6961226bccb"
+        },
+        {
+          "shape": "C",
+          "file": "b0681b001ba996d7-C.png",
+          "sha256": "5e9879f6d5f48e1f7c84a69c2f2d4d72980c1ac08dcd6ae59a70faf7025eba11"
+        },
+        {
+          "shape": "D",
+          "file": "a034258ffaa664dc-D.png",
+          "sha256": "288b4e2723633f70e433a68227e3ae7b2182e3012e87a1697217cacfefe1b118"
+        },
+        {
+          "shape": "E",
+          "file": "1955e5e898238c30-E.png",
+          "sha256": "3ab89f89dd86f4be29c30030b5e7fef65f4ead563cb4ec5f3f3fe4f1d473cf4f"
+        },
+        {
+          "shape": "F",
+          "file": "952a020479ad51f8-F.png",
+          "sha256": "9d38493550ea44ee8d10ec150c6eed894ea34edf2436f50ee6480d984275bc09"
+        },
+        {
+          "shape": "G",
+          "file": "61a4b47b3e133b31-G.png",
+          "sha256": "0fb1d26aba08a4ab1b86ffea9beb340b7487221eb747f0170eb4cee10e448ad7"
+        },
+        {
+          "shape": "H",
+          "file": "f1fb2e31ae41289e-H.png",
+          "sha256": "1a8a5f93ccbaba3593f5de424c7fc2700df032a8e6e1a1cd795baa3d1f7113e4"
+        },
+        {
+          "shape": "X",
+          "file": "26ef16695b414fed-X.png",
+          "sha256": "e52a25ca8988ba6cd7f47e0cef67b746fcda8eb68fe56f86d53ab4f6c644ea6d"
+        }
+      ]
+    },
+    {
+      "id": "guarded",
+      "label": "Guarded",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "ccf3646e74b6dbca-A.png",
+          "sha256": "07ba96e8576a2a2e2fffb45877c6f1fafa344c7e707c144d96003f2e94354749"
+        },
+        {
+          "shape": "B",
+          "file": "4417ee929ff599ef-B.png",
+          "sha256": "db86a6cd283b75dbf9d704e2e1c76e9a4a62baab8ac587c67cfd5036263b27de"
+        },
+        {
+          "shape": "C",
+          "file": "266b4bc4072e4783-C.png",
+          "sha256": "862f2849e422d324eabda67d1c16d142550354179e19ee95a695acd026718176"
+        },
+        {
+          "shape": "D",
+          "file": "2bb633a5962d1086-D.png",
+          "sha256": "f1c3c650cb8b0d046638e623d4d33b6fd4e988813d26a3316af5f9a1fec1a70f"
+        },
+        {
+          "shape": "E",
+          "file": "952d09e8793e4372-E.png",
+          "sha256": "19477a56b25fa061a0a5f86d7f5f857212ae494ae47c88644405e28a94f3b67b"
+        },
+        {
+          "shape": "F",
+          "file": "fba5855280da625f-F.png",
+          "sha256": "b68585e4d64eb3e55db1d279f8fbd8cee41c797abcee160262278fc5cd5d8bfe"
+        },
+        {
+          "shape": "G",
+          "file": "c62e4ff0a38a76aa-G.png",
+          "sha256": "6bfad8b5a3b87ab32567610a3c2d5ac34d2563125d4936c02e13a801001fe02b"
+        },
+        {
+          "shape": "H",
+          "file": "7a740ac27496297a-H.png",
+          "sha256": "6af2f707a71ed88966208e15004782199c3c052228372e5e27bccd4d13b9b0ef"
+        },
+        {
+          "shape": "X",
+          "file": "c0bbcc0891937387-X.png",
+          "sha256": "b5a0ce9574928896cc9909a9637894cb75c681727a9a69e12ea8aa621d04cfb5"
+        }
+      ]
+    }
+  ],
+  "thinkingEyeSetsByEmotion": {
+    "neutral": [
+      {
+        "id": "left",
+        "phases": {
+          "open": {
+            "file": "6c670e4ac837929a-left-open.png",
+            "sha256": "71b21c25a82167fda424ce0d09b20d620170422aa1da6b2cf343aa39c09cd0f7"
+          },
+          "half": {
+            "file": "b8ab01aa1d8b0688-left-half.png",
+            "sha256": "5ada82dc2cbf2175cfd7f396b8115a9683b39597e8e1ab3ae71e1a5361508602"
+          },
+          "closed": {
+            "file": "96aa1a09cade45b1-left-closed.png",
+            "sha256": "dbd11d5e8807931a13cd13b4c448733ff235b13ff3342e812fbbabb50ba1a787"
+          }
+        }
+      },
+      {
+        "id": "right",
+        "phases": {
+          "open": {
+            "file": "58f4b1529c7e06f9-right-open.png",
+            "sha256": "8bd78629d77c926590285af2383b3983c43a1ef0c1a2ad6653dbd672fcc0e2b0"
+          },
+          "half": {
+            "file": "d9c39536bf886f82-right-half.png",
+            "sha256": "cf38de772b685644626dba2b0c28dd2b83ce0c43ec528cf103b0cf14d1ac2728"
+          },
+          "closed": {
+            "file": "34d2f9bbf6e8f480-right-closed.png",
+            "sha256": "dbd11d5e8807931a13cd13b4c448733ff235b13ff3342e812fbbabb50ba1a787"
+          }
+        }
+      }
+    ],
+    "happy": [
+      {
+        "id": "left",
+        "phases": {
+          "open": {
+            "file": "a173cab7e022acdb-left-open.png",
+            "sha256": "10a0812b92626f8c8b9820a8195aca22636fab00e04c45f44aec188147baf81d"
+          },
+          "half": {
+            "file": "9003662b04e4c0bc-left-half.png",
+            "sha256": "35d9704985473b9ffdd38619db1410c1bf1244023e7fc881980ebacd51e86b01"
+          },
+          "closed": {
+            "file": "2897a12e249caa02-left-closed.png",
+            "sha256": "f8219d13adf19e2a6d3e9f8d37578d482bd07805d0ff0bfa49b9cb49969c6702"
+          }
+        }
+      },
+      {
+        "id": "right",
+        "phases": {
+          "open": {
+            "file": "c235797525205a7d-right-open.png",
+            "sha256": "9697c2eb15c4f1aff99aff93a19f62c8c58e2eafa003dc6788a0c3d2c652f6e0"
+          },
+          "half": {
+            "file": "a3b03adbd8cf7d33-right-half.png",
+            "sha256": "bb0286387f3cc6869357ceec282083f4aa5df6b3756e2e5afd87a1866663d106"
+          },
+          "closed": {
+            "file": "27f7dc1079eb28d5-right-closed.png",
+            "sha256": "f8219d13adf19e2a6d3e9f8d37578d482bd07805d0ff0bfa49b9cb49969c6702"
+          }
+        }
+      }
+    ],
+    "angry": [
+      {
+        "id": "left",
+        "phases": {
+          "open": {
+            "file": "b752faaa0cd612f3-left-open.png",
+            "sha256": "732f2c0fa074141c49a74648f144afe2ca014296433bcaa8d10be7051020d8aa"
+          },
+          "half": {
+            "file": "3337dd2ec38d98e8-left-half.png",
+            "sha256": "9b082ec6d319eb30b28f56bb2060562daba7c9fcdf7ae8e38a0f5183294557af"
+          },
+          "closed": {
+            "file": "e824839378a76d14-left-closed.png",
+            "sha256": "852a09a12f5efa3bb843aed5fb9bdcce5d38931c1e54509c8a68878133004055"
+          }
+        }
+      },
+      {
+        "id": "right",
+        "phases": {
+          "open": {
+            "file": "28608a7a72ffc44f-right-open.png",
+            "sha256": "2b43a72eb78cc1f65387aaa2d25a2ef01a217137e86471b635c940bb71e89909"
+          },
+          "half": {
+            "file": "97ed3b73b64fa358-right-half.png",
+            "sha256": "60fbca6c1539d84f2caba829bd81e9bae9a378d0d170e3134192eae6c74ebecf"
+          },
+          "closed": {
+            "file": "d664c66f7f7be5d9-right-closed.png",
+            "sha256": "852a09a12f5efa3bb843aed5fb9bdcce5d38931c1e54509c8a68878133004055"
+          }
+        }
+      }
+    ],
+    "sad": [
+      {
+        "id": "left",
+        "phases": {
+          "open": {
+            "file": "2103590383bd73aa-left-open.png",
+            "sha256": "b8a7b1c4aa7fd142577d0d1ebc643c4e0d59370991a0aeb36a240219ea136906"
+          },
+          "half": {
+            "file": "7e05601568ee610c-left-half.png",
+            "sha256": "bb10427d60e2316a6d792a170b955728cf80aa6f43bae5dba6934862ed0be90d"
+          },
+          "closed": {
+            "file": "09f7a80b2e15dc02-left-closed.png",
+            "sha256": "040f12bd2c2f8542a602789672e0d14c9c374daf69b3be546e9ab442baa4a04b"
+          }
+        }
+      },
+      {
+        "id": "right",
+        "phases": {
+          "open": {
+            "file": "52dfd89cd56f7d34-right-open.png",
+            "sha256": "5b3393f926cf39ce99ed7dd67911146c927f7db8ff9f85ddc7d19bcc14612c36"
+          },
+          "half": {
+            "file": "dc3afef58238d75d-right-half.png",
+            "sha256": "8590cc2531a1f14bb1575ab20bba1e4fca340e7814e23d36e5a2264332de1198"
+          },
+          "closed": {
+            "file": "5d4421f01fc88473-right-closed.png",
+            "sha256": "040f12bd2c2f8542a602789672e0d14c9c374daf69b3be546e9ab442baa4a04b"
+          }
+        }
+      }
+    ],
+    "afraid": [
+      {
+        "id": "left",
+        "phases": {
+          "open": {
+            "file": "af30351e74d40970-left-open.png",
+            "sha256": "58c4e6343d5db9e9e650b110825f22b5a692ad399e558c1391d0a1ff70cc0ec7"
+          },
+          "half": {
+            "file": "2a1ccdb48017b6a6-left-half.png",
+            "sha256": "e892a51e1d04621e2bd3a7da9299d115320fae97a36421a35537bd1d0dccdf1b"
+          },
+          "closed": {
+            "file": "823f3b11aae9d331-left-closed.png",
+            "sha256": "ba439d617586b22f23513dbdad742379286ad31a0ff98aef456d1fcf3b66ac13"
+          }
+        }
+      },
+      {
+        "id": "right",
+        "phases": {
+          "open": {
+            "file": "ffc75b273792f2e2-right-open.png",
+            "sha256": "5141945628fbfb8d8a8a9341aba3b62096353bdeaeeef8069a3c3e00c9502769"
+          },
+          "half": {
+            "file": "d285a749d1926f4f-right-half.png",
+            "sha256": "9d539d083bdd206278e0137943f98ea43c85252c31735d6cf27bc02ad4cfc2dc"
+          },
+          "closed": {
+            "file": "44be0b05fdcae048-right-closed.png",
+            "sha256": "ba439d617586b22f23513dbdad742379286ad31a0ff98aef456d1fcf3b66ac13"
+          }
+        }
+      }
+    ],
+    "guarded": [
+      {
+        "id": "left",
+        "phases": {
+          "open": {
+            "file": "014408d18e764b1f-left-open.png",
+            "sha256": "dbd12c3e83f154273b96531bdc486688c91bcdc1f4525e6d2759fe56fccffd15"
+          },
+          "half": {
+            "file": "5bd595a83f451e9c-left-half.png",
+            "sha256": "483a3f9f0ce175abcdc32f4e5975a1225f7b48841bcd8141d8efbdb248a5577a"
+          },
+          "closed": {
+            "file": "da930eb0da20c164-left-closed.png",
+            "sha256": "62bd69e9e9bb2a640f01d819e891d8b531893fba2deb057e9f6518925618a49c"
+          }
+        }
+      },
+      {
+        "id": "right",
+        "phases": {
+          "open": {
+            "file": "e0879ef61dd1403a-right-open.png",
+            "sha256": "6c0558bb57eb095c3b8008d2e07d576eb6d190a2da5736a73719363b4b1798ca"
+          },
+          "half": {
+            "file": "b672326cc209e1c7-right-half.png",
+            "sha256": "ad36b6e7a21a9f1c67919e3c8e584652bb3fab9cfedbe5077d52e8ea0ba43b25"
+          },
+          "closed": {
+            "file": "7802ea11f6d7e266-right-closed.png",
+            "sha256": "62bd69e9e9bb2a640f01d819e891d8b531893fba2deb057e9f6518925618a49c"
+          }
+        }
+      }
+    ]
+  },
+  "originalUpper": "f3f62d19435cfe30-front-open.png",
+  "originalLower": "83161e2f4afc7958-A.png",
+  "status": "complete-art-runtime-selected",
+  "sourceProductionManifest": "../../../../production-20261028/portraits/npc195-complete-candidate/manifest.json",
+  "sourceProductionManifestSha256": "361c9401f6b79bc066cb8caa528ffab95a95816614936feaa99d9e85e3e7d3c2"
+}

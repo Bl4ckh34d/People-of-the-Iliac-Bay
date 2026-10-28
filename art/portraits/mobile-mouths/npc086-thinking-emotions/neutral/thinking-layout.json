@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "status": "source-only-provisional-native-review-required",
+  "emotionId": "neutral",
+  "referenceUpperFile": "eyes/neutral/open.png",
+  "browSourceFile": "eyes/neutral/open.png",
+  "halfSourceFile": "eyes/neutral/half.png",
+  "closedSourceFile": "eyes/neutral/closed.png",
+  "sourceSha256": "685cd0cb922554bb245a0431ee5f141aadbb8c740df7fb81d5a9cb03c888e99d",
+  "referenceSha256": "16a17f3483dc81d8b503be1f63dc8fffe5af1fa3788541abf724814161150c32",
+  "halfLidRegions": [
+    {
+      "x": 15,
+      "y": 22,
+      "width": 14,
+      "height": 1
+    },
+    {
+      "x": 35,
+      "y": 22,
+      "width": 15,
+      "height": 1
+    }
+  ],
+  "rationale": "Existing native review places brows through row20, upper lid at22, iris/highlights from23. Candidate row22 strip is intentionally one pixel high; leave uncertain whether row21 should remain untouched. This same-face band was compared against this emotion’s open/half/closed contact-sheet cells. It is a source-only proposal, not an approved mask or a claim that all gaze directions have been checked. Copy only the contiguous upper skin/lid band; preserve every gaze iris/sclera below it."
+}

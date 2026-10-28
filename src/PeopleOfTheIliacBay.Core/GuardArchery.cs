@@ -2,6 +2,11 @@ namespace PeopleOfTheIliacBay.Core
 {
     public static class GuardArchery
     {
+        public static void EquipWallWatch(GuardRecord guard)
+        {
+            if (!guard.HasBow) guard.ArrowsRemaining=24;
+            guard.HasBow=true; guard.ArcheryAssigned=true;
+        }
         public static void EnsureLoadout(GuardRecord guard)
         {
             if(guard.ArcheryAssigned) return;

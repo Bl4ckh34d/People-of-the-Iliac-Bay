@@ -207,14 +207,11 @@ namespace PeopleOfTheIliacBay.Core
         private static List<NpcTreatmentOutcomeHistory> CopyNpcTreatmentOutcomeHistories(WorldState source,WorldState validated)
         {
             var result=new List<NpcTreatmentOutcomeHistory>();
-            if(source.Version<48)return result;
             if(source.NpcTreatmentOutcomeHistories==null || source.NpcTreatmentOutcomeHistories.Count>100000)
                 throw new ArgumentException("Invalid NPC treatment outcome history ledger.");
             var people=new HashSet<string>(StringComparer.Ordinal);
             foreach(NpcTreatmentOutcomeHistory history in source.NpcTreatmentOutcomeHistories)
             {
-                if(source.Version<59 && history.Outcomes.Exists(row=>row.Kind==NpcTreatmentKind.MagicSelfCast))
-                    throw new ArgumentException("Legacy treatment history contains future magic healing.");
                 ValidateNpcTreatmentOutcomeHistory(history);
                 bool alive;
                 if(!people.Add(history.PersonId) || !KnownNpcIdentity(validated,history.PersonId,out alive))

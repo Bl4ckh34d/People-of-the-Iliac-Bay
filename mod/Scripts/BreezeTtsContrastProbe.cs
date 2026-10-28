@@ -19,7 +19,7 @@ namespace PeopleOfTheIliacBay.DFU
     internal static class BreezeTtsContrastProbe
     {
         private const string ManifestFlag = "-peopleoftheiliacbay-tts-contrast-manifest";
-        private const string OwnedCharacter = "PeopleOfTheIliacBayTest-9a5f197b";
+        private const string OwnedCharacter = "Hakon Ironhand";
         private const string BaselineSave = "People - Gothway Garden";
         private const string SampleKind = "controlled-voice-contrast";
         private const string FixedText = "You came back. I was beginning to wonder whether I would see you again.";

@@ -40,8 +40,6 @@ namespace PeopleOfTheIliacBay.Core
         private static List<ConversationMood> CopyConversationMoods(WorldState source)
         {
             var result = new List<ConversationMood>();
-            if (source.Version < 32)
-                return result;
             Require(source.ConversationMoods != null, "Missing conversation mood records.");
 
             var identities = new HashSet<string>(StringComparer.Ordinal);
@@ -51,11 +49,10 @@ namespace PeopleOfTheIliacBay.Core
                     identities.Add(item.PersonId) && item.Value >= -100 && item.Value <= 100 &&
                     item.AcceptedTurnSequence >= 0, "Invalid conversation mood.");
 
-                bool legacy = source.Version <= 32;
-                bool hasTimeAnchor = legacy ? false : item.HasTimeAnchor;
-                double updatedAt = legacy ? 0 : item.UpdatedAt;
-                long revision = legacy ? 0 : item.Revision;
-                double halfLife = source.Version < 37 ? 0 : item.RecoveryHalfLifeSeconds;
+                bool hasTimeAnchor = item.HasTimeAnchor;
+                double updatedAt = item.UpdatedAt;
+                long revision = item.Revision;
+                double halfLife = item.RecoveryHalfLifeSeconds;
                 Require(Finite(updatedAt) && updatedAt >= 0 && revision >= 0,
                     "Invalid conversation mood timing or revision.");
                 Require(Finite(halfLife) && halfLife >= 0 && halfLife <= 86400,

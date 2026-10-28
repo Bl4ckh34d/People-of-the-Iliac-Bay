@@ -18,11 +18,12 @@ namespace PeopleOfTheIliacBay.DFU
     {
         public static void Verify(WorldStateStore store,ResidentActor actor,string expectedCharacter)
         {
-            bool ownedRoadmapProbe=Environment.GetEnvironmentVariable("POTIB_COMPANION_CAST")=="1" &&
+            bool shieldOnly=Environment.GetEnvironmentVariable("POTIB_COMPANION_SHIELD_ONLY")=="1";
+            bool ownedRoadmapProbe=(Environment.GetEnvironmentVariable("POTIB_COMPANION_CAST")=="1" || shieldOnly) &&
                 Environment.GetEnvironmentVariable("POTIB_ROADMAP_PROBE")=="companion-health";
             Require((Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-companion-cast-probe")>=0 ||
                 ownedRoadmapProbe) &&
-                !string.IsNullOrEmpty(expectedCharacter) && expectedCharacter.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal) &&
+                !string.IsNullOrEmpty(expectedCharacter) && NativeProbeText.IsTestCharacter(expectedCharacter) &&
                 GameManager.Instance.PlayerEntity.Name==expectedCharacter,
                 "Companion cast probe requires its isolated disposable character flag.");
             Require(store!=null && actor && actor.Resident!=null && actor.gameObject.activeInHierarchy,
@@ -36,9 +37,9 @@ namespace PeopleOfTheIliacBay.DFU
                 ReferenceEquals(manager.EntityBehaviour,body) && !manager.HasReadySpell,
                 "Companion cast probe lacks bound native bodies, spellbook persistence, or has a ready spell.");
             var activeFollow=store.ActiveNpcAction(actor.Resident.Id);
-            Require(activeFollow!=null && ActivePlayerFollow(store,actor.Resident.Id,activeFollow.Id),
+            Require(shieldOnly || activeFollow!=null && ActivePlayerFollow(store,actor.Resident.Id,activeFollow.Id),
                 "Companion cast skill proof requires an active player Follow action.");
-            string followId=activeFollow.Id;
+            string followId=activeFollow==null?null:activeFollow.Id;
             int originalSpellCount=body.Entity.SpellbookCount();
             var originalBook=body.Entity.SerializeSpellbook();
             string originalBookPacket=SaveLoadManager.Serialize(typeof(EffectBundleSettings[]),originalBook,false);
@@ -81,6 +82,15 @@ namespace PeopleOfTheIliacBay.DFU
                 body.Entity.Skills.SetPermanentSkillValue(DFCareer.Skills.Restoration,100);
                 body.Entity.Skills.SetPermanentSkillValue(DFCareer.Skills.Alteration,100);
                 manager.UsePlayerCharacterSkillsForEnemyMagicCost=false;
+                if(shieldOnly)
+                {
+                    GameManager.Instance.PlayerEntity.GodMode=false;
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_SHIELD_ONLY_CONTROLLED_CONTEXT: controlledKnownBook=true; "+
+                        "controlledNativeLevel=20; controlledAlteration=100; controlledMagickaRefill=true; "+
+                        "naturalCaster=false; healCureXpSkipped=true; nativeSavingThrows=true");
+                    VerifyShield(store,actor,body,manager,binding);
+                    return;
+                }
                 var effect=BaseEntityEffect.DefaultEffectSettings();
                 effect.MagnitudeBaseMin=10;effect.MagnitudeBaseMax=10;
                 effect.MagnitudePlusMin=0;effect.MagnitudePlusMax=0;effect.MagnitudePerLevel=1;
@@ -295,8 +305,12 @@ namespace PeopleOfTheIliacBay.DFU
                         Require(countAfter==0,"Player touch cure reported native effect without clearing condition: "+key);
                         Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_COMPANION_CURE_NATIVE_PASS: effect="+key+"; target=player; exactMagicka=true; savedClear=true");
                     }
-                    else Require(countAfter==countBefore && effectsAfter==effectsBefore,
-                        "Player touch cure failed without the native no-effect outcome: "+key+"; "+reason);
+                    else
+                    {
+                        Require(countAfter==countBefore && effectsAfter==effectsBefore,
+                            "Player touch cure failed without the native no-effect outcome: "+key+"; "+reason);
+                        throw new InvalidOperationException("Player touch cure produced no verified native cure: "+key+"; "+reason);
+                    }
                 }
                 finally{body.Entity.DeleteSpell(index);}
             }
@@ -323,6 +337,8 @@ namespace PeopleOfTheIliacBay.DFU
             int index=body.Entity.SpellbookCount();body.Entity.AddSpell(spell);
             try
             {
+                var controlledBook=actor.GetComponent<NativeNpcKnownSpellBinding>();
+                Require(controlledBook && controlledBook.Capture(),"Controlled known Shield book could not be captured.");
                 manager.RestoreInstancedBundleSaveData(null);body.Entity.SetMagicka(body.Entity.MaxMagicka);binding.Capture();
                 var spec=Find(store,actor,index,NpcCompanionCastDelivery.Self);
                 int before=body.Entity.CurrentMagicka;string reason;
@@ -330,7 +346,14 @@ namespace PeopleOfTheIliacBay.DFU
                     "Known native Shield did not execute: "+reason);
                 Shield shield=FindShield(manager);Require(shield!=null,"Native cast did not attach Shield.");
                 Require(body.Entity.CurrentMagicka==before-spec.MagickaCost,"Shield did not debit exact native magicka.");
-                Require(shield.DamageShield(3)==0,"Controlled Shield did not absorb native damage.");
+                var initialStrength=(Shield.SaveData_v1)shield.GetSaveData();
+                int healthBefore=body.Entity.CurrentHealth;
+                Require(initialStrength.shieldRemaining>3 && healthBefore>1,
+                    "Controlled Shield lacks enough native strength or safe health for damage checks.");
+                body.Entity.DecreaseHealth(3);
+                Require(body.Entity.CurrentHealth==healthBefore &&
+                    ((Shield.SaveData_v1)shield.GetSaveData()).shieldRemaining==initialStrength.shieldRemaining-3,
+                    "Native entity damage did not consume Shield before health.");
                 int rounds=shield.RoundsRemaining;var strength=(Shield.SaveData_v1)shield.GetSaveData();
                 binding.Capture();
                 Require(!string.IsNullOrEmpty(store.ReadNpcProgress(actor.Resident.Id).NativeConditions),
@@ -344,6 +367,12 @@ namespace PeopleOfTheIliacBay.DFU
 
                 // Date only this snapshot, simulating an unmaterialized actor without changing global game time.
                 string captured=store.ReadNpcProgress(actor.Resident.Id).NativeConditions;
+                body.Entity.DecreaseHealth(strength.shieldRemaining+1);
+                Require(body.Entity.CurrentHealth==healthBefore-1 && NativeNpcShieldState.ProtectionRounds(manager)==0,
+                    "Broken native Shield did not pass only the overflow damage to health.");
+                binding.Capture();
+                Require(store.ReadNpcProgress(actor.Resident.Id).NativeConditions==null,
+                    "Broken Shield remained in the saved native condition packet.");
                 var packet=(NativeNpcConditionBinding.ConditionPacket)SaveLoadManager.Deserialize(
                     typeof(NativeNpcConditionBinding.ConditionPacket),captured);
                 double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
@@ -377,7 +406,16 @@ namespace PeopleOfTheIliacBay.DFU
                     "Known player touch Shield did not execute: "+reason);
                 Require(FindShield(playerEffects)!=null && body.Entity.CurrentMagicka==before-spec.MagickaCost,
                     "Player touch Shield did not attach with exact native magicka.");
-                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_COMPANION_SHIELD_NATIVE_PASS: nativeSelf=true; nativePlayerTouch=true; exactMagicka=true; nativeDamage=true; roundsRestored=true; strengthRestored=true; offscreenAged=true; independentTimestamp=true; expiredClear=true");
+                var playerShield=FindShield(playerEffects);
+                var playerStrength=(Shield.SaveData_v1)playerShield.GetSaveData();
+                int playerHealth=playerEffects.EntityBehaviour.Entity.CurrentHealth;
+                Require(playerStrength.shieldRemaining>0 && playerHealth>1,
+                    "Player touch Shield lacks native strength or safe health for its damage check.");
+                playerEffects.EntityBehaviour.Entity.DecreaseHealth(1);
+                Require(playerEffects.EntityBehaviour.Entity.CurrentHealth==playerHealth &&
+                    ((Shield.SaveData_v1)playerShield.GetSaveData()).shieldRemaining==playerStrength.shieldRemaining-1,
+                    "Player touch Shield did not protect the exact recipient from native entity damage.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_COMPANION_SHIELD_NATIVE_PASS: nativeSelf=true; nativePlayerTouch=true; exactMagicka=true; nativeEntityDamage=true; nativeOverflow=true; brokenClear=true; playerEntityDamage=true; roundsRestored=true; strengthRestored=true; offscreenAged=true; independentTimestamp=true; expiredClear=true");
             }
             finally{body.Entity.DeleteSpell(index);}
         }
@@ -386,7 +424,20 @@ namespace PeopleOfTheIliacBay.DFU
         {
             foreach(var spec in NativeNpcCompanionCast.Discover(actor.gameObject,store))
                 if(spec.Delivery==delivery && spec.SpellId.StartsWith("native:spellbook:"+index+":",StringComparison.Ordinal))return spec;
-            throw new InvalidOperationException("Controlled known native spell was not discovered: "+index);
+            var body=actor.GetComponent<DaggerfallEntityBehaviour>();
+            var manager=actor.GetComponent<EntityEffectManager>();
+            EffectBundleSettings settings;
+            string selected="missing";
+            if(body && body.Entity!=null && manager && body.Entity.GetSpell(index,out settings))
+            {
+                DaggerfallEntity caster=manager.UsePlayerCharacterSkillsForEnemyMagicCost?null:body.Entity;
+                (int _,int cost)=FormulaHelper.CalculateTotalEffectCosts(settings.Effects,settings.TargetType,caster,settings.MinimumCastingCost);
+                selected="name="+settings.Name+"; target="+settings.TargetType+"; nativeCost="+cost+
+                    "; magicka="+body.Entity.CurrentMagicka+"/"+body.Entity.MaxMagicka+
+                    "; ready="+manager.HasReadySpell+"; protectionRounds="+NativeNpcShieldState.ProtectionRounds(manager);
+            }
+            throw new InvalidOperationException("Controlled known native spell was not discovered: "+index+
+                "; delivery="+delivery+"; "+selected);
         }
         private static Shield FindShield(EntityEffectManager manager)
         {

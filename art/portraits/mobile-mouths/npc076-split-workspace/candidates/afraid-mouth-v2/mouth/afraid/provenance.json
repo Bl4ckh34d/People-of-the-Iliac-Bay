@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T12:20:35.4818958Z",
+    "portraitRecord":  76,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "afraid",
+    "prompt":  "Create one refined NPC076 AFRAID pixel-art mouth atlas from the single provided local 3×3 grid, which already contains the selected neutral Rhubarb poses. Use the same atlas cell positions and anatomy, but add only subtle fearful tension around the lip corners: small taut/downturned corners and a slight pressed quality in closed shapes, never a grin or exaggerated grimace. Output exactly the full registered 3×3 lower-face crops in row-major A B C / D E F / G H X, with complete 64×29 pixels per cell and aspect 64:29. Keep the same NPC, nose, jaw, neck, hair, framing, and source pixel style. Most important: shift lips to a muted, lower-chroma brown-rose like the original neutral lip hue, not saturated lipstick red, pink, or orange. Keep original lip scale and contours; do not darken to black or enlarge the lips. Keep teeth where visemes require them in subdued neutral gray-ivory, small and matte, not shiny or bright white strips. Preserve the actual Rhubarb meanings: A pressured P/B/M closure; B narrow nearly closed consonant/EE opening; C medium unrounded EH/AE; D wide vertical AA; E slightly rounded AO/ER no wider than C; F puckered UW/OW/W; G upper teeth on lower lip for F/V; H raised tongue behind upper teeth for L with a C-to-D opening; X relaxed closure. Do not alter crop registration or add labels, borders, background, smoothing, or rescaling.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-a501e1f0-78ab-433e-b1f1-1ea932e712aa.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-a501e1f0-78ab-433e-b1f1-1ea932e712aa.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "732830dbc9a0f5d46622b8b74db022f97b141cea462c81fcd0604b1a206590ae",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "f010b543045a347a9c2220a8b19edb897b03250636674f331f5caf670819c98c",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-a501e1f0-78ab-433e-b1f1-1ea932e712aa.png",
+                      "sha256":  "8ab23ebd9f743f6df28bfe89e9005927f818a4f65eb3043760ebdeb4b7959e25",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/afraid/raw.png",
+                "sha256":  "8ab23ebd9f743f6df28bfe89e9005927f818a4f65eb3043760ebdeb4b7959e25",
+                "width":  1863,
+                "height":  844
+            }
+}

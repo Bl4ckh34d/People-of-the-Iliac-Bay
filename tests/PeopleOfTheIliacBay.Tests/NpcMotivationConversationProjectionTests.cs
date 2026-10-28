@@ -282,9 +282,9 @@ namespace PeopleOfTheIliacBay.Tests
                 home => home == "home:projection", (id, category, revision) => true,
                 (id, revision, kind, start, end) => true, out var terms);
             Check.True(termsOk);
-            string escrow = "contract:" + contractId + ":escrow";
+            string recipient = owner;
             var funding = NpcServiceTransferReceipt.Create("receipt:funding:" + contractId, contractId,
-                NpcServiceTransferKind.Funding, payer, escrow, 120, acceptedAt);
+                NpcServiceTransferKind.Funding, payer, recipient, 120, acceptedAt);
             Check.True(NpcServiceContractLedger.TryReserve(ledger, ledger.Revision, terms, funding, out var reserved));
             NpcServiceContract active;
             Check.True(reserved.Read(contractId).TryStart(reserved.Read(contractId).Revision, startAt, out active));

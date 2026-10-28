@@ -13,8 +13,42 @@ namespace PeopleOfTheIliacBay.DFU
     // replacing the production movement owner. No saved routes are modified.
     internal static class NativeNavigationTrial
     {
+        private static IEnumerator RepackFixturePurses(PeopleOfTheIliacBayMod host,StreetPopulation streets)
+        {
+            var game=GameManager.Instance;
+            if(game.PlayerEntity.Name!="Hakon Ironhand")throw new InvalidOperationException("Purse preparation requires Hakon's disposable saves.");
+            foreach(string title in new[]{"People - Gothway Garden","People - Shop entrance","People - Inn entrance",
+                "People - Daggerfall day","People - Daggerfall night"})
+            {
+                yield return ConversationMoodProbe.LoadSave(host,streets,"Hakon Ironhand",title,false);
+                int total=game.PlayerEntity.GetGoldAmount();
+                FreshPreviewFighter.MakePursePortable(game.PlayerEntity);
+                if(game.PlayerEntity.GetGoldAmount()!=total || game.PlayerEntity.CarriedWeight>=game.PlayerEntity.MaxEncumbrance)
+                    throw new InvalidOperationException("Purse conversion changed wealth or left the fighter overloaded.");
+                bool saved=false;
+                DaggerfallWorkshop.Game.Serialization.SaveLoadManager.OnSaveEventHandler onSave=ignored=>saved=true;
+                DaggerfallWorkshop.Game.Serialization.SaveLoadManager.OnSave+=onSave;
+                try
+                {
+                    game.SaveLoadManager.Save("Hakon Ironhand",title);
+                    float deadline=Time.realtimeSinceStartup+30;
+                    while(!saved && Time.realtimeSinceStartup<deadline)yield return null;
+                    if(!saved)throw new InvalidOperationException("Purse fixture did not save: "+title);
+                }
+                finally {DaggerfallWorkshop.Game.Serialization.SaveLoadManager.OnSave-=onSave;}
+                yield return ConversationMoodProbe.LoadSave(host,streets,"Hakon Ironhand",title,false);
+                if(game.PlayerEntity.GetGoldAmount()!=total || game.PlayerEntity.GoldPieces!=1000 ||
+                    game.PlayerEntity.CarriedWeight>=game.PlayerEntity.MaxEncumbrance)
+                    throw new InvalidOperationException("Purse fixture reload failed: "+title);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FIXTURE_PURSE_PASS: save="+title+"; total="+total+
+                    "; coins="+game.PlayerEntity.GoldPieces+"; carried="+game.PlayerEntity.CarriedWeight+"; capacity="+game.PlayerEntity.MaxEncumbrance);
+            }
+        }
+
         public static IEnumerator Run()
         {
+            DaggerfallUI.Instance.PopToHUD();
+            GameManager.Instance.PauseGame(false);
             string interiorTarget=Environment.GetEnvironmentVariable("POTIB_NAVMESH_INTERIOR");
             if(!string.IsNullOrEmpty(interiorTarget))
                 yield return NativeTravelerFixtureWarmup.EnterAfterOrdinaryWarmup(int.Parse(interiorTarget),EnterInterior);
@@ -38,6 +72,8 @@ namespace PeopleOfTheIliacBay.DFU
                     yield return GuardDoorNativeProbe.Run(host,streets,GameManager.Instance.PlayerEntity.Name);
                 else if(roadmapProbe=="theft-memory")
                     yield return streets.VerifyTheftMemories();
+                else if(roadmapProbe=="scene-summary")
+                    yield return streets.VerifySceneMemorySummaries();
                 else if(roadmapProbe=="personal-trade")
                     yield return PersonalTradeNativeProbe.Run(host,streets);
                 else if(roadmapProbe=="static-personal-trade")
@@ -46,6 +82,56 @@ namespace PeopleOfTheIliacBay.DFU
                 else if(roadmapProbe=="dungeon-jump")yield return NativeDungeonJumpProbe.Run();
                 else if(roadmapProbe=="dungeon-follow")yield return NativeDungeonFollowProbe.Run(host,streets);
                 else if(roadmapProbe=="inn-refresh-cost")yield return NativeInnRefreshProbe.Run(host);
+                else if(roadmapProbe=="traveler-routes")yield return NativeTravelerRouteProbe.Run(host,streets);
+                else if(roadmapProbe=="traveler-departure")yield return streets.VerifyTravelerDepartureRetention();
+                else if(roadmapProbe=="natural-fallback")yield return streets.VerifyNaturalTravel("fallback");
+                else if(roadmapProbe=="natural-checkout")yield return streets.VerifyNaturalTravel("checkout");
+                else if(roadmapProbe=="natural-home")yield return streets.VerifyNaturalTravel("home");
+                else if(roadmapProbe=="natural-shelter-census")yield return streets.VerifyNaturalTravel("shelter-census");
+                else if(roadmapProbe=="controlled-guild-arrival")yield return streets.VerifyNaturalTravel("controlled-guild");
+                else if(roadmapProbe=="controlled-camp-arrival")yield return streets.VerifyNaturalTravel("controlled-camp");
+                else if(roadmapProbe=="companion-fast-travel")yield return GoalSequenceProbe.VerifyNativeCompanionFastTravel(host,streets);
+                else if(roadmapProbe=="companion-dungeon-fast-travel")yield return GoalSequenceProbe.VerifyNativeFastTravelDungeon(host,streets);
+                else if(roadmapProbe=="companion-dungeon-entry")yield return GoalSequenceProbe.VerifyNativeFastTravelDungeon(host,streets,true);
+                else if(roadmapProbe=="companion-interior-reload")yield return GoalSequenceProbe.VerifyFastTravelInteriorReload(host,streets);
+                else if(roadmapProbe=="companion-interior-entry")yield return GoalSequenceProbe.PrepareFastTravelInteriorCheckpoint(host,streets);
+                else if(roadmapProbe=="companion-interior-expiry")yield return GoalSequenceProbe.VerifyFastTravelInteriorExpiry(host,streets);
+                else if(roadmapProbe=="door-crowds")yield return streets.VerifyOrdinaryDoorCrowds();
+                else if(roadmapProbe=="inn-assignments")yield return host.AuditAllInnAssignments();
+                else if(roadmapProbe=="native-vendor-trade")yield return NativeVendorTradeNativeProbe.RunFixture(host,streets,GameManager.Instance.PlayerEntity.Name);
+                else if(roadmapProbe=="market-visit")yield return streets.RunMarketVisitNativeProbe();
+                else if(roadmapProbe=="market-commute")yield return streets.VerifyMarketCommute();
+                else if(roadmapProbe=="dialogue-complaint")yield return streets.VerifyDialogueComplaint();
+                else if(roadmapProbe=="dialogue-biography")yield return NativeBiographyDialogueProbe.RunFixture(host,streets,GameManager.Instance.PlayerEntity.Name);
+                else if(roadmapProbe=="dialogue-cancel")yield return NativeDialogueCancellationProbe.RunFixture(host,streets,GameManager.Instance.PlayerEntity.Name);
+                else if(roadmapProbe=="family-bank-inn")yield return streets.VerifyFamilyCashVisit(true);
+                else if(roadmapProbe=="family-inn-return")yield return streets.VerifyFamilyInnReturnDirect();
+                else if(roadmapProbe=="family-childcare-home")yield return HouseholdChildcareNativeProbe.Run(host,streets);
+                else if(roadmapProbe=="family-grief")yield return HouseholdGriefNativeProbe.Run(host,streets);
+                else if(roadmapProbe=="inn-capacity")yield return NativeTavernCapacityProbe.Run(host,streets);
+                else if(roadmapProbe=="stationary-loot")yield return StationaryNpcProbe.Run();
+                else if(roadmapProbe=="native-shop-route")yield return NativeVendorTradeNativeProbe.RunShopRoutingFixture(host,streets,GameManager.Instance.PlayerEntity.Name);
+                else if(roadmapProbe=="native-repair")yield return NativeNpcRepairDropoffProbe.Run(host,streets,GameManager.Instance.PlayerEntity.Name);
+                else if(roadmapProbe=="guard-custody-geometry")yield return NativeCustodyGeometryProbe.Run();
+                else if(roadmapProbe=="guard-castle-custody")yield return NativeCustodyGeometryProbe.RunCastle();
+                else if(roadmapProbe=="guard-shifts")
+                {
+                    if(Environment.GetEnvironmentVariable("POTIB_OBSERVE_DOOR_CROWDS")=="1")
+                        streets.StartCoroutine(streets.ObserveDoorCrowds());
+                    yield return GuardShiftProbe.Run();
+                }
+                else if(roadmapProbe=="wall-law")yield return GuardShiftProbe.RunWallLaw();
+                else if(roadmapProbe=="wall-law-night")yield return GuardShiftProbe.RunNightWallLaw();
+                else if(roadmapProbe=="wall-npc")yield return GuardShiftProbe.RunWallNonPlayer();
+                else if(roadmapProbe=="guard-sleep")yield return GuardShiftProbe.RunSleep();
+                else if(roadmapProbe=="guard-shift-change")yield return GuardShiftProbe.RunShiftChange();
+                else if(roadmapProbe=="guard-locations")yield return GuardCivilianLocationProbe.Run();
+                else if(roadmapProbe=="guard-sight-pursuit")yield return GuardPursuitAcceptanceProbe.Run(false);
+                else if(roadmapProbe=="guard-halt-hearing")yield return GuardPursuitAcceptanceProbe.Run(true);
+                else if(roadmapProbe=="corpse-witness-report")yield return CorpseResponseNativeProbe.RunCase(host,streets,GameManager.Instance.PlayerEntity.Name,CorpseResponseNativeProbe.Case.NpcKiller);
+                else if(roadmapProbe=="corpse-static-inquiry")yield return CorpseResponseNativeProbe.RunCase(host,streets,GameManager.Instance.PlayerEntity.Name,CorpseResponseNativeProbe.Case.StaticWitness);
+                else if(roadmapProbe=="fixture-purse")yield return RepackFixturePurses(host,streets);
+                else if(roadmapProbe=="home-sleep")yield return NpcHomeSleepNativeProbe.Run(host,streets,GameManager.Instance.PlayerEntity.Name);
                 else if(roadmapProbe=="interior-module")yield return NativeInteriorModuleProbe.Run();
                 else if(roadmapProbe=="paid-companion")
                 {

@@ -8,7 +8,6 @@ namespace PeopleOfTheIliacBay.Core
         private static List<DefenseCombatant> CopyDefense(WorldState source,WorldState validated)
         {
             var result=new List<DefenseCombatant>();
-            if(source.Version<7) return result;
             Require(source.DefenseCombatants!=null,"Missing defense ledger.");
             var ids=new HashSet<string>(StringComparer.Ordinal); var corpses=new HashSet<string>(StringComparer.Ordinal);
             foreach(var c in source.DefenseCombatants)

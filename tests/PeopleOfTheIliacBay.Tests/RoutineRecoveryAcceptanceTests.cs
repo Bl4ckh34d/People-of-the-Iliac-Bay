@@ -42,20 +42,21 @@ namespace PeopleOfTheIliacBay.Tests
             Check.True(plan.SkippedStopIndices.Contains(0),"A missed optional visit should be skipped while home return remains feasible.");
         }
 
-        private static void ReturnDurationCannotCrossProtectedSleep()
+        private static void ReturnDurationMayCrossOrdinarySleep()
         {
             var routine=Routine();
-            Check.True(!RoutineRecoveryAcceptance.TryCreateAfterAction(100,Person(),routine,Ordinary(routine),null,
-                0,21*3600+50*60,20*60,10,360,1320,1,out _,out var reason),
-                "An action whose verified return completes after sleep was accepted.");
-            Check.True(reason.Contains("sleep"));
+            Check.True(RoutineRecoveryAcceptance.TryCreateAfterAction(100,Person(),routine,Ordinary(routine),null,
+                0,21*3600+50*60,20*60,20,360,1320,1,out var plan,out var reason),reason);
+            Check.Near(22*3600+700,plan.EndsAt);
+            Check.Equal(Activity.Travel,plan.Evaluate(plan.DepartAt+50).Activity);
+            Check.Equal(Activity.Sleep,plan.Evaluate(plan.EndsAt).Activity);
         }
 
         public static void Add(List<(string Name,Action Body)> cases)
         {
             cases.Add(("Routine recovery acceptance includes verified physical return time before fixed appointments",ReturnDurationProtectsFixedAppointment));
             cases.Add(("Routine recovery acceptance skips an infeasible optional visit and protects home return",ReturnDurationMaySkipOptionalVisit));
-            cases.Add(("Routine recovery acceptance refuses a measured return that starts after protected sleep",ReturnDurationCannotCrossProtectedSleep));
+            cases.Add(("Routine recovery acceptance permits measured late return and sleep",ReturnDurationMayCrossOrdinarySleep));
         }
     }
 }

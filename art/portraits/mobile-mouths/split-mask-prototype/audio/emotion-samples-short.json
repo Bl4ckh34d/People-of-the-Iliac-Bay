@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "source": "work/breeze-tts-20261022/portrait-emotion-samples/manifest.json",
+  "sameText": "Good day. I have been in this town for many years. What brings you here today?",
+  "sameReferenceSha256": "e8ca4c1b5f252462ef86350435cf5b0e150d9bcc15002a63763b245d43253b0e",
+  "audioSets": [
+    {
+      "id": "neutral",
+      "audio": "audio/neutral.wav",
+      "timing": "audio/neutral.visemes.json",
+      "audioSha256": "3097c6496a7fd36af4f6d53646be1ce55fbf701d3b2178cee79c5d0463bd8b8e",
+      "exactText": "Good day. I have been in this town for many years. What brings you here today?",
+      "profileId": "npcvoice-01",
+      "referenceSha256": "e8ca4c1b5f252462ef86350435cf5b0e150d9bcc15002a63763b245d43253b0e",
+      "deliveryText": "neutral, calm, and conversational"
+    },
+    {
+      "id": "happy",
+      "audio": "audio/happy.wav",
+      "timing": "audio/happy.visemes.json",
+      "audioSha256": "5719bc6f3d033136a6682e2b2c491738345881cf725598d44cd6dfc9fd790d88",
+      "exactText": "Good day. I have been in this town for many years. What brings you here today?",
+      "profileId": "npcvoice-01",
+      "referenceSha256": "e8ca4c1b5f252462ef86350435cf5b0e150d9bcc15002a63763b245d43253b0e",
+      "deliveryText": "happy and warmly upbeat, with a light natural lift"
+    },
+    {
+      "id": "angry",
+      "audio": "audio/angry.wav",
+      "timing": "audio/angry.visemes.json",
+      "audioSha256": "e9419f3b1bde1769aed78c9e1afd58cf50fcdc582d643a2506117fa2e8882abe",
+      "exactText": "Good day. I have been in this town for many years. What brings you here today?",
+      "profileId": "npcvoice-01",
+      "referenceSha256": "e8ca4c1b5f252462ef86350435cf5b0e150d9bcc15002a63763b245d43253b0e",
+      "deliveryText": "angry but controlled, firm and restrained; do not shout"
+    },
+    {
+      "id": "sad",
+      "audio": "audio/sad.wav",
+      "timing": "audio/sad.visemes.json",
+      "audioSha256": "aeab046c311c0a6e901c90c3726034956b6b61186635c81fc3e81d672a8124a3",
+      "exactText": "Good day. I have been in this town for many years. What brings you here today?",
+      "profileId": "npcvoice-01",
+      "referenceSha256": "e8ca4c1b5f252462ef86350435cf5b0e150d9bcc15002a63763b245d43253b0e",
+      "deliveryText": "sad and subdued, with restrained low-key warmth"
+    },
+    {
+      "id": "afraid",
+      "audio": "audio/afraid.wav",
+      "timing": "audio/afraid.visemes.json",
+      "audioSha256": "eec72aba1403fadfe164227f49e15202b12b2a2219adaff9905fcd9afbab9336",
+      "exactText": "Good day. I have been in this town for many years. What brings you here today?",
+      "profileId": "npcvoice-01",
+      "referenceSha256": "e8ca4c1b5f252462ef86350435cf5b0e150d9bcc15002a63763b245d43253b0e",
+      "deliveryText": "afraid and tense, alert and anxious, without panic"
+    },
+    {
+      "id": "guarded",
+      "audio": "audio/guarded.wav",
+      "timing": "audio/guarded.visemes.json",
+      "audioSha256": "51b6c6d713650874638216e05ba2ca0bc01669c8476acae9c8cd4f54b3d47e03",
+      "exactText": "Good day. I have been in this town for many years. What brings you here today?",
+      "profileId": "npcvoice-01",
+      "referenceSha256": "e8ca4c1b5f252462ef86350435cf5b0e150d9bcc15002a63763b245d43253b0e",
+      "deliveryText": "guarded, cautious, reserved, and emotionally contained"
+    }
+  ],
+  "visualAndListeningAcceptance": "pending"
+}

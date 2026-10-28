@@ -106,7 +106,7 @@ namespace PeopleOfTheIliacBay.DFU
             ResidentActor actor, string expectedCharacter)
         {
             bool enabled = OptedIn();
-            Require(enabled && expectedCharacter != null && expectedCharacter.StartsWith("PeopleOfTheIliacBayTest-", StringComparison.Ordinal) &&
+            Require(enabled && expectedCharacter != null && NativeProbeText.IsTestCharacter(expectedCharacter) &&
                 GameManager.Instance.PlayerEntity.Name == expectedCharacter,
                 "Combat probe requires its opt-in flag and caller-owned disposable character.");
             DaggerfallUnityItem weapon = null;

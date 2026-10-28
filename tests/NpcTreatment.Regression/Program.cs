@@ -328,7 +328,7 @@ internal static class Program
         return new NpcActionTarget
         {
             Kind = NpcActionTargetKind.IndoorPoint, SettlementId = 1, BuildingKey = 10,
-            ContainerId = "bed:resident-room:1", X = 2, Y = 0, Z = 4
+            ContainerId = "bed:resident-stay:1", X = 2, Y = 0, Z = 4
         };
     }
 

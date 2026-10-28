@@ -1,0 +1,23 @@
+{
+  "portrait": 79,
+  "emotion": "guarded / skeptical",
+  "status": "FAILED: built-in image_gen rejected output at safety moderation; no mouth image produced; no retry per bounded task",
+  "generator": "built-in image_gen edit",
+  "generation_attempts": 1,
+  "output": null,
+  "output_sha256": null,
+  "references": [
+    {
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc079-split-workspace\\mouth-reference-grid.png",
+      "sha256": "51B7D166C01001213D48E19BE135F463E41B6A9892DA5ABE9C686CF1AE53CA2A"
+    },
+    {
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc079-split-workspace\\original.png",
+      "sha256": "70B1B52DF73159543AFD5776EAE7565BFD3619FD31BC5FD90AF674E42520D460"
+    }
+  ],
+  "cell_order": "3x3 row-major: A B C / D E F / G H X",
+  "prompt": "Image 1 is the exact mouth-reference atlas and fixes NPC identity, scale, framing, and native lip proportions. Image 2 is the immutable original portrait for face geometry, palette, neck, hair, and background. Generate one complete 3x3 lower-half speech atlas at the same full-cell framing and pixel scale as image 1. Row-major viseme cells are A B C / D E F / G H X. Preserve the original NPC, nose, jaw, cheeks, neck, hair, shoulder edge, background, soft warm palette, and mouth location. Only vary the mouth region for these speech shapes. This is guarded/skeptical: closed poses A and X have restrained, firm lips with a very slight asymmetry at the corners, not a frown or smirk. Keep the skeptical mouth subtle and consistent across all nine cells; do not pout, grin, sneer, scowl, or exaggerate. Speech poses use modest natural lip openings: B small; C medium; D narrow with visible upper teeth; E wider; F medium rounded; G wide; H narrow rounded; do not show oversized teeth or large comic mouth. Match original native lip width and height; no face-scale or crop changes. Keep lower jaw and head stationary; speech opening comes from lips only. Reproduce all 9 equal cells, with no missing, merged, or extra panels. No text or labels.",
+  "failure": "http 400 Bad Request: image_generation_user_error, moderation_blocked, moderation_stage=output, categories=[sexual], request_id=32193cf3-ee2d-4dd3-a354-c0770d253afb",
+  "visual_review": "No output exists to inspect or copy. Do not register or install a mouth sheet."
+}

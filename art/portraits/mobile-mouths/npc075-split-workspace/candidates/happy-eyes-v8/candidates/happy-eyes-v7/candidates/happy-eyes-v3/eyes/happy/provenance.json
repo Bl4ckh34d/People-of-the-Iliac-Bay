@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T12:01:13.1613549Z",
+    "portraitRecord":  75,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "happy",
+    "prompt":  "Use case: illustration-story. Asset type: Daggerfall Unity NPC075 happy-eye atlas. The single supplied image is the exact local original NPC075 upper-half reference grid. Use only this reference.\n\nGenerate one 2×2 atlas of four equal, complete native 64×35 upper-face crops. Canvas ratio 64:35. No labels, gutters, dividers, borders, padding, extra rows, zooms, or extra panels. Exact row-major order: OPEN / HALF / CLOSED / OPEN REPEAT.\n\nCorrect the current happy-eye failure: the eyebrows still read neutral. Make both brows visibly warm, relaxed, and cheerful. Give each brow a coherent soft arc with outer thirds gently lifted toward the temples; keep inner thirds relaxed and smooth, without raising them into worried inner arches. Expression must read kind, cheerful, and welcoming beside the neutral source. Do not use a surprised high arch, worried peaked inner brow, severe angry slant, or flat neutral brow. Pair this brow shape with a genuine but restrained smile in the eyes: small lower-lid lift and fine curved outer-corner smile creases. Keep the smile soft, not a squint that closes the eyes.\n\nPreserve NPC075 identity, exact framing, dark center fringe and side hair. Preserve every source hair pixel, especially fringe locks across rows 15–16 and upper corners. Keep compact amber-olive iris clusters, original size, color, forward alignment, and tiny muted pale glints. Keep source warm-brown skin, low-contrast pixel palette, and native pixel-cluster style.\n\nUse same cheerful brow and smile-eye design across phases. OPEN stays narrow and friendly. HALF shows natural upper-lid coverage of most compact iris. CLOSED uses continuous softly closed lids. OPEN REPEAT matches OPEN. Keep all edits inside existing eye/brow envelopes. Do not repaint fringe, hair, face exterior, nose, or mouth. No enlarged eye whites, enlarged pupils, bright glossy highlights, saturated color, blur, gradients, vector smoothing, text, watermark, or added subjects.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-fe5a906b-c428-4817-89f8-a7bf5aa790e1.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-fe5a906b-c428-4817-89f8-a7bf5aa790e1.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "e2e7919bfc72eb52738873b46bffa3a1eb3ca2b503bd62101ac973e8f30cd8b3",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-fe5a906b-c428-4817-89f8-a7bf5aa790e1.png",
+                      "sha256":  "f81e47a716db8a3b7a7b5cc44b2227ea41a16055d51a8b13686a1f3d9acf03f3",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/happy/raw.png",
+                "sha256":  "f81e47a716db8a3b7a7b5cc44b2227ea41a16055d51a8b13686a1f3d9acf03f3",
+                "width":  1695,
+                "height":  928
+            }
+}

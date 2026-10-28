@@ -452,7 +452,6 @@ namespace PeopleOfTheIliacBay.Core
         private static List<NpcHealthCareRecord> CopyNpcHealthCareRecords(WorldState source, WorldState validated)
         {
             var result = new List<NpcHealthCareRecord>();
-            if (source.Version < 44) return result;
             Require(source.NpcHealthCares != null && source.NpcHealthCares.Count <= 100000,
                 "Invalid NPC health-care ledger.");
             var residents = new HashSet<string>(StringComparer.Ordinal);
@@ -476,7 +475,6 @@ namespace PeopleOfTheIliacBay.Core
                 NpcHealthCareRecord copied = NpcHealthCare.CopyRecord(row);
                 // Pre-52 saves did not carry this fact; task shape/revision alone is not
                 // proof of atomic admission, including after terminal-task retention.
-                if (source.Version < 52) copied.HasAcceptedTreatment = false;
                 result.Add(copied);
             }
             return result;

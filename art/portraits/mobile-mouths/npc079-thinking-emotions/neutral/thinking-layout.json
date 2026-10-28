@@ -1,0 +1,25 @@
+{
+  "emotionId": "neutral",
+  "referenceUpperFile": "eyes/neutral/open.png",
+  "browSourceFile": "eyes/neutral/open.png",
+  "halfSourceFile": "eyes/neutral/half.png",
+  "closedSourceFile": "eyes/neutral/closed.png",
+  "halfLidRegions": [
+    {
+      "x": 15,
+      "y": 25,
+      "width": 16,
+      "height": 2
+    },
+    {
+      "x": 34,
+      "y": 25,
+      "width": 17,
+      "height": 2
+    }
+  ],
+  "sourceSha256": "2670676179b903ceb07acb571ae91acb0f0176a315629d06c9d811cefa11bc66",
+  "referenceSha256": "2670676179b903ceb07acb571ae91acb0f0176a315629d06c9d811cefa11bc66",
+  "candidateOnly": true,
+  "rationale": "Provisional from npc079 portrait-specific neutral band y25..26. Inspected all six emotion phase crops; band stays above visible iris/sclera. Angry and afraid brow tips sit nearest the band and need parent-native review. Applies to neutral only after inspecting its source phase RGB; not an approval to build or publish."
+}

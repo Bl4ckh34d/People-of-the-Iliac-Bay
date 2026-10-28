@@ -13,8 +13,8 @@ namespace PeopleOfTheIliacBay.DFU
             public bool Walled;
             public List<RoutePoint> Points;
         }
-        // Road runs at the navigation boundary are local settlement approaches.
-        // Beyond this boundary, regional travel remains abstract until road integration.
+        // These are physical local approaches. Basic Roads validates the regional
+        // origin separately; travel across unloaded map pixels remains abstract.
         public List<TravelerAccess> SurveyTravelerRoutes(int buildingKey)
         {
             var result=new List<TravelerAccess>(); Entrance inn;
@@ -27,22 +27,15 @@ namespace PeopleOfTheIliacBay.DFU
                 var approaches=new List<Entrance>();
                 foreach(var gate in gates)
                 {
-                    var mesh=gate.GetComponent<MeshFilter>();
-                    if(!mesh || !mesh.sharedMesh) continue;
-                    var bounds=mesh.sharedMesh.bounds;
-                    bool alongX=bounds.size.x<bounds.size.z;
-                    Vector3 normal=gate.transform.TransformDirection(alongX ? Vector3.right : Vector3.forward);
-                    var middle=gate.transform.TransformPoint(bounds.center);
-                    if(Vector3.Dot(normal,middle-center)<0) normal=-normal;
-                    float extent=(alongX ? bounds.extents.x*gate.transform.lossyScale.x : bounds.extents.z*gate.transform.lossyScale.z)+1;
-                    var local=origin.InverseTransformPoint(middle+normal*extent);
+                    NativeCityGateNavigation.Aperture aperture;
+                    if(!NativeCityGateNavigation.TryAperture(gate,center,out aperture))continue;
+                    var local=origin.InverseTransformPoint(aperture.Outer);
                     var ground=ScenePoint(new RoutePoint(local.x,local.z)); GridCell cell;
-                    var inside=origin.InverseTransformPoint(middle-normal*extent);
+                    var inside=origin.InverseTransformPoint(aperture.Inner);
                     var insideGround=ScenePoint(new RoutePoint(inside.x,inside.z));
-                    // Native navigation can disconnect the gate tile itself. Connect
-                    // to the inner street; RouteBetween still sweeps the full crossing.
+                    if(!NativeCityGateNavigation.Clear(ground,insideGround))continue;
                     if(!FindEntranceCell(insideGround,out cell))
-                    { Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GATE_APPROACH_UNREACHED: local="+local+"; bounds="+bounds); continue; }
+                    { Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GATE_APPROACH_UNREACHED: local="+local); continue; }
                     approaches.Add(new Entrance { Cell=cell,LocalDoor=origin.InverseTransformPoint(ground) });
                 }
                 approaches.Sort((a,b)=>Compare(a.LocalDoor,b.LocalDoor));

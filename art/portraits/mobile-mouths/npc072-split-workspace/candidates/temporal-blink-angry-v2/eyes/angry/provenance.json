@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T16:18:35.6073483Z",
+    "portraitRecord":  72,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "angry",
+    "prompt":  "Edit this exact 2x2 grid into a precisely registered ANGRY blink atlas of the same pixel-art woman. Four cells remain complete 64x35 upper portrait halves, overall 64:35 aspect. Same hair, forehead, head, nose, golden olive irises, skin colors, soft contrast and pixel grid. No margins, labels or extra features.\n\nFIRST FIX THE BROWS: The eyebrow on IMAGE RIGHT currently has a detached outer tail separated by a pale skin gap. Repair this into ONE coherent tapered eyebrow with a continuous modest brown pixel-cluster path from inner brow through its arch to its outer tail. Both eyebrows should be connected and anatomically believable. Preserve the restrained angry inward/downward slope, slightly tense nose bridge, thin-to-medium natural brown brows. Do not create doubled brows, floating fragments, a pale cut across the brow, heavy black eyebrows or harsh contrast. The repaired brow shape and position must be IDENTICAL across all four cells.\n\nCell order: top left OPEN, top right HALF CLOSED, bottom left FULLY CLOSED, bottom right exact repeat of top left OPEN. Animate only upper eyelids descending over stationary eyes. Eye sockets, lower eyelids, lower eye contours, cheeks, pupils and iris centers remain fixed. HALF means the upper lid visibly covers about half the existing eye opening; do not raise cheeks or lower lids, or move eyeballs down. CLOSED upper lid meets the same stationary lower contour. No white flash or shifted eye crease. Keep each native compact stepped iris, tiny muted glint and brown-gold palette. No enlarged sclera, round HD iris, rectangular block iris, red lips, smooth painting or geometric head drift. Only repaired brows plus upper-lid blink states should differ from the reference. The new OPEN eye anatomy must match the reference OPEN, except the repaired brow continuity.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb as C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-32476acf-e65a-41de-81a3-c2923a6edf84.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-32476acf-e65a-41de-81a3-c2923a6edf84.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "4af6922ef7f8345a11ae8418761144f64dcaaa8b836f461486a2fb206cbebd85",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "d2311e0e05453ff8b856792c681237c14ff33a2591fea1ef4faa7ec4b7f4b5ea",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-32476acf-e65a-41de-81a3-c2923a6edf84.png",
+                      "sha256":  "cff7dd7a6cbf56198bab561f42a0277c2d8fe868dec5e1057b6fe9b279e9a599",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/angry/raw.png",
+                "sha256":  "cff7dd7a6cbf56198bab561f42a0277c2d8fe868dec5e1057b6fe9b279e9a599",
+                "width":  1695,
+                "height":  928
+            }
+}

@@ -27,6 +27,7 @@ namespace PeopleOfTheIliacBay.DFU
         private int advancedFrame = -1;
         private Func<Vector3, bool> permitted;
         public bool Active { get; private set; }
+        public float Progress {get{return duration>0?Mathf.Clamp01(elapsed/duration):0;}}
         public bool ReachedDestination { get; private set; }
         public float DistanceTravelled { get; private set; }
         public string Outcome { get; private set; }
@@ -236,6 +237,11 @@ namespace PeopleOfTheIliacBay.DFU
             float fall = peakHeight - (transform.position.y - 1f);
             if (outcome != "dungeon-jump-context-ended" && entity != null && fall > 5f)
                 entity.DecreaseHealth((int)(5f * (fall - 5f)));
+            int gain;
+            if(reached && actor && entity!=null && NativeNpcCompanionExperience.TryAwardSuccessfulUse(actor.CompanionStateStore,
+                actor.Resident.Id,(int)DFCareer.Skills.Jumping,ResidentActor.CompanionNow(),out gain) && gain>0)
+                entity.Skills.SetPermanentSkillValue(DFCareer.Skills.Jumping,(short)Math.Min(100,
+                    entity.Skills.GetPermanentSkillValue(DFCareer.Skills.Jumping)+gain));
         }
 
         private bool Supported(Vector3 point, out Vector3 floor)

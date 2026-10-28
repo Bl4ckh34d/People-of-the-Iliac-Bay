@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T07:39:44.9519541Z",
+    "portraitRecord":  79,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Use case: precise-object-edit\nAsset type: DFU common portrait NPC079 angry-thinking eye atlas\nInput image: Image 1 is the exact 2×2 source reference. Top row repeats this selected angry portrait\u0027s open eyes; bottom row repeats its half-lidded eyes.\nPrimary request: Create a matching 2×2 pixel-art atlas of this same angry face looking LEFT and RIGHT, with open and half-lidded phases.\nComposition: Return a 2×2 grid, exactly four equal cells, each based on a 64×35 upper portrait half enlarged 8× (target canvas 1024×560; each cell has 64:35 aspect). Cell order: top-left = look screen LEFT, open; top-right = look screen RIGHT, open; bottom-left = look screen LEFT, half-lidded; bottom-right = look screen RIGHT, half-lidded. No labels, borders, gutters, padding, or added full-face content.\nStyle: Preserve this source\u0027s restrained low-contrast pixel art, small dark amber-brown iris/pupil clusters, warm muted skin and hair palette, and stepped native pixel texture.\nConstraints: Keep this exact angry identity, lowered V-shaped angry brows, and brow tension in every cell. Brows and eye spacing stay fixed. Both eyes look together in the specified screen direction. Keep each iris compact and close to the original small source size; use irregular stepped shaded pixels, not circles, disks, bars, purple blocks, or a new painted pupil. Add at most a tiny dim warm highlight that blends with the original dark amber eye; no white glare or pale rectangular glints. Keep eye openings and lid contours continuous and plausible. Bottom cells must visibly lower the upper lids while leaving part of each iris and pupil visible. Preserve surrounding skin, hair, nose, background, framing, and color balance. Make only subtle changes inside the eye regions. Do not lighten the angry expression, enlarge eyes, add white sclera flashes, change brow shape, smooth edges, blur, anti-alias, or alter pixels outside the eye areas.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-4bfdec84-9457-49eb-82aa-7829ce9000bc.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-4bfdec84-9457-49eb-82aa-7829ce9000bc.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "70b1b52df73159543afd5776eae7565bfd3619fd31bc5fd90af674e42520d460",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "7a1b775f55ce964954cfaf9afca8dd333f5e79b98b31584214d2f893ee669631",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-4bfdec84-9457-49eb-82aa-7829ce9000bc.png",
+                      "sha256":  "015b8a59788f3594617c6578bc578c57286678c685d819e630d6de1023564873",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "015b8a59788f3594617c6578bc578c57286678c685d819e630d6de1023564873",
+                "width":  1695,
+                "height":  928
+            }
+}

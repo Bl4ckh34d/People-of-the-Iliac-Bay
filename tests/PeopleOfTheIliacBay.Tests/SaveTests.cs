@@ -17,13 +17,15 @@ namespace PeopleOfTheIliacBay.Tests
         private static string Signature(WorldState s) => JsonSerializer.Serialize(s, new JsonSerializerOptions { IncludeFields = true });
         internal static void Add(List<(string, Action)> cases)
         {
-            cases.Add(("Version one saves migrate without regenerating residents", () => {
-                var s = Filled(); var old = s.Snapshot(); old.Version = 1; old.Routines = null;
-                string identity = old.Settlements[0].Households[0].Residents[0].Id;
-                s.Restore(old);
-                Check.Equal(new WorldState().Version, s.Snapshot().Version);
-                Check.Equal(identity, s.Snapshot().Settlements[0].Households[0].Residents[0].Id);
-                Check.Equal(0, s.Snapshot().Routines.Count);
+            cases.Add(("Obsolete development saves are rejected without changing current state", () => {
+                var store = Filled(); string before = Signature(store.Snapshot());
+                for (int version = 0; version < WorldState.CurrentVersion; version++)
+                {
+                    var old = store.Snapshot(); old.Version = version;
+                    Check.Throws<ArgumentException>(() => store.Restore(old));
+                    Check.Throws<ArgumentException>(() => store.Restore(old, 100));
+                    Check.Equal(before, Signature(store.Snapshot()));
+                }
             }));
             cases.Add(("Saved routes survive reload without live scene geometry", () => {
                 var s = Filled(); var resident = s.GetOrCreate(100, new[] { 10 }).Households[0].Residents[0];

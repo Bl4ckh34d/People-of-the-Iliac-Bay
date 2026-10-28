@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T12:15:03.2027511Z",
+    "portraitRecord":  76,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "happy",
+    "prompt":  "Use case: illustration-story. Asset type: Daggerfall Unity NPC076 happy speech-mouth atlas. Use only the single supplied local NPC076 original lower-half reference grid.\n\nGenerate exactly one 3×3 atlas of nine equal, complete native 64×29 lower-face crops, overall canvas ratio 64:29. No labels, gutters, dividers, borders, padding, fourth row, neck/shoulder band, zooms, or extra panels. Exact row-major cell order: A B C / D E F / G H X.\n\nCreate a warm, natural happy speaking expression. Keep the smile gentle and friendly, with softly lifted mouth corners where appropriate, but do not turn every phoneme into a grin. Preserve NPC076 identity and original framing, nose, jaw, chin, neck, hair, source muted brown-rose lip hue, warm-brown skin, low-contrast pixel palette, and native pixel clusters. Keep lip scale close to source. Teeth appear only when phoneme requires them and use subdued neutral gray-ivory, never bright white or shiny.\n\nUse these exact Rhubarb mouth-shape meanings:\nA: closed pressured lips for P, B, and M.\nB: narrow opening with teeth nearly together for consonants and EE.\nC: medium unrounded opening for EH and AE.\nD: wide vertical opening for AA.\nE: slightly rounded AO/ER opening, no wider than C.\nF: puckered rounded lips for UW, OW, and W.\nG: upper teeth touching the lower lip for F and V.\nH: tongue raised behind upper teeth for L, with an opening between C and D.\nX: relaxed closed idle mouth.\n\nMatch each shape to its phoneme without arbitrary repetition or making all cells look alike. Keep the complete lower-half crop registered, with no independent mouth zoom or rescaling. Preserve source skin and all pixels outside the mouth naturally. No lipstick-red saturation, bright teeth flash, exaggerated grin, blur, gradients, vector smoothing, text, watermark, or added subjects.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-5b36e91b-2d07-4ca2-9438-9c914a578051.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-5b36e91b-2d07-4ca2-9438-9c914a578051.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "732830dbc9a0f5d46622b8b74db022f97b141cea462c81fcd0604b1a206590ae",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "a53462011331deaa1e7922a1305fe439a226e401f543639a6c4f8cbd0f7d1c82",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-5b36e91b-2d07-4ca2-9438-9c914a578051.png",
+                      "sha256":  "ad6a985fff71ec73c7a0322a6683dc6976ad8655cb42e632f002cfd81c34649b",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/happy/raw.png",
+                "sha256":  "ad6a985fff71ec73c7a0322a6683dc6976ad8655cb42e632f002cfd81c34649b",
+                "width":  1863,
+                "height":  844
+            }
+}

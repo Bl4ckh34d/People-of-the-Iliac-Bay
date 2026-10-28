@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "createdUtc": "2026-10-22T18:33:12.8488732Z",
+  "portraitRecord": 87,
+  "bank": "TFAC00I0.RCI",
+  "part": "eyes",
+  "emotion": "guarded",
+  "prompt": "Use case: precise-object-edit\nAsset type: NPC087 GUARDED horizontal eye-gaze atlas for Daggerfall Unity pixel portraits.\nInput image: Image 1 is the inspected exact 2×2 repeated reference grid for this same NPC. Its top row shows the selected revised GUARDED straight OPEN eye master repeated; its bottom row shows that master’s selected GUARDED HALF-lid frame repeated. Use it as the sole source for this atlas.\n\nCreate exactly one 2×2 atlas with the same 1024×560 canvas, four equal 512×280 cells, no margins, gutters, labels, frame, watermark, or transparency. Row-major cells:\n1. LEFT gaze OPEN: both eyes look together toward the viewer-left (image-left); compact irises/pupils shift horizontally toward the left side of each eye socket.\n2. RIGHT gaze OPEN: both eyes look together toward the viewer-right (image-right); compact irises/pupils shift horizontally toward the right side of each eye socket.\n3. LEFT gaze HALF: same viewer-left gaze with the continuous dark upper lids lowered as in the bottom-row reference.\n4. RIGHT gaze HALF: same viewer-right gaze with the continuous dark upper lids lowered as in the bottom-row reference.\n\nKeep the guarded expression and the selected asymmetric full brows exactly as shown: one brow gently raised/arched, the other lower/flatter. Do not change brow shape, height, fullness, expression, eye spacing, eye size, face, skin, hair, nose bridge, lower lids, cheek, lighting, colors, or pixel-art style. Change only horizontal iris/pupil gaze within the original sockets. Keep both irises compact, brown/olive, same size and vertical position in every cell; shift them clearly but modestly so the pair reads as coherent left or right gaze and remains inside each socket. Do not enlarge, duplicate, cross, or detach pupils. In HALF cells the upper eyelid contour is dark and continuous across each eye; no bright iris glint interrupts that line. Preserve the source’s soft muted palette and crisp pixel clusters. No upward/downward gaze, surprise, anger, or new marks.",
+  "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1649b-737f-7f23-85cd-d1729bb2e3f5 as C:\\Users\\Daniel\\.codex\\generated_images\\01a1649b-737f-7f23-85cd-d1729bb2e3f5\\exec-892b1871-bce0-468d-acbc-d268215b5e7b.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+  "generatedPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1649b-737f-7f23-85cd-d1729bb2e3f5\\exec-892b1871-bce0-468d-acbc-d268215b5e7b.png",
+  "sourceOriginal": {
+    "path": "original.png",
+    "sha256": "b8851f9df69ee15e297ab3aa7e70025710d27bd2e84dd0ed46d7ff7e94ab7717",
+    "width": 64,
+    "height": 64
+  },
+  "referenceGrid": {
+    "path": "eyes-reference-grid.png",
+    "sha256": "dc37bfa8dfd6ae6980eb4a7d30a267c2f682089e87296690ed732a780642dd8e",
+    "width": 1024,
+    "height": 560
+  },
+  "generator": {
+    "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1649b-737f-7f23-85cd-d1729bb2e3f5\\exec-892b1871-bce0-468d-acbc-d268215b5e7b.png",
+    "sha256": "88d92e6db8c103cf3f5417a038402fa4598a1b56fecfd0ea855cd12d44a227d1",
+    "width": 1695,
+    "height": 928
+  },
+  "raw": {
+    "path": "eyes/guarded/raw.png",
+    "sha256": "88d92e6db8c103cf3f5417a038402fa4598a1b56fecfd0ea855cd12d44a227d1",
+    "width": 1695,
+    "height": 928
+  }
+}

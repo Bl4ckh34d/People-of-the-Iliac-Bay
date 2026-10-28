@@ -180,6 +180,8 @@ public static class PeopleOfTheIliacBayBuild
             if (source == "Assets/Game/Mods/PeopleOfTheIliacBay/ItemTemplates.json") { assets.Add(source); continue; }
             if (source == "Assets/Game/Mods/PeopleOfTheIliacBay/Textures/portrait-split-manifest.json.bytes")
             { Require(portraitManifestAsset == null,"Portrait runtime manifest is listed once"); portraitManifestAsset=source; assets.Add(source); continue; }
+            if (source == "Assets/Game/Mods/PeopleOfTheIliacBay/Textures/npc-complete-catalog.json.bytes")
+            { assets.Add(source); continue; }
             if (source.EndsWith(".png.bytes") && source.Contains("/Textures/")) { assets.Add(source); continue; }
             if(source.StartsWith("Assets/Game/Mods/PeopleOfTheIliacBay/Textures/idle-",StringComparison.Ordinal)&&source.EndsWith(".json",StringComparison.Ordinal))
             {
@@ -236,6 +238,7 @@ public static class PeopleOfTheIliacBayBuild
                     bundle.LoadAsset<TextAsset>(asset)!=null,"Missing bundled asset: "+asset);
             var compiled=System.Reflection.Assembly.Load(bundle.LoadAsset<TextAsset>(runtimeAssembly).bytes);
             VerifyDynamicSitting(compiled,path=>bundle.LoadAsset<TextAsset>(path.Replace('\\','/')).text);
+            VerifyCompletedNpcSprites(compiled,bundle);
             int idleCount=0;
             foreach(string path in assets)
             {
@@ -261,6 +264,39 @@ public static class PeopleOfTheIliacBayBuild
             "{\"fullSerializerRoundTrip\":true,\"adapterSaveLifecycle\":true,\"publicHookContracts\":true,\"assetCount\":" + assets.Count +
             ",\"nativeSettings\":true,\"installed\":true,\"physicalActors\":false}");
         Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_BUILD_SUCCESS: serializer, adapter lifecycle, contracts and bundle verified; installed.");
+    }
+
+    private static void VerifyCompletedNpcSprites(System.Reflection.Assembly compiled,AssetBundle bundle)
+    {
+        const string prefix="Assets/Game/Mods/PeopleOfTheIliacBay/Textures/";
+        var raw=bundle.LoadAsset<TextAsset>(prefix+"npc-complete-catalog.json.bytes");
+        Require(raw!=null,"Complete NPC catalogue bundled");
+        var art=compiled.GetType("PeopleOfTheIliacBay.DFU.CompletedNpcArt",true);
+        var catalogType=art.GetNestedType("Catalog");
+        var catalog=SaveLoadManager.Deserialize(catalogType,raw.text);
+        var entries=(Array)catalogType.GetField("entries").GetValue(catalog);
+        Require(entries!=null&&entries.Length>0,"Complete NPC runtime deserialization retains entries");
+        var unique=new HashSet<string>();int frames=0;
+        foreach(var entry in entries)
+        {
+            Require((bool)art.GetMethod("Valid").Invoke(null,new[]{entry}),"Runtime validates complete NPC entry");
+            var type=entry.GetType();string file=(string)type.GetField("file").GetValue(entry);
+            if(!unique.Add(file))continue;
+            var image=bundle.LoadAsset<TextAsset>(prefix+file);Require(image!=null,"Complete NPC image bundled: "+file);
+            using(var hash=SHA256.Create())Require(BitConverter.ToString(hash.ComputeHash(image.bytes)).Replace("-","").ToLowerInvariant()==
+                (string)type.GetField("sha256").GetValue(entry),"Bundled complete NPC image hash: "+file);
+            var texture=new Texture2D(2,2,TextureFormat.RGBA32,false);
+            try
+            {
+                Require(texture.LoadImage(image.bytes),"Unity decodes complete NPC atlas: "+file);
+                int phases=(int)type.GetField("phases").GetValue(entry);
+                Require(texture.width==(int)type.GetField("cellWidth").GetValue(entry)*phases&&
+                    texture.height==(int)type.GetField("cellHeight").GetValue(entry)*8,"Eight-direction atlas dimensions: "+file);
+                frames+=8*phases;
+            }
+            finally{UnityEngine.Object.DestroyImmediate(texture);}
+        }
+        Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_COMPLETE_SPRITES_PASS: mappings="+entries.Length+"; sets="+unique.Count+"; frames="+frames+"; runtime DLL, bundled hashes and Unity PNG decoder.");
     }
 
     private static void VerifySplitPortraitRuntimePackage(System.Reflection.Assembly runtimeAssembly,
@@ -400,14 +436,18 @@ public static class PeopleOfTheIliacBayBuild
         // Batch editor verification does not start ModManager's player loader.
         // Import the packaged JSON into the native helper before constructing items.
         var templates = SaveLoadManager.Deserialize(typeof(List<ItemTemplate>), json) as List<ItemTemplate>;
-        Require(templates != null && templates.Count == 1, "Property key JSON deserializes through native serializer");
+        Require(templates != null && templates.Count == 2 &&
+            templates.Exists(t=>t.index==HouseholdPropertyKeyItem.TemplateIndex) &&
+            templates.Exists(t=>t.index==NativeMarketGoodsItem.TemplateIndex),
+            "Property key and market goods JSON deserialize with distinct native identities");
         var templateField = typeof(ItemHelper).GetField("itemTemplates",
             System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
         Require(templateField != null, "Native item template storage exists for editor fixture");
         var nativeTemplates = (List<ItemTemplate>)templateField.GetValue(DaggerfallUnity.Instance.ItemHelper);
-        nativeTemplates.RemoveAll(t => t.index == HouseholdPropertyKeyItem.TemplateIndex);
-        nativeTemplates.Add(templates[0]);
+        nativeTemplates.RemoveAll(t => templates.Exists(candidateTemplate=>candidateTemplate.index==t.index));
+        nativeTemplates.AddRange(templates);
         HouseholdPropertyKeyItem.Register();
+        NativeMarketGoodsItem.Register();
         Require(Array.IndexOf(DaggerfallUnity.Instance.ItemHelper.GetCustomItemsForGroup(ItemGroups.MiscItems),
             HouseholdPropertyKeyItem.TemplateIndex) < 0,
             "Property key is registered for direct creation, not random loot or shop stock");
@@ -437,6 +477,15 @@ public static class PeopleOfTheIliacBayBuild
             HouseholdPropertyKeyItem.IsMatching(restoredKey, 1234567, 7654321),
             "Native item serialization restores custom property key class and exact identity");
         Require(!key.IsStackable(), "Property keys cannot merge across property identities");
+        var marketGoods=new NativeMarketGoodsItem(211,40);marketGoods.stackCount=4;
+        var goodsCollection=new ItemCollection();goodsCollection.AddItem(marketGoods);
+        var goodsData=SaveLoadManager.Deserialize(typeof(ItemData_v1[]),
+            SaveLoadManager.Serialize(typeof(ItemData_v1[]),goodsCollection.SerializeItems())) as ItemData_v1[];
+        var goodsRestored=new ItemCollection();goodsRestored.DeserializeItems(goodsData);
+        var goodsCopy=goodsRestored.GetItem(0) as NativeMarketGoodsItem;
+        Require(goodsCopy!=null && goodsCopy.UID==marketGoods.UID && goodsCopy.stackCount==4 &&
+            goodsCopy.GoodsArchive==211 && goodsCopy.GoodsRecord==40 && goodsCopy.LongName=="Meat",
+            "Native market goods preserve class, UID, quantity and observed product across serialization");
         var source = new ItemCollection(); var target = new ItemCollection();
         source.AddItem(key);
         int transferred = 0;
@@ -685,7 +734,7 @@ public static class PeopleOfTheIliacBayBuild
                 }
                 checkedEntries++;
             }
-            Require(checkedEntries==326,"Explicit humanoid sleeping coverage count, including provider-specific appearances");
+            Require(checkedEntries==394,"Explicit humanoid sleeping coverage count, including provider-specific appearances");
             Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_SLEEP_CATALOGUE_PASS: "+checkedEntries+" mapped source appearances; shared textures and separate overhead footprints.");
         }
         finally { foreach(var image in sheets.Values) UnityEngine.Object.DestroyImmediate(image); }
@@ -838,21 +887,14 @@ public static class PeopleOfTheIliacBayBuild
             savedFamily.Residents[2].AgeGroup == ResidentAgeGroup.Child && !savedFamily.Residents[0].IsAlive &&
             savedFamily.Residents[1].PartnerId == family.Residents[0].Id && savedFamily.SurnameSeed == family.SurnameSeed,
             "Persistent family roles and deceased parent");
-        for (int version = 1; version <= 2; version++)
+        for (int version = 1; version <= 3; version++)
         {
-            string legacy = "{\"Version\":" + version + ",\"WorldSeed\":42,\"Settlements\":[{\"SettlementId\":100,\"Households\":[{\"BuildingKey\":10,\"Residents\":[{\"Id\":\"legacy\",\"HomeKey\":10,\"AppearanceSeed\":3,\"IsAlive\":false}]}]}],\"Routines\":[]}";
-            restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), legacy));
-            var migrated = restored.Snapshot(); var home = migrated.Settlements[0].Households[0]; var resident = home.Residents[0];
-            Require(migrated.Version == new WorldState().Version && migrated.QuestBindings.Count == 0 && resident.Id == "legacy" && resident.AppearanceSeed == 3 && !resident.IsAlive &&
-                resident.AgeGroup == ResidentAgeGroup.Adult && resident.Sex == ResidentSex.Female && resident.PartnerId == null &&
-                home.SurnameSeed == StableSeed.Combine(42, 100, 10, 0xfffffffe), "Legacy FullSerializer migration " + version);
+            var unsupported=restored.Snapshot();unsupported.Version=version;bool rejected=false;
+            try {restored.Restore(unsupported);} catch(ArgumentException) {rejected=true;}
+            Require(rejected && restored.Snapshot().Version==WorldState.CurrentVersion,
+                "Development schema is rejected without replacing current state: "+version);
         }
-        string schemaThree = "{\"Version\":3,\"WorldSeed\":42,\"Settlements\":[{\"SettlementId\":100,\"Households\":[{\"BuildingKey\":10,\"SurnameSeed\":876,\"Residents\":[{\"Id\":\"legacy-family\",\"HomeKey\":10,\"AppearanceSeed\":3,\"Sex\":1,\"IsAlive\":false}]}]}],\"Routines\":[]}";
-        restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), schemaThree));
-        Require(restored.Snapshot().Version == new WorldState().Version && restored.Snapshot().QuestBindings.Count == 0 &&
-            restored.Snapshot().Settlements[0].Households[0].SurnameSeed == 876 &&
-            !restored.Snapshot().Settlements[0].Households[0].Residents[0].IsAlive, "Schema three without a binding field migrates without regeneration");
-        Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_QUEST_LEDGER_SERIALIZATION_PASS: committed contracts, largest native-serializable UID, deaths and schemas 1-3.");
+        Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_QUEST_LEDGER_SERIALIZATION_PASS: committed contracts, largest native-serializable UID, deaths and old-schema rejection.");
     }
     private static void VerifyWitnessRedirect()
     {
@@ -870,35 +912,37 @@ public static class PeopleOfTheIliacBayBuild
     private static void VerifyLodging()
     {
         var store=new WorldStateStore(42); store.GetOrCreate(1,new int[0]);
-        store.RegisterLodging(1,7,new[] { new LodgingRoom { Id="suite",Beds=new List<string> { "bed:0","bed:1" } } });
-        Require(store.TryBookLodging(1,7,"paid-player","player",1,true,1,100,864100),"Player room reservation");
+        store.RegisterLodgingBeds(1,7,new[] { new LodgingBed { Id="bed:0" },new LodgingBed { Id="bed:1" } });
+        Require(store.TryBookLodging(1,7,"paid-player","player",1,true,1,100,864100),"Player bed reservation");
         var json=SaveLoadManager.Serialize(typeof(WorldState),store.Snapshot());
         var restored=new WorldStateStore(0); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),json));
-        Require(restored.IsLodgingBedReserved(1,7,"bed:1",200,"traveler"),"Entire private room survives native serialization");
-        Require(!restored.TryBookLodging(1,7,"traveler","visitor",2,false,1,200,300),"Paid player booking cannot be displaced");
-        Require(restored.EarliestLodgingStart(1,7,1,200,86400)==864100,"Native booking checkout remains authoritative");
+        Require(restored.IsLodgingBedReserved(1,7,"bed:0",200,"traveler") &&
+            !restored.IsLodgingBedReserved(1,7,"bed:1",200,"traveler"),"Exact player bed survives native serialization");
+        Require(restored.TryBookLodging(1,7,"traveler","visitor",2,false,1,200,300),"Second bed remains independently bookable");
+        Require(restored.EarliestLodgingStart(1,7,2,400,86400)==864100,"Both beds become available after checkout");
         var occupant=restored.RegisterNativePerson(1,7,42,"Inn Occupant",ResidentSex.Male,1,0,182,0);
-        Require(restored.TryClaimLodgingBed(1,7,occupant.Id,"bed:0",864100),"Native occupant claims expired room");
+        Require(restored.TryClaimLodgingBed(1,7,occupant.Id,"bed:0",864100),"Native occupant claims expired bed");
         json=SaveLoadManager.Serialize(typeof(WorldState),restored.Snapshot());
         restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),json));
-        Require(restored.NativeLodgingBed(occupant.Id)=="bed:0" && restored.IsLodgingBedReserved(1,7,"bed:1",864101,"player"),
-            "Native occupant bed and room exclusion survive serialization");
-        Require(restored.AvailableLodgingRoom(1,7,1,864101,864200)==null,"Native occupied room is not offered");
-        var expanded=restored.Snapshot().Lodgings[0].Rooms;
-        expanded.Add(new LodgingRoom {Id="staff",NonRentable=true,Beds=new List<string>{"staff-bed"}});
-        restored.RegisterLodging(1,7,expanded);
+        Require(restored.NativeLodgingBed(occupant.Id)=="bed:0" && restored.IsLodgingBedReserved(1,7,"bed:0",864101,"player"),
+            "Native occupant bed survives serialization");
+        Require(restored.AvailableLodgingBeds(1,7,1,864101,864200)[0]=="bed:1","Only occupied bed is withheld");
+        var expanded=restored.Snapshot().Lodgings[0].Beds;
+        expanded.Add(new LodgingBed {Id="staff-bed"});
+        restored.RegisterLodgingBeds(1,7,expanded);
         json=SaveLoadManager.Serialize(typeof(WorldState),restored.Snapshot());
         restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),json));
-        Require(restored.Snapshot().Lodgings[0].Rooms.Find(r=>r.Id=="staff").NonRentable &&
-            restored.AvailableLodgingRoom(1,7,1,864101,864200)==null,"Non-rental bedroom survives native serialization without becoming available");
-        var legacy=restored.Snapshot(); legacy.Version=7; legacy.Lodgings=null;
-        restored.Restore(legacy); Require(restored.Snapshot().Lodgings.Count==0,"Schema seven gains empty lodging ledger");
-        Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_LODGING_SAVE_PASS: native paid-room serialization, protected player interval and schema-seven migration.");
+        Require(restored.Snapshot().Lodgings[0].Beds.Exists(b=>b.Id=="staff-bed") &&
+            restored.AvailableLodgingBeds(1,7,2,864101,864200).Contains("staff-bed"),"Every registered bed remains independently available");
+        var legacy=restored.Snapshot(); legacy.Version=83; legacy.Lodgings=null;bool rejected=false;
+        try {restored.Restore(legacy);} catch(ArgumentException) {rejected=true;}
+        Require(rejected && restored.Snapshot().Lodgings.Count>0,"Earlier lodging schema is rejected without replacing current state");
+        Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_LODGING_SAVE_PASS: exact bed serialization, independent capacity and old-schema rejection.");
     }
     private static void VerifyTravelers()
     {
         var precise=new WorldStateStore(42); precise.GetOrCreate(1,new int[0]);
-        precise.RegisterLodging(1,7,new[]{new LodgingRoom { Id="room",Beds=new List<string>{"bed"} }});
+        precise.RegisterLodgingBeds(1,7,new[]{new LodgingBed { Id="bed" }});
         precise.RegisterTraveler(new TravelerPerson {Id="traveler:precise",Name="Calendar Guest",HomeSettlement=2,AppearanceSeed=12});
         precise.RegisterTravelerVisit(new TravelerVisit {Id="precise-visit",PersonId="traveler:precise",SettlementId=1,TavernKey=7,Nights=2,
             DesiredArrival=12597573702,CommuteSeconds=6990.40364950249,
@@ -907,11 +951,11 @@ public static class PeopleOfTheIliacBayBuild
         precise.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),SaveLoadManager.Serialize(typeof(WorldState),precise.Snapshot())));
         Require(precise.Snapshot().TravelerVisits[0].Admission==TravelerAdmission.Admitted,"Real-calendar fractional traveler paid booking round trip");
         var store=new WorldStateStore(42); store.GetOrCreate(1,new int[0]);
-        store.RegisterLodging(1,7,new[] { new LodgingRoom { Id="room",Beds=new List<string> { "bed" } } });
+        store.RegisterLodgingBeds(1,7,new[] { new LodgingBed { Id="bed" } });
         store.RegisterTraveler(new TravelerPerson { Id="traveler:test",Name="Travel Test",HomeSettlement=2,AppearanceSeed=12 });
         store.RegisterTravelerVisit(new TravelerVisit { Id="visit",PersonId="traveler:test",SettlementId=1,TavernKey=7,Nights=2,
             DesiredArrival=43200,CommuteSeconds=600,Route=new List<SavedRoutePoint> { new SavedRoutePoint(),new SavedRoutePoint { X=30 } } });
-        Require(store.TryAdmitTraveler("visit",43800),"Traveler admitted to paid room");
+        Require(store.TryAdmitTraveler("visit",43800),"Traveler admitted to paid bed");
         store.RegisterTraveler(new TravelerPerson { Id="traveler:witness",Name="Travel Witness",HomeSettlement=3,AppearanceSeed=13 });
         store.RegisterTravelerVisit(new TravelerVisit { Id="witness-visit",PersonId="traveler:witness",SettlementId=1,TavernKey=7,Nights=2,
             DesiredArrival=43200,CommuteSeconds=600,Route=new List<SavedRoutePoint> { new SavedRoutePoint(),new SavedRoutePoint { X=30 } } });
@@ -928,9 +972,10 @@ public static class PeopleOfTheIliacBayBuild
             restored.IsLodgingBedReserved(1,7,"bed",50000,"player"),"Traveler native serialization preserves death and booking");
         Require(restored.Snapshot().AlarmIncidents[0].Corpse.Discovery.ObserverId=="traveler:witness" &&
             restored.Snapshot().AlarmIncidents[0].People[0].DirectWitness,"Traveler corpse and witness survive native serialization");
-        var old=restored.Snapshot(); old.Version=8; old.Travelers=null; old.TravelerVisits=null; old.AlarmIncidents.Clear();
-        restored.Restore(old); Require(restored.Snapshot().Travelers.Count==0 && restored.Snapshot().TravelerVisits.Count==0,"Schema eight gains empty travelers");
-        Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TRAVELER_SAVE_PASS: native schema-nine traveler identity, visit, death, admission and room ownership.");
+        var old=restored.Snapshot(); old.Version=8; old.Travelers=null; old.TravelerVisits=null; old.AlarmIncidents.Clear();bool rejected=false;
+        try {restored.Restore(old);} catch(ArgumentException) {rejected=true;}
+        Require(rejected && restored.Snapshot().TravelerVisits.Count==2,"Earlier traveler schema is rejected without replacing current state");
+        Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TRAVELER_SAVE_PASS: traveler identity, visit, death, admission and bed ownership.");
     }
     private static void VerifyDefenseLedger()
     {
@@ -1059,14 +1104,14 @@ public static class PeopleOfTheIliacBayBuild
         json = SaveLoadManager.Serialize(typeof(WorldState), restored.Snapshot());
         restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
         Require(json == SaveLoadManager.Serialize(typeof(WorldState), restored.Snapshot()), "Recruitment and replacement lineage persist");
-        var legacy = restored.Snapshot(); legacy.Version = 5; legacy.Garrisons = null;
-        restored.Restore(legacy);
-        Require(restored.Snapshot().Version == new WorldState().Version && restored.Snapshot().Garrisons.Count == 0 &&
-            restored.Snapshot().Settlements.Count == 1, "Schema five garrison migration preserves residents");
+        var legacy = restored.Snapshot(); legacy.Version = 5; legacy.Garrisons = null;bool rejected=false;
+        try {restored.Restore(legacy);} catch(ArgumentException) {rejected=true;}
+        Require(rejected && restored.Snapshot().Garrisons.Count==1 && restored.Snapshot().Settlements.Count==1,
+            "Earlier garrison schema is rejected without replacing current state");
         VerifyPatrolPairPlan();
         VerifyGuardPatrolRoster();
         VerifyGuardDefense();
-        Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARDS_PERSISTENCE_PASS: finite identities, dispatch, timed death location, native save, recruitment and schema-five migration.");
+        Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARDS_PERSISTENCE_PASS: finite identities, dispatch, timed death location, native save, recruitment and old-schema rejection.");
     }
     private static void VerifyRegionalNames()
     {
@@ -1508,7 +1553,7 @@ public static class PeopleOfTheIliacBayBuild
             System.Reflection.BindingFlags.NonPublic).Invoke(mod, null);
         var type = Array.Find(types, t => t.FullName == "PeopleOfTheIliacBay.QuestHooks.NativeGuardHooks");
         Require(type != null, "Production guard hooks are loadable");
-        bool owns = true; int immediate = 0, delayed = 0, singles = 0;
+        bool owns = true; int immediate = 0, delayed = 0, singles = 0, attacks = 0;
         var actor = new GameObject("Guard hook contract actor");
         IDisposable hook = null;
         try
@@ -1518,7 +1563,7 @@ public static class PeopleOfTheIliacBayBuild
                 new Func<Vector3, Vector3, GameObject>((position, direction) => {
                     Require(position == Vector3.one && direction == Vector3.forward, "Guard position and direction preserved");
                     singles++; return actor;
-                }) });
+                }), new Action<DaggerfallEntityBehaviour, DaggerfallEntityBehaviour>((target, source) => attacks++) });
             var player = (PlayerEntity)System.Runtime.Serialization.FormatterServices.GetUninitializedObject(typeof(PlayerEntity));
             player.SpawnCityGuards(true); player.SpawnCityGuards(false);
             var conversion = type.GetMethod("BeforePoolConversion", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
@@ -1528,6 +1573,14 @@ public static class PeopleOfTheIliacBayBuild
             owns = false;
             Require((bool)conversion.Invoke(null, null), "Unsupported towns retain pooled guard conversion");
             var flags = System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic;
+            var attack = type.GetMethod("AfterAttack", flags);
+            Require(attack != null, "Native guard attack callback exists");
+            attack.Invoke(null, new object[] { null, null });
+            Require(attacks == 0, "Unsupported towns do not receive owned guard attack callbacks");
+            owns = true;
+            attack.Invoke(null, new object[] { null, null });
+            Require(attacks == 1, "Owned guard attack callback is wired");
+            owns = false;
             Require((bool)type.GetMethod("BeforeBatch", flags).Invoke(null, new object[] { true }), "Unsupported town keeps native batch spawning");
             var args = new object[] { Vector3.one, Vector3.forward, null };
             Require((bool)type.GetMethod("BeforeSingle", flags).Invoke(null, args) && args[2] == null && singles == 1,
@@ -1536,7 +1589,8 @@ public static class PeopleOfTheIliacBayBuild
             Require((bool)type.GetMethod("BeforeBatch", flags).Invoke(null, new object[] { true }), "Disposed hooks are inactive");
             owns = true;
             hook = (IDisposable)Activator.CreateInstance(type, new object[] { new Func<bool>(() => owns),
-                new Action<bool>(value => { }), new Func<Vector3, Vector3, GameObject>((position, direction) => null) });
+                new Action<bool>(value => { }), new Func<Vector3, Vector3, GameObject>((position, direction) => null),
+                new Action<DaggerfallEntityBehaviour, DaggerfallEntityBehaviour>((target, source) => { }) });
             bool rejected = false;
             try { player.SpawnCityGuard(Vector3.one, Vector3.forward); }
             catch (InvalidOperationException) { rejected = true; }

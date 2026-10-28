@@ -40,6 +40,7 @@ namespace PeopleOfTheIliacBay.Core
         private sealed class PointOuting
         {
             public double Departure, Arrival, Leave, Return;
+            public Activity AtTarget = Activity.Meeting;
             public RoutePoint Target;
             public RoutePoint[] Outbound, Inbound;
             public double[] OutboundLengths, InboundLengths;
@@ -47,7 +48,7 @@ namespace PeopleOfTheIliacBay.Core
             {
                 if(seconds<Departure || seconds>=Return) return Interior(Activity.Home,home);
                 if(seconds<Arrival) return Along(Outbound,OutboundLengths,(seconds-Departure)/(Arrival-Departure),Activity.Travel);
-                if(seconds<Leave) return new ActivitySnapshot(Activity.Meeting,-1,Target,1);
+                if(seconds<Leave) return new ActivitySnapshot(AtTarget,-1,Target,1);
                 return Along(Inbound,InboundLengths,(seconds-Leave)/(Return-Leave),Activity.Travel);
             }
             private static ActivitySnapshot Along(RoutePoint[] points,double[] lengths,double fraction,Activity activity)
@@ -86,7 +87,7 @@ namespace PeopleOfTheIliacBay.Core
             result.itineraryVisits=visits.ToArray();return result;
         }
         private bool RecoveryApplies(double now)
-        {return recoveryPlan!=null && now>=recoveryPlan.CreatedAt && now<(recoveryPlan.AbsoluteDay+1d)*86400d;}
+        {return recoveryPlan!=null && now>=recoveryPlan.CreatedAt && now<Math.Max((recoveryPlan.AbsoluteDay+1d)*86400d,recoveryPlan.EndsAt+1);}
         public double ReturnHomeAt(double daySeconds)
         {
             if(interludeSource!=null)return interludeSource.ReturnHomeAt(daySeconds);

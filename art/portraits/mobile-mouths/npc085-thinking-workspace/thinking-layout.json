@@ -1,0 +1,20 @@
+{
+  "status": "provisional-review-required",
+  "halfLidRegions": [
+    {
+      "x": 16,
+      "y": 21,
+      "width": 13,
+      "height": 1
+    },
+    {
+      "x": 35,
+      "y": 21,
+      "width": 13,
+      "height": 1
+    }
+  ],
+  "sourceSha256": "8381f07edb8751dd0dfa93e4049c5ae00563c75ba9b0bb1fb5dfa80ca2a001d4",
+  "referenceSha256": "791df72556b50f6693f62317b29d2e6fe0915c7bdd5dda8b76c157c9ebe2fe31",
+  "rationale": "Provisional one-row strips follow this face\u2019s visible upper lid in the current source and neutral half. Keep below face-specific browLockEndY and above original iris/highlight bounds. Review against all nine thinking gaze cells before building; reduce or move any strip that touches retained iris or sclera. Never expand to full eye boxes or cover neutral center irises."
+}

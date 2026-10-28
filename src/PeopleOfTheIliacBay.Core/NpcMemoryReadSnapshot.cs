@@ -40,7 +40,7 @@ namespace PeopleOfTheIliacBay.Core
             if (!ValidMemoryReadInput(personId, now, maximumCharacters, 2000) ||
                 query == null || query.Length > 160) return false;
             string text = RecallConversation(personId, query, now, maximumCharacters);
-            string scene=RecallSceneEvents(personId,now,Math.Min(maximumCharacters,1200));
+            string scene=RecallSceneEvents(personId,now,Math.Min(maximumCharacters/2,1000));
             if(!string.IsNullOrEmpty(scene))text=CleanMemory(scene+" "+text,maximumCharacters);
             NpcTreatmentRecallEvidence treatment = CaptureNpcTreatmentRecall(personId, query, now, maximumCharacters);
             if (!string.IsNullOrEmpty(treatment.Text))
@@ -95,7 +95,7 @@ namespace PeopleOfTheIliacBay.Core
                 // the pinned head; restoring even that same head replaces State.
                 return (journal == null ? 0 : journal.Entries.Count) == read.JournalCount &&
                     string.Equals(read.SceneRecall,
-                        RecallSceneEvents(read.PersonId,now,Math.Min(read.MaximumCharacters,1200)),StringComparison.Ordinal) &&
+                        RecallSceneEvents(read.PersonId,now,Math.Min(read.MaximumCharacters/2,1000),false),StringComparison.Ordinal) &&
                     now < read.NextFutureRecordAt && now < read.NextFutureTreatmentAt &&
                     string.Equals(read.TreatmentAuthority, TreatmentRecallAuthority(read.PersonId), StringComparison.Ordinal);
             }

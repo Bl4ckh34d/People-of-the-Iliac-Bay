@@ -97,35 +97,6 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.Equal(0, before.NpcExperienceInbox.Entries.Count);
             }));
 
-            cases.Add(("Schema 34 migration preserves prior domains and initializes an empty inbox", () =>
-            {
-                string observer;
-                string other;
-                var store = Create(out observer, out other);
-                store.GetOrCreateNpcPersonality(observer, 5, NpcSocialBackground.Noble);
-                var relationship = Native(observer, observer, "player", "outcome:older-domain", 1);
-                Check.True(store.TryCommitNpcRelationship(Proposal(observer, relationship, 2), 0));
-                var schema34 = store.Snapshot();
-                schema34.Version = 34;
-                // Schema 34 did not persist an experience inbox. Do not manufacture
-                // future rows and rely on migration silently discarding them.
-                schema34.NpcExperienceInbox = null;
-                schema34.ConversationMoods.Add(new ConversationMood
-                {
-                    PersonId = observer, Value = -12, AcceptedTurnSequence = 5,
-                    HasTimeAnchor = true, UpdatedAt = 12, Revision = 2
-                });
-                var restored = new WorldStateStore(0);
-                restored.Restore(schema34);
-                Check.Equal(0, restored.Snapshot().NpcExperienceInbox.Entries.Count);
-                Check.Equal(0L, restored.Snapshot().NpcExperienceInbox.Revision);
-                Check.Equal(1L, restored.NpcRelationshipLedgerRevision);
-                Check.True(restored.ReadNpcPersonality(observer) != null);
-                Check.Equal(-12, restored.CaptureConversationMood(observer).Value);
-                Check.Equal(5L, restored.CaptureConversationMood(observer).AcceptedTurnSequence);
-                Check.Equal(2L, restored.CaptureConversationMood(observer).Revision);
-            }));
-
             cases.Add(("Malformed current inbox restore fails atomically", () =>
             {
                 string observer;

@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "createdUtc": "2026-10-21T21:14:25.129Z",
+  "portraitRecord": 78,
+  "bank": "TFAC00I0.RCI",
+  "emotion": "sad",
+  "part": "mouth",
+  "imageGenCalls": 1,
+  "tool": "built-in image_gen",
+  "prompt": "Create exactly one raw SAD speech-mouth atlas for this specific native portrait's lower 64x29 half. Preserve the input canvas, exact 3-column by 3-row grid, repeated complete lower-face cell framing and same pixel scale. Keep the face identity, nose, cheeks, jaw, neck, hair, skin shading, background and soft muted native palette stable. No captions, letters, labels, extra borders, objects, tears, or overall face changes. Cells are row-major: A B C / D E F / G H X. Give all nine cells clearly different, readable speech-mouth shapes; A and X are closed-mouth poses. Use the subtle low-energy sadness consistently: a small gentle downward turn at the lip corners, never a pout or grimace. Keep mouth size near the original lip scale; avoid oversized openings and hard contrast. Change only mouth articulation and minimal lip-corner tension. Do not stretch, blur, redraw, or shift the nose, face, neck, hair, or background. Maintain crisp but softly shaded pixel art; do not add teeth or tongue where the opening is too small to support them naturally. Keep A and X closed and emotionally sad, with A lightly pressed for speech and X resting.",
+  "promptSha256": "f5f65c37586972134bc611ca738030c251ba7c5004f93b5d5f57a4e8873d9458",
+  "sourcePortrait": {
+    "path": "original.png",
+    "width": 64,
+    "height": 64,
+    "bytes": 3442,
+    "sha256": "4cfab5dce8d40ff0246728c2c28922d9b5627cec9549f9b5252f2f601e4978ce"
+  },
+  "referenceGrid": {
+    "path": "mouth-reference-grid.png",
+    "width": 1536,
+    "height": 696,
+    "bytes": 142703,
+    "sha256": "723a29c0e82dc6a0b811139c36f110100a031876b51ea7eea10984dd1a3e9f45"
+  },
+  "sourceHalf": {
+    "path": "source-lower.png",
+    "width": 64,
+    "height": 29,
+    "bytes": 1095,
+    "sha256": "b4198907de03ee1af39b9100f862f1d01d4b9525d203845831ecbaa69bdc185e"
+  },
+  "grid": {
+    "columns": 3,
+    "rows": 3,
+    "rowMajor": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "X"
+    ],
+    "inputCanvas": "1536x696",
+    "expectedCell": "512x232"
+  },
+  "rawImage": {
+    "path": "mouth\\sad\\raw.png",
+    "width": 1863,
+    "height": 844,
+    "bytes": 1353174,
+    "sha256": "469523b5e8f7fe5a47a56af47f6851c24c089a2468f3d6da5ca9f5a70869555d"
+  },
+  "imageGenOriginalPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-fb9b-7322-8190-74bf6fb54c9d\\exec-f581eb67-e215-450f-acc7-a5412d9b15d2.png",
+  "visualInspection": [
+    "Nine visibly varied articulation poses; A and X are closed with modest downward corners.",
+    "Some open frames show bright teeth and fuller, more expressive lip shapes than source; low-energy sadness varies by cell.",
+    "Nose/jaw/chin shading shifts slightly across cells, beyond the mouth itself.",
+    "Raw output is 1863x844, not the 1536x696 reference size; exact cell pixel boundaries need parent review.",
+    "Raw atlas only; no slicing, resizing or composition performed."
+  ]
+}

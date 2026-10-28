@@ -6,21 +6,18 @@ namespace PeopleOfTheIliacBay.Core
     public enum LodgingBookingPurpose { Ordinary=0, NpcHealthRest=1 }
 
     [Serializable]
-    public sealed class LodgingRoom
+    public sealed class LodgingBed
     {
         public string Id;
-        public bool NonRentable;
-        public List<string> Beds=new List<string>();
     }
     [Serializable]
     public sealed class LodgingBooking
     {
-        public string Id,GuestId,RoomId;
+        public string Id,GuestId;
         public int HomeSettlement,PartySize;
         public bool Player;
         public double StartsAt,EndsAt;
-        // Healthcare authority is an explicit, restore-validated purpose tied
-        // to one accepted task and its exact bed; ordinary bookings leave these empty.
+        public List<string> BedIds=new List<string>();
         public LodgingBookingPurpose Purpose;
         public string HealthCareId,HealthCareTaskId,BedId,PaymentTransactionId;
         public int PaidPrice,PaidNights;
@@ -35,7 +32,8 @@ namespace PeopleOfTheIliacBay.Core
     public sealed class TavernLodging
     {
         public int SettlementId,BuildingKey;
-        public List<LodgingRoom> Rooms=new List<LodgingRoom>();
+        public int GuildFactionId;
+        public List<LodgingBed> Beds=new List<LodgingBed>();
         public List<LodgingBooking> Bookings=new List<LodgingBooking>();
         public List<LodgingOccupant> Occupants=new List<LodgingOccupant>();
     }
@@ -57,67 +55,53 @@ namespace PeopleOfTheIliacBay.Core
             }
             return null;
         }
-        public string NativeGuestBedroom(string personId)
-        {
-            foreach(var inn in state.Lodgings)
-            {
-                var bed=inn.Occupants.Find(o=>o.PersonId==personId);
-                var room=bed==null ? null : inn.Rooms.Find(r=>!r.NonRentable && r.Beds.Contains(bed.BedId));
-                if(room!=null) return room.Id;
-            }
-            return null;
-        }
+        public string NativeGuestBed(string personId)
+        { return NativeLodgingBed(personId); }
         public bool TryClaimLodgingBed(int town,int building,string personId,string bed,double now)
         {
             var tavern=Lodging(town,building);
             Require(DefenseTime(now) && state.NativePeople.Exists(p=>p.Id==personId && p.IsAlive &&
                 p.SettlementId==town && p.WorkKey==building),"Invalid native lodging occupant.");
-            var room=tavern.Rooms.Find(r=>r.Beds.Contains(bed));
-            Require(room!=null,"Unknown occupant bed.");
+            Require(tavern.Beds.Exists(value=>value.Id==bed),"Unknown occupant bed.");
             if(state.NativePeople.Exists(p=>p.Id==personId && p.RetiredBedroomFlat)) return false;
             foreach(var other in state.Lodgings)
             {
                 var prior=other.Occupants.Find(o=>o.PersonId==personId);
                 if(prior!=null) return other==tavern && prior.BedId==bed;
             }
-            if(tavern.Occupants.Exists(o=>o.BedId==bed) || tavern.Bookings.Exists(b=>b.RoomId==room.Id && b.EndsAt>now)) return false;
+            if(tavern.Occupants.Exists(o=>o.BedId==bed) ||
+                tavern.Bookings.Exists(b=>b.BedIds.Contains(bed) && b.EndsAt>now)) return false;
             tavern.Occupants.Add(new LodgingOccupant {PersonId=personId,BedId=bed,StartsAt=now});
             return true;
         }
-        private static bool OccupiedRoom(TavernLodging tavern,LodgingRoom room,double end)
-        { return tavern.Occupants.Exists(o=>room.Beds.Contains(o.BedId) && o.StartsAt<end); }
         private TavernLodging Lodging(int town,int building)
         {
             var result=state.Lodgings.Find(t=>t.SettlementId==town && t.BuildingKey==building);
             Require(result!=null,"Unknown tavern lodging."); return result;
         }
-        public void RegisterLodging(int town,int building,IEnumerable<LodgingRoom> rooms)
+        public void RegisterLodgingBeds(int town,int building,IEnumerable<LodgingBed> beds)
         {
-            Require(rooms!=null,"Missing lodging rooms.");
-            var incoming=new TavernLodging { SettlementId=town,BuildingKey=building,Rooms=new List<LodgingRoom>(rooms) };
-            var copied=CopyLodging(incoming,state,new HashSet<string>());
+            Require(beds!=null,"Missing lodging beds.");
+            var incoming=new TavernLodging {SettlementId=town,BuildingKey=building,Beds=new List<LodgingBed>(beds)};
+            var copied=CopyLodging(incoming,state,new HashSet<string>(),WorldState.CurrentVersion,state);
             var existing=state.Lodgings.Find(t=>t.SettlementId==town && t.BuildingKey==building);
             if(existing!=null)
             {
-                foreach(var previous in existing.Rooms)
-                {
-                    var room=copied.Rooms.Find(r=>r.Id==previous.Id);
-                    Require(room!=null && previous.NonRentable==room.NonRentable && previous.Beds.Count==room.Beds.Count &&
-                        previous.Beds.TrueForAll(b=>room.Beds.Contains(b)),"Lodging layout change requires reconciliation.");
-                }
-                var additions=copied.Rooms.FindAll(r=>!existing.Rooms.Exists(p=>p.Id==r.Id));
-                Require(additions.TrueForAll(r=>r.NonRentable),"New rental rooms require layout reconciliation.");
-                existing.Rooms.AddRange(additions);
-                existing.Rooms.Sort((a,b)=>StringComparer.Ordinal.Compare(a.Id,b.Id));
+                foreach(var previous in existing.Beds)
+                    Require(copied.Beds.Exists(value=>value.Id==previous.Id),"Lodging layout cannot erase a known bed.");
+                foreach(var addition in copied.Beds)
+                    if(!existing.Beds.Exists(value=>value.Id==addition.Id)) existing.Beds.Add(addition);
+                existing.Beds.Sort((a,b)=>StringComparer.Ordinal.Compare(a.Id,b.Id));
                 return;
             }
             state.Lodgings.Add(copied);
         }
-        // A successful commit represents a paid reservation; callers must reconcile native payment.
-        public bool TryBookLodging(int town,int building,string id,string guest,int home,bool player,int party,double start,double end,string allocatedRoom=null)
+        public bool TryBookLodging(int town,int building,string id,string guest,int home,bool player,int party,double start,double end,string allocatedBed=null)
         {
             var tavern=Lodging(town,building);
-            Require(allocatedRoom==null || tavern.Rooms.Exists(r=>r.Id==allocatedRoom),"Unknown allocated lodging room.");
+            if(tavern.GuildFactionId>0 && (player || party!=1 || !GuildGuest(state,guest,home,tavern.GuildFactionId)))return false;
+            Require(allocatedBed==null || tavern.Beds.Exists(value=>value.Id==allocatedBed),"Unknown allocated lodging bed.");
+            Require(allocatedBed==null || party==1,"A native bed allocation can book only one guest.");
             Require(DefenseId(id) && DefenseId(guest) && home>=0 && (player || home!=town) && party>0 &&
                 DefenseTime(start) && DefenseTime(end) && end>start,"Invalid lodging request.");
             foreach(var other in state.Lodgings)
@@ -126,24 +110,19 @@ namespace PeopleOfTheIliacBay.Core
                 if(prior==null) continue;
                 Require(other==tavern && prior.GuestId==guest && prior.HomeSettlement==home && prior.Player==player &&
                     prior.PartySize==party && prior.StartsAt==start && prior.EndsAt==end &&
-                    (allocatedRoom==null || prior.RoomId==allocatedRoom),"Booking identity changed.");
+                    (allocatedBed==null || prior.BedIds.Count==1 && prior.BedIds[0]==allocatedBed),"Booking identity changed.");
                 return true;
             }
-            // Vanilla permits the player to retain paid rooms in different inns.
             foreach(var other in state.Lodgings)
             {
                 Require(!other.Bookings.Exists(b=>b.GuestId==guest && b.Player!=player),"Lodging guest role changed.");
                 if(other.Bookings.Exists(b=>b.GuestId==guest && (!player || other==tavern) && Overlap(start,end,b))) return false;
             }
-            foreach(var room in tavern.Rooms)
-            {
-                if(room.NonRentable || (allocatedRoom!=null && room.Id!=allocatedRoom) || room.Beds.Count<party || OccupiedRoom(tavern,room,end) ||
-                    tavern.Bookings.Exists(b=>b.RoomId==room.Id && Overlap(start,end,b))) continue;
-                tavern.Bookings.Add(new LodgingBooking { Id=id,GuestId=guest,HomeSettlement=home,Player=player,
-                    PartySize=party,RoomId=room.Id,StartsAt=start,EndsAt=end });
-                return true;
-            }
-            return false;
+            var available=AvailableBeds(tavern,party,start,end,allocatedBed,null);
+            if(available==null) return false;
+            tavern.Bookings.Add(new LodgingBooking {Id=id,GuestId=guest,HomeSettlement=home,Player=player,
+                PartySize=party,BedIds=available,StartsAt=start,EndsAt=end});
+            return true;
         }
         public bool TryExtendLodging(string id,double end)
         {
@@ -151,118 +130,137 @@ namespace PeopleOfTheIliacBay.Core
             {
                 var booking=tavern.Bookings.Find(b=>b.Id==id); if(booking==null) continue;
                 Require(DefenseTime(end) && end>=booking.EndsAt,"Invalid lodging extension.");
-                // Health-rest nights and price are one paid, restore-validated quote.
-                // This ordinary booking API cannot extend that payment authority.
                 if(booking.Purpose==LodgingBookingPurpose.NpcHealthRest && end!=booking.EndsAt)return false;
-                if(OccupiedRoom(tavern,tavern.Rooms.Find(r=>r.Id==booking.RoomId),end)) return false;
                 if(end!=booking.EndsAt && state.TravelerVisits.Exists(v=>v.BookingId==id)) return false;
                 if(end!=booking.EndsAt && state.ResidentTrips.Exists(t=>t.InnStays.Exists(s=>s.BookingId==id))) return false;
+                foreach(var bed in booking.BedIds)
+                {
+                    if(tavern.Occupants.Exists(o=>o.BedId==bed && o.StartsAt<end)) return false;
+                    if(tavern.Bookings.Exists(b=>b!=booking && b.BedIds.Contains(bed) && Overlap(booking.StartsAt,end,b))) return false;
+                }
                 foreach(var other in state.Lodgings)
-                    if(other.Bookings.Exists(b=>b!=booking && (b.GuestId==booking.GuestId && (!booking.Player || other==tavern) ||
-                        other==tavern && b.RoomId==booking.RoomId) && Overlap(booking.StartsAt,end,b))) return false;
+                    if(other.Bookings.Exists(b=>b!=booking && b.GuestId==booking.GuestId && (!booking.Player || other==tavern) &&
+                        Overlap(booking.StartsAt,end,b))) return false;
                 booking.EndsAt=end; return true;
             }
             throw new ArgumentException("Unknown lodging booking.");
         }
-        // Import a native paid receipt; payment and allocated marker remain owned by DFU.
-        public bool ReconcilePlayerLodging(int town,int building,string room,double now,double expiry)
+        public bool ReconcilePlayerLodging(int town,int building,string bed,double now,double expiry)
         {
             Require(DefenseTime(now) && DefenseTime(expiry),"Invalid native rental time.");
             var tavern=Lodging(town,building);
-            Require(tavern.Rooms.Exists(r=>r.Id==room),"Unknown native rental room.");
+            Require(tavern.Beds.Exists(value=>value.Id==bed),"Unknown native rental bed.");
             if(expiry<=now) return false;
             var booking=tavern.Bookings.Find(b=>b.Player && b.GuestId=="player" && b.StartsAt<=now && now<b.EndsAt);
             if(booking!=null)
             {
-                if(booking.RoomId!=room || expiry<booking.EndsAt) return false;
+                if(booking.BedIds.Count!=1 || booking.BedIds[0]!=bed || expiry<booking.EndsAt) return false;
                 return TryExtendLodging(booking.Id,expiry);
             }
             string id="native-player:"+town+":"+building+":"+now.ToString("R",System.Globalization.CultureInfo.InvariantCulture);
-            return TryBookLodging(town,building,id,"player",town,true,1,now,expiry,room);
+            return TryBookLodging(town,building,id,"player",town,true,1,now,expiry,bed);
         }
         public bool IsLodgingBedReserved(int town,int building,string bed,double now,string guest)
         {
             Require(DefenseTime(now),"Invalid lodging time."); var tavern=Lodging(town,building);
-            var room=tavern.Rooms.Find(r=>r.Beds.Contains(bed));
-            Require(room!=null,"Unknown lodging bed.");
-            return tavern.Occupants.Exists(o=>room.Beds.Contains(o.BedId) && o.PersonId!=guest && o.StartsAt<=now) ||
-                tavern.Bookings.Exists(b=>b.RoomId==room.Id && b.GuestId!=guest && b.StartsAt<=now && now<b.EndsAt);
+            Require(tavern.Beds.Exists(value=>value.Id==bed),"Unknown lodging bed.");
+            return tavern.Occupants.Exists(o=>o.BedId==bed && o.PersonId!=guest && o.StartsAt<=now) ||
+                tavern.Bookings.Exists(b=>b.BedIds.Contains(bed) && b.GuestId!=guest && b.StartsAt<=now && now<b.EndsAt);
         }
         public double? EarliestLodgingStart(int town,int building,int party,double now,double duration)
         {
             Require(party>0 && DefenseTime(now) && DefenseTime(duration) && duration>0 && DefenseTime(now+duration),"Invalid lodging availability request.");
-            var tavern=Lodging(town,building); double? earliest=null;
-            foreach(var room in tavern.Rooms)
-            {
-                if(room.NonRentable || room.Beds.Count<party) continue;
-                double at=now; var bookings=tavern.Bookings.FindAll(b=>b.RoomId==room.Id);
-                bookings.Sort((a,b)=>a.StartsAt.CompareTo(b.StartsAt));
-                foreach(var booking in bookings) if(Overlap(at,at+duration,booking)) at=booking.EndsAt;
-                if(!OccupiedRoom(tavern,room,at+duration) && DefenseTime(at+duration) && (!earliest.HasValue || at<earliest.Value)) earliest=at;
-            }
-            return earliest;
+            var tavern=Lodging(town,building);var candidates=new List<double>{now};
+            foreach(var booking in tavern.Bookings) if(booking.EndsAt>=now && !candidates.Contains(booking.EndsAt)) candidates.Add(booking.EndsAt);
+            candidates.Sort();
+            foreach(double at in candidates)
+                if(DefenseTime(at+duration) && AvailableBeds(tavern,party,at,at+duration,null,null)!=null) return at;
+            return null;
         }
-        public string AvailableLodgingRoom(int town,int building,int party,double start,double end)
+        public List<string> AvailableLodgingBeds(int town,int building,int party,double start,double end)
         {
             Require(party>0 && DefenseTime(start) && DefenseTime(end) && end>start,"Invalid lodging offer.");
-            var tavern=Lodging(town,building);
-            var room=tavern.Rooms.Find(r=>!r.NonRentable && r.Beds.Count>=party && !OccupiedRoom(tavern,r,end) && !tavern.Bookings.Exists(b=>b.RoomId==r.Id && Overlap(start,end,b)));
-            return room==null ? null : room.Id;
+            return AvailableBeds(Lodging(town,building),party,start,end,null,null);
+        }
+        private static List<string> AvailableBeds(TavernLodging tavern,int count,double start,double end,string exact,LodgingBooking ignored)
+        {
+            var result=new List<string>();
+            foreach(var bed in tavern.Beds)
+            {
+                if(exact!=null && bed.Id!=exact) continue;
+                if(tavern.Occupants.Exists(o=>o.BedId==bed.Id && o.StartsAt<end)) continue;
+                if(tavern.Bookings.Exists(b=>b!=ignored && b.BedIds.Contains(bed.Id) && Overlap(start,end,b))) continue;
+                result.Add(bed.Id);
+            }
+            result.Sort(StringComparer.Ordinal);
+            if(result.Count<count) return null;
+            if(result.Count>count) result.RemoveRange(count,result.Count-count);
+            return result;
         }
         private static bool Overlap(double start,double end,LodgingBooking booking)
         { return start<booking.EndsAt && booking.StartsAt<end; }
-        private static TavernLodging CopyLodging(TavernLodging source,WorldState world,HashSet<string> ids,int version=11,WorldState authority=null)
+        private static bool SharesBed(LodgingBooking a,LodgingBooking b)
+        {
+            foreach(var bed in a.BedIds) if(b.BedIds.Contains(bed)) return true;
+            return false;
+        }
+        private static TavernLodging CopyLodging(TavernLodging source,WorldState world,HashSet<string> ids,int version=84,WorldState authority=null)
         {
             Require(source!=null && source.BuildingKey>=0 && world.Settlements.Exists(s=>s.SettlementId==source.SettlementId) &&
-                source.Rooms!=null && source.Bookings!=null,"Invalid tavern lodging.");
-            var copy=new TavernLodging { SettlementId=source.SettlementId,BuildingKey=source.BuildingKey };
-            var beds=new HashSet<string>(); var rooms=new HashSet<string>();
-            foreach(var room in source.Rooms)
+                source.Beds!=null && source.Bookings!=null,"Invalid tavern lodging.");
+            Require(source.GuildFactionId>=0,"Invalid guild lodging faction.");
+            var copy=new TavernLodging {SettlementId=source.SettlementId,BuildingKey=source.BuildingKey,GuildFactionId=source.GuildFactionId};
+            var beds=new HashSet<string>();
+            foreach(var bed in source.Beds)
             {
-                Require(room!=null && DefenseId(room.Id) && rooms.Add(room.Id) && room.Beds!=null && room.Beds.Count>0,"Invalid lodging room.");
-                var next=new LodgingRoom { Id=room.Id,NonRentable=version>=11 && room.NonRentable };
-                foreach(var bed in room.Beds) { Require(DefenseId(bed) && beds.Add(bed),"Duplicate or invalid lodging bed."); next.Beds.Add(bed); }
-                copy.Rooms.Add(next);
+                Require(bed!=null && DefenseId(bed.Id) && beds.Add(bed.Id),"Duplicate or invalid lodging bed.");
+                copy.Beds.Add(new LodgingBed {Id=bed.Id});
             }
-            copy.Rooms.Sort((a,b)=>StringComparer.Ordinal.Compare(a.Id,b.Id));
-            if(version>=10)
+            copy.Beds.Sort((a,b)=>StringComparer.Ordinal.Compare(a.Id,b.Id));
+            Require(source.Occupants!=null,"Missing native lodging occupants.");
+            foreach(var occupant in source.Occupants)
             {
-                Require(source.Occupants!=null,"Missing native lodging occupants.");
-                foreach(var occupant in source.Occupants)
-                {
-                    Require(occupant!=null && DefenseTime(occupant.StartsAt) && beds.Contains(occupant.BedId) &&
-                        world.NativePeople.Exists(p=>p.Id==occupant.PersonId && !p.RetiredBedroomFlat && p.SettlementId==source.SettlementId && p.WorkKey==source.BuildingKey) &&
-                        !copy.Occupants.Exists(o=>o.PersonId==occupant.PersonId || o.BedId==occupant.BedId),"Invalid native lodging claim.");
-                    copy.Occupants.Add(new LodgingOccupant {PersonId=occupant.PersonId,BedId=occupant.BedId,StartsAt=occupant.StartsAt});
-                }
+                Require(occupant!=null && DefenseTime(occupant.StartsAt) && beds.Contains(occupant.BedId) &&
+                    world.NativePeople.Exists(p=>p.Id==occupant.PersonId && !p.RetiredBedroomFlat && p.SettlementId==source.SettlementId && p.WorkKey==source.BuildingKey) &&
+                    !copy.Occupants.Exists(o=>o.PersonId==occupant.PersonId || o.BedId==occupant.BedId),"Invalid native lodging claim.");
+                copy.Occupants.Add(new LodgingOccupant {PersonId=occupant.PersonId,BedId=occupant.BedId,StartsAt=occupant.StartsAt});
             }
             foreach(var booking in source.Bookings)
             {
+                Require(source.GuildFactionId==0 || booking!=null && !booking.Player && booking.PartySize==1 &&
+                    GuildGuest(world,booking.GuestId,booking.HomeSettlement,source.GuildFactionId,false),"Guild lodging lacks matching NPC membership.");
                 Require(booking!=null && DefenseId(booking.Id) && ids.Add(booking.Id) && DefenseId(booking.GuestId) &&
-                    booking.HomeSettlement>=0 &&
-                    booking.PartySize>0 && copy.Rooms.Exists(r=>r.Id==booking.RoomId && !r.NonRentable && r.Beds.Count>=booking.PartySize) &&
+                    booking.HomeSettlement>=0 && booking.PartySize>0 && booking.BedIds!=null && booking.BedIds.Count==booking.PartySize &&
                     DefenseTime(booking.StartsAt) && DefenseTime(booking.EndsAt) && booking.EndsAt>booking.StartsAt,
                     "Invalid lodging booking.");
+                var bookedBeds=new HashSet<string>();
+                foreach(var bed in booking.BedIds) Require(beds.Contains(bed) && bookedBeds.Add(bed),"Invalid booked bed.");
                 if(booking.Purpose==LodgingBookingPurpose.Ordinary)
                     Require(booking.Player || booking.HomeSettlement!=source.SettlementId,"Invalid local ordinary lodging booking.");
                 else if(booking.Purpose==LodgingBookingPurpose.NpcHealthRest)
                     Require(ValidHealthRestLodgingAuthority(authority,source,booking),"Invalid NPC healthcare lodging authority.");
                 else Require(false,"Unknown lodging booking purpose.");
-                Require(!OccupiedRoom(copy,copy.Rooms.Find(r=>r.Id==booking.RoomId),booking.EndsAt),"Booking conflicts with native room occupant.");
+                Require(!copy.Occupants.Exists(o=>bookedBeds.Contains(o.BedId) && o.StartsAt<booking.EndsAt),
+                    "Booking conflicts with native bed occupant.");
                 Require(!copy.Bookings.Exists(b=>b.GuestId==booking.GuestId && b.Player!=booking.Player),"Lodging guest role changed.");
-                Require(!copy.Bookings.Exists(b=>(b.RoomId==booking.RoomId || b.GuestId==booking.GuestId) &&
+                Require(!copy.Bookings.Exists(b=>(SharesBed(booking,b) || b.GuestId==booking.GuestId) &&
                     Overlap(booking.StartsAt,booking.EndsAt,b)),"Overlapping lodging bookings.");
-                copy.Bookings.Add(new LodgingBooking { Id=booking.Id,GuestId=booking.GuestId,RoomId=booking.RoomId,
-                    HomeSettlement=booking.HomeSettlement,Player=booking.Player,PartySize=booking.PartySize,
-                    StartsAt=booking.StartsAt,EndsAt=booking.EndsAt,Purpose=booking.Purpose,
-                    HealthCareId=booking.HealthCareId,HealthCareTaskId=booking.HealthCareTaskId,BedId=booking.BedId,
-                    PaymentTransactionId=booking.PaymentTransactionId,PaidPrice=booking.PaidPrice,PaidNights=booking.PaidNights });
+                copy.Bookings.Add(CopyBooking(booking));
             }
             return copy;
         }
+        private static LodgingBooking CopyBooking(LodgingBooking booking)
+        {
+            return new LodgingBooking {Id=booking.Id,GuestId=booking.GuestId,HomeSettlement=booking.HomeSettlement,
+                Player=booking.Player,PartySize=booking.PartySize,BedIds=new List<string>(booking.BedIds),
+                StartsAt=booking.StartsAt,EndsAt=booking.EndsAt,Purpose=booking.Purpose,
+                HealthCareId=booking.HealthCareId,HealthCareTaskId=booking.HealthCareTaskId,BedId=booking.BedId,
+                PaymentTransactionId=booking.PaymentTransactionId,PaidPrice=booking.PaidPrice,PaidNights=booking.PaidNights};
+        }
         private static List<TavernLodging> CopyLodgings(WorldState source,WorldState world)
         {
-            var result=new List<TavernLodging>(); if(source.Version<8) return result;
+            var result=new List<TavernLodging>();
+            if(source.Version<84) return result;
             Require(source.Lodgings!=null,"Missing lodging ledger."); var ids=new HashSet<string>();
             foreach(var tavern in source.Lodgings)
             {

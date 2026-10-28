@@ -10,7 +10,6 @@ namespace PeopleOfTheIliacBay.Tests
         {
             cases.Add(("Completed player item receive stores a validated durable receipt", ReceiptIsAttachedToCompletedAction));
             cases.Add(("Completed item receipt survives later action position and routine recovery updates", ReceiptSurvivesLaterActionUpdates));
-            cases.Add(("Schema 38 completed actions restore without a new transfer receipt", LegacyCompletedActionRestores));
             cases.Add(("Durable item receipt drains once as neutral ItemReceived evidence", ReceiptDrainsOnce));
             cases.Add(("Bounded item receipt drain makes progress past nonreceipt actions", ReceiptDrainIsBoundedAndFair));
             cases.Add(("Merged item receipt names retained destination UID and rejects missing UID", RetainedUidIsRequired));

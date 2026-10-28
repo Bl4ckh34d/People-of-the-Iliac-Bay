@@ -21,7 +21,7 @@ namespace PeopleOfTheIliacBay.DFU
             var game=GameManager.Instance;
             string mode=Environment.GetEnvironmentVariable("POTIB_ROADMAP_PROBE");
             Require((mode=="personal-trade" || mode=="personal-haggling") && host && actor && store!=null && game &&
-                game.PlayerEntity.Name.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal),
+                NativeProbeText.IsTestCharacter(game.PlayerEntity.Name),
                 "Personal haggling needs its owned explicit fixture.");
             var owner=actor.GetComponent<NativeNpcInventoryOwner>();
             Require(owner && owner.Binding!=null && item!=null && ReferenceEquals(owner.Binding.Items.GetItem(item.UID),item),

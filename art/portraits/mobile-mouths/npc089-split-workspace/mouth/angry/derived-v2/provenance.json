@@ -1,0 +1,39 @@
+﻿{
+    "kind":  "whole-cell-derived-mouth-atlas",
+    "createdUtc":  "2026-10-22T16:58:19.9195314Z",
+    "portraitRecord":  89,
+    "emotion":  "angry",
+    "baseAtlas":  {
+                      "file":  "../../../v1-raw-native-baseline.png",
+                      "sha256":  "7cac04274f313a53aaedf1f906b330fb243f4af69774f8ddf70b0e93e83d7181",
+                      "source":  "v1 generated raw atlas sampled with production nearest-neighbor whole-cell method; avoid double edge blending"
+                  },
+    "generatedAtlas":  {
+                           "file":  "../../../generation/mouth/angry/raw.png",
+                           "sha256":  "a8b69b8206f762581abd042d5ee33c3a3830bba5c0e4dce85f9b2170ffad4698",
+                           "receipt":  "../../../generation/mouth/angry/provenance.json"
+                       },
+    "replacedWholeCells":  [
+                               {
+                                   "shape":  "D",
+                                   "index":  3
+                               },
+                               {
+                                   "shape":  "E",
+                                   "index":  4
+                               }
+                           ],
+    "preservedExactCells":  [
+                                "A",
+                                "B",
+                                "C",
+                                "F",
+                                "G",
+                                "H",
+                                "X"
+                            ],
+    "sampling":  "Each generated full cell sampled to64x29 with production System.Drawing nearest-neighbor and PixelOffsetMode Half. Only complete D/E cells replace v1 native cells; combined atlas enlarged exactly8x.",
+    "manualFeaturePixelEdits":  false,
+    "derivedNativeSha256":  "d8f5e4685760569ee55a1b2f466b5d77a9075fdad38cbffea3cf7dea53c00628",
+    "derivedRawSha256":  "b97bafb3b2c27d540a479d4b9ec2e466accf17361af9ad5fc91075506f171056"
+}

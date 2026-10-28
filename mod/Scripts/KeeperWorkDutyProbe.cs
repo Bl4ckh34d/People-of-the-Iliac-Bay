@@ -19,7 +19,7 @@ namespace PeopleOfTheIliacBay.DFU
     internal static class KeeperWorkDutyProbe
     {
         internal const string Flag = "-peopleoftheiliacbay-keeper-work-duty-probe";
-        private const string OwnedCharacter = "PeopleOfTheIliacBayTest-9a5f197b";
+        private const string OwnedCharacter = "Hakon Ironhand";
         private const string BaselineSave = "People - Gothway Garden";
         private const BindingFlags PrivateInstance = BindingFlags.Instance | BindingFlags.NonPublic;
 

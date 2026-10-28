@@ -60,7 +60,8 @@ namespace PeopleOfTheIliacBay.Core
                         double starts=day+selection.DepartureSeconds,
                             ends=day+ResidentVisitJourney.Create(selection.DepartureSeconds,originals[selection.SourceOutingIndex].Itinerary).EndsAt;
                         if(required[member].IsHomeThroughout(starts,ends) &&
-                            (plan.ChildIds.Count==0 || required[1-member].IsHomeThroughout(starts,ends)))continue;
+                            (plan.ChildIds.Count==0 || !HouseholdDayPlanner.RequiresChildcare(seed,plan.SettlementId,home,plan.AbsoluteDay) ||
+                                required[1-member].IsHomeThroughout(starts,ends)))continue;
                         if(starts<=now){reason="active or historical optional change requires physical recovery";failure=HouseholdDayCompositionFailure.PhysicalRecoveryRequired;return false;}
                         members[member].Outings.RemoveAt(index);
                     }

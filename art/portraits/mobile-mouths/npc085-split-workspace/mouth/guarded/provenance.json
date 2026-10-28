@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T00:47:04.3647006Z",
+    "portraitRecord":  85,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "guarded",
+    "prompt":  "Create a 3x3 pixel-art mouth atlas, each cell exactly 64x29 pixels, in the supplied portrait085 source-lower face composition and original native pixel scale. Order row-major A B C / D E F / G H X. Match the reference\u0027s muted brown lips and warm brown skin with soft low-contrast shading; preserve lip scale and position, face framing, chin, hair, jaw, neck, and background. Guarded skeptical expression uses only subtle asymmetric pressed corners, never a grin or angry sneer. Mouth poses must remain clearly distinct and accurately articulated:\nA = closed lips with light pressure for P/B/M.\nB = narrow slight opening with teeth nearly together for EE and consonants.\nC = medium relaxed unrounded opening for EH/AE; no round O shape.\nD = wide vertical AA opening, visibly larger than C.\nE = slightly rounded AO/ER opening, no wider than C.\nF = small forward pucker for UW/OW/W, not a tooth bite.\nG = upper teeth touching lower lip for F/V, not a wide vowel and not a pucker.\nH = raised tongue behind upper teeth for L; opening between C and D, tongue may be subtle at native scale.\nX = relaxed closed idle lips.\nDo not duplicate A and X: A has restrained light lip pressure, X is relaxed idle. Do not collapse B/C/E/F/G/H into similar generic openings. Teeth and tongue should be tiny and subdued, never stark white. No lipstick red, orange halos, exaggerated smile, oversized lips, text, borders, gutters, or labels.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a160c7-5d26-7712-a755-f48a9dd0f80d as C:\\Users\\Daniel\\.codex\\generated_images\\01a160c7-5d26-7712-a755-f48a9dd0f80d\\exec-ddeccdb5-dae7-4275-8a39-b826d38a0da7.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c7-5d26-7712-a755-f48a9dd0f80d\\exec-ddeccdb5-dae7-4275-8a39-b826d38a0da7.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "8381f07edb8751dd0dfa93e4049c5ae00563c75ba9b0bb1fb5dfa80ca2a001d4",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "7b7a44274d6593733f56b7ed6838224154a6606fb0818d05641509d4bc13fcfa",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c7-5d26-7712-a755-f48a9dd0f80d\\exec-ddeccdb5-dae7-4275-8a39-b826d38a0da7.png",
+                      "sha256":  "4bce223a62e734f272aa0ff30a5107cb409017f527271de18455eb56dd3900f2",
+                      "width":  1862,
+                      "height":  845
+                  },
+    "raw":  {
+                "path":  "mouth/guarded/raw.png",
+                "sha256":  "4bce223a62e734f272aa0ff30a5107cb409017f527271de18455eb56dd3900f2",
+                "width":  1862,
+                "height":  845
+            }
+}

@@ -220,11 +220,15 @@ namespace PeopleOfTheIliacBay.Core
         public ResidentTripSnapshot Evaluate(double now)
         {
             if(!Time(now)) throw new ArgumentException("Invalid trip time.");
+            ResidentTripSnapshot lodging;RoutePoint? target;
+            if(TryLodgingState(now,out lodging,out target))return lodging;
             return EvaluateTimeline(now);
         }
         public ResidentTripSnapshot Evaluate(double now,ObservedVisit observedVisit)
         {
             if(!Time(now)) throw new ArgumentException("Invalid trip time.");
+            ResidentTripSnapshot lodging;RoutePoint? target;
+            if(TryLodgingState(now,out lodging,out target))return lodging;
             ScopedVisit observedStop; double shift;
             if(!TryObservedVisit(observedVisit,out observedStop,out shift) || now<observedVisit.ObservedAt)
                 return EvaluateTimeline(now);
@@ -240,6 +244,8 @@ namespace PeopleOfTheIliacBay.Core
         }
         internal RoutePoint? VisitTravelDestination(double now,ObservedVisit observedVisit,ResidentTripSnapshot snapshot)
         {
+            ResidentTripSnapshot lodging;RoutePoint? target;
+            if(TryLodgingState(now,out lodging,out target))return target;
             if(snapshot.Phase!=ResidentTripPhase.Visiting || snapshot.BuildingKey>=0 ||
                 snapshot.VisitPhase!=ResidentVisitPhase.Walking && snapshot.VisitPhase!=ResidentVisitPhase.Leaving)
                 return null;
@@ -409,13 +415,28 @@ namespace PeopleOfTheIliacBay.Core
             residentTripIndex.TryGetValue(copy.ResidentId,out var previous);
             var observed=previous==null ? null : IndexedObservedVisit(copy.ResidentId);
             Require(previous==null || copy.DepartsAt>=previous.HomeAtFor(copy.DepartsAt,observed),"Resident already has an overlapping trip.");
+            foreach(var visit in state.TravelerVisits)
+                if(visit.PersonId==copy.ResidentId)
+                {var journey=TravelerReservedJourney(Traveler(copy.ResidentId),visit);Require(copy.HomeLeavesAt>=TravelerHomeAt(Traveler(copy.ResidentId),visit) || copy.HomeAt<=journey.EntryAt,
+                    "Resident already has an overlapping Inn journey.");}
             state.ResidentTrips.RemoveAll(t=>t.ResidentId==copy.ResidentId); state.ResidentTrips.Add(copy);
             residentTripIndex[copy.ResidentId]=copy;
             RemoveObservedVisit(copy.ResidentId);
         }
         public bool IsResidentAway(string id,double now)
+        {return IsResidentAway(id,now,null);}
+        // A destination owner can identify its exact already present guest.
+        // This never releases another journey or a permanent lodging absence.
+        public bool IsResidentAway(string id,double now,string observedGuestVisitId)
         {
             Require(DefenseTime(now),"Invalid resident absence time.");
+            foreach(var visit in state.TravelerVisits)
+                if(visit.PersonId==id)
+                {
+                    var person=Traveler(id);var journey=TravelerReservedJourney(person,visit);
+                    if(now>=journey.EntryAt && now<TravelerHomeAt(person,visit) &&
+                        !(visit.Id==observedGuestVisitId && person.IsAlive))return true;
+                }
             InnLodgerHomeReservation lodging;
             if(innLodgerHomeIndex.TryGetValue(id,out lodging) && now>=lodging.ReservedAt) return true;
             residentTripIndex.TryGetValue(id,out var trip);
@@ -428,8 +449,17 @@ namespace PeopleOfTheIliacBay.Core
             return ResidentTrip.CopyValidated(trip);
         }
         public bool IsResidentAwayDuring(string id,double from,double until)
+        {return IsResidentAwayDuring(id,from,until,null);}
+        // An actual destination host may release only this already active guest
+        // stay for paid service. Other visits and origin commitments still count.
+        public bool IsResidentAwayDuring(string id,double from,double until,string currentGuestVisitId)
         {
             Require(DefenseTime(from) && DefenseTime(until) && until>from,"Invalid resident absence interval.");
+            foreach(var visit in state.TravelerVisits)
+                if(visit.PersonId==id)
+                {var journey=TravelerReservedJourney(Traveler(id),visit);
+                    if(visit.Id==currentGuestVisitId && from>=journey.CheckInAt && from<journey.CheckOutAt)continue;
+                    if(journey.EntryAt<until && from<TravelerHomeAt(Traveler(id),visit)) return true;}
             InnLodgerHomeReservation lodging;
             if(innLodgerHomeIndex.TryGetValue(id,out lodging) && lodging.ReservedAt<until)return true;
             ResidentTrip trip;
@@ -447,8 +477,18 @@ namespace PeopleOfTheIliacBay.Core
         public void SaveResidentServiceExit(string id,ResidentServiceExit exit)
         {
             exit=ResidentServiceExit.Copy(exit);
+            Require(!exit.SeekingLodging && exit.ExteriorDoor==null && exit.LodgingDetour==null,
+                "Lodging holds are derived from an actual Inn refusal.");
             ResidentTrip original;
             Require(residentTripIndex.TryGetValue(id,out original),"Resident has no trip.");
+            var rejected=original.InnStays.Find(s=>s.Admission==TravelerAdmission.Refused &&
+                (s.VisitId==exit.VisitId || exit.VisitId==null && s.BuildingKey==exit.BuildingKey && ResidentVisitJourney.SameTime(s.EnterAt,exit.VisitEnterAt)));
+            if(rejected!=null && exit.WalkEndsAt<exit.VisitLeaveAt)
+            {
+                var scope=original.ResolveScopedVisit(exit.VisitId,exit.SettlementId,exit.BuildingKey,exit.VisitEnterAt);
+                exit.SeekingLodging=true;exit.ExteriorDoor=new SavedRoutePoint {X=scope.Visit.Position.X,Z=scope.Visit.Position.Z};
+                exit=ResidentServiceExit.Copy(exit);
+            }
             if(ResidentTrip.IsRoadExit(exit))
             {
                 SaveResidentRoadExit(id,original,exit);
@@ -465,7 +505,7 @@ namespace PeopleOfTheIliacBay.Core
                 return;
             }
             bool refused=copy.InnStays.Exists(s=>s.BuildingKey==exit.BuildingKey && ResidentVisitJourney.SameTime(s.EnterAt,exit.VisitEnterAt) && s.Admission==TravelerAdmission.Refused);
-            if(refused)
+            if(refused && !exit.SeekingLodging)
             {
                 var visits=new List<ResidentVisitSnapshot>(ResidentVisitJourney.Create(copy.ArrivesAt,copy.Destination,copy.PrimaryExits()).ScheduledVisits());
                 int index=visits.FindIndex(v=>v.BuildingKey==exit.BuildingKey && ResidentVisitJourney.SameTime(v.EnterAt,exit.VisitEnterAt) && v.Purpose==ResidentVisitPurpose.Inn);
@@ -582,6 +622,13 @@ namespace PeopleOfTheIliacBay.Core
             if(innLodgerHomeIndex.TryGetValue(id,out lodging) && now>=lodging.ReservedAt)
                 return new ActivitySnapshot(Activity.Visit,-1,new RoutePoint(0,0),0);
             if(!IsResidentAway(id,now)) return scheduled;
+            foreach(var visit in state.TravelerVisits)
+            {
+                if(visit.PersonId!=id)continue;
+                var journey=TravelerReservedJourney(Traveler(id),visit);
+                if(now>=journey.EntryAt && now<TravelerHomeAt(Traveler(id),visit))
+                    return new ActivitySnapshot(Activity.Visit,-1,new RoutePoint(0,0),0);
+            }
             var trip=residentTripIndex[id]; var position=trip.Evaluate(now,IndexedObservedVisit(trip.ResidentId));
             bool homeWalk=IsHomeWalk(position.Phase);
             return new ActivitySnapshot(homeWalk ? Activity.Travel : Activity.Visit,-1,
@@ -606,15 +653,11 @@ namespace PeopleOfTheIliacBay.Core
         private static List<ResidentTrip> CopyResidentTrips(WorldState source,WorldState copy)
         {
             var trips=new List<ResidentTrip>();
-            if(source.Version<12) return trips;
             Require(source.ResidentTrips!=null,"Missing resident trip ledger.");
             var owners=new HashSet<string>(StringComparer.Ordinal);
             foreach(var trip in source.ResidentTrips)
             {
                 var saved=ResidentTrip.CopyValidated(trip);
-                Require(source.Version>=16 || saved.OutboundStops.Count==0 && saved.ReturnStops.Count==0,"Road stops require save schema 16.");
-                Require(source.Version>=17 || !saved.OutboundStops.Exists(s=>s.ExitRoadNode.HasValue) && !saved.ReturnStops.Exists(s=>s.ExitRoadNode.HasValue),
-                    "Through-town stops require save schema 17.");
                 var person=TripResident(copy,saved.HomeSettlement,saved.ResidentId);
                 Require(person!=null && person.AgeGroup==ResidentAgeGroup.Adult && owners.Add(saved.ResidentId),
                     "Invalid or duplicate resident trip owner.");

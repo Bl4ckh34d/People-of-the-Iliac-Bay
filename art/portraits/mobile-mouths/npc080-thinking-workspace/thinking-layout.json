@@ -1,0 +1,20 @@
+{
+  "halfLidRegions": [
+    {
+      "x": 18,
+      "y": 24,
+      "width": 11,
+      "height": 2
+    },
+    {
+      "x": 36,
+      "y": 24,
+      "width": 11,
+      "height": 2
+    }
+  ],
+  "sourceSha256": "4ea9b975047475ae696146fbd02a9b005b16c4baab7e1c1e1c3651ee287f4b0b",
+  "referenceSha256": "0bf8484e70568b77fdb8334919baa0d508c5d33385f6518c5144ecf09823fb6a",
+  "candidateOnly": true,
+  "rationale": "Source-only candidate from preflight: rows 24\u201325 contain face skin/lid colors above visible original iris/sclera. Review against all nine final gaze cells before build."
+}

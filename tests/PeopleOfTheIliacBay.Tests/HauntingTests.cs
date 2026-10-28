@@ -262,6 +262,33 @@ namespace PeopleOfTheIliacBay.Tests
                     Check.Equal(category>=0 && category<=2,SettlementClassification.SupportsPopulation(category));
                 Check.Equal(false,SettlementClassification.SupportsPopulation(65535));
             }));
+            cases.Add(("Civilian guard admission excludes standalone poor homes dungeons cults covens and uninhabited sites",()=>{
+                var allowed=new[]{0,1,2,3,5,6,8};
+                foreach(int type in allowed)Check.True(SettlementClassification.SupportsGuards(type),"Missing civilian guard type "+type);
+                foreach(int type in new[]{-1,4,7,9,10,11,12,13,14,15,65535})
+                {
+                    Check.True(!SettlementClassification.SupportsGuards(type),"Unexpected guard type "+type);
+                    Check.Throws<ArgumentOutOfRangeException>(()=>SettlementClassification.GuardScale(type));
+                }
+                foreach(int type in new[]{3,5,6,8,11})Check.True(!SettlementClassification.SupportsPopulation(type));
+            }));
+            cases.Add(("Small civilian locations obtain both guard shifts without invented households",()=>{
+                var store=new WorldStateStore(42);var population=store.GetOrCreate(99,new int[0]);
+                foreach(int type in new[]{3,5,6,8})
+                {
+                    int residents=0;foreach(var home in population.Households)residents+=home.Residents.Count;
+                    int count=GuardRoster.TargetWithGateSlots(GuardRoster.TargetCount(SettlementClassification.GuardScale(type),residents),0);
+                    var roster=GuardRoster.Create(99,42,count,new[]{new SavedRoutePoint {X=2,Z=2},
+                        new SavedRoutePoint {X=6,Z=2},new SavedRoutePoint {X=10,Z=2}});
+                    Check.Equal(6,roster.Guards.Count);
+                    Check.Equal(3,roster.Guards.FindAll(g=>g.Shift==GuardShift.Day).Count);
+                    Check.Equal(3,roster.Guards.FindAll(g=>g.Shift==GuardShift.Night).Count);
+                    Check.Equal(0,population.Households.Count);
+                }
+                Check.Equal(SettlementScale.City,SettlementClassification.GuardScale(0));
+                Check.Equal(SettlementScale.Town,SettlementClassification.GuardScale(1));
+                Check.Equal(SettlementScale.Hamlet,SettlementClassification.GuardScale(2));
+            }));
             cases.Add(("Single-name cultures get a stable shared family name",()=>{
                 var home=new Household { SurnameSeed=42 };
                 home.Residents.Add(new Resident { AppearanceSeed=1 });

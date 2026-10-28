@@ -1,0 +1,22 @@
+{
+  "portraitRecord": 81,
+  "emotion": "afraid",
+  "asset": "mouth-atlas",
+  "generationMode": "built-in image_gen edit",
+  "layout": "3x3 row-major A B C / D E F / G H X",
+  "sourcePortrait": "art/portraits/mobile-mouths/npc081-split-workspace/original.png",
+  "sourcePortraitSha256": "eb0f7dcd1d390a6ff58d1bc0bba7a3855b5930ee824aa54e2f749211721e8ba0",
+  "reference": "art/portraits/mobile-mouths/npc081-split-workspace/mouth-reference-grid.png",
+  "referenceSha256": "195f9a431b7a6509ca0c701eb5057672431e11ab58037bef41cc61402bbe851f",
+  "referenceSize": "1536x696",
+  "generatedSourcePath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-2ede-7fc1-b24a-9d18707baa51\\exec-61b1dc31-26e0-4949-9afa-90503b7dadb2.png",
+  "output": "art/portraits/mobile-mouths/npc081-split-workspace/mouth/afraid/raw.png",
+  "outputDimensions": "1863x844",
+  "outputSha256": "e6bdddeab11ee2e4452a2281abbeb276c03148348cd0456f5ede99f9f25180f7",
+  "prompt": "Use case: precise-object-edit. Asset type: pixel-art NPC portrait mouth viseme atlas for Daggerfall Unity. Input image: Image 1 is the exact 3x3 grid of repeated original NPC081 lower-face halves and is the identity, palette, framing and pixel-scale source. Create a 3x3 sheet with the same nine lower-face crops in row-major order, one distinct pose in each cell: A closed, B teeth together, C small open, D wide open, E rounded open, F puckered, G upper teeth visible, H tongue visible, X closed resting. Make each pose clearly distinguishable while keeping the mouth within the original lip footprint and native-scale pixel art. Expression is fearful and tense: restrained anxious mouth corners, slight tension around closed poses; speech poses remain legible, not a huge grimace or oversized lips. Preserve NPC081 identity, skin/hair/background colors, face and jaw geometry, nose, chin, neck, lighting, crop framing and exact 3x3 layout. Keep the original muted brown/rose lip palette and soft contrast; no lipstick red, no orange skin shift, no bright white tooth flashes, no heavy black outlines. A and X are gently tense closed-mouth variants, not neutral. No other changes, extra objects, text or watermark.",
+  "visibleQaIssues": [
+    "Atlas retains full 3x3 layout and nine visibly different mouth poses.",
+    "Generated tooth bands and dark oral cavities are brighter/high-contrast than the reference; inspect palette/composition before use.",
+    "Lips read more saturated red than the muted source lip color; skin also appears somewhat warmer in atlas. No correction applied."
+  ]
+}

@@ -1,0 +1,255 @@
+{
+  "portraitRecord": 79,
+  "bank": "TFAC00I0.RCI",
+  "width": 64,
+  "height": 64,
+  "splitY": 35,
+  "eyeRegions": [
+    {
+      "x": 15,
+      "y": 15,
+      "width": 16,
+      "height": 17
+    },
+    {
+      "x": 34,
+      "y": 15,
+      "width": 17,
+      "height": 17
+    }
+  ],
+  "mouthRegion": {
+    "x": 22,
+    "y": 39,
+    "width": 20,
+    "height": 13
+  },
+  "maskBoundsRationale": "Inspected record79 original: uncovered face, eye and brow clusters remain inside x15..30/x34..50 y15..31; lips lie inside x22..41 y39..51. No previous face-specific pixel repairs or feature locks inherited. Parent must inspect native generated parts before registration.",
+  "sourceSelections": {
+    "mouths": {
+      "sad": {
+        "file": "mouth/sad/raw-v2.png",
+        "provenance": "mouth/sad/provenance-v2.json"
+      }
+    }
+  },
+  "eyeFeatureLocks": [
+    {
+      "emotion": "neutral",
+      "phase": "half",
+      "x": 16,
+      "y": 23,
+      "width": 14,
+      "height": 2,
+      "sourceFile": "source-upper.png"
+    },
+    {
+      "emotion": "neutral",
+      "phase": "half",
+      "x": 35,
+      "y": 23,
+      "width": 14,
+      "height": 2,
+      "sourceFile": "source-upper.png"
+    },
+    {
+      "emotion": "neutral",
+      "phase": "closed",
+      "x": 16,
+      "y": 23,
+      "width": 14,
+      "height": 2,
+      "sourceFile": "source-upper.png"
+    },
+    {
+      "emotion": "neutral",
+      "phase": "closed",
+      "x": 35,
+      "y": 23,
+      "width": 14,
+      "height": 2,
+      "sourceFile": "source-upper.png"
+    },
+    {
+      "emotion": "happy",
+      "phase": "half",
+      "x": 16,
+      "y": 23,
+      "width": 14,
+      "height": 2
+    },
+    {
+      "emotion": "happy",
+      "phase": "half",
+      "x": 35,
+      "y": 23,
+      "width": 14,
+      "height": 2
+    },
+    {
+      "emotion": "happy",
+      "phase": "closed",
+      "x": 16,
+      "y": 23,
+      "width": 14,
+      "height": 2
+    },
+    {
+      "emotion": "happy",
+      "phase": "closed",
+      "x": 35,
+      "y": 23,
+      "width": 14,
+      "height": 2
+    },
+    {
+      "emotion": "angry",
+      "phase": "half",
+      "x": 16,
+      "y": 23,
+      "width": 14,
+      "height": 2
+    },
+    {
+      "emotion": "angry",
+      "phase": "half",
+      "x": 35,
+      "y": 23,
+      "width": 14,
+      "height": 2
+    },
+    {
+      "emotion": "angry",
+      "phase": "closed",
+      "x": 16,
+      "y": 23,
+      "width": 14,
+      "height": 2
+    },
+    {
+      "emotion": "angry",
+      "phase": "closed",
+      "x": 35,
+      "y": 23,
+      "width": 14,
+      "height": 2
+    },
+    {
+      "emotion": "sad",
+      "phase": "half",
+      "x": 16,
+      "y": 23,
+      "width": 14,
+      "height": 2
+    },
+    {
+      "emotion": "sad",
+      "phase": "half",
+      "x": 35,
+      "y": 23,
+      "width": 14,
+      "height": 2
+    },
+    {
+      "emotion": "sad",
+      "phase": "closed",
+      "x": 16,
+      "y": 23,
+      "width": 14,
+      "height": 2
+    },
+    {
+      "emotion": "sad",
+      "phase": "closed",
+      "x": 35,
+      "y": 23,
+      "width": 14,
+      "height": 2
+    },
+    {
+      "emotion": "afraid",
+      "phase": "half",
+      "x": 16,
+      "y": 23,
+      "width": 14,
+      "height": 2
+    },
+    {
+      "emotion": "afraid",
+      "phase": "half",
+      "x": 35,
+      "y": 23,
+      "width": 14,
+      "height": 2
+    },
+    {
+      "emotion": "afraid",
+      "phase": "closed",
+      "x": 16,
+      "y": 23,
+      "width": 14,
+      "height": 2
+    },
+    {
+      "emotion": "afraid",
+      "phase": "closed",
+      "x": 35,
+      "y": 23,
+      "width": 14,
+      "height": 2
+    },
+    {
+      "emotion": "guarded",
+      "phase": "half",
+      "x": 16,
+      "y": 23,
+      "width": 14,
+      "height": 2
+    },
+    {
+      "emotion": "guarded",
+      "phase": "half",
+      "x": 35,
+      "y": 23,
+      "width": 14,
+      "height": 2
+    },
+    {
+      "emotion": "guarded",
+      "phase": "closed",
+      "x": 16,
+      "y": 23,
+      "width": 14,
+      "height": 2
+    },
+    {
+      "emotion": "guarded",
+      "phase": "closed",
+      "x": 35,
+      "y": 23,
+      "width": 14,
+      "height": 2
+    },
+    {
+      "emotion": "guarded",
+      "phase": "half",
+      "x": 18,
+      "y": 25,
+      "width": 11,
+      "height": 6,
+      "sourceFile": "eyes/neutral/half.png"
+    },
+    {
+      "emotion": "guarded",
+      "phase": "half",
+      "x": 36,
+      "y": 25,
+      "width": 11,
+      "height": 6,
+      "sourceFile": "eyes/neutral/half.png"
+    }
+  ],
+  "featureLockRationale": "Native079 inspection: lowered inner brow tips extend into rows23..24; keep the same open master in blinking. Guarded half was nearly open; reuse the verified neutral half eye geometry in y25..30, leaving skeptical brows intact.",
+  "browLockEndY": 24,
+  "browLockRationale": "Native record079 six-mood source inspection: preserve the complete brow/upper-lid transition through row24, including lowered inner tips in neutral, angry, sad, afraid and guarded; the happy arch remains within this lock. Original exterior outside eyeRegions remains source-exact."
+}

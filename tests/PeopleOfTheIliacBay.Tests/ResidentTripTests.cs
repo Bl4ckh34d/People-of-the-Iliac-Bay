@@ -265,16 +265,15 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.Throws<ArgumentException>(()=>ResidentTrip.Create(person.Id,100,200,0,600,100,
                     new[]{new RoutePoint(10,10),new RoutePoint(12,10)}));
             }));
-            cases.Add(("Legacy saves gain empty resident journey ledger and reject duplicate ownership",()=>{
-                var store=Store(out var person); var legacy=store.Snapshot(); legacy.Version=11; legacy.ResidentTrips=null;
-                store.Restore(legacy); Check.Equal(0,store.Snapshot().ResidentTrips.Count);
+            cases.Add(("Resident trip restore rejects duplicate ownership",()=>{
+                var store=Store(out var person);
                 store.ScheduleResidentTrip(Trip(person.Id));
                 var bad=store.Snapshot(); bad.ResidentTrips.Add(bad.ResidentTrips[0]);
                 Check.Throws<ArgumentException>(()=>store.Restore(bad));
             }));
-            cases.Add(("Schema 12 trips without home connectors retain their original timing",()=>{
+            cases.Add(("Trips without home connectors retain their original timing",()=>{
                 var store=Store(out var person); store.ScheduleResidentTrip(Trip(person.Id));
-                var old=store.Snapshot(); old.Version=12; old.ResidentTrips[0].HomeRoute=null;
+                var old=store.Snapshot(); old.ResidentTrips[0].HomeRoute=null;
                 store.Restore(old);
                 Check.Equal(new WorldState().Version,store.Snapshot().Version);
                 Check.Equal(ResidentTripPhase.Outbound,store.ResidentTripAt(person.Id,100).Phase);

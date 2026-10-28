@@ -133,13 +133,6 @@ namespace PeopleOfTheIliacBay.Tests
             Check.Throws<ArgumentException>(() => store.Restore(missing));
             Check.Equal(1, store.Snapshot().NpcMotivations.Count);
 
-            var legacy = store.Snapshot();
-            HistoricalNpcExperienceFixture.PrepareLegacyEnvelope(legacy, 37);
-            legacy.NpcMotivations = null;
-            var migrated = new WorldStateStore(0);
-            migrated.Restore(legacy);
-            Check.Equal(0, migrated.Snapshot().NpcMotivations.Count);
-            Check.Equal(0L, migrated.ReadNpcMotivationState(owner).Revision);
         }
 
         private static WorldStateStore KnownNativeStore(out string owner)

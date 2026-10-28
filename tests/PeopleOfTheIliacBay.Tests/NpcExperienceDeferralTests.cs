@@ -11,7 +11,7 @@ namespace PeopleOfTheIliacBay.Tests
         {
             cases.Add(("Exhausted appraisal defers oldest event and later event can commit after restore", DeferralUnblocksAndPersists));
             cases.Add(("Appraisal deferral rejects duplicate, stale, foreign-store, and wrong-observer tickets", DeferralRejectsStaleBindings));
-            cases.Add(("Inbox version one migration preserves pending and consumed rows", VersionOneMigrationPreservesStatuses));
+            cases.Add(("Current inbox copy preserves pending and consumed rows", CurrentCopyPreservesStatuses));
         }
 
         private static void DeferralUnblocksAndPersists()
@@ -81,7 +81,7 @@ namespace PeopleOfTheIliacBay.Tests
             Equal(1, pendingStore.ReadPendingNpcExperiences(otherObserver, 10).Count);
         }
 
-        private static void VersionOneMigrationPreservesStatuses()
+        private static void CurrentCopyPreservesStatuses()
         {
             string observer;
             var store = NpcExperienceCommitTests.Create(out observer);
@@ -92,18 +92,11 @@ namespace PeopleOfTheIliacBay.Tests
             True(store.TryCommitNpcExperienceAppraisal(ticket, NpcExperienceCommitTests.Result(ticket.Request, mood: 0)));
 
             var legacy = store.Snapshot().NpcExperienceInbox;
-            HistoricalNpcExperienceFixture.PrepareLegacyInbox(legacy, 1);
             var migrated = NpcExperienceInbox.CopyValidated(legacy, id => id == observer);
             Equal(NpcExperienceInbox.VersionCurrent, migrated.Version);
             Equal(NpcExperienceInboxStatus.Consumed, migrated.Entries.Single(x => x.OutcomeId == "pending").Status);
             Equal(NpcExperienceInboxStatus.Pending, migrated.Entries.Single(x => x.OutcomeId == "consumed").Status);
 
-            NpcExperienceCommitTests.Enqueue(store, observer, "deferred", 12);
-            True(store.TryCaptureNpcExperienceAppraisal(observer, 12, out ticket));
-            True(store.TryDeferNpcExperienceAppraisal(observer, ticket, 13));
-            var impossibleV1 = store.Snapshot().NpcExperienceInbox;
-            HistoricalNpcExperienceFixture.PrepareLegacyInbox(impossibleV1, 1);
-            Throws<ArgumentException>(() => NpcExperienceInbox.CopyValidated(impossibleV1, id => id == observer));
         }
 
         private static void True(bool value)

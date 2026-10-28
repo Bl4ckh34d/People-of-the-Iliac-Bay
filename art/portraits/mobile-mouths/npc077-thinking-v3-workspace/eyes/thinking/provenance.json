@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T05:32:04.5783573Z",
+    "portraitRecord":  77,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "stylized-concept. Create one clean 3-by-3 gaze atlas from the supplied exact 1536x840 nearest-neighbor reference grid. Each cell must be a complete, identical-scale 64x35 upper portrait; final atlas must be 192x105 cells with no gutters, labels, text, borders, or added padding. The supplied grid repeats the exact same native portrait in all nine cells as the visual source; do not reproduce it as nine identical outputs.\n\nKeep face, hair, skin, lighting, colors, texture, eyebrow shape and position, and every pixel outside the two eye-feature rectangles unchanged from the reference. Do not add detail, enlarge the eye openings, thicken brows, or shift the face. Keep both eyes anatomically coherent and the same size in every direction.\n\nMake a clearly readable 3x3 gaze matrix, row-major: UP-LEFT, UP, UP-RIGHT; LEFT, CENTER, RIGHT; DOWN-LEFT, DOWN, DOWN-RIGHT. Each gaze must be distinct. Move both irises and their pupils together in the named direction, with matching direction in both eyes. Horizontal and diagonal directions must combine their horizontal and vertical components.\n\nCritical vertical requirement at native 64x35 scale: every top-row gaze must place the iris/pupil centers 1 to 2 native pixels HIGHER than the middle-row centers. Every bottom-row gaze must place them 1 to 2 native pixels LOWER than the middle-row centers. This vertical separation must be visibly real in the pixel art, not just a label or a horizontal-only glance. Keep the middle row centered vertically. For the UP row only, the upper lid may lift by at most one native pixel to reveal the raised iris; keep the lower lid fixed and do not enlarge the iris or eye opening. For DOWN, keep the lower lid/source eye identity fixed and place the iris visibly lower, partly tucked under the lower lid if needed.\n\nPreserve the source\u0027s narrow, naturally hooded eye shape and the muted violet-gray irises. Keep each iris/pupil footprint about the original three native pixels wide with the same compact pixel structure; do not make rounder, larger, brighter, or more saturated irises. Keep only tiny source-like sclera/highlight pixels. No large white crescents, giant whites, oversized pupils, or flashes.\n\nUse the exact reference palette and source-like pixel texture. Do not add new facial features, change expression, or modify brows. Return only the 3x3 atlas.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-d187bbc0-9a05-4b3f-88a7-02e4c585b87f.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-d187bbc0-9a05-4b3f-88a7-02e4c585b87f.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "e797d4129c06130dd9a87c7b3a60ca36518adfe7128a4fc84b9626280e228bb6",
+                          "width":  1536,
+                          "height":  840
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-d187bbc0-9a05-4b3f-88a7-02e4c585b87f.png",
+                      "sha256":  "cfda937f605512e18ab5bff796ee540b1bf489526974ae763e65c218a3b58a94",
+                      "width":  1696,
+                      "height":  927
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "cfda937f605512e18ab5bff796ee540b1bf489526974ae763e65c218a3b58a94",
+                "width":  1696,
+                "height":  927
+            }
+}

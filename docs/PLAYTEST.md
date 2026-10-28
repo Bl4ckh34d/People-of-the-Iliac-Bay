@@ -1,12 +1,22 @@
-# Spieltest — 26. Oktober 2026
+# Spieltest — 27. Oktober 2026
 
-Aktuell installiert: **`D3CA68C3D919`**; Distribution und Player identisch.
-Unity-Paketprüfung besteht; die enthaltene Core-Basis besteht2162 Tests.
-Kontrollierte Wachtests bestehen beobachteten und unbeobachteten Türdurchgang,
-Wiedererkennung innen und Zielverlust.22 native Diebstahls-Erinnerungsfälle bestehen.
-Dungeon-Follow samt Kontext und Rundreiseprobe ist enthalten, aber noch nicht
-nativ abgenommen: der erste Lauf scheitert vor Eintritt an der Reisenden-Fixture.
-Frühere Begleiter-, Tempel- und Inn-Ergänzungen bleiben enthalten.
+Aktuell installiert: **`9227BBCCD619`**; Distribution und Player identisch.
+Unity-Paketprüfung und 2149 Core-Tests bestehen. Die fünf frischen Hakon-Saves
+wurden nativ gespeichert und neu geladen; Gesamtwert 100.000 Gold, tragbar als
+1.000 Münzen plus Kreditbrief.
+
+Neue native Belege: Wachbeitritt auf Sicht, tatsächlicher Halt-Ruf bis 200 m,
+NPC-Regalkauf samt physischer Übergabe ohne Bestandsverbrauch, Nachtruhe ohne
+Schlafsprite und zwei NPC-Mordfälle mit echter Zeugenmeldung und Wache. Die
+2–5 Sekunden Gespräch vor dem Abmarsch bestehen nativ mit 4,64 Sekunden.
+Alle 19 Daggerfall-Inns bestehen die Toranbindung einschließlich vier
+körperlicher Querungen und geschlossener Tore.
+Der freie Fünf-Schritt-Auftrag wurde von Gemma korrekt zerlegt und gebunden,
+vom NPC jedoch abgelehnt; vollständige Ausführung ist damit nicht abgenommen.
+[Aktuelle Ergebnisse, Wiederholbarkeit und offene Punkte](audits/2026-10-27-game-acceptance.md).
+
+## Frühere Belege und weiter offene Abläufe
+
 10 g je tatsächlichem NPC-Level buchen einen begonnenen 24-Stunden-Tag
 (Level5:50g, Level12:120g). Frühe Kündigung erstattet keinen
 Teil des Tages, gescheiterte Aufnahme erstattet vollständig, keine automatische

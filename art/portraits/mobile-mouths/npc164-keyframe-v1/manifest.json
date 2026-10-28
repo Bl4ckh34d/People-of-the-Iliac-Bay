@@ -1,0 +1,2728 @@
+{
+  "schemaVersion": 2,
+  "portraitRecord": 164,
+  "bank": "TFAC00I0.RCI",
+  "width": 64,
+  "height": 64,
+  "splitY": 35,
+  "original": "original.png",
+  "originalUpper": "source-upper.png",
+  "originalLower": "source-lower.png",
+  "status": "partial-repair-remaining-findings-open",
+  "visualAcceptance": "static-eye-repair-reviewed-audiovisual-and-full-NPC-acceptance-open",
+  "eyeSets": [
+    {
+      "id": "neutral",
+      "label": "Neutral",
+      "phases": {
+        "open": {
+          "file": "repair-20261027-v6/eyes/neutral/front/open.png",
+          "difference": "repair-20261027-v6/eyes/neutral/front/open-diff.png",
+          "changedPixels": 0,
+          "sha256": "7c86906c42cbeb1080b3d69f4e6163785c3c07463d51c4c43e2e3ad83c82ca78"
+        },
+        "half": {
+          "file": "repair-20261027-blink-v13/neutral/front/half.png",
+          "difference": "repair-20261027-blink-v13/neutral/front/half-diff.png",
+          "changedPixels": 82,
+          "sha256": "aba8fa765ed2b45b5aeb7327a05b1945ac107d5d64adfaa32b60a510c938890b"
+        },
+        "closed": {
+          "file": "repair-20261027-blink-v13/neutral/front/closed.png",
+          "difference": "repair-20261027-blink-v13/neutral/front/closed-diff.png",
+          "changedPixels": 139,
+          "sha256": "4b85144b7f5f7d7e7504ac17a5a8edc5c31b3f92fb15f11fafcbdc263e16bf58"
+        }
+      }
+    },
+    {
+      "id": "happy",
+      "label": "Happy",
+      "phases": {
+        "open": {
+          "file": "repair-20261027-eyes-v11/happy/front/open.png",
+          "difference": "repair-20261027-eyes-v11/happy/front/open-diff.png",
+          "changedPixels": 283,
+          "sha256": "bf57ea1b737019e8b3281177b875338751bb93a339c77e75b9bd2e0b711c3eb3"
+        },
+        "half": {
+          "file": "repair-20261027-blink-v13/happy/front/half.png",
+          "difference": "repair-20261027-blink-v13/happy/front/half-diff.png",
+          "changedPixels": 365,
+          "sha256": "43b4ccd57c4e84520ca31b14cfe3f3cf6abb18acd765cd703a16f69a6b18aa6c"
+        },
+        "closed": {
+          "file": "repair-20261027-blink-v13/happy/front/closed.png",
+          "difference": "repair-20261027-blink-v13/happy/front/closed-diff.png",
+          "changedPixels": 422,
+          "sha256": "0090075a646c3085e5b56b147b7e9bb5aafb6f8ead6fd962f87c60857384aadc"
+        }
+      }
+    },
+    {
+      "id": "angry",
+      "label": "Angry",
+      "phases": {
+        "open": {
+          "file": "repair-20261027-eyes-v11/angry/front/open.png",
+          "difference": "repair-20261027-eyes-v11/angry/front/open-diff.png",
+          "changedPixels": 307,
+          "sha256": "d06ae990c3c4b5d2be074f6ae470c16400869d536676261611c708432a63b919"
+        },
+        "half": {
+          "file": "repair-20261027-blink-v13/angry/front/half.png",
+          "difference": "repair-20261027-blink-v13/angry/front/half-diff.png",
+          "changedPixels": 389,
+          "sha256": "dd54dc961381fbc706bf817b6a1003fe823fd4f36aa3aa060cb60937c96b0490"
+        },
+        "closed": {
+          "file": "repair-20261027-blink-v13/angry/front/closed.png",
+          "difference": "repair-20261027-blink-v13/angry/front/closed-diff.png",
+          "changedPixels": 446,
+          "sha256": "6612d90f82a927cc7bb5799699f794be9576a0cb7d23a7b1c0f68a500e254c3d"
+        }
+      }
+    },
+    {
+      "id": "sad",
+      "label": "Sad",
+      "phases": {
+        "open": {
+          "file": "repair-20261027-sad-brow-cleanup-v18/sad/front/open.png",
+          "difference": "repair-20261027-sad-brow-cleanup-v18/sad/front/open-diff.png",
+          "sha256": "5234ff27b00090c3e59e54d3380adc438adcaeb21737b2c5a11e393f6be0d891",
+          "changedPixels": 314
+        },
+        "half": {
+          "file": "repair-20261027-sad-brow-cleanup-v18/sad/front/half.png",
+          "difference": "repair-20261027-sad-brow-cleanup-v18/sad/front/half-diff.png",
+          "sha256": "34c8da6990e30efe875620580d0f53b5811478eafa64374cc4492289d5cc5ce4",
+          "changedPixels": 368
+        },
+        "closed": {
+          "file": "repair-20261027-sad-brow-cleanup-v18/sad/front/closed.png",
+          "difference": "repair-20261027-sad-brow-cleanup-v18/sad/front/closed-diff.png",
+          "sha256": "d91535bb2215944cbe28dacaa69fb422cef56ff27681a6b0836a498f5e3f5d6c",
+          "changedPixels": 426
+        }
+      }
+    },
+    {
+      "id": "afraid",
+      "label": "Afraid",
+      "phases": {
+        "open": {
+          "file": "repair-20261027-fear-brows-v15/front/open.png",
+          "difference": "repair-20261027-fear-brows-v15/front/open-diff.png",
+          "changedPixels": 246,
+          "sha256": "62288038db06381370bb4cb0369692c11a7ad7aa9897becba1af62405a0a7453"
+        },
+        "half": {
+          "file": "repair-20261027-fear-brows-v15/front/half.png",
+          "difference": "repair-20261027-fear-brows-v15/front/half-diff.png",
+          "changedPixels": 328,
+          "sha256": "93017d9fb2f0d7add9a455538ba0cc5a9c7a18d501a53f66e55fecd0d4da151b"
+        },
+        "closed": {
+          "file": "repair-20261027-fear-brows-v15/front/closed.png",
+          "difference": "repair-20261027-fear-brows-v15/front/closed-diff.png",
+          "changedPixels": 385,
+          "sha256": "cbdb1bd8250729638437dc7bceaaaf491b0e350408f1d7827cbbbfbc1e0cd89a"
+        }
+      }
+    },
+    {
+      "id": "guarded",
+      "label": "Guarded",
+      "phases": {
+        "open": {
+          "file": "repair-20261027-v6/eyes/guarded/front/open.png",
+          "difference": "repair-20261027-v6/eyes/guarded/front/open-diff.png",
+          "changedPixels": 235,
+          "sha256": "a4dfed88e4b0d65f2d5ce4d3a54b3cc310b3b85fe95432d538e7e54b7fb91dd3"
+        },
+        "half": {
+          "file": "repair-20261027-blink-v13/guarded/front/half.png",
+          "difference": "repair-20261027-blink-v13/guarded/front/half-diff.png",
+          "changedPixels": 317,
+          "sha256": "cd835c931c90dc75258e4a8f915cdafc069db028e4aa3717c56a3961a5f4d78d"
+        },
+        "closed": {
+          "file": "repair-20261027-blink-v13/guarded/front/closed.png",
+          "difference": "repair-20261027-blink-v13/guarded/front/closed-diff.png",
+          "changedPixels": 374,
+          "sha256": "c8a1c4ae3072ed4e9c6f2a275990b95195c016f3ab7d6d5ec8e1099352460faa"
+        }
+      }
+    }
+  ],
+  "mouthSets": [
+    {
+      "id": "neutral",
+      "label": "Neutral",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "mouth/neutral/A.png",
+          "difference": "mouth/neutral/A-diff.png",
+          "changedPixels": 0,
+          "sha256": "6910b0491f40f64cc5cd3a4c9822342959b52aa82d44f214aec65601dec8ff48"
+        },
+        {
+          "shape": "B",
+          "file": "repair-20261027-mouth-v3/neutral/B.png",
+          "difference": "repair-20261027-mouth-v3/neutral/B-diff.png",
+          "changedPixels": 348,
+          "sha256": "a47d6a7b0fad83bd79ff63f585b296f5e577dd49ccd66a52cbd7b0619c9bc138"
+        },
+        {
+          "shape": "C",
+          "file": "repair-20261027-mouth-v3/neutral/C.png",
+          "difference": "repair-20261027-mouth-v3/neutral/C-diff.png",
+          "changedPixels": 364,
+          "sha256": "158916185c2a3adb08f17638344f75bd18d9c3d0bb6adb75a377846003792852"
+        },
+        {
+          "shape": "D",
+          "file": "repair-20261027-mouth-v3/neutral/D.png",
+          "difference": "repair-20261027-mouth-v3/neutral/D-diff.png",
+          "changedPixels": 370,
+          "sha256": "fad12713c7655adebe5e42d60c27892bfe2d84e27705a891f6f7df01be326126"
+        },
+        {
+          "shape": "E",
+          "file": "repair-20261027-mouth-v3/neutral/E.png",
+          "difference": "repair-20261027-mouth-v3/neutral/E-diff.png",
+          "changedPixels": 343,
+          "sha256": "fb35c57e38613450a30300200df4aed8fbea6ec9ea90324f304e0c630da2d614"
+        },
+        {
+          "shape": "F",
+          "file": "repair-20261027-mouth-v3/neutral/F.png",
+          "difference": "repair-20261027-mouth-v3/neutral/F-diff.png",
+          "changedPixels": 355,
+          "sha256": "411522f1ab45d2e130be0114b36563467ee265e7e3c93b7ca594f374667dfc2d"
+        },
+        {
+          "shape": "G",
+          "file": "repair-20261027-mouth-v3/neutral/G.png",
+          "difference": "repair-20261027-mouth-v3/neutral/G-diff.png",
+          "changedPixels": 356,
+          "sha256": "b155ea6a8f89c7bb2a38217d8cd1ec518a4513948c2edd4c15fa7a82fd3c7989"
+        },
+        {
+          "shape": "H",
+          "file": "repair-20261027-mouth-v3/neutral/H.png",
+          "difference": "repair-20261027-mouth-v3/neutral/H-diff.png",
+          "changedPixels": 369,
+          "sha256": "15f34a7f2688c4c52150a726e096a5db8690ca83bfc8d20050495ade5036c41f"
+        },
+        {
+          "shape": "X",
+          "file": "mouth/neutral/X.png",
+          "difference": "mouth/neutral/X-diff.png",
+          "changedPixels": 0,
+          "sha256": "6910b0491f40f64cc5cd3a4c9822342959b52aa82d44f214aec65601dec8ff48"
+        }
+      ]
+    },
+    {
+      "id": "happy",
+      "label": "Happy",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "repair-20261027-mouth-v3/happy/A.png",
+          "difference": "repair-20261027-mouth-v3/happy/A-diff.png",
+          "changedPixels": 369,
+          "sha256": "85f5bed42cda9c7c623eda1bf149ae41ef5e7277e57d9544dc14011fbc28a62b"
+        },
+        {
+          "shape": "B",
+          "file": "repair-20261027-mouth-v3/happy/B.png",
+          "difference": "repair-20261027-mouth-v3/happy/B-diff.png",
+          "changedPixels": 362,
+          "sha256": "7dde0a26e918f1475a397559e50fa41f760aa645834f0363e8d59ba5b589cf9a"
+        },
+        {
+          "shape": "C",
+          "file": "repair-20261027-mouth-v3/happy/C.png",
+          "difference": "repair-20261027-mouth-v3/happy/C-diff.png",
+          "changedPixels": 366,
+          "sha256": "40a529b38358c0c1953a9380f478b4921bb293c12a1cbb7e260a35a2042ce414"
+        },
+        {
+          "shape": "D",
+          "file": "repair-20261027-mouth-v3/happy/D.png",
+          "difference": "repair-20261027-mouth-v3/happy/D-diff.png",
+          "changedPixels": 369,
+          "sha256": "b12a9ae40bf8401dc3c6f161781834068621adb6965857be7b146137403ef7e9"
+        },
+        {
+          "shape": "E",
+          "file": "repair-20261027-mouth-v3/happy/E.png",
+          "difference": "repair-20261027-mouth-v3/happy/E-diff.png",
+          "changedPixels": 368,
+          "sha256": "77b683b02864175ad13a2ceba66413f4a6a8888473726680bc9ded03bf31642f"
+        },
+        {
+          "shape": "F",
+          "file": "repair-20261027-mouth-v3/happy/F.png",
+          "difference": "repair-20261027-mouth-v3/happy/F-diff.png",
+          "changedPixels": 362,
+          "sha256": "c0d660b32dcbc020006485e5f62c71d200756d85d42942f9fbac7ae52d94341f"
+        },
+        {
+          "shape": "G",
+          "file": "repair-20261027-mouth-v3/happy/G.png",
+          "difference": "repair-20261027-mouth-v3/happy/G-diff.png",
+          "changedPixels": 366,
+          "sha256": "52ea0348641754ff81cb963d7d0d03df1d6a87c9b9c9ceadbe1f6180e49582bb"
+        },
+        {
+          "shape": "H",
+          "file": "repair-20261027-mouth-v3/happy/H.png",
+          "difference": "repair-20261027-mouth-v3/happy/H-diff.png",
+          "changedPixels": 366,
+          "sha256": "9957da54ea517eb577c826839c87cf3643aac1534c860054ddbe1145cc0ef23a"
+        },
+        {
+          "shape": "X",
+          "file": "repair-20261027-mouth-v3/happy/X.png",
+          "difference": "repair-20261027-mouth-v3/happy/X-diff.png",
+          "changedPixels": 362,
+          "sha256": "c1041414f16563ced4984313c78477d6b7b1903d25ce58a50c62af48d4ebe149"
+        }
+      ]
+    },
+    {
+      "id": "angry",
+      "label": "Angry",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "repair-20261027-mouth-v3/angry/A.png",
+          "difference": "repair-20261027-mouth-v3/angry/A-diff.png",
+          "changedPixels": 369,
+          "sha256": "89c1dc6108adba88eafcf0b959ab0d85dd6bc6874cc70b9063cb697ca2d3c3be"
+        },
+        {
+          "shape": "B",
+          "file": "repair-20261027-mouth-v3/angry/B.png",
+          "difference": "repair-20261027-mouth-v3/angry/B-diff.png",
+          "changedPixels": 370,
+          "sha256": "f2c6d9746a0bd03d538b4386ea8cbc8d707a609658395b49b4c996ea8771e86b"
+        },
+        {
+          "shape": "C",
+          "file": "repair-20261027-mouth-v3/angry/C.png",
+          "difference": "repair-20261027-mouth-v3/angry/C-diff.png",
+          "changedPixels": 369,
+          "sha256": "f95146a1cea645fe89d011030a67e18e04f5f3a82e2449f425b874f640b1736e"
+        },
+        {
+          "shape": "D",
+          "file": "repair-20261027-mouth-v3/angry/D.png",
+          "difference": "repair-20261027-mouth-v3/angry/D-diff.png",
+          "changedPixels": 369,
+          "sha256": "8ee10ebeca5a6fc0f920a87fbc6a7242cd8e5b929f6a9238ff29faec5ea944ae"
+        },
+        {
+          "shape": "E",
+          "file": "repair-20261027-mouth-v3/angry/E.png",
+          "difference": "repair-20261027-mouth-v3/angry/E-diff.png",
+          "changedPixels": 367,
+          "sha256": "9e14421a99c1e5632be9e99e1ad161a91a5d3ac3b30b904b8bc5ab383876fa17"
+        },
+        {
+          "shape": "F",
+          "file": "repair-20261027-mouth-v3/angry/F.png",
+          "difference": "repair-20261027-mouth-v3/angry/F-diff.png",
+          "changedPixels": 368,
+          "sha256": "03946d8b9020ef67d384bab70634cfaf0f6ffad89d02406cd6db64a369d9329c"
+        },
+        {
+          "shape": "G",
+          "file": "repair-20261027-mouth-v3/angry/G.png",
+          "difference": "repair-20261027-mouth-v3/angry/G-diff.png",
+          "changedPixels": 372,
+          "sha256": "c62888c67d6e1dfed67431e7a46afcf929a0388ce5c2895e0f7a3996efde8b52"
+        },
+        {
+          "shape": "H",
+          "file": "repair-20261027-mouth-v3/angry/H.png",
+          "difference": "repair-20261027-mouth-v3/angry/H-diff.png",
+          "changedPixels": 373,
+          "sha256": "987a26f47049e59c47ae624870bbb7ea497b3bef1b864e108b25c75b78db4919"
+        },
+        {
+          "shape": "X",
+          "file": "repair-20261027-mouth-v3/angry/X.png",
+          "difference": "repair-20261027-mouth-v3/angry/X-diff.png",
+          "changedPixels": 372,
+          "sha256": "b826f2fd11fc8b4677920d37efe8c8b1627906ec523d0223e78c1b8970e68258"
+        }
+      ]
+    },
+    {
+      "id": "sad",
+      "label": "Sad",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "repair-20261027-mouth-v3/sad/A.png",
+          "difference": "repair-20261027-mouth-v3/sad/A-diff.png",
+          "changedPixels": 343,
+          "sha256": "49f6ba98f7d1bad349be2aaaca7652a09426a52d42c38f3ea5970e71756666d2"
+        },
+        {
+          "shape": "B",
+          "file": "repair-20261027-mouth-v3/sad/B.png",
+          "difference": "repair-20261027-mouth-v3/sad/B-diff.png",
+          "changedPixels": 365,
+          "sha256": "0d1a47bcf22fcfb737ad4cc7b62e6408264b52af9498a5080f527182a431c2a9"
+        },
+        {
+          "shape": "C",
+          "file": "repair-20261027-mouth-v3/sad/C.png",
+          "difference": "repair-20261027-mouth-v3/sad/C-diff.png",
+          "changedPixels": 353,
+          "sha256": "50d1186861e6f773b9ab0a82268330f3283cdbac359f777787fbe010062deb78"
+        },
+        {
+          "shape": "D",
+          "file": "repair-20261027-mouth-v3/sad/D.png",
+          "difference": "repair-20261027-mouth-v3/sad/D-diff.png",
+          "changedPixels": 358,
+          "sha256": "047bc965004b56c1482cd3d2b663b77958fb9ba42c8ed7aaf7ee180986501e83"
+        },
+        {
+          "shape": "E",
+          "file": "repair-20261027-mouth-v3/sad/E.png",
+          "difference": "repair-20261027-mouth-v3/sad/E-diff.png",
+          "changedPixels": 358,
+          "sha256": "c0a1d70cbe3650096307a4db576341d9a2e21adaca219c5e72f346b1ec8853b2"
+        },
+        {
+          "shape": "F",
+          "file": "repair-20261027-mouth-v3/sad/F.png",
+          "difference": "repair-20261027-mouth-v3/sad/F-diff.png",
+          "changedPixels": 345,
+          "sha256": "3806c6a578aa0e133848364873ce008e6fe3dd3760808997015d578b7a127bd1"
+        },
+        {
+          "shape": "G",
+          "file": "repair-20261027-mouth-v3/sad/G.png",
+          "difference": "repair-20261027-mouth-v3/sad/G-diff.png",
+          "changedPixels": 325,
+          "sha256": "2cc1bcce49eb9a0966b4438e4a61d2fc8323401b20a1b7c9623c9e3acacbca0c"
+        },
+        {
+          "shape": "H",
+          "file": "repair-20261027-mouth-v3/sad/H.png",
+          "difference": "repair-20261027-mouth-v3/sad/H-diff.png",
+          "changedPixels": 362,
+          "sha256": "b1af1ef4c012657b14a16d39684fef2f613adc9fae9b64f0bf002573ad73ec3a"
+        },
+        {
+          "shape": "X",
+          "file": "repair-20261027-mouth-v3/sad/X.png",
+          "difference": "repair-20261027-mouth-v3/sad/X-diff.png",
+          "changedPixels": 363,
+          "sha256": "528ccf138360a37db693de2f5d200f16fa808391306b771b5e62772f9b1c6ce3"
+        }
+      ]
+    },
+    {
+      "id": "afraid",
+      "label": "Afraid",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "repair-20261027-mouth-v3/afraid/A.png",
+          "difference": "repair-20261027-mouth-v3/afraid/A-diff.png",
+          "changedPixels": 355,
+          "sha256": "2432d2d00b5d2cd3aea26859f4b1ce8dfd2c8b3720bd78516561ac53eb190362"
+        },
+        {
+          "shape": "B",
+          "file": "repair-20261027-mouth-v3/afraid/B.png",
+          "difference": "repair-20261027-mouth-v3/afraid/B-diff.png",
+          "changedPixels": 367,
+          "sha256": "fae59aac3308e5bcbdfb4da2e135b3a60b504c6837c157ea11652b8b2733b35a"
+        },
+        {
+          "shape": "C",
+          "file": "repair-20261027-mouth-v3/afraid/C.png",
+          "difference": "repair-20261027-mouth-v3/afraid/C-diff.png",
+          "changedPixels": 358,
+          "sha256": "266bb26e9cdad41fb60a56a137cb4c9f1bf74aa68eb02ecc018ca160ad4f72cc"
+        },
+        {
+          "shape": "D",
+          "file": "repair-20261027-mouth-v3/afraid/D.png",
+          "difference": "repair-20261027-mouth-v3/afraid/D-diff.png",
+          "changedPixels": 361,
+          "sha256": "864f47148131d2902dd19c809c84d981a93c99fcb1583d0ca59c3b2e24ef3259"
+        },
+        {
+          "shape": "E",
+          "file": "repair-20261027-mouth-v3/afraid/E.png",
+          "difference": "repair-20261027-mouth-v3/afraid/E-diff.png",
+          "changedPixels": 365,
+          "sha256": "80537a4ca1c5130aa1907b421577c21ee94f17ca478336f38444d2f5ad4fda23"
+        },
+        {
+          "shape": "F",
+          "file": "repair-20261027-mouth-v3/afraid/F.png",
+          "difference": "repair-20261027-mouth-v3/afraid/F-diff.png",
+          "changedPixels": 365,
+          "sha256": "a4fe7b871b2deaae7b8b917d309328cbc28e7a9509c9fdba1984458b8f5d5f5d"
+        },
+        {
+          "shape": "G",
+          "file": "repair-20261027-mouth-v3/afraid/G.png",
+          "difference": "repair-20261027-mouth-v3/afraid/G-diff.png",
+          "changedPixels": 353,
+          "sha256": "d08fd84b85925c3afc316159bdc0f66c8a6c87750705bcc819bf2ea8ebdc2838"
+        },
+        {
+          "shape": "H",
+          "file": "repair-20261027-mouth-v3/afraid/H.png",
+          "difference": "repair-20261027-mouth-v3/afraid/H-diff.png",
+          "changedPixels": 364,
+          "sha256": "85ff4908ee67cf4e191011f7fafc7fbc4268aa9dbdfdd7fa3d72ee38d369cd56"
+        },
+        {
+          "shape": "X",
+          "file": "repair-20261027-mouth-v3/afraid/X.png",
+          "difference": "repair-20261027-mouth-v3/afraid/X-diff.png",
+          "changedPixels": 360,
+          "sha256": "70684b0e1d406f98105206d1ff9a1a729c72b0e5455e448863d6ada3245a92d5"
+        }
+      ]
+    },
+    {
+      "id": "guarded",
+      "label": "Guarded",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "repair-20261027-mouth-v3/guarded/A.png",
+          "difference": "repair-20261027-mouth-v3/guarded/A-diff.png",
+          "changedPixels": 364,
+          "sha256": "6a0e11d053b4b46c46fcb6461e6b12accbe817e227b4bc3861fb6479a0480e18"
+        },
+        {
+          "shape": "B",
+          "file": "repair-20261027-mouth-v3/guarded/B.png",
+          "difference": "repair-20261027-mouth-v3/guarded/B-diff.png",
+          "changedPixels": 363,
+          "sha256": "edd1ca521317a47e4bce0bec71efc2a8ddf33d036a97370c7c6976c1884443a5"
+        },
+        {
+          "shape": "C",
+          "file": "repair-20261027-mouth-v3/guarded/C.png",
+          "difference": "repair-20261027-mouth-v3/guarded/C-diff.png",
+          "changedPixels": 372,
+          "sha256": "0169a346f470bc230cf81a6c189516dad78dd8b3831cd27c32f33e47e757b752"
+        },
+        {
+          "shape": "D",
+          "file": "repair-20261027-mouth-v3/guarded/D.png",
+          "difference": "repair-20261027-mouth-v3/guarded/D-diff.png",
+          "changedPixels": 368,
+          "sha256": "2eda584249e14b8d4dbd0e6030bbd0f19abe380baacbee5aff89bee433c94b3b"
+        },
+        {
+          "shape": "E",
+          "file": "repair-20261027-mouth-v3/guarded/E.png",
+          "difference": "repair-20261027-mouth-v3/guarded/E-diff.png",
+          "changedPixels": 371,
+          "sha256": "dbbf5cf55415becb04e90d010350fa3c4986e94812e57026ec96325ecbb8735a"
+        },
+        {
+          "shape": "F",
+          "file": "repair-20261027-mouth-v3/guarded/F.png",
+          "difference": "repair-20261027-mouth-v3/guarded/F-diff.png",
+          "changedPixels": 357,
+          "sha256": "f1853bf1974a8e857c32b63710e59beee5b67089cf51e1de16f410755874f8ac"
+        },
+        {
+          "shape": "G",
+          "file": "repair-20261027-mouth-v3/guarded/G.png",
+          "difference": "repair-20261027-mouth-v3/guarded/G-diff.png",
+          "changedPixels": 370,
+          "sha256": "9d0f04d0c412149216b18a7e0a9a44b630e6fa1124ecfcfe609986618c68950a"
+        },
+        {
+          "shape": "H",
+          "file": "repair-20261027-mouth-v3/guarded/H.png",
+          "difference": "repair-20261027-mouth-v3/guarded/H-diff.png",
+          "changedPixels": 372,
+          "sha256": "09a1c20c7bff68a2c508f020f1e69c9a04812ba38faa3d13d4a1d2d7dbfc1ce9"
+        },
+        {
+          "shape": "X",
+          "file": "repair-20261027-mouth-v3/guarded/X.png",
+          "difference": "repair-20261027-mouth-v3/guarded/X-diff.png",
+          "changedPixels": 362,
+          "sha256": "4e8ccdecf5cc23ab3de69899f27bf5456b82324d7b886b0b2a4a49b3566c5b60"
+        }
+      ]
+    }
+  ],
+  "thinkingEyeSetsByEmotion": {
+    "neutral": [
+      {
+        "id": "left",
+        "label": "Left",
+        "phases": {
+          "open": {
+            "file": "repair-20261027-v6/eyes/neutral/left/open.png",
+            "difference": "repair-20261027-v6/eyes/neutral/left/open-diff.png",
+            "changedPixels": 140,
+            "sha256": "c28a50771f21c52fe629271e814cc9661aa27532ce240786bbe923bf55800315"
+          },
+          "half": {
+            "file": "repair-20261027-blink-v13/neutral/left/half.png",
+            "difference": "repair-20261027-blink-v13/neutral/left/half-diff.png",
+            "changedPixels": 138,
+            "sha256": "10da67248ee0bc628629127acf056252992ca16a3786f0eb6afefff610de6490"
+          },
+          "closed": {
+            "file": "repair-20261027-blink-v13/neutral/left/closed.png",
+            "difference": "repair-20261027-blink-v13/neutral/left/closed-diff.png",
+            "changedPixels": 139,
+            "sha256": "4b85144b7f5f7d7e7504ac17a5a8edc5c31b3f92fb15f11fafcbdc263e16bf58"
+          }
+        }
+      },
+      {
+        "id": "right",
+        "label": "Right",
+        "phases": {
+          "open": {
+            "file": "repair-20261027-v6/eyes/neutral/right/open.png",
+            "difference": "repair-20261027-v6/eyes/neutral/right/open-diff.png",
+            "changedPixels": 137,
+            "sha256": "e63ffd6068861f5f05f6f34f7e97a0bd8d41e3c8e673d36adb9b8e38a8d4ae89"
+          },
+          "half": {
+            "file": "repair-20261027-blink-v13/neutral/right/half.png",
+            "difference": "repair-20261027-blink-v13/neutral/right/half-diff.png",
+            "changedPixels": 136,
+            "sha256": "50d0f662532b8c0a41f5b34be1f908c6c82625179df49cce230a45625cfd0119"
+          },
+          "closed": {
+            "file": "repair-20261027-blink-v13/neutral/right/closed.png",
+            "difference": "repair-20261027-blink-v13/neutral/right/closed-diff.png",
+            "changedPixels": 139,
+            "sha256": "4b85144b7f5f7d7e7504ac17a5a8edc5c31b3f92fb15f11fafcbdc263e16bf58"
+          }
+        }
+      }
+    ],
+    "happy": [
+      {
+        "id": "left",
+        "label": "Left",
+        "phases": {
+          "open": {
+            "file": "repair-20261027-eyes-v11/happy/left/open.png",
+            "difference": "repair-20261027-eyes-v11/happy/left/open-diff.png",
+            "changedPixels": 423,
+            "sha256": "fb614bc964c296fd8cc71ffc168e16440211a2b427f28f27dd605107ab9e1050"
+          },
+          "half": {
+            "file": "repair-20261027-blink-v13/happy/left/half.png",
+            "difference": "repair-20261027-blink-v13/happy/left/half-diff.png",
+            "changedPixels": 421,
+            "sha256": "e45c00ba43e3a11a1945ca1215171ec2b775047488a0e102f92d7f9a1b2af139"
+          },
+          "closed": {
+            "file": "repair-20261027-blink-v13/happy/left/closed.png",
+            "difference": "repair-20261027-blink-v13/happy/left/closed-diff.png",
+            "changedPixels": 422,
+            "sha256": "0090075a646c3085e5b56b147b7e9bb5aafb6f8ead6fd962f87c60857384aadc"
+          }
+        }
+      },
+      {
+        "id": "right",
+        "label": "Right",
+        "phases": {
+          "open": {
+            "file": "repair-20261027-eyes-v11/happy/right/open.png",
+            "difference": "repair-20261027-eyes-v11/happy/right/open-diff.png",
+            "changedPixels": 420,
+            "sha256": "9d7f7082110bf39307b98b43e3b1ce8e63bd61965555ab139a2cfdc40ebe9d3e"
+          },
+          "half": {
+            "file": "repair-20261027-blink-v13/happy/right/half.png",
+            "difference": "repair-20261027-blink-v13/happy/right/half-diff.png",
+            "changedPixels": 419,
+            "sha256": "9b54abdff70c38b39540e1f1701646ffa20abd5f0834c39e5886b88eb5876c2c"
+          },
+          "closed": {
+            "file": "repair-20261027-blink-v13/happy/right/closed.png",
+            "difference": "repair-20261027-blink-v13/happy/right/closed-diff.png",
+            "changedPixels": 422,
+            "sha256": "0090075a646c3085e5b56b147b7e9bb5aafb6f8ead6fd962f87c60857384aadc"
+          }
+        }
+      }
+    ],
+    "angry": [
+      {
+        "id": "left",
+        "label": "Left",
+        "phases": {
+          "open": {
+            "file": "repair-20261027-eyes-v11/angry/left/open.png",
+            "difference": "repair-20261027-eyes-v11/angry/left/open-diff.png",
+            "changedPixels": 447,
+            "sha256": "641e4c8dc1abca704e55a415cbaae2a2daab528a6ee45c63a60630674ce4a1a6"
+          },
+          "half": {
+            "file": "repair-20261027-blink-v13/angry/left/half.png",
+            "difference": "repair-20261027-blink-v13/angry/left/half-diff.png",
+            "changedPixels": 445,
+            "sha256": "4268ffca38e560fdfdc555af04990dbf48d15d2419b650cbe5ebf7c482623965"
+          },
+          "closed": {
+            "file": "repair-20261027-blink-v13/angry/left/closed.png",
+            "difference": "repair-20261027-blink-v13/angry/left/closed-diff.png",
+            "changedPixels": 446,
+            "sha256": "6612d90f82a927cc7bb5799699f794be9576a0cb7d23a7b1c0f68a500e254c3d"
+          }
+        }
+      },
+      {
+        "id": "right",
+        "label": "Right",
+        "phases": {
+          "open": {
+            "file": "repair-20261027-eyes-v11/angry/right/open.png",
+            "difference": "repair-20261027-eyes-v11/angry/right/open-diff.png",
+            "changedPixels": 444,
+            "sha256": "65b57067d87cb57ddc9a062cee651b63fa869324d34f35807bcf16d401b21f98"
+          },
+          "half": {
+            "file": "repair-20261027-blink-v13/angry/right/half.png",
+            "difference": "repair-20261027-blink-v13/angry/right/half-diff.png",
+            "changedPixels": 443,
+            "sha256": "3db7914dded9cc31d427b81a24ff477a141178089072761d8fba7cdb2a369ce2"
+          },
+          "closed": {
+            "file": "repair-20261027-blink-v13/angry/right/closed.png",
+            "difference": "repair-20261027-blink-v13/angry/right/closed-diff.png",
+            "changedPixels": 446,
+            "sha256": "6612d90f82a927cc7bb5799699f794be9576a0cb7d23a7b1c0f68a500e254c3d"
+          }
+        }
+      }
+    ],
+    "sad": [
+      {
+        "id": "left",
+        "label": "Left",
+        "phases": {
+          "open": {
+            "file": "repair-20261027-sad-brow-cleanup-v18/sad/left/open.png",
+            "difference": "repair-20261027-sad-brow-cleanup-v18/sad/left/open-diff.png",
+            "sha256": "6b69d119911abb98488196aac38eb292e9a695496c935bbf90e59a85b98189ac",
+            "changedPixels": 426
+          },
+          "half": {
+            "file": "repair-20261027-sad-brow-cleanup-v18/sad/left/half.png",
+            "difference": "repair-20261027-sad-brow-cleanup-v18/sad/left/half-diff.png",
+            "sha256": "3761f8f92a1dde4fc2bfd1e29eb0b57c611ee91db5a710822da993cfeb2142a7",
+            "changedPixels": 424
+          },
+          "closed": {
+            "file": "repair-20261027-sad-brow-cleanup-v18/sad/left/closed.png",
+            "difference": "repair-20261027-sad-brow-cleanup-v18/sad/left/closed-diff.png",
+            "sha256": "d91535bb2215944cbe28dacaa69fb422cef56ff27681a6b0836a498f5e3f5d6c",
+            "changedPixels": 426
+          }
+        }
+      },
+      {
+        "id": "right",
+        "label": "Right",
+        "phases": {
+          "open": {
+            "file": "repair-20261027-sad-brow-cleanup-v18/sad/right/open.png",
+            "difference": "repair-20261027-sad-brow-cleanup-v18/sad/right/open-diff.png",
+            "sha256": "159156b46b7ff9cdb95815aa0ff6de86c254039b98274edb9fef34abfb2c34ca",
+            "changedPixels": 424
+          },
+          "half": {
+            "file": "repair-20261027-sad-brow-cleanup-v18/sad/right/half.png",
+            "difference": "repair-20261027-sad-brow-cleanup-v18/sad/right/half-diff.png",
+            "sha256": "4deac3e48909713e3d7f94a7cd35d69db16caa02cbeda637d7f52017048e6233",
+            "changedPixels": 422
+          },
+          "closed": {
+            "file": "repair-20261027-sad-brow-cleanup-v18/sad/right/closed.png",
+            "difference": "repair-20261027-sad-brow-cleanup-v18/sad/right/closed-diff.png",
+            "sha256": "d91535bb2215944cbe28dacaa69fb422cef56ff27681a6b0836a498f5e3f5d6c",
+            "changedPixels": 426
+          }
+        }
+      }
+    ],
+    "afraid": [
+      {
+        "id": "left",
+        "label": "Left",
+        "phases": {
+          "open": {
+            "file": "repair-20261027-fear-brows-v15/left/open.png",
+            "difference": "repair-20261027-fear-brows-v15/left/open-diff.png",
+            "changedPixels": 386,
+            "sha256": "90c26affbf0ea5af4bc1afbf1fdcf0f1da4e59a33fc58e49ec42de8c8808df22"
+          },
+          "half": {
+            "file": "repair-20261027-fear-brows-v15/left/half.png",
+            "difference": "repair-20261027-fear-brows-v15/left/half-diff.png",
+            "changedPixels": 384,
+            "sha256": "857a85acfcd641da6fc929042396e7d23f20150df8a4ac4a558c0c7476f078e6"
+          },
+          "closed": {
+            "file": "repair-20261027-fear-brows-v15/left/closed.png",
+            "difference": "repair-20261027-fear-brows-v15/left/closed-diff.png",
+            "changedPixels": 385,
+            "sha256": "cbdb1bd8250729638437dc7bceaaaf491b0e350408f1d7827cbbbfbc1e0cd89a"
+          }
+        }
+      },
+      {
+        "id": "right",
+        "label": "Right",
+        "phases": {
+          "open": {
+            "file": "repair-20261027-fear-brows-v15/right/open.png",
+            "difference": "repair-20261027-fear-brows-v15/right/open-diff.png",
+            "changedPixels": 383,
+            "sha256": "f2603028101b73e172f1ba93d0f3303059a977f1b5c3e8798aec10e18378ef01"
+          },
+          "half": {
+            "file": "repair-20261027-fear-brows-v15/right/half.png",
+            "difference": "repair-20261027-fear-brows-v15/right/half-diff.png",
+            "changedPixels": 382,
+            "sha256": "973866d4e83d58d4609d9a206d4e3a4ddaa18488ecbabfe0dd2400a7f1b6f6c3"
+          },
+          "closed": {
+            "file": "repair-20261027-fear-brows-v15/right/closed.png",
+            "difference": "repair-20261027-fear-brows-v15/right/closed-diff.png",
+            "changedPixels": 385,
+            "sha256": "cbdb1bd8250729638437dc7bceaaaf491b0e350408f1d7827cbbbfbc1e0cd89a"
+          }
+        }
+      }
+    ],
+    "guarded": [
+      {
+        "id": "left",
+        "label": "Left",
+        "phases": {
+          "open": {
+            "file": "repair-20261027-v6/eyes/guarded/left/open.png",
+            "difference": "repair-20261027-v6/eyes/guarded/left/open-diff.png",
+            "changedPixels": 375,
+            "sha256": "880b1d9d30d14e594a324e78e9235c9a341f77f127010d9164ec4c2a1bc554aa"
+          },
+          "half": {
+            "file": "repair-20261027-blink-v13/guarded/left/half.png",
+            "difference": "repair-20261027-blink-v13/guarded/left/half-diff.png",
+            "changedPixels": 373,
+            "sha256": "cd25656aa88855581f076c6f18224bcc647742c9a65a3ae3380fff673c7ef0d2"
+          },
+          "closed": {
+            "file": "repair-20261027-blink-v13/guarded/left/closed.png",
+            "difference": "repair-20261027-blink-v13/guarded/left/closed-diff.png",
+            "changedPixels": 374,
+            "sha256": "c8a1c4ae3072ed4e9c6f2a275990b95195c016f3ab7d6d5ec8e1099352460faa"
+          }
+        }
+      },
+      {
+        "id": "right",
+        "label": "Right",
+        "phases": {
+          "open": {
+            "file": "repair-20261027-v6/eyes/guarded/right/open.png",
+            "difference": "repair-20261027-v6/eyes/guarded/right/open-diff.png",
+            "changedPixels": 372,
+            "sha256": "fd25e777d1c1dee7e877d7fdbc43594943c0993405a929b67be9a0d80ae5356e"
+          },
+          "half": {
+            "file": "repair-20261027-blink-v13/guarded/right/half.png",
+            "difference": "repair-20261027-blink-v13/guarded/right/half-diff.png",
+            "changedPixels": 371,
+            "sha256": "c9ca92ada0d97161761e27a729bd5a270e92c5802e9d38d9f057474e23e671dc"
+          },
+          "closed": {
+            "file": "repair-20261027-blink-v13/guarded/right/closed.png",
+            "difference": "repair-20261027-blink-v13/guarded/right/closed-diff.png",
+            "changedPixels": 374,
+            "sha256": "c8a1c4ae3072ed4e9c6f2a275990b95195c016f3ab7d6d5ec8e1099352460faa"
+          }
+        }
+      }
+    ]
+  },
+  "candidateProvenance": {
+    "sourcePath": "art/portraits/mobile-mouths/split-mask-prototype/catalog/common-164.png",
+    "sourceSha256": "18e72eecfbbca31e78217fcb320c51a4e9531c84a208fbe0b2514600984288bf",
+    "workRoot": "work/portrait164-keyframe-v1",
+    "rawGenerationCount": 23,
+    "rawGenerationOutputs": {
+      "master-happy": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait164-keyframe-v1\\raw\\master-happy.png",
+        "sha256": "a1313367c52880e0fee72dbca96c4782f8deed7863bdf0e9039bfa48f6702544",
+        "width": 1254,
+        "height": 1254,
+        "receipt": "work/portrait164-keyframe-v1/receipts/master-happy.request.json"
+      },
+      "master-angry": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait164-keyframe-v1\\raw\\master-angry.png",
+        "sha256": "376872c581027b5a5bb30dc55435cd006e4d2cb8e15033ae32cb8c3dc9af835c",
+        "width": 1254,
+        "height": 1254,
+        "receipt": "work/portrait164-keyframe-v1/receipts/master-angry.request.json"
+      },
+      "master-sad": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait164-keyframe-v1\\raw\\master-sad.png",
+        "sha256": "b9eccc957fd56a531359683789208f064e4f23c0b1a183497a44f90a92612e57",
+        "width": 1254,
+        "height": 1254,
+        "receipt": "work/portrait164-keyframe-v1/receipts/master-sad.request.json"
+      },
+      "master-afraid": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait164-keyframe-v1\\raw\\master-afraid.png",
+        "sha256": "8398c014189e722744e5e359721f02884d862ae36c08560f4365615e10c4f52f",
+        "width": 1254,
+        "height": 1254,
+        "receipt": "work/portrait164-keyframe-v1/receipts/master-afraid.request.json"
+      },
+      "master-guarded": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait164-keyframe-v1\\raw\\master-guarded.png",
+        "sha256": "1a5fee1bd3f4c807c3ecd4f8c6908468f86f9e2116c4c0168a46112738c0ed3a",
+        "width": 1254,
+        "height": 1254,
+        "receipt": "work/portrait164-keyframe-v1/receipts/master-guarded.request.json"
+      },
+      "closed-neutral": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait164-keyframe-v1\\raw\\closed-neutral.png",
+        "sha256": "6039d751973c78665e9c03f2995a99b1e9eaab191f1c8950c3613aa0ba21b56c",
+        "width": 1254,
+        "height": 1254,
+        "receipt": "work/portrait164-keyframe-v1/receipts/closed-neutral.request.json"
+      },
+      "closed-happy": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait164-keyframe-v1\\raw\\closed-happy.png",
+        "sha256": "b79f99812bcaf6657e238d22b2d5f9a0622baae01e85ec8ba90c46a7a2bdc071",
+        "width": 1254,
+        "height": 1254,
+        "receipt": "work/portrait164-keyframe-v1/receipts/closed-happy.request.json"
+      },
+      "closed-angry": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait164-keyframe-v1\\raw\\closed-angry.png",
+        "sha256": "3109fb44ac093dfd8d64b5620e52d7d847228a72595316dff896aab224334ad6",
+        "width": 1254,
+        "height": 1254,
+        "receipt": "work/portrait164-keyframe-v1/receipts/closed-angry.request.json"
+      },
+      "closed-sad": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait164-keyframe-v1\\raw\\closed-sad.png",
+        "sha256": "fa071ff6aa157214633552fae02f23bdc31bee8b20ee56437987496fea106a9a",
+        "width": 1254,
+        "height": 1254,
+        "receipt": "work/portrait164-keyframe-v1/receipts/closed-sad.request.json"
+      },
+      "closed-afraid": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait164-keyframe-v1\\raw\\closed-afraid.png",
+        "sha256": "41a1b02c0a852a4cf99bc8a18279a42253a1ed3b9b484a56c19556ffe26838cb",
+        "width": 1254,
+        "height": 1254,
+        "receipt": "work/portrait164-keyframe-v1/receipts/closed-afraid.request.json"
+      },
+      "closed-guarded": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait164-keyframe-v1\\raw\\closed-guarded.png",
+        "sha256": "2eecedca86cf243f7a30995bbf0b001bb30c6d411dc7c83fb9087b93766bc9dc",
+        "width": 1254,
+        "height": 1254,
+        "receipt": "work/portrait164-keyframe-v1/receipts/closed-guarded.request.json"
+      },
+      "eyes-neutral": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait164-keyframe-v1\\eyes\\neutral\\raw.png",
+        "sha256": "8fb3079514ef234e6868208821a498c363eaed8d09d124ebc20b974ce4da962d",
+        "width": 1695,
+        "height": 928,
+        "receipt": "work/portrait164-keyframe-v1/receipts/eyes-neutral.request.json"
+      },
+      "eyes-happy": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait164-keyframe-v1\\eyes\\happy\\raw.png",
+        "sha256": "8dd08fe3b8095ce642a3c93e6ba4088c0df5be5d603e4d38c0e5aebe02063a17",
+        "width": 1695,
+        "height": 928,
+        "receipt": "work/portrait164-keyframe-v1/receipts/eyes-happy.request.json"
+      },
+      "eyes-angry": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait164-keyframe-v1\\eyes\\angry\\raw.png",
+        "sha256": "4181285a7c6b5c2a7fb706c4fbd6f9fa5c957137564bbf232e23ceef230e0551",
+        "width": 1695,
+        "height": 928,
+        "receipt": "work/portrait164-keyframe-v1/receipts/eyes-angry.request.json"
+      },
+      "eyes-sad": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait164-keyframe-v1\\eyes\\sad\\raw.png",
+        "sha256": "92e708915e0480a74d02927b3b85c77b20def9ddaaa32bdca027df27d3a2291f",
+        "width": 1695,
+        "height": 928,
+        "receipt": "work/portrait164-keyframe-v1/receipts/eyes-sad.request.json"
+      },
+      "eyes-afraid": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait164-keyframe-v1\\eyes\\afraid\\raw.png",
+        "sha256": "1cd50870e975c189d6805d7deb85666e349b32bec9c8d4d752b2c839917bf142",
+        "width": 1695,
+        "height": 928,
+        "receipt": "work/portrait164-keyframe-v1/receipts/eyes-afraid.request.json"
+      },
+      "eyes-guarded": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait164-keyframe-v1\\eyes\\guarded\\raw.png",
+        "sha256": "8cfe8319479c930795c472b3a476f65f3087461dce2fe15d9834509a70c923ff",
+        "width": 1695,
+        "height": 928,
+        "receipt": "work/portrait164-keyframe-v1/receipts/eyes-guarded.request.json"
+      },
+      "mouth-neutral": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait164-keyframe-v1\\mouth\\neutral\\raw.png",
+        "sha256": "ed19b6ffa06f75cbb0c67081a317a1216c5e7f0a4c020d4ecc2da8b1d0e4c056",
+        "width": 1863,
+        "height": 844,
+        "receipt": "work/portrait164-keyframe-v1/receipts/mouth-neutral.request.json"
+      },
+      "mouth-happy": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait164-keyframe-v1\\mouth\\happy\\raw.png",
+        "sha256": "f0e43f3c361c3f4600c39c66d565b512356ccca1ec70f97fe0ea42a6c14f3e4b",
+        "width": 1863,
+        "height": 844,
+        "receipt": "work/portrait164-keyframe-v1/receipts/mouth-happy.request.json"
+      },
+      "mouth-angry": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait164-keyframe-v1\\mouth\\angry\\raw.png",
+        "sha256": "4eed25b6ab57627902a6ea1ec82a5a258575bebb1af42132a3e3f62becbcceb0",
+        "width": 1860,
+        "height": 845,
+        "receipt": "work/portrait164-keyframe-v1/receipts/mouth-angry.request.json"
+      },
+      "mouth-sad": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait164-keyframe-v1\\mouth\\sad\\raw.png",
+        "sha256": "54187cedbdf32d303923c65ad5a48b79fba8432751a24fb3da156dff0b36a0ac",
+        "width": 1863,
+        "height": 844,
+        "receipt": "work/portrait164-keyframe-v1/receipts/mouth-sad.request.json"
+      },
+      "mouth-afraid": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait164-keyframe-v1\\mouth\\afraid\\raw.png",
+        "sha256": "4c3814947d6c2a036f48a6fa039edb404fef67fbb03b542fda8d8e1658ba0ce8",
+        "width": 1863,
+        "height": 844,
+        "receipt": "work/portrait164-keyframe-v1/receipts/mouth-afraid.request.json"
+      },
+      "mouth-guarded": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait164-keyframe-v1\\mouth\\guarded\\raw.png",
+        "sha256": "40c8129241a7b4d515dd0b95ff391e1abe6e87279ee1943b982474adb8a09dc2",
+        "width": 1863,
+        "height": 844,
+        "receipt": "work/portrait164-keyframe-v1/receipts/mouth-guarded.request.json"
+      }
+    },
+    "generationRequestReceipts": [
+      {
+        "receipt": "work/portrait164-keyframe-v1/receipts/master-happy.request.json",
+        "argumentsReceipt": "work/portrait164-keyframe-v1/receipts/master-happy.request.json",
+        "referenceInput": "work/portrait164-keyframe-v1/original.png",
+        "referenceSha256": "18e72eecfbbca31e78217fcb320c51a4e9531c84a208fbe0b2514600984288bf",
+        "imageGenReferencePath": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/work/portrait164-keyframe-v1/original.png",
+        "prompt": "Use case: precise-object-edit\nAsset type: source-conditioned emotional master study for Daggerfall Unity mobile portrait NPC164\nInput image: Image 1 is immutable neutral NPC164 original, native 64x64 coarse pixel art.\nPrimary request: Preserve same character, head pose, pixel scale, framing, hair, hair ornament, skin tone, background and lighting. Make one restrained, readable HAPPY eye-and-brow expression. Keep both eyes open, with original muted-brown iris color, native placement and small source-like pupil cores. Keep mouth fully closed and unchanged. Change only brows, upper lids and eye expression. No smile, no added teeth.\nStyle: Match original coarse 64x64 pixel-art clusters and subdued source palette. Square crisp pixels; no smoothing, anti-aliasing, new highlights, modern realism or color grading.\nComposition: Full square source frame; no crop, zoom, shift, border, text, labels or extra elements.\nConstraints: Do not redraw or recolor stationary forehead, temples, cheeks, nose, mouth, jaw, hair, ornament or background. Keep emotional change small and anatomically natural.",
+        "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4 as C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4\\exec-4e0a04ae-9ae1-4983-b3ea-9df542bdc0f8.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      {
+        "receipt": "work/portrait164-keyframe-v1/receipts/master-angry.request.json",
+        "argumentsReceipt": "work/portrait164-keyframe-v1/receipts/master-angry.request.json",
+        "referenceInput": "work/portrait164-keyframe-v1/original.png",
+        "referenceSha256": "18e72eecfbbca31e78217fcb320c51a4e9531c84a208fbe0b2514600984288bf",
+        "imageGenReferencePath": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/work/portrait164-keyframe-v1/original.png",
+        "prompt": "Use case: precise-object-edit\nAsset type: source-conditioned emotional master study for Daggerfall Unity mobile portrait NPC164\nInput image: Image 1 is immutable neutral NPC164 original, native 64x64 coarse pixel art.\nPrimary request: Preserve same character, head pose, pixel scale, framing, hair, hair ornament, skin tone, background and lighting. Make one restrained, readable ANGRY eye-and-brow expression: brows draw slightly inward and downward, upper lids narrow modestly, eyes remain open and pupils stay at source position. Keep mouth fully closed and unchanged. Change only brows, upper lids and eye expression.\nStyle: Match original coarse 64x64 pixel-art clusters and subdued source palette. Square crisp pixels; no smoothing, anti-aliasing, new highlights, modern realism or color grading.\nComposition: Full square source frame; no crop, zoom, shift, border, text, labels or extra elements.\nConstraints: Do not redraw or recolor stationary forehead, temples, cheeks, nose, mouth, jaw, hair, ornament or background. Keep emotional change small and anatomically natural.",
+        "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4 as C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4\\exec-3729079d-def9-43de-a41d-6652babc0dfb.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      {
+        "receipt": "work/portrait164-keyframe-v1/receipts/master-sad.request.json",
+        "argumentsReceipt": "work/portrait164-keyframe-v1/receipts/master-sad.request.json",
+        "referenceInput": "work/portrait164-keyframe-v1/original.png",
+        "referenceSha256": "18e72eecfbbca31e78217fcb320c51a4e9531c84a208fbe0b2514600984288bf",
+        "imageGenReferencePath": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/work/portrait164-keyframe-v1/original.png",
+        "prompt": "Use case: precise-object-edit\nAsset type: source-conditioned emotional master study for Daggerfall Unity mobile portrait NPC164\nInput image: Image 1 is immutable neutral NPC164 original, native 64x64 coarse pixel art.\nPrimary request: Preserve same character, head pose, pixel scale, framing, hair, hair ornament, skin tone, background and lighting. Make one restrained, readable SAD eye-and-brow expression: inner brows lift gently, upper lids become heavier, eyes look subtly downcast. Keep both eyes open and preserve original muted-brown iris color, native placement and small pupil cores. Do not make eyes wide or alert; fear must read differently. Keep mouth fully closed and unchanged. Change only brows, upper lids and eye expression.\nStyle: Match original coarse 64x64 pixel-art clusters and subdued source palette. Square crisp pixels; no smoothing, anti-aliasing, new highlights, modern realism or color grading.\nComposition: Full square source frame; no crop, zoom, shift, border, text, labels or extra elements.\nConstraints: Do not redraw or recolor stationary forehead, temples, cheeks, nose, mouth, jaw, hair, ornament or background. Keep emotional change small and anatomically natural.",
+        "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4 as C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4\\exec-5f015462-1861-4860-88ef-3ce47f0fd34a.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      {
+        "receipt": "work/portrait164-keyframe-v1/receipts/master-afraid.request.json",
+        "argumentsReceipt": "work/portrait164-keyframe-v1/receipts/master-afraid.request.json",
+        "referenceInput": "work/portrait164-keyframe-v1/original.png",
+        "referenceSha256": "18e72eecfbbca31e78217fcb320c51a4e9531c84a208fbe0b2514600984288bf",
+        "imageGenReferencePath": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/work/portrait164-keyframe-v1/original.png",
+        "prompt": "Use case: precise-object-edit\nAsset type: source-conditioned emotional master study for Daggerfall Unity mobile portrait NPC164\nInput image: Image 1 is immutable neutral NPC164 original, native 64x64 coarse pixel art.\nPrimary request: Preserve same character, head pose, pixel scale, framing, hair, hair ornament, skin tone, background and lighting. Make one restrained, readable AFRAID eye-and-brow expression: brows rise and tense, upper lids lift, both eyes look alert and visibly more open than the sad reference. Fear must read alert and tense, not downcast sadness. Keep original muted-brown iris color, native placement and small pupil cores. Keep mouth fully closed and unchanged. Change only brows, upper lids and eye expression.\nStyle: Match original coarse 64x64 pixel-art clusters and subdued source palette. Square crisp pixels; no smoothing, anti-aliasing, new highlights, modern realism or color grading.\nComposition: Full square source frame; no crop, zoom, shift, border, text, labels or extra elements.\nConstraints: Do not redraw or recolor stationary forehead, temples, cheeks, nose, mouth, jaw, hair, ornament or background. Keep expression restrained and anatomically natural; do not enlarge eyes.",
+        "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4 as C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4\\exec-46cc1a71-5651-46f2-b3b1-4c3494d97991.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      {
+        "receipt": "work/portrait164-keyframe-v1/receipts/master-guarded.request.json",
+        "argumentsReceipt": "work/portrait164-keyframe-v1/receipts/master-guarded.request.json",
+        "referenceInput": "work/portrait164-keyframe-v1/original.png",
+        "referenceSha256": "18e72eecfbbca31e78217fcb320c51a4e9531c84a208fbe0b2514600984288bf",
+        "imageGenReferencePath": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/work/portrait164-keyframe-v1/original.png",
+        "prompt": "Use case: precise-object-edit\nAsset type: source-conditioned emotional master study for Daggerfall Unity mobile portrait NPC164\nInput image: Image 1 is immutable neutral NPC164 original, native 64x64 coarse pixel art.\nPrimary request: Preserve same character, head pose, pixel scale, framing, hair, hair ornament, skin tone, background and lighting. Make one restrained, readable GUARDED/SKEPTICAL eye-and-brow expression: lift one brow slightly while the other stays firm, narrow the upper lids a little, and keep the gaze steady. Keep both eyes open, preserve original muted-brown iris color, native placement and small pupil cores. Do not make a wink or exaggerated surprise. Keep mouth fully closed and unchanged. Change only brows, upper lids and eye expression.\nStyle: Match original coarse 64x64 pixel-art clusters and subdued source palette. Square crisp pixels; no smoothing, anti-aliasing, new highlights, modern realism or color grading.\nComposition: Full square source frame; no crop, zoom, shift, border, text, labels or extra elements.\nConstraints: Do not redraw or recolor stationary forehead, temples, cheeks, nose, mouth, jaw, hair, ornament or background. Keep emotional change small and anatomically natural.",
+        "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4 as C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4\\exec-f8ecc41e-6970-4cce-9ea9-c31e5d94a962.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      {
+        "receipt": "work/portrait164-keyframe-v1/receipts/closed-neutral.request.json",
+        "argumentsReceipt": "work/portrait164-keyframe-v1/receipts/closed-neutral.request.json",
+        "referenceInput": "work/portrait164-keyframe-v1/receipts/reference-inputs/closed-neutral-input.png",
+        "referenceSha256": "8dd345a438dc30ec542820ae861023defadc5d15f69e9d90b126329ebbbe3130",
+        "imageGenReferencePath": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/work/portrait164-keyframe-v1/masters/neutral.png",
+        "prompt": "Use case: precise-object-edit\nAsset type: selected NPC164 neutral CLOSED-eye endpoint, full source frame\nInput image: Image 1 is the selected NPC164 neutral OPEN portrait, native 64x64, composed from its immutable original. Preserve its same character, framing and exact neutral expression.\nPrimary request: Close both eyes fully in place. Upper eyelids descend over the existing eye opening; cover every iris, pupil and visible sclera pixel. Draw one continuous source-colored upper-lash line per eye. Keep eyebrows, forehead, lower lids, cheeks, nose, mouth, hair, ornament, jaw, clothes and background completely stationary. Mouth stays closed.\nStyle: Same subdued coarse pixel art and original native pixel scale. Crisp square pixels only; no smoothing, anti-aliasing, highlights, color grading or new colors.\nComposition: Same full 64x64 portrait framing, no crop, zoom, shift, border, labels or extra elements.",
+        "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4 as C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4\\exec-9b8808f6-4dcd-4c0d-b1f3-ab0d36db39ad.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      {
+        "receipt": "work/portrait164-keyframe-v1/receipts/closed-happy.request.json",
+        "argumentsReceipt": "work/portrait164-keyframe-v1/receipts/closed-happy.request.json",
+        "referenceInput": "work/portrait164-keyframe-v1/receipts/reference-inputs/closed-happy-input.png",
+        "referenceSha256": "60d066ef9aa6f8dfd8f2c9f40d6df8bd8b187795b19b581b91c2c94287db4417",
+        "imageGenReferencePath": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/work/portrait164-keyframe-v1/masters/happy.png",
+        "prompt": "Use case: precise-object-edit\nAsset type: selected NPC164 HAPPY CLOSED-eye endpoint, full source frame\nInput image: Image 1 is the selected NPC164 HAPPY OPEN portrait, native 64x64, composed from its immutable original. Preserve same character, framing, restrained happy brow expression and mood.\nPrimary request: Close both eyes fully in place. Upper eyelids descend over the existing eye opening; cover every iris, pupil and visible sclera pixel. Draw one continuous source-colored upper-lash line per eye. Keep brows and their full contours fixed. Keep forehead, lower lids, cheeks, nose, mouth, hair, ornament, jaw, clothes and background completely stationary. Mouth stays closed.\nStyle: Same subdued coarse pixel art and original native pixel scale. Crisp square pixels only; no smoothing, anti-aliasing, highlights, color grading or new colors.\nComposition: Same full 64x64 portrait framing, no crop, zoom, shift, border, labels or extra elements.",
+        "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4 as C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4\\exec-2b22d8bb-2ec4-43d3-8387-8b39d4f26fd4.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      {
+        "receipt": "work/portrait164-keyframe-v1/receipts/closed-angry.request.json",
+        "argumentsReceipt": "work/portrait164-keyframe-v1/receipts/closed-angry.request.json",
+        "referenceInput": "work/portrait164-keyframe-v1/receipts/reference-inputs/closed-angry-input.png",
+        "referenceSha256": "068d0d3935d5c3d17657e1642383a613e567b7330190133eedf03f555029c13b",
+        "imageGenReferencePath": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/work/portrait164-keyframe-v1/masters/angry.png",
+        "prompt": "Use case: precise-object-edit\nAsset type: selected NPC164 ANGRY CLOSED-eye endpoint, full source frame\nInput image: Image 1 is the selected NPC164 ANGRY OPEN portrait, native 64x64, composed from its immutable original. Preserve same character, framing, angry brow expression and mood.\nPrimary request: Close both eyes fully in place. Upper eyelids descend over the existing eye opening; cover every iris, pupil and visible sclera pixel. Draw one continuous source-colored upper-lash line per eye. Keep angry brows and their full contours fixed. Keep forehead, lower lids, cheeks, nose, mouth, hair, ornament, jaw, clothes and background completely stationary. Mouth stays closed.\nStyle: Same subdued coarse pixel art and original native pixel scale. Crisp square pixels only; no smoothing, anti-aliasing, highlights, color grading or new colors.\nComposition: Same full 64x64 portrait framing, no crop, zoom, shift, border, labels or extra elements.",
+        "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4 as C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4\\exec-af79be7d-99c0-44fa-b516-3dba18f336f9.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      {
+        "receipt": "work/portrait164-keyframe-v1/receipts/closed-sad.request.json",
+        "argumentsReceipt": "work/portrait164-keyframe-v1/receipts/closed-sad.request.json",
+        "referenceInput": "work/portrait164-keyframe-v1/receipts/reference-inputs/closed-sad-input.png",
+        "referenceSha256": "c3ec9d6decdd227dba026f27e225c19cfe6d9476c75e561bc1f21cee19b5f4d3",
+        "imageGenReferencePath": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/work/portrait164-keyframe-v1/masters/sad.png",
+        "prompt": "Use case: precise-object-edit\nAsset type: selected NPC164 SAD CLOSED-eye endpoint, full source frame\nInput image: Image 1 is the selected NPC164 SAD OPEN portrait, native 64x64, composed from its immutable original. Preserve same character, framing, sad brow expression and mood.\nPrimary request: Close both eyes fully in place. Upper eyelids descend over the existing eye opening; cover every iris, pupil and visible sclera pixel. Draw one continuous source-colored upper-lash line per eye. Keep the raised inner sad brows and their full contours fixed. Keep forehead, lower lids, cheeks, nose, mouth, hair, ornament, jaw, clothes and background completely stationary. Mouth stays closed.\nStyle: Same subdued coarse pixel art and original native pixel scale. Crisp square pixels only; no smoothing, anti-aliasing, highlights, color grading or new colors.\nComposition: Same full 64x64 portrait framing, no crop, zoom, shift, border, labels or extra elements.",
+        "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4 as C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4\\exec-0011c85a-86aa-464f-92a1-131e7a0e63c6.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      {
+        "receipt": "work/portrait164-keyframe-v1/receipts/closed-afraid.request.json",
+        "argumentsReceipt": "work/portrait164-keyframe-v1/receipts/closed-afraid.request.json",
+        "referenceInput": "work/portrait164-keyframe-v1/receipts/reference-inputs/closed-afraid-input.png",
+        "referenceSha256": "da8622178079a844e3e77ff5f38ef59159411c956282a1f154aae3b3387db7ad",
+        "imageGenReferencePath": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/work/portrait164-keyframe-v1/masters/afraid.png",
+        "prompt": "Use case: precise-object-edit\nAsset type: selected NPC164 AFRAID CLOSED-eye endpoint, full source frame\nInput image: Image 1 is the selected NPC164 AFRAID OPEN portrait, native 64x64, composed from its immutable original. Preserve same character, framing, tense raised brow expression and mood.\nPrimary request: Close both eyes fully in place. Upper eyelids descend over the existing wide-open eye aperture; cover every iris, pupil and visible sclera pixel. Draw one continuous source-colored upper-lash line per eye. Keep brows and their full contours fixed. Keep forehead, lower lids, cheeks, nose, mouth, hair, ornament, jaw, clothes and background completely stationary. Mouth stays closed.\nStyle: Same subdued coarse pixel art and original native pixel scale. Crisp square pixels only; no smoothing, anti-aliasing, highlights, color grading or new colors.\nComposition: Same full 64x64 portrait framing, no crop, zoom, shift, border, labels or extra elements.",
+        "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4 as C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4\\exec-9c1b9fa0-6db9-44ea-a2ef-df68763bcd59.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      {
+        "receipt": "work/portrait164-keyframe-v1/receipts/closed-guarded.request.json",
+        "argumentsReceipt": "work/portrait164-keyframe-v1/receipts/closed-guarded.request.json",
+        "referenceInput": "work/portrait164-keyframe-v1/receipts/reference-inputs/closed-guarded-input.png",
+        "referenceSha256": "3be532c495a0588ca596506b66a76bfcd3bdc6f55b9afaf8095fbabe3837dc60",
+        "imageGenReferencePath": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/work/portrait164-keyframe-v1/masters/guarded.png",
+        "prompt": "Use case: precise-object-edit\nAsset type: selected NPC164 GUARDED/SKEPTICAL CLOSED-eye endpoint, full source frame\nInput image: Image 1 is the selected NPC164 GUARDED/SKEPTICAL OPEN portrait, native 64x64, composed from its immutable original. Preserve same character, framing, asymmetrical skeptical brow expression and mood.\nPrimary request: Close both eyes fully in place. Upper eyelids descend over the existing eye opening; cover every iris, pupil and visible sclera pixel. Draw one continuous source-colored upper-lash line per eye. Keep both brows and their full contours fixed. Keep forehead, lower lids, cheeks, nose, mouth, hair, ornament, jaw, clothes and background completely stationary. Mouth stays closed.\nStyle: Same subdued coarse pixel art and original native pixel scale. Crisp square pixels only; no smoothing, anti-aliasing, highlights, color grading or new colors.\nComposition: Same full 64x64 portrait framing, no crop, zoom, shift, border, labels or extra elements.",
+        "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4 as C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4\\exec-7f4d7069-ed98-4843-a4c4-745e2eac4855.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      {
+        "receipt": "work/portrait164-keyframe-v1/receipts/eyes-neutral.request.json",
+        "argumentsReceipt": "work/portrait164-keyframe-v1/receipts/eyes-neutral.arguments.json",
+        "referenceInput": "work/portrait164-keyframe-v1/receipts/reference-grids/eyes-neutral.png",
+        "referenceSha256": "4bce5e8aa6fa07116cd3f03797b9f6e552662358ca6585295cab23dcba73fb41",
+        "imageGenReferencePath": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/work/portrait164-keyframe-v1/eyes-reference-grid.png",
+        "prompt": "Use case: precise-object-edit\nAsset type: one source-conditioned NPC164 NEUTRAL upper-eye animation atlas\nInput image: Image 1 is NPC164's own exact neutral 3x3 upper-face template, built from its immutable original and its own selected CLOSED endpoint. It is enlarged 8x with nearest-neighbor sampling.\nPrimary request: Edit this template into nine pixel-art eye states. Preserve exact 3x3 grid, same native 64x35 upper-half cell framing, face scale and cell boundaries. Rows: FRONT, gaze toward image-LEFT, gaze toward image-RIGHT. Columns: OPEN, HALF, CLOSED.\nSubject details: Keep same NPC164 face and neutral brows in every cell. OPEN cells show source-sized eyes, muted warm-brown/olive irises and small dark-brown pupil cores at the existing eye corners. FRONT pupils look forward. In row 2 both pupils look toward image-left relative to their own eye corners. In row 3 both pupils look toward image-right relative to their own eye corners.\nMotion: In every row, HALF has upper lids descend partway over that same OPEN eye. Keep each pupil and iris at exactly the same position, width, shape and color as that row's OPEN cell. Leave a visible narrow native iris strip in HALF. Keep lower lids and cheeks stationary. CLOSED matches the supplied own closed endpoint, fully covers every iris and pupil, and has one continuous dark-brown upper-lash contour per eye.\nStyle: Preserve original subdued 64x64 pixel-art scale, dark brown hair, warm brown complexion, muted source eye colors and low contrast. Crisp square pixels only.\nComposition: Same 192:105 atlas aspect ratio, no extra cells, crop, zoom, shift, border, labels or gutters.\nConstraints: Do not change brows, forehead, nose bridge or stationary face pixels. No gray iris blobs, bright white sclera bands, new glints, pupil translation between OPEN and HALF, broken or double lashes, eye enlargement, smoothing or anti-aliasing.",
+        "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4 as C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4\\exec-41c9e97f-233b-4ab4-b89d-a68ffbebefb3.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      {
+        "receipt": "work/portrait164-keyframe-v1/receipts/eyes-happy.request.json",
+        "argumentsReceipt": "work/portrait164-keyframe-v1/receipts/eyes-happy.arguments.json",
+        "referenceInput": "work/portrait164-keyframe-v1/receipts/reference-grids/eyes-happy.png",
+        "referenceSha256": "89942cd7c7650f9209ad3e27e51e42b8e0d80ec1490f61c68e55a44e49fad064",
+        "imageGenReferencePath": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/work/portrait164-keyframe-v1/eyes-reference-grid.png",
+        "prompt": "Use case: precise-object-edit\nAsset type: one source-conditioned NPC164 HAPPY upper-eye animation atlas\nInput image: Image 1 is NPC164's exact HAPPY 3x3 upper-face template, built from its own selected open master and fully closed endpoint. It is enlarged 8x with nearest-neighbor sampling.\nPrimary request: Edit the atlas into nine pixel-art eye states. Preserve exact 3x3 grid, same native 64x35 upper-half cell framing, face scale and cell boundaries. Rows: FRONT, gaze toward image-LEFT, gaze toward image-RIGHT. Columns: OPEN, HALF, CLOSED.\nSubject details: Keep this same character and its restrained happy brow expression in every cell. Keep OPEN eyes clearly open, with source-sized eyes, muted warm-brown/olive irises and small dark-brown pupil cores. FRONT pupils look forward. In row 2 both pupils look toward image-left relative to their own eye corners. In row 3 both pupils look toward image-right relative to their own eye corners.\nMotion: In every row, HALF has upper lids descend partway over that same OPEN eye, leaving a narrow iris strip visible. Keep each pupil and iris at exactly the same position, width, shape and color as that row's OPEN cell. Keep lower lids and cheeks stationary. CLOSED matches the supplied own closed endpoint, fully covers every iris and pupil, and has one continuous dark-brown upper-lash contour per eye.\nStyle: Preserve original subdued 64x64 pixel-art scale, dark brown hair, warm brown complexion, muted source eye colors and low contrast. Crisp square pixels only.\nComposition: Same 192:105 atlas aspect ratio, no extra cells, crop, zoom, shift, border, labels or gutters.\nConstraints: Do not change brows, forehead, nose bridge or stationary face pixels. No gray iris blobs, bright white sclera bands, new glints, pupil translation between OPEN and HALF, broken or double lashes, eye enlargement, smoothing or anti-aliasing.",
+        "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4 as C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4\\exec-a7ceadf4-db67-40a3-bd86-c8f4fe6c9e1d.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      {
+        "receipt": "work/portrait164-keyframe-v1/receipts/eyes-angry.request.json",
+        "argumentsReceipt": "work/portrait164-keyframe-v1/receipts/eyes-angry.arguments.json",
+        "referenceInput": "work/portrait164-keyframe-v1/receipts/reference-grids/eyes-angry.png",
+        "referenceSha256": "7a1284abf236576a90c643dfe534876a7cadf80377b8ed7fa00a08b191bdb8a4",
+        "imageGenReferencePath": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/work/portrait164-keyframe-v1/eyes-reference-grid.png",
+        "prompt": "Use case: precise-object-edit\nAsset type: one source-conditioned NPC164 ANGRY upper-eye animation atlas\nInput image: Image 1 is NPC164's exact ANGRY 3x3 upper-face template, built from its own selected open master and fully closed endpoint. It is enlarged 8x with nearest-neighbor sampling.\nPrimary request: Edit the atlas into nine pixel-art eye states. Preserve exact 3x3 grid, same native 64x35 upper-half cell framing, face scale and cell boundaries. Rows: FRONT, gaze toward image-LEFT, gaze toward image-RIGHT. Columns: OPEN, HALF, CLOSED.\nSubject details: Keep this same character and its restrained angry brow expression in every cell. Keep OPEN eyes visibly open, with source-sized eyes, muted warm-brown/olive irises and small dark-brown pupil cores. FRONT pupils look forward. In row 2 both pupils look toward image-left relative to their own eye corners. In row 3 both pupils look toward image-right relative to their own eye corners.\nMotion: In every row, HALF has upper lids descend partway over that same OPEN eye, leaving a narrow iris strip visible. Keep each pupil and iris at exactly the same position, width, shape and color as that row's OPEN cell. Keep lower lids and cheeks stationary. CLOSED matches the supplied own closed endpoint, fully covers every iris and pupil, and has one continuous dark-brown upper-lash contour per eye.\nStyle: Preserve original subdued 64x64 pixel-art scale, dark brown hair, warm brown complexion, muted source eye colors and low contrast. Crisp square pixels only.\nComposition: Same 192:105 atlas aspect ratio, no extra cells, crop, zoom, shift, border, labels or gutters.\nConstraints: Do not change brows, forehead, nose bridge or stationary face pixels. No gray iris blobs, bright white sclera bands, new glints, pupil translation between OPEN and HALF, broken or double lashes, eye enlargement, smoothing or anti-aliasing.",
+        "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4 as C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4\\exec-41cbe178-3ce7-4c0d-8a09-b74a8fc4e577.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      {
+        "receipt": "work/portrait164-keyframe-v1/receipts/eyes-sad.request.json",
+        "argumentsReceipt": "work/portrait164-keyframe-v1/receipts/eyes-sad.arguments.json",
+        "referenceInput": "work/portrait164-keyframe-v1/receipts/reference-grids/eyes-sad.png",
+        "referenceSha256": "5c5fab0a130e3a578fc826b49e2646e77089fe898c92234250ce57317ebaa933",
+        "imageGenReferencePath": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/work/portrait164-keyframe-v1/eyes-reference-grid.png",
+        "prompt": "Use case: precise-object-edit\nAsset type: one source-conditioned NPC164 SAD upper-eye animation atlas\nInput image: Image 1 is NPC164's exact SAD 3x3 upper-face template, built from its own selected open master and fully closed endpoint. It is enlarged 8x with nearest-neighbor sampling.\nPrimary request: Edit the atlas into nine pixel-art eye states. Preserve exact 3x3 grid, same native 64x35 upper-half cell framing, face scale and cell boundaries. Rows: FRONT, gaze toward image-LEFT, gaze toward image-RIGHT. Columns: OPEN, HALF, CLOSED.\nSubject details: Keep this same character and its restrained sad brow expression in every cell. OPEN must match the selected sad open eye aperture, with both eyes visibly open despite heavier lids, muted warm-brown/olive irises and small dark-brown pupil cores. Do not add another squint. FRONT pupils look forward. In row 2 both pupils look toward image-left relative to their own eye corners. In row 3 both pupils look toward image-right relative to their own eye corners.\nMotion: In every row, HALF lowers the upper lid partway from that same OPEN aperture, leaving a narrow iris strip visible. Keep each pupil and iris at exactly the same position, width, shape and color as that row's OPEN cell. Keep lower lids and cheeks stationary. CLOSED matches the supplied own closed endpoint, fully covers every iris and pupil, and has one continuous dark-brown upper-lash contour per eye.\nStyle: Preserve original subdued 64x64 pixel-art scale, dark brown hair, warm brown complexion, muted source eye colors and low contrast. Crisp square pixels only.\nComposition: Same 192:105 atlas aspect ratio, no extra cells, crop, zoom, shift, border, labels or gutters.\nConstraints: Do not change brows, forehead, nose bridge or stationary face pixels. No gray iris blobs, bright white sclera bands, new glints, pupil translation between OPEN and HALF, broken or double lashes, eye enlargement, smoothing or anti-aliasing.",
+        "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4 as C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4\\exec-4d4ff4c6-2a8c-4a0e-926c-4f91a4fec1d4.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      {
+        "receipt": "work/portrait164-keyframe-v1/receipts/eyes-afraid.request.json",
+        "argumentsReceipt": "work/portrait164-keyframe-v1/receipts/eyes-afraid.arguments.json",
+        "referenceInput": "work/portrait164-keyframe-v1/receipts/reference-grids/eyes-afraid.png",
+        "referenceSha256": "536c62a23203b93e2f5c857c50f9db21fc7184a161cc4c2dd25237f87929a025",
+        "imageGenReferencePath": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/work/portrait164-keyframe-v1/eyes-reference-grid.png",
+        "prompt": "Use case: precise-object-edit\nAsset type: one source-conditioned NPC164 AFRAID upper-eye animation atlas\nInput image: Image 1 is NPC164's exact AFRAID 3x3 upper-face template, built from its own selected open master and fully closed endpoint. It is enlarged 8x with nearest-neighbor sampling.\nPrimary request: Edit the atlas into nine pixel-art eye states. Preserve exact 3x3 grid, same native 64x35 upper-half cell framing, face scale and cell boundaries. Rows: FRONT, gaze toward image-LEFT, gaze toward image-RIGHT. Columns: OPEN, HALF, CLOSED.\nSubject details: Keep this same character and restrained tense afraid brow expression in every cell. OPEN eyes match the selected alert master and remain clearly open, with source-sized muted warm-brown/olive irises and small dark-brown pupil cores. Fear stays more alert and open than sadness. FRONT pupils look forward. In row 2 both pupils look toward image-left relative to their own eye corners. In row 3 both pupils look toward image-right relative to their own eye corners.\nMotion: In every row, HALF lowers only upper lids partway over that same OPEN eye, leaving a narrow iris strip visible. Keep each pupil and iris at exactly the same position, width, shape and color as that row's OPEN cell. Keep lower lids and cheeks stationary. CLOSED matches the supplied own closed endpoint, fully covers every iris and pupil, and has one continuous dark-brown upper-lash contour per eye.\nStyle: Preserve original subdued 64x64 pixel-art scale, dark brown hair, warm brown complexion, muted source eye colors and low contrast. Crisp square pixels only.\nComposition: Same 192:105 atlas aspect ratio, no extra cells, crop, zoom, shift, border, labels or gutters.\nConstraints: Do not change brows, forehead, nose bridge or stationary face pixels. No gray iris blobs, bright white sclera bands, new glints, pupil translation between OPEN and HALF, broken or double lashes, eye enlargement, smoothing or anti-aliasing.",
+        "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4 as C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4\\exec-cd219239-7fb1-4d98-a7f0-ddab18adb799.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      {
+        "receipt": "work/portrait164-keyframe-v1/receipts/eyes-guarded.request.json",
+        "argumentsReceipt": "work/portrait164-keyframe-v1/receipts/eyes-guarded.arguments.json",
+        "referenceInput": "work/portrait164-keyframe-v1/receipts/reference-grids/eyes-guarded.png",
+        "referenceSha256": "96023ac301111db9e07a0f6abb12498c0b89a6b010c3518486bd22da933cd5f6",
+        "imageGenReferencePath": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/work/portrait164-keyframe-v1/eyes-reference-grid.png",
+        "prompt": "Use case: precise-object-edit\nAsset type: one source-conditioned NPC164 GUARDED/SKEPTICAL upper-eye animation atlas\nInput image: Image 1 is NPC164's exact GUARDED/SKEPTICAL 3x3 upper-face template, built from its own selected open master and fully closed endpoint. It is enlarged 8x with nearest-neighbor sampling.\nPrimary request: Edit the atlas into nine pixel-art eye states. Preserve exact 3x3 grid, same native 64x35 upper-half cell framing, face scale and cell boundaries. Rows: FRONT, gaze toward image-LEFT, gaze toward image-RIGHT. Columns: OPEN, HALF, CLOSED.\nSubject details: Keep this same character and restrained asymmetric guarded/skeptical brow expression in every cell. Keep OPEN eyes visibly open, with source-sized muted warm-brown/olive irises and small dark-brown pupil cores. Do not turn it into a wink. FRONT pupils look forward. In row 2 both pupils look toward image-left relative to their own eye corners. In row 3 both pupils look toward image-right relative to their own eye corners.\nMotion: In every row, HALF lowers upper lids partway over that same OPEN eye, leaving a narrow iris strip visible. Keep each pupil and iris at exactly the same position, width, shape and color as that row's OPEN cell. Keep lower lids and cheeks stationary. CLOSED matches the supplied own closed endpoint, fully covers every iris and pupil, and has one continuous dark-brown upper-lash contour per eye.\nStyle: Preserve original subdued 64x64 pixel-art scale, dark brown hair, warm brown complexion, muted source eye colors and low contrast. Crisp square pixels only.\nComposition: Same 192:105 atlas aspect ratio, no extra cells, crop, zoom, shift, border, labels or gutters.\nConstraints: Do not change brows, forehead, nose bridge or stationary face pixels. No gray iris blobs, bright white sclera bands, new glints, pupil translation between OPEN and HALF, broken or double lashes, eye enlargement, smoothing or anti-aliasing.",
+        "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4 as C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4\\exec-b4b1c70d-79bf-4e27-b7d8-5d6a48b0716e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      {
+        "receipt": "work/portrait164-keyframe-v1/receipts/mouth-neutral.request.json",
+        "argumentsReceipt": "work/portrait164-keyframe-v1/receipts/mouth-neutral.arguments.json",
+        "referenceInput": "work/portrait164-keyframe-v1/mouth-reference-grid.png",
+        "referenceSha256": "da8799c14b754ec067a33af399ba2dc140a51692db952a9a46d763e1ceba5553",
+        "imageGenReferencePath": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/work/portrait164-keyframe-v1/mouth-reference-grid.png",
+        "prompt": "Use case: precise-object-edit\nAsset type: one source-conditioned NPC164 NEUTRAL speech-mouth atlas\nInput image: Image 1 is a 3x3 reference grid of NPC164's own native lower-face source, repeated in every cell and enlarged 8x nearest-neighbor. Keep this same character and small source mouth proportions.\nPrimary request: Edit only the mouth in each cell. Preserve exact 3x3 grid, same native 64x29 lower-half framing, face scale and cell boundaries. Row-major order is A B C / D E F / G H X.\nActual Rhubarb mouth shapes: A closed, lips pressed for P/B/M. B narrow opening with teeth nearly together for consonants/EE. C medium unrounded opening for EH/AE. D wide AA. E slightly rounded AO/ER, no wider than C. F puckered UW/OW/W. G upper teeth touch lower lip for F/V. H tongue raised behind upper teeth for L, opening between C and D. X relaxed closed idle.\nAnatomy: Keep NPC164's upper teeth anchored to the same upper incisal row. Use restrained pixel-scale teeth, warm ivory rather than bright white. Keep dark oral cavity inside the mouth, lips attached to original corners, and tongue only where shape H needs it. Keep A and X fully closed. No huge grin, oversized mouth, floating teeth, moving jaw, changed nose, cheeks, chin or neck.\nStyle: Original coarse subdued pixel art, warm brown skin, native eye-free lower-half style; square crisp pixels only. No smoothing, anti-aliasing, new colors outside subtle oral cavity/ivory shades, lighting shift or color grading.\nComposition: Same 192:87 atlas aspect ratio, no extra cells, crop, zoom, shift, border, labels or gutters.\nConstraints: Do not change any stationary lower-face pixels outside each small mouth feature. Preserve original low contrast and mouth width. Do not substitute arbitrary letter poses for the listed phonetic meanings.",
+        "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4 as C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4\\exec-67e8ac59-ad41-4dc8-95b8-9046f760a198.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      {
+        "receipt": "work/portrait164-keyframe-v1/receipts/mouth-happy.request.json",
+        "argumentsReceipt": "work/portrait164-keyframe-v1/receipts/mouth-happy.arguments.json",
+        "referenceInput": "work/portrait164-keyframe-v1/mouth-reference-grid.png",
+        "referenceSha256": "da8799c14b754ec067a33af399ba2dc140a51692db952a9a46d763e1ceba5553",
+        "imageGenReferencePath": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/work/portrait164-keyframe-v1/mouth-reference-grid.png",
+        "prompt": "Use case: precise-object-edit\nAsset type: one source-conditioned NPC164 HAPPY speech-mouth atlas\nInput image: Image 1 is a 3x3 reference grid of NPC164's own native lower-face source, repeated in every cell and enlarged 8x nearest-neighbor. Keep this same character and small source mouth proportions.\nPrimary request: Edit only the mouth in each cell. Preserve exact 3x3 grid, same native 64x29 lower-half framing, face scale and cell boundaries. Row-major order is A B C / D E F / G H X.\nMood: restrained warm happiness. A pressed-lip shape still means P/B/M; B is narrow EE; C medium unrounded EH/AE; D wide AA; E slightly rounded AO/ER and no wider than C; F puckered UW/OW/W; G upper teeth touch lower lip for F/V; H tongue raised behind upper teeth for L, opening between C and D; X relaxed, closed, lightly upturned happy idle. Each letter must show its actual mouth meaning.\nAnatomy: Keep NPC164's upper teeth anchored to same upper incisal row. Use restrained pixel-scale teeth, warm ivory rather than bright white. Keep dark oral cavity inside mouth, lips attached to original corners, and tongue only where H needs it. Keep A and X fully closed. No huge grin, oversized mouth, floating teeth, moving jaw, changed nose, cheeks, chin or neck.\nStyle: Original coarse subdued pixel art, warm brown skin, native eye-free lower-half style; square crisp pixels only. No smoothing, anti-aliasing, lighting shift or color grading.\nComposition: Same 192:87 atlas aspect ratio, no extra cells, crop, zoom, shift, border, labels or gutters.\nConstraints: Do not change stationary lower-face pixels outside small mouth feature. Preserve original low contrast and mouth width. Do not substitute arbitrary letter poses for listed phonetic meanings.",
+        "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4 as C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4\\exec-89e732cc-baf7-4879-b003-ff382ab5717d.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      {
+        "receipt": "work/portrait164-keyframe-v1/receipts/mouth-angry.request.json",
+        "argumentsReceipt": "work/portrait164-keyframe-v1/receipts/mouth-angry.arguments.json",
+        "referenceInput": "work/portrait164-keyframe-v1/mouth-reference-grid.png",
+        "referenceSha256": "da8799c14b754ec067a33af399ba2dc140a51692db952a9a46d763e1ceba5553",
+        "imageGenReferencePath": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/work/portrait164-keyframe-v1/mouth-reference-grid.png",
+        "prompt": "Use case: precise-object-edit\nAsset type: one source-conditioned NPC164 ANGRY speech-mouth atlas\nInput image: Image 1 is a 3x3 reference grid of NPC164's own native lower-face source, repeated in every cell and enlarged 8x nearest-neighbor. Keep this same character and small source mouth proportions.\nPrimary request: Edit only the mouth in each cell. Preserve exact 3x3 grid, same native 64x29 lower-half framing, face scale and cell boundaries. Row-major order is A B C / D E F / G H X.\nMood: restrained anger with firm downturned closed lips. A pressed-lip shape means P/B/M. B is narrow opening with teeth nearly together for consonants/EE. C medium unrounded EH/AE. D wide AA. E slightly rounded AO/ER, no wider than C. F puckered UW/OW/W. G upper teeth touch lower lip for F/V. H tongue raised behind upper teeth for L, opening between C and D. X relaxed closed idle but retains a subtle stern frown. Each letter must show its actual meaning.\nAnatomy: Keep NPC164's upper teeth anchored to same upper incisal row. Use restrained pixel-scale teeth, warm ivory rather than bright white. Keep dark oral cavity inside mouth, lips attached to original corners, and tongue only where H needs it. A and X stay fully closed. No snarl, oversized mouth, floating teeth, moving jaw, changed nose, cheeks, chin or neck.\nStyle: Original coarse subdued pixel art, warm brown skin; square crisp pixels only. No smoothing, anti-aliasing, lighting shift or color grading.\nComposition: Same 192:87 atlas aspect ratio, no extra cells, crop, zoom, shift, border, labels or gutters.\nConstraints: Do not change stationary lower-face pixels outside small mouth feature. Preserve original low contrast and mouth width. Do not substitute arbitrary letter poses for listed phonetic meanings.",
+        "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4 as C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4\\exec-0be78636-9a2e-404a-ab83-9be1f07ae99d.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      {
+        "receipt": "work/portrait164-keyframe-v1/receipts/mouth-sad.request.json",
+        "argumentsReceipt": "work/portrait164-keyframe-v1/receipts/mouth-sad.arguments.json",
+        "referenceInput": "work/portrait164-keyframe-v1/mouth-reference-grid.png",
+        "referenceSha256": "da8799c14b754ec067a33af399ba2dc140a51692db952a9a46d763e1ceba5553",
+        "imageGenReferencePath": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/work/portrait164-keyframe-v1/mouth-reference-grid.png",
+        "prompt": "Use case: precise-object-edit\nAsset type: one source-conditioned NPC164 SAD speech-mouth atlas\nInput image: Image 1 is a 3x3 reference grid of NPC164's own native lower-face source, repeated in every cell and enlarged 8x nearest-neighbor. Keep this same character and small source mouth proportions.\nPrimary request: Edit only the mouth in each cell. Preserve exact 3x3 grid, same native 64x29 lower-half framing, face scale and cell boundaries. Row-major order is A B C / D E F / G H X.\nMood: restrained sadness: slight downturn at the corners, subdued tension, small openings that remain anatomically plausible; X is a quiet closed frown. Each letter must show its actual mouth meaning.\nPhonetic semantics: A pressed-lip shape means P/B/M; B narrow EE; C medium unrounded EH/AE; D wide AA; E slightly rounded AO/ER and no wider than C; F puckered UW/OW/W; G upper teeth touch lower lip for F/V; H tongue raised behind upper teeth for L, opening between C and D; X relaxed closed idle for this mood. Keep A and X fully closed.\nAnatomy: Keep NPC164's upper teeth anchored to same upper incisal row. Use restrained pixel-scale teeth, warm ivory rather than bright white. Keep dark oral cavity inside mouth, lips attached to original corners, tongue only where H needs it. No huge grin, oversized mouth, floating teeth, moving jaw, changed nose, cheeks, chin or neck.\nStyle: Original coarse subdued pixel art, warm brown skin, native eye-free lower-half style; square crisp pixels only. No smoothing, anti-aliasing, lighting shift or color grading.\nComposition: Same 192:87 atlas aspect ratio, no extra cells, crop, zoom, shift, border, labels or gutters.\nConstraints: Do not change stationary lower-face pixels outside small mouth feature. Preserve original low contrast and mouth width. Do not substitute arbitrary letter poses for listed phonetic meanings.",
+        "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4 as C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4\\exec-f3d91270-cd5a-4fa4-90e6-2346849d3d7b.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      {
+        "receipt": "work/portrait164-keyframe-v1/receipts/mouth-afraid.request.json",
+        "argumentsReceipt": "work/portrait164-keyframe-v1/receipts/mouth-afraid.arguments.json",
+        "referenceInput": "work/portrait164-keyframe-v1/mouth-reference-grid.png",
+        "referenceSha256": "da8799c14b754ec067a33af399ba2dc140a51692db952a9a46d763e1ceba5553",
+        "imageGenReferencePath": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/work/portrait164-keyframe-v1/mouth-reference-grid.png",
+        "prompt": "Use case: precise-object-edit\nAsset type: one source-conditioned NPC164 AFRAID speech-mouth atlas\nInput image: Image 1 is a 3x3 reference grid of NPC164's own native lower-face source, repeated in every cell and enlarged 8x nearest-neighbor. Keep this same character and small source mouth proportions.\nPrimary request: Edit only the mouth in each cell. Preserve exact 3x3 grid, same native 64x29 lower-half framing, face scale and cell boundaries. Row-major order is A B C / D E F / G H X.\nMood: restrained fear: taut mouth, subtly stretched corners, small controlled openings, no scream; X is a closed anxious line. Each letter must show its actual mouth meaning.\nPhonetic semantics: A pressed-lip shape means P/B/M; B narrow EE; C medium unrounded EH/AE; D wide AA; E slightly rounded AO/ER and no wider than C; F puckered UW/OW/W; G upper teeth touch lower lip for F/V; H tongue raised behind upper teeth for L, opening between C and D; X relaxed closed idle for this mood. Keep A and X fully closed.\nAnatomy: Keep NPC164's upper teeth anchored to same upper incisal row. Use restrained pixel-scale teeth, warm ivory rather than bright white. Keep dark oral cavity inside mouth, lips attached to original corners, tongue only where H needs it. No huge grin, oversized mouth, floating teeth, moving jaw, changed nose, cheeks, chin or neck.\nStyle: Original coarse subdued pixel art, warm brown skin, native eye-free lower-half style; square crisp pixels only. No smoothing, anti-aliasing, lighting shift or color grading.\nComposition: Same 192:87 atlas aspect ratio, no extra cells, crop, zoom, shift, border, labels or gutters.\nConstraints: Do not change stationary lower-face pixels outside small mouth feature. Preserve original low contrast and mouth width. Do not substitute arbitrary letter poses for listed phonetic meanings.",
+        "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4 as C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4\\exec-cb8acf52-bf63-49bf-835e-c105c4744e00.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      {
+        "receipt": "work/portrait164-keyframe-v1/receipts/mouth-guarded.request.json",
+        "argumentsReceipt": "work/portrait164-keyframe-v1/receipts/mouth-guarded.arguments.json",
+        "referenceInput": "work/portrait164-keyframe-v1/mouth-reference-grid.png",
+        "referenceSha256": "da8799c14b754ec067a33af399ba2dc140a51692db952a9a46d763e1ceba5553",
+        "imageGenReferencePath": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/work/portrait164-keyframe-v1/mouth-reference-grid.png",
+        "prompt": "Use case: precise-object-edit\nAsset type: one source-conditioned NPC164 GUARDED speech-mouth atlas\nInput image: Image 1 is a 3x3 reference grid of NPC164's own native lower-face source, repeated in every cell and enlarged 8x nearest-neighbor. Keep this same character and small source mouth proportions.\nPrimary request: Edit only the mouth in each cell. Preserve exact 3x3 grid, same native 64x29 lower-half framing, face scale and cell boundaries. Row-major order is A B C / D E F / G H X.\nMood: restrained guardedness: cautious tight lips, low-key skepticism, small controlled openings, no smirk or snarl; X is a closed guarded line. Each letter must show its actual mouth meaning.\nPhonetic semantics: A pressed-lip shape means P/B/M; B narrow EE; C medium unrounded EH/AE; D wide AA; E slightly rounded AO/ER and no wider than C; F puckered UW/OW/W; G upper teeth touch lower lip for F/V; H tongue raised behind upper teeth for L, opening between C and D; X relaxed closed idle for this mood. Keep A and X fully closed.\nAnatomy: Keep NPC164's upper teeth anchored to same upper incisal row. Use restrained pixel-scale teeth, warm ivory rather than bright white. Keep dark oral cavity inside mouth, lips attached to original corners, tongue only where H needs it. No huge grin, oversized mouth, floating teeth, moving jaw, changed nose, cheeks, chin or neck.\nStyle: Original coarse subdued pixel art, warm brown skin, native eye-free lower-half style; square crisp pixels only. No smoothing, anti-aliasing, lighting shift or color grading.\nComposition: Same 192:87 atlas aspect ratio, no extra cells, crop, zoom, shift, border, labels or gutters.\nConstraints: Do not change stationary lower-face pixels outside small mouth feature. Preserve original low contrast and mouth width. Do not substitute arbitrary letter poses for listed phonetic meanings.",
+        "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4 as C:\\Users\\Daniel\\.codex\\generated_images\\01a17235-4c6d-7752-a80b-cbf930d9d5d4\\exec-d92ff6db-a68d-4a7f-a377-b6f1a692a7a5.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      }
+    ],
+    "maskGeometry": {
+      "expressionRects": [
+        [
+          14,
+          16,
+          29,
+          24
+        ],
+        [
+          35,
+          16,
+          51,
+          24
+        ]
+      ],
+      "motionRects": [
+        [
+          15,
+          24,
+          29,
+          29
+        ],
+        [
+          35,
+          24,
+          50,
+          29
+        ]
+      ],
+      "halfOpenRetainRects": [
+        [
+          20,
+          26,
+          27,
+          29
+        ],
+        [
+          38,
+          26,
+          45,
+          29
+        ]
+      ],
+      "mouthRects": [
+        [
+          22,
+          43,
+          43,
+          52
+        ]
+      ]
+    },
+    "frameDimensions": {
+      "eyes": [
+        64,
+        35
+      ],
+      "mouth": [
+        64,
+        29
+      ],
+      "source": [
+        64,
+        64
+      ]
+    },
+    "palettePolicy": "Quantize generated pixels inside fitted feature masks to the immutable NPC164 source palette; source pixels outside the masks remain byte-identical RGB values.",
+    "sourcePaletteColorCount": 35,
+    "masterChecks": {
+      "neutral": {
+        "skinOffset": [
+          0,
+          0,
+          0
+        ],
+        "sha256": "cbd7971f9abf1102748b864a7e31909c3ce3c33f4ad20d12a4d1d11a47643234"
+      },
+      "happy": {
+        "skinOffset": [
+          3,
+          3,
+          6
+        ],
+        "sha256": "9df32f319ae5bb9bf6f8550381f01aacc75a3e6a9141ba57f012426e27e863b1"
+      },
+      "angry": {
+        "skinOffset": [
+          7,
+          3,
+          5
+        ],
+        "sha256": "cbab8f6348ad8ed084f61b9e7b6de748dd15b9b196960dea269d51383503b6aa"
+      },
+      "sad": {
+        "skinOffset": [
+          3,
+          3,
+          5
+        ],
+        "sha256": "2e6b1d7d4634608773199fceb438c0fde5cee05b132a751a9dbc8b615d0fe82b"
+      },
+      "afraid": {
+        "skinOffset": [
+          1,
+          2,
+          4
+        ],
+        "sha256": "ce00f56717e58f138f83b76025824331cabcbcbea49589f7f7e3a204481a0d04"
+      },
+      "guarded": {
+        "skinOffset": [
+          14,
+          9,
+          10
+        ],
+        "sha256": "aeefac87f673347c856f8a5f9daeac372804e4e60383ec25e65f591c55976f46"
+      }
+    },
+    "eyeChecks": {
+      "neutral": {
+        "endpointSkinOffset": [
+          1,
+          2,
+          4
+        ],
+        "gazes": {
+          "front": {
+            "skinOffsets": {
+              "open": [
+                0,
+                2,
+                0
+              ],
+              "half": [
+                -1,
+                2,
+                1
+              ]
+            },
+            "phases": {
+              "open": {
+                "file": "eyes/neutral/front/open.png",
+                "difference": "eyes/neutral/front/open-diff.png",
+                "changedPixels": 0,
+                "sha256": "7c86906c42cbeb1080b3d69f4e6163785c3c07463d51c4c43e2e3ad83c82ca78"
+              },
+              "half": {
+                "file": "eyes/neutral/front/half.png",
+                "difference": "eyes/neutral/front/half-diff.png",
+                "changedPixels": 56,
+                "sha256": "01a330b14743cce5d42a7873cabe4213d622afc1f125bd4f4086de43dd66bb49"
+              },
+              "closed": {
+                "file": "eyes/neutral/front/closed.png",
+                "difference": "eyes/neutral/front/closed-diff.png",
+                "changedPixels": 135,
+                "sha256": "10f82e8246442e5fc60d89a067f09148fd601700e25956a8db9f8283ccf9b216"
+              }
+            }
+          },
+          "left": {
+            "skinOffsets": {
+              "open": [
+                2,
+                3,
+                2
+              ],
+              "half": [
+                2,
+                3,
+                1
+              ]
+            },
+            "phases": {
+              "open": {
+                "file": "eyes/neutral/left/open.png",
+                "difference": "eyes/neutral/left/open-diff.png",
+                "changedPixels": 102,
+                "sha256": "898b8e33247cfbb533122e4f2cb1debb0ff6c0c16cb87e6550d8fa6112b05640"
+              },
+              "half": {
+                "file": "eyes/neutral/left/half.png",
+                "difference": "eyes/neutral/left/half-diff.png",
+                "changedPixels": 108,
+                "sha256": "7752c27e9f7e559924eee79adba6fc8d18e562b4f704d58e1ed723a0a320c371"
+              },
+              "closed": {
+                "file": "eyes/neutral/left/closed.png",
+                "difference": "eyes/neutral/left/closed-diff.png",
+                "changedPixels": 135,
+                "sha256": "10f82e8246442e5fc60d89a067f09148fd601700e25956a8db9f8283ccf9b216"
+              }
+            }
+          },
+          "right": {
+            "skinOffsets": {
+              "open": [
+                -2,
+                0,
+                -1
+              ],
+              "half": [
+                -1,
+                2,
+                0
+              ]
+            },
+            "phases": {
+              "open": {
+                "file": "eyes/neutral/right/open.png",
+                "difference": "eyes/neutral/right/open-diff.png",
+                "changedPixels": 97,
+                "sha256": "cbfea1950be32327f3ebaa1ef2aa1fbd78eb1ce384f4a4be4bc30550715cae9f"
+              },
+              "half": {
+                "file": "eyes/neutral/right/half.png",
+                "difference": "eyes/neutral/right/half-diff.png",
+                "changedPixels": 100,
+                "sha256": "a822d4dce87763ba8e715d5bdceecea0f07261519d57ebe8d6c264f80caa90df"
+              },
+              "closed": {
+                "file": "eyes/neutral/right/closed.png",
+                "difference": "eyes/neutral/right/closed-diff.png",
+                "changedPixels": 135,
+                "sha256": "10f82e8246442e5fc60d89a067f09148fd601700e25956a8db9f8283ccf9b216"
+              }
+            }
+          }
+        }
+      },
+      "happy": {
+        "endpointSkinOffset": [
+          12,
+          6,
+          7
+        ],
+        "gazes": {
+          "front": {
+            "skinOffsets": {
+              "open": [
+                -2,
+                2,
+                3
+              ],
+              "half": [
+                -3,
+                2,
+                3
+              ]
+            },
+            "phases": {
+              "open": {
+                "file": "eyes/happy/front/open.png",
+                "difference": "eyes/happy/front/open-diff.png",
+                "changedPixels": 335,
+                "sha256": "e82567cd19f52ecb7aeebabfaacbb6006d64616f73d5d0c5b3b080b0e398822c"
+              },
+              "half": {
+                "file": "eyes/happy/front/half.png",
+                "difference": "eyes/happy/front/half-diff.png",
+                "changedPixels": 327,
+                "sha256": "c2442b24869af4850f7adf82a2710237de7f112f431f20340eecc706b9e45aa7"
+              },
+              "closed": {
+                "file": "eyes/happy/front/closed.png",
+                "difference": "eyes/happy/front/closed-diff.png",
+                "changedPixels": 341,
+                "sha256": "8454c52506315e0a4a77f176126c6aa0590459affcef1de3fd988dc0cf56246a"
+              }
+            }
+          },
+          "left": {
+            "skinOffsets": {
+              "open": [
+                0,
+                3,
+                3
+              ],
+              "half": [
+                1,
+                3,
+                3
+              ]
+            },
+            "phases": {
+              "open": {
+                "file": "eyes/happy/left/open.png",
+                "difference": "eyes/happy/left/open-diff.png",
+                "changedPixels": 337,
+                "sha256": "21c986536d2cebf784b90ac48485ae83a7b118c3b189f7060a7710caf0665591"
+              },
+              "half": {
+                "file": "eyes/happy/left/half.png",
+                "difference": "eyes/happy/left/half-diff.png",
+                "changedPixels": 336,
+                "sha256": "ae91ec2b67da687a360d9c733d7a5681e46bc74da3c1f690b868243fb2b21bd2"
+              },
+              "closed": {
+                "file": "eyes/happy/left/closed.png",
+                "difference": "eyes/happy/left/closed-diff.png",
+                "changedPixels": 341,
+                "sha256": "8454c52506315e0a4a77f176126c6aa0590459affcef1de3fd988dc0cf56246a"
+              }
+            }
+          },
+          "right": {
+            "skinOffsets": {
+              "open": [
+                -4,
+                1,
+                1
+              ],
+              "half": [
+                -3,
+                1,
+                1
+              ]
+            },
+            "phases": {
+              "open": {
+                "file": "eyes/happy/right/open.png",
+                "difference": "eyes/happy/right/open-diff.png",
+                "changedPixels": 334,
+                "sha256": "43f493de2559e96efd56d1b903f8d3ed9a9005a6fc51fc26e3185715a17fe25d"
+              },
+              "half": {
+                "file": "eyes/happy/right/half.png",
+                "difference": "eyes/happy/right/half-diff.png",
+                "changedPixels": 338,
+                "sha256": "fdb253ad808dfd9b9a48afada4b43576b659d7e56b58e224f99cdc3b11271f23"
+              },
+              "closed": {
+                "file": "eyes/happy/right/closed.png",
+                "difference": "eyes/happy/right/closed-diff.png",
+                "changedPixels": 341,
+                "sha256": "8454c52506315e0a4a77f176126c6aa0590459affcef1de3fd988dc0cf56246a"
+              }
+            }
+          }
+        }
+      },
+      "angry": {
+        "endpointSkinOffset": [
+          2,
+          2,
+          5
+        ],
+        "gazes": {
+          "front": {
+            "skinOffsets": {
+              "open": [
+                -7,
+                1,
+                0
+              ],
+              "half": [
+                -7,
+                2,
+                1
+              ]
+            },
+            "phases": {
+              "open": {
+                "file": "eyes/angry/front/open.png",
+                "difference": "eyes/angry/front/open-diff.png",
+                "changedPixels": 364,
+                "sha256": "2e125573ba4674372f803c9a393583b7a8da32ca92137d055659ac67dc8c34e5"
+              },
+              "half": {
+                "file": "eyes/angry/front/half.png",
+                "difference": "eyes/angry/front/half-diff.png",
+                "changedPixels": 366,
+                "sha256": "49f1c1b40d03f673296c3819af49822122f168472bf5abb201953f1a65cb7fba"
+              },
+              "closed": {
+                "file": "eyes/angry/front/closed.png",
+                "difference": "eyes/angry/front/closed-diff.png",
+                "changedPixels": 368,
+                "sha256": "376d120ed67c2e450b36b5944eabc8cb7918fba295e28129c51ff13522661b5d"
+              }
+            }
+          },
+          "left": {
+            "skinOffsets": {
+              "open": [
+                -5,
+                2,
+                1
+              ],
+              "half": [
+                -3,
+                2,
+                1
+              ]
+            },
+            "phases": {
+              "open": {
+                "file": "eyes/angry/left/open.png",
+                "difference": "eyes/angry/left/open-diff.png",
+                "changedPixels": 366,
+                "sha256": "9a40ea8dc12f4d23e02856b8daae279f1ba2e55164e03c670d778cf1a6fe941c"
+              },
+              "half": {
+                "file": "eyes/angry/left/half.png",
+                "difference": "eyes/angry/left/half-diff.png",
+                "changedPixels": 365,
+                "sha256": "8e1297f02247cedab99056ae17ef84bffbafbcc276545ccbb0eec75b95121d92"
+              },
+              "closed": {
+                "file": "eyes/angry/left/closed.png",
+                "difference": "eyes/angry/left/closed-diff.png",
+                "changedPixels": 368,
+                "sha256": "376d120ed67c2e450b36b5944eabc8cb7918fba295e28129c51ff13522661b5d"
+              }
+            }
+          },
+          "right": {
+            "skinOffsets": {
+              "open": [
+                -8,
+                0,
+                -1
+              ],
+              "half": [
+                -7,
+                1,
+                0
+              ]
+            },
+            "phases": {
+              "open": {
+                "file": "eyes/angry/right/open.png",
+                "difference": "eyes/angry/right/open-diff.png",
+                "changedPixels": 360,
+                "sha256": "2166019221782a94cb25cea5873584b44f5cde9863a12a9785d846eeb21f0f33"
+              },
+              "half": {
+                "file": "eyes/angry/right/half.png",
+                "difference": "eyes/angry/right/half-diff.png",
+                "changedPixels": 367,
+                "sha256": "afc8cd0dfb3b9b30d5258821794be5e987988ca2bfcb23faea1fbe1dd5854318"
+              },
+              "closed": {
+                "file": "eyes/angry/right/closed.png",
+                "difference": "eyes/angry/right/closed-diff.png",
+                "changedPixels": 368,
+                "sha256": "376d120ed67c2e450b36b5944eabc8cb7918fba295e28129c51ff13522661b5d"
+              }
+            }
+          }
+        }
+      },
+      "sad": {
+        "endpointSkinOffset": [
+          0,
+          0,
+          3
+        ],
+        "gazes": {
+          "front": {
+            "skinOffsets": {
+              "open": [
+                -1,
+                2,
+                1
+              ],
+              "half": [
+                0,
+                2,
+                2
+              ]
+            },
+            "phases": {
+              "open": {
+                "file": "eyes/sad/front/open.png",
+                "difference": "eyes/sad/front/open-diff.png",
+                "changedPixels": 312,
+                "sha256": "66596faf24091e65dfedbec7dfc3aa89e15abecbbc824ab1f7931485e7f3298f"
+              },
+              "half": {
+                "file": "eyes/sad/front/half.png",
+                "difference": "eyes/sad/front/half-diff.png",
+                "changedPixels": 321,
+                "sha256": "aea02004551f437bf3d22e09f29abbda3d3c48270914c35fa4be34f03c83ef2d"
+              },
+              "closed": {
+                "file": "eyes/sad/front/closed.png",
+                "difference": "eyes/sad/front/closed-diff.png",
+                "changedPixels": 321,
+                "sha256": "21e115508d382342be8195da5bb9d5fe2f2e7f32bc187167db006b67a273d02f"
+              }
+            }
+          },
+          "left": {
+            "skinOffsets": {
+              "open": [
+                -1,
+                2,
+                1
+              ],
+              "half": [
+                0,
+                2,
+                1
+              ]
+            },
+            "phases": {
+              "open": {
+                "file": "eyes/sad/left/open.png",
+                "difference": "eyes/sad/left/open-diff.png",
+                "changedPixels": 323,
+                "sha256": "3bc0cb3146222ac44370160f8860c585d58f3a9ddf06b00ba23d5fa2257a38be"
+              },
+              "half": {
+                "file": "eyes/sad/left/half.png",
+                "difference": "eyes/sad/left/half-diff.png",
+                "changedPixels": 313,
+                "sha256": "d8d9e08254c4061a6568a97bd1a20a98781093d56116b9f9cd85180975e8b736"
+              },
+              "closed": {
+                "file": "eyes/sad/left/closed.png",
+                "difference": "eyes/sad/left/closed-diff.png",
+                "changedPixels": 321,
+                "sha256": "21e115508d382342be8195da5bb9d5fe2f2e7f32bc187167db006b67a273d02f"
+              }
+            }
+          },
+          "right": {
+            "skinOffsets": {
+              "open": [
+                -2,
+                1,
+                0
+              ],
+              "half": [
+                -3,
+                1,
+                1
+              ]
+            },
+            "phases": {
+              "open": {
+                "file": "eyes/sad/right/open.png",
+                "difference": "eyes/sad/right/open-diff.png",
+                "changedPixels": 321,
+                "sha256": "6890f0ae1996088559afac9a97fa3e3c361b385e79af64eed93db3aa4ceb676b"
+              },
+              "half": {
+                "file": "eyes/sad/right/half.png",
+                "difference": "eyes/sad/right/half-diff.png",
+                "changedPixels": 320,
+                "sha256": "2a52cdffcfb4b94e2941b58286056140442f8872837b33811a3a5137514fedc0"
+              },
+              "closed": {
+                "file": "eyes/sad/right/closed.png",
+                "difference": "eyes/sad/right/closed-diff.png",
+                "changedPixels": 321,
+                "sha256": "21e115508d382342be8195da5bb9d5fe2f2e7f32bc187167db006b67a273d02f"
+              }
+            }
+          }
+        }
+      },
+      "afraid": {
+        "endpointSkinOffset": [
+          2,
+          2,
+          4
+        ],
+        "gazes": {
+          "front": {
+            "skinOffsets": {
+              "open": [
+                0,
+                2,
+                2
+              ],
+              "half": [
+                -1,
+                2,
+                3
+              ]
+            },
+            "phases": {
+              "open": {
+                "file": "eyes/afraid/front/open.png",
+                "difference": "eyes/afraid/front/open-diff.png",
+                "changedPixels": 343,
+                "sha256": "04d182634520ca6bb2531251fa4304daa1b13725ef385a978bbf95133c854a72"
+              },
+              "half": {
+                "file": "eyes/afraid/front/half.png",
+                "difference": "eyes/afraid/front/half-diff.png",
+                "changedPixels": 345,
+                "sha256": "45b05fb56c8899c2db1803366a0b677712acf466e7399b8967b9f4754a5c8b69"
+              },
+              "closed": {
+                "file": "eyes/afraid/front/closed.png",
+                "difference": "eyes/afraid/front/closed-diff.png",
+                "changedPixels": 344,
+                "sha256": "86258cf45008bfc00f911bd8133af7b4ffaab0f474c35d2bfe002d800faca191"
+              }
+            }
+          },
+          "left": {
+            "skinOffsets": {
+              "open": [
+                1,
+                3,
+                3
+              ],
+              "half": [
+                2,
+                3,
+                3
+              ]
+            },
+            "phases": {
+              "open": {
+                "file": "eyes/afraid/left/open.png",
+                "difference": "eyes/afraid/left/open-diff.png",
+                "changedPixels": 348,
+                "sha256": "7008dff2abb6d46586b265e345c2bede53c1765bf39852dd72457a23c29c38f1"
+              },
+              "half": {
+                "file": "eyes/afraid/left/half.png",
+                "difference": "eyes/afraid/left/half-diff.png",
+                "changedPixels": 350,
+                "sha256": "2e6f7e59859a3eaa07861643cb6d6ecd138ddb0aa32f1cf980c41b5f4f4c0e36"
+              },
+              "closed": {
+                "file": "eyes/afraid/left/closed.png",
+                "difference": "eyes/afraid/left/closed-diff.png",
+                "changedPixels": 344,
+                "sha256": "86258cf45008bfc00f911bd8133af7b4ffaab0f474c35d2bfe002d800faca191"
+              }
+            }
+          },
+          "right": {
+            "skinOffsets": {
+              "open": [
+                -5,
+                -1,
+                0
+              ],
+              "half": [
+                -4,
+                0,
+                0
+              ]
+            },
+            "phases": {
+              "open": {
+                "file": "eyes/afraid/right/open.png",
+                "difference": "eyes/afraid/right/open-diff.png",
+                "changedPixels": 344,
+                "sha256": "7444e72ab1bb9d070fa14d276579a270ca8c53375dd968a31caecab8d8d8c364"
+              },
+              "half": {
+                "file": "eyes/afraid/right/half.png",
+                "difference": "eyes/afraid/right/half-diff.png",
+                "changedPixels": 346,
+                "sha256": "0f5ded32e14c91150bf5a5b9f5eebeeeabb434aa80fea3a9d787d30fd20fad5c"
+              },
+              "closed": {
+                "file": "eyes/afraid/right/closed.png",
+                "difference": "eyes/afraid/right/closed-diff.png",
+                "changedPixels": 344,
+                "sha256": "86258cf45008bfc00f911bd8133af7b4ffaab0f474c35d2bfe002d800faca191"
+              }
+            }
+          }
+        }
+      },
+      "guarded": {
+        "endpointSkinOffset": [
+          14,
+          9,
+          9
+        ],
+        "gazes": {
+          "front": {
+            "skinOffsets": {
+              "open": [
+                2,
+                3,
+                3
+              ],
+              "half": [
+                2,
+                3,
+                3
+              ]
+            },
+            "phases": {
+              "open": {
+                "file": "eyes/guarded/front/open.png",
+                "difference": "eyes/guarded/front/open-diff.png",
+                "changedPixels": 380,
+                "sha256": "f3bf689a773acb2ef70beed6610458a3b92ac498e9ce3cea7349fb72751c1002"
+              },
+              "half": {
+                "file": "eyes/guarded/front/half.png",
+                "difference": "eyes/guarded/front/half-diff.png",
+                "changedPixels": 379,
+                "sha256": "883f7cff886720cdd58117747e8bed3e849a376127c64010bc2a872cd0f39d71"
+              },
+              "closed": {
+                "file": "eyes/guarded/front/closed.png",
+                "difference": "eyes/guarded/front/closed-diff.png",
+                "changedPixels": 381,
+                "sha256": "f53a8c2224c7f24a1aa0009bccec8909fada04ed55497e531d60fb8e36f16c73"
+              }
+            }
+          },
+          "left": {
+            "skinOffsets": {
+              "open": [
+                4,
+                4,
+                3
+              ],
+              "half": [
+                4,
+                4,
+                4
+              ]
+            },
+            "phases": {
+              "open": {
+                "file": "eyes/guarded/left/open.png",
+                "difference": "eyes/guarded/left/open-diff.png",
+                "changedPixels": 382,
+                "sha256": "78e2f95589507bdca9c98fa93e8410ac33162f702d67e41e1dac5506b3f13c9c"
+              },
+              "half": {
+                "file": "eyes/guarded/left/half.png",
+                "difference": "eyes/guarded/left/half-diff.png",
+                "changedPixels": 378,
+                "sha256": "f66f8b80827b1d73f24f8d5572cf5682b374104191c9e59b54960b643655168c"
+              },
+              "closed": {
+                "file": "eyes/guarded/left/closed.png",
+                "difference": "eyes/guarded/left/closed-diff.png",
+                "changedPixels": 381,
+                "sha256": "f53a8c2224c7f24a1aa0009bccec8909fada04ed55497e531d60fb8e36f16c73"
+              }
+            }
+          },
+          "right": {
+            "skinOffsets": {
+              "open": [
+                1,
+                2,
+                1
+              ],
+              "half": [
+                1,
+                2,
+                2
+              ]
+            },
+            "phases": {
+              "open": {
+                "file": "eyes/guarded/right/open.png",
+                "difference": "eyes/guarded/right/open-diff.png",
+                "changedPixels": 377,
+                "sha256": "490587db12a6c5c640b5960c15e89acdcf2770f9886bdf21181e504b021e9953"
+              },
+              "half": {
+                "file": "eyes/guarded/right/half.png",
+                "difference": "eyes/guarded/right/half-diff.png",
+                "changedPixels": 377,
+                "sha256": "1f938def306cd689009ecefd890b7f35b1cad82ee5bf94fe7d00be2a0f3bae6c"
+              },
+              "closed": {
+                "file": "eyes/guarded/right/closed.png",
+                "difference": "eyes/guarded/right/closed-diff.png",
+                "changedPixels": 381,
+                "sha256": "f53a8c2224c7f24a1aa0009bccec8909fada04ed55497e531d60fb8e36f16c73"
+              }
+            }
+          }
+        }
+      }
+    },
+    "mouthChecks": {
+      "neutral": {
+        "shapes": {
+          "A": {
+            "file": "mouth/neutral/A.png",
+            "difference": "mouth/neutral/A-diff.png",
+            "changedPixels": 0,
+            "sha256": "6910b0491f40f64cc5cd3a4c9822342959b52aa82d44f214aec65601dec8ff48",
+            "skinOffset": [
+              0,
+              0,
+              0
+            ]
+          },
+          "B": {
+            "file": "mouth/neutral/B.png",
+            "difference": "mouth/neutral/B-diff.png",
+            "changedPixels": 95,
+            "sha256": "bae7eda37338640630643c8fd579262d4a198ac596bbbe92c6d2e8a605410ce0",
+            "skinOffset": [
+              0,
+              2,
+              2
+            ]
+          },
+          "C": {
+            "file": "mouth/neutral/C.png",
+            "difference": "mouth/neutral/C-diff.png",
+            "changedPixels": 120,
+            "sha256": "5aed0f8473a37232ab2695aae5279d85811541f8532e93286545c363a9558a4c",
+            "skinOffset": [
+              0,
+              1,
+              2
+            ]
+          },
+          "D": {
+            "file": "mouth/neutral/D.png",
+            "difference": "mouth/neutral/D-diff.png",
+            "changedPixels": 126,
+            "sha256": "78714a45f87bb08afd9286be05c81b6d71317f13aa881a6e36039822ab382906",
+            "skinOffset": [
+              -1,
+              1,
+              2
+            ]
+          },
+          "E": {
+            "file": "mouth/neutral/E.png",
+            "difference": "mouth/neutral/E-diff.png",
+            "changedPixels": 105,
+            "sha256": "da2b6df5b3cd419cf25df070a88c0da01dd68cb586895c2a5cf27aea8fcf7304",
+            "skinOffset": [
+              0,
+              1,
+              2
+            ]
+          },
+          "F": {
+            "file": "mouth/neutral/F.png",
+            "difference": "mouth/neutral/F-diff.png",
+            "changedPixels": 94,
+            "sha256": "903ae46e83a38b6ecbd2829a4d748b6d4ae1abcbedd01f86ccae730dc8888e8c",
+            "skinOffset": [
+              -1,
+              1,
+              2
+            ]
+          },
+          "G": {
+            "file": "mouth/neutral/G.png",
+            "difference": "mouth/neutral/G-diff.png",
+            "changedPixels": 93,
+            "sha256": "4565786f319ed08baf8c3deabf15b200c97b8cb643429ff42cf572a5b9e75ba3",
+            "skinOffset": [
+              -1,
+              1,
+              2
+            ]
+          },
+          "H": {
+            "file": "mouth/neutral/H.png",
+            "difference": "mouth/neutral/H-diff.png",
+            "changedPixels": 98,
+            "sha256": "40ff0dcf9d5f65c3ca421398084127f45741d1c8470ee9bcb136a4e72ccb009a",
+            "skinOffset": [
+              0,
+              1,
+              2
+            ]
+          },
+          "X": {
+            "file": "mouth/neutral/X.png",
+            "difference": "mouth/neutral/X-diff.png",
+            "changedPixels": 0,
+            "sha256": "6910b0491f40f64cc5cd3a4c9822342959b52aa82d44f214aec65601dec8ff48",
+            "skinOffset": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      "happy": {
+        "shapes": {
+          "A": {
+            "file": "mouth/happy/A.png",
+            "difference": "mouth/happy/A-diff.png",
+            "changedPixels": 65,
+            "sha256": "1d33d7b1d24bfc499ed9692445145a258d0fa6e989ec32a6a161dd9ef6e8e966",
+            "skinOffset": [
+              -1,
+              1,
+              1
+            ]
+          },
+          "B": {
+            "file": "mouth/happy/B.png",
+            "difference": "mouth/happy/B-diff.png",
+            "changedPixels": 79,
+            "sha256": "339aee74f8caa8391e27988b436a33a641671b10622ab4bab04538d340b371ee",
+            "skinOffset": [
+              0,
+              1,
+              2
+            ]
+          },
+          "C": {
+            "file": "mouth/happy/C.png",
+            "difference": "mouth/happy/C-diff.png",
+            "changedPixels": 104,
+            "sha256": "91338b9b02a9f20018894788b5c849fa38dd346e6c4921f91b4f626e1ba29048",
+            "skinOffset": [
+              -1,
+              0,
+              1
+            ]
+          },
+          "D": {
+            "file": "mouth/happy/D.png",
+            "difference": "mouth/happy/D-diff.png",
+            "changedPixels": 122,
+            "sha256": "27810aeade11760027929ae0857f6545a7c4c585a709cd9fefb96e036e23a422",
+            "skinOffset": [
+              -1,
+              0,
+              1
+            ]
+          },
+          "E": {
+            "file": "mouth/happy/E.png",
+            "difference": "mouth/happy/E-diff.png",
+            "changedPixels": 109,
+            "sha256": "6febd3a425470c947e7539c2181ff5427c22b9c2751d681590d291d9330f2e76",
+            "skinOffset": [
+              -1,
+              0,
+              1
+            ]
+          },
+          "F": {
+            "file": "mouth/happy/F.png",
+            "difference": "mouth/happy/F-diff.png",
+            "changedPixels": 98,
+            "sha256": "eda3524577f6ad556fb91083d2a13c0ffd7ab8a3bec81bddb8fa86467bb48c19",
+            "skinOffset": [
+              -1,
+              0,
+              1
+            ]
+          },
+          "G": {
+            "file": "mouth/happy/G.png",
+            "difference": "mouth/happy/G-diff.png",
+            "changedPixels": 98,
+            "sha256": "15f87fa60035c5959827cf8f22d4212b2b04545ab6a4477387f06b40a77f9d9f",
+            "skinOffset": [
+              -1,
+              0,
+              1
+            ]
+          },
+          "H": {
+            "file": "mouth/happy/H.png",
+            "difference": "mouth/happy/H-diff.png",
+            "changedPixels": 109,
+            "sha256": "44a8e0cff08f01e58ab97015df82c5ed78646de560d08a07f0dfe748ee14dee7",
+            "skinOffset": [
+              0,
+              1,
+              2
+            ]
+          },
+          "X": {
+            "file": "mouth/happy/X.png",
+            "difference": "mouth/happy/X-diff.png",
+            "changedPixels": 93,
+            "sha256": "37c7acc6b31e676c7d52eb935f336009d874b57f50e2215fe8e98d7189ebda66",
+            "skinOffset": [
+              -1,
+              0,
+              1
+            ]
+          }
+        }
+      },
+      "angry": {
+        "shapes": {
+          "A": {
+            "file": "mouth/angry/A.png",
+            "difference": "mouth/angry/A-diff.png",
+            "changedPixels": 83,
+            "sha256": "be2e99499af2a2c1b694c0e04f14d9bd76db603ddb3ad8c6866387d27bc987ff",
+            "skinOffset": [
+              -2,
+              1,
+              3
+            ]
+          },
+          "B": {
+            "file": "mouth/angry/B.png",
+            "difference": "mouth/angry/B-diff.png",
+            "changedPixels": 80,
+            "sha256": "b43b1c3df24e34ba8942d49ffdabd12449ec94407f6d12a7c7733b05d3178f0a",
+            "skinOffset": [
+              -2,
+              1,
+              3
+            ]
+          },
+          "C": {
+            "file": "mouth/angry/C.png",
+            "difference": "mouth/angry/C-diff.png",
+            "changedPixels": 119,
+            "sha256": "4a042a5c117aee5332d62e63cd8d7fe339eda9fbd0e53d33d3a396139594656b",
+            "skinOffset": [
+              -3,
+              1,
+              3
+            ]
+          },
+          "D": {
+            "file": "mouth/angry/D.png",
+            "difference": "mouth/angry/D-diff.png",
+            "changedPixels": 122,
+            "sha256": "1dff4f4e4136f262d1b17a5ff0367099c58b3ef00fb6b20e307ab13f5342da10",
+            "skinOffset": [
+              -3,
+              0,
+              2
+            ]
+          },
+          "E": {
+            "file": "mouth/angry/E.png",
+            "difference": "mouth/angry/E-diff.png",
+            "changedPixels": 113,
+            "sha256": "04db00bb4ea9793b3b3e02d3d61db75f9b4e3a3e9063f8c72381a8601cb1e02d",
+            "skinOffset": [
+              -3,
+              0,
+              2
+            ]
+          },
+          "F": {
+            "file": "mouth/angry/F.png",
+            "difference": "mouth/angry/F-diff.png",
+            "changedPixels": 116,
+            "sha256": "5f169580b2bd834f79d0e01a375b4f4fac87e848c7fcb6fa452401107bbfe42b",
+            "skinOffset": [
+              -3,
+              0,
+              3
+            ]
+          },
+          "G": {
+            "file": "mouth/angry/G.png",
+            "difference": "mouth/angry/G-diff.png",
+            "changedPixels": 89,
+            "sha256": "0f4492c3ec67ee6eb31189ff5533c5f7ad6bb5e1648ca5308dc5bf6cc0377056",
+            "skinOffset": [
+              -3,
+              0,
+              2
+            ]
+          },
+          "H": {
+            "file": "mouth/angry/H.png",
+            "difference": "mouth/angry/H-diff.png",
+            "changedPixels": 113,
+            "sha256": "d225616fb73d8edda747f13cf34ae91cb531aca93121126b75978e049c0adc94",
+            "skinOffset": [
+              -3,
+              0,
+              2
+            ]
+          },
+          "X": {
+            "file": "mouth/angry/X.png",
+            "difference": "mouth/angry/X-diff.png",
+            "changedPixels": 107,
+            "sha256": "f8fb92873a2d285630dbce7eb6a781891437829b658ea9646708fdc603e62d0c",
+            "skinOffset": [
+              -3,
+              0,
+              2
+            ]
+          }
+        }
+      },
+      "sad": {
+        "shapes": {
+          "A": {
+            "file": "mouth/sad/A.png",
+            "difference": "mouth/sad/A-diff.png",
+            "changedPixels": 82,
+            "sha256": "0c7bacfb5721a6f8b75ddf3ca660abe258916939bdfe5318455221fb81a6bf0b",
+            "skinOffset": [
+              -4,
+              0,
+              2
+            ]
+          },
+          "B": {
+            "file": "mouth/sad/B.png",
+            "difference": "mouth/sad/B-diff.png",
+            "changedPixels": 103,
+            "sha256": "189620b308a257197d15ec3ee627909b2151d2cabe7172750e417de31b94c8a4",
+            "skinOffset": [
+              -3,
+              0,
+              2
+            ]
+          },
+          "C": {
+            "file": "mouth/sad/C.png",
+            "difference": "mouth/sad/C-diff.png",
+            "changedPixels": 104,
+            "sha256": "544632aeb8331be874425d30c8a918e878034a8724e5698ed6e5da981ba9d32f",
+            "skinOffset": [
+              -4,
+              0,
+              2
+            ]
+          },
+          "D": {
+            "file": "mouth/sad/D.png",
+            "difference": "mouth/sad/D-diff.png",
+            "changedPixels": 102,
+            "sha256": "e0076c37e591dda269f64857d29fbbe688438a1700b21d25190ed2c03d616736",
+            "skinOffset": [
+              -4,
+              0,
+              2
+            ]
+          },
+          "E": {
+            "file": "mouth/sad/E.png",
+            "difference": "mouth/sad/E-diff.png",
+            "changedPixels": 107,
+            "sha256": "8b32971943bbcac59e7b5a29ebcef34219424c786c08131e753bee294f237823",
+            "skinOffset": [
+              -4,
+              0,
+              2
+            ]
+          },
+          "F": {
+            "file": "mouth/sad/F.png",
+            "difference": "mouth/sad/F-diff.png",
+            "changedPixels": 98,
+            "sha256": "7c81d1be506b1adfa0badcf26c8b66bbd7d068229da86759790423eb0b3a9070",
+            "skinOffset": [
+              -4,
+              0,
+              2
+            ]
+          },
+          "G": {
+            "file": "mouth/sad/G.png",
+            "difference": "mouth/sad/G-diff.png",
+            "changedPixels": 91,
+            "sha256": "7a3cdb577c541a25212d4a1ceb1d2fb440420874c5ff7751be809780e421ee02",
+            "skinOffset": [
+              -4,
+              0,
+              2
+            ]
+          },
+          "H": {
+            "file": "mouth/sad/H.png",
+            "difference": "mouth/sad/H-diff.png",
+            "changedPixels": 101,
+            "sha256": "741558186f396da8d9c9ccd306f2662a1212f5244b111e94f8ac7dfe7e366b47",
+            "skinOffset": [
+              -3,
+              0,
+              2
+            ]
+          },
+          "X": {
+            "file": "mouth/sad/X.png",
+            "difference": "mouth/sad/X-diff.png",
+            "changedPixels": 92,
+            "sha256": "4ae5c9ae0ab042f2ae2b173e917b79af2d17cbf8e9daa146b86e14656d19c901",
+            "skinOffset": [
+              -3,
+              0,
+              2
+            ]
+          }
+        }
+      },
+      "afraid": {
+        "shapes": {
+          "A": {
+            "file": "mouth/afraid/A.png",
+            "difference": "mouth/afraid/A-diff.png",
+            "changedPixels": 80,
+            "sha256": "2bb9eaac5800955af7dee11d9e64baa5ccd1c0b6fe90e4497c345abdb10cbacd",
+            "skinOffset": [
+              -1,
+              1,
+              2
+            ]
+          },
+          "B": {
+            "file": "mouth/afraid/B.png",
+            "difference": "mouth/afraid/B-diff.png",
+            "changedPixels": 92,
+            "sha256": "4b49a43378ada53b0114ade8cd9f98f35a624b4b08e603cd6bc1ab91bb9d3e39",
+            "skinOffset": [
+              -1,
+              1,
+              2
+            ]
+          },
+          "C": {
+            "file": "mouth/afraid/C.png",
+            "difference": "mouth/afraid/C-diff.png",
+            "changedPixels": 99,
+            "sha256": "bdce3c9d3891eb52507cd9f45b11f2e1855fd6f6a03853cf61441ba092b48160",
+            "skinOffset": [
+              -2,
+              1,
+              2
+            ]
+          },
+          "D": {
+            "file": "mouth/afraid/D.png",
+            "difference": "mouth/afraid/D-diff.png",
+            "changedPixels": 104,
+            "sha256": "2c25dbc509f0ce9307f070260b2a7dfd08afd00e566aa96df9a87ad82044f3a1",
+            "skinOffset": [
+              -2,
+              1,
+              1
+            ]
+          },
+          "E": {
+            "file": "mouth/afraid/E.png",
+            "difference": "mouth/afraid/E-diff.png",
+            "changedPixels": 103,
+            "sha256": "6e029380fe360d4a9a30546a577681b4e1776b22131ed24a5fd9fca2c6defa59",
+            "skinOffset": [
+              -2,
+              1,
+              2
+            ]
+          },
+          "F": {
+            "file": "mouth/afraid/F.png",
+            "difference": "mouth/afraid/F-diff.png",
+            "changedPixels": 100,
+            "sha256": "96a9affc3b9754be5de8c8b61cebb9277853c8f9cf14a1bb40c9dd0c5825bf15",
+            "skinOffset": [
+              -2,
+              1,
+              2
+            ]
+          },
+          "G": {
+            "file": "mouth/afraid/G.png",
+            "difference": "mouth/afraid/G-diff.png",
+            "changedPixels": 93,
+            "sha256": "28b61d4011daabf67f9bba155e31544d510be35df206904b0ee8bc4e4369cd38",
+            "skinOffset": [
+              -1,
+              1,
+              2
+            ]
+          },
+          "H": {
+            "file": "mouth/afraid/H.png",
+            "difference": "mouth/afraid/H-diff.png",
+            "changedPixels": 105,
+            "sha256": "b91d5589fef763bb7c0129a9ef5eea5e5ad73ccc6448f699ac4575e26b815f0e",
+            "skinOffset": [
+              -1,
+              1,
+              2
+            ]
+          },
+          "X": {
+            "file": "mouth/afraid/X.png",
+            "difference": "mouth/afraid/X-diff.png",
+            "changedPixels": 88,
+            "sha256": "9f43b22cc1af1cbf03db96d08048645e0f63343268125eb1a777546ecae3d0f0",
+            "skinOffset": [
+              -2,
+              1,
+              1
+            ]
+          }
+        }
+      },
+      "guarded": {
+        "shapes": {
+          "A": {
+            "file": "mouth/guarded/A.png",
+            "difference": "mouth/guarded/A-diff.png",
+            "changedPixels": 85,
+            "sha256": "6f990ef3ecea606224fb55e13c54d94a93c2d15eea889e2158e10273f02cf6b4",
+            "skinOffset": [
+              -4,
+              0,
+              2
+            ]
+          },
+          "B": {
+            "file": "mouth/guarded/B.png",
+            "difference": "mouth/guarded/B-diff.png",
+            "changedPixels": 85,
+            "sha256": "05b16779e4fd54758b53a16fbe1f0b405c84f177fd0f0fd7d3a8eca069aaca4b",
+            "skinOffset": [
+              -4,
+              0,
+              2
+            ]
+          },
+          "C": {
+            "file": "mouth/guarded/C.png",
+            "difference": "mouth/guarded/C-diff.png",
+            "changedPixels": 115,
+            "sha256": "8fbb1a96da40514a812c9acdf467e855dc23eaf3baf401e90b3eb44a84eb08b4",
+            "skinOffset": [
+              -3,
+              0,
+              2
+            ]
+          },
+          "D": {
+            "file": "mouth/guarded/D.png",
+            "difference": "mouth/guarded/D-diff.png",
+            "changedPixels": 118,
+            "sha256": "160364cfd5e0d1ed5426d2550b11e61e1b53735cf94cc937ea7981609c2785d3",
+            "skinOffset": [
+              -4,
+              -1,
+              1
+            ]
+          },
+          "E": {
+            "file": "mouth/guarded/E.png",
+            "difference": "mouth/guarded/E-diff.png",
+            "changedPixels": 107,
+            "sha256": "578ea426fb66b4844e024ef1466f3004ccc69463c6c76a74a011266e61e06660",
+            "skinOffset": [
+              -4,
+              -1,
+              1
+            ]
+          },
+          "F": {
+            "file": "mouth/guarded/F.png",
+            "difference": "mouth/guarded/F-diff.png",
+            "changedPixels": 94,
+            "sha256": "e9dde69c9a6a5182a15f0c8d63f715e905d4259cbe70d43fc8fe9129bb2b6c9c",
+            "skinOffset": [
+              -4,
+              -1,
+              1
+            ]
+          },
+          "G": {
+            "file": "mouth/guarded/G.png",
+            "difference": "mouth/guarded/G-diff.png",
+            "changedPixels": 91,
+            "sha256": "3078fa96a0b8360378ff34f51263a4e99406d695d3accc92b8654905ecb814ac",
+            "skinOffset": [
+              -4,
+              -1,
+              1
+            ]
+          },
+          "H": {
+            "file": "mouth/guarded/H.png",
+            "difference": "mouth/guarded/H-diff.png",
+            "changedPixels": 94,
+            "sha256": "983b17bb1453f3f41e90a2b70bc050055cde5cda95c05bcccfad3bb0ee70b64d",
+            "skinOffset": [
+              -4,
+              -1,
+              1
+            ]
+          },
+          "X": {
+            "file": "mouth/guarded/X.png",
+            "difference": "mouth/guarded/X-diff.png",
+            "changedPixels": 93,
+            "sha256": "8d87ea6830608ec428c9362940a80c3200e6e33646a8e00f5ae560561e976f79",
+            "skinOffset": [
+              -4,
+              -1,
+              1
+            ]
+          }
+        }
+      }
+    },
+    "registration": "Candidate only; no shared catalog, served preview, or gallery/static root edit."
+  },
+  "auditedRepairs": [
+    {
+      "date": "2026-10-27",
+      "scope": "neutral/afraid/guarded eyes, 27 states",
+      "method": "original-sized shared eye geometry, own expression brows, same-coordinate OPEN iris retention in HALF",
+      "report": "work/portrait-repairs-20261027/164/REPARATURPROTOKOLL.md",
+      "userApproval": false,
+      "remainingMoods": [
+        "happy",
+        "angry",
+        "sad"
+      ],
+      "mouthsRepaired": false,
+      "realtimeAccepted": false
+    },
+    {
+      "date": "2026-10-27",
+      "scope": "52 mouth states; neutral A/X preserved",
+      "method": "Whole-cell stationary-landmark alignment, complete upper-lip/teeth coverage, raw tooth colors retained, regenerated sad G",
+      "report": "work/portrait-repairs-20261027/164/mouth-v3-review.json",
+      "rawProvenance": "work/portrait-repairs-20261027/164/mouth-v3-analysis.json",
+      "userApproval": false,
+      "realtimeAccepted": false,
+      "phoneticListeningAccepted": false
+    },
+    {
+      "date": "2026-10-27",
+      "scope": "sad eyes, nine states",
+      "method": "Original-conditioned sad brows, calibrated same-face OPEN/HALF, regenerated thin CLOSED lash; fixed cheeks and temples",
+      "report": "work/portrait-repairs-20261027/164/sad-v10-review.json",
+      "userApproval": false,
+      "realtimeAccepted": false
+    },
+    {
+      "date": "2026-10-27",
+      "scope": "happy/angry eyes, 18 states",
+      "method": "Original-conditioned own expression brows; calibrated same-face eyes and thin CLOSED endpoint, stationary surrounding tissue",
+      "report": "work/portrait-repairs-20261027/164/eyes-v11-review.json",
+      "userApproval": false,
+      "realtimeAccepted": false
+    },
+    {
+      "date": "2026-10-27",
+      "scope": "All six moods and three gazes, HALF/CLOSED only,36 states",
+      "method": "Original-conditioned blink source with fixed horizontal location; exposed iris retained from matching OPEN without translation",
+      "report": "work/portrait-repairs-20261027/164/blink-v13-review.json",
+      "userApproval": false,
+      "realtimeAccepted": false
+    },
+    {
+      "date": "2026-10-27",
+      "scope": "fear eyebrows, nine states",
+      "method": "Original-conditioned raised fear brows; all repaired eye animation pixels below row24 preserved",
+      "report": "work/portrait-repairs-20261027/164/fear-brows-v15-review.json",
+      "userApproval": false,
+      "realtimeAccepted": false
+    },
+    {
+      "date": "2026-10-27",
+      "scope": "Nine sad brow and inter-lid skin states; all rows27 onward unchanged",
+      "method": "Generated brow cleanup V16 and same-coordinate generated lid-skin cleanup V18; existing iris and closed lash retained; rejected V17 pair excluded",
+      "report": "work/portrait-repairs-20261027/164/sad-brow-cleanup-v18-review.json",
+      "userApproval": false,
+      "realtimeAccepted": false
+    }
+  ]
+}

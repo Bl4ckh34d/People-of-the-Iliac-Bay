@@ -10,6 +10,16 @@ namespace PeopleOfTheIliacBay.Tests
         { return TravelerJourney.Create(seed,arrival,nights,commute,walls,new[] { new RoutePoint(0,0),new RoutePoint(30,0),new RoutePoint(30,40) }); }
         public static void Add(List<(string Name,Action Body)> cases)
         {
+            cases.Add(("Catch-up guests never materialize outside after their scheduled arrival",new Action(()=>{
+                Check.True(TravelerExteriorMaterialization.ShouldExist(TravelerAdmission.Pending,TravelerPhase.Arriving,false));
+                Check.True(!TravelerExteriorMaterialization.ShouldExist(TravelerAdmission.Pending,TravelerPhase.AtInn,false));
+                Check.True(!TravelerExteriorMaterialization.ShouldExist(TravelerAdmission.Pending,TravelerPhase.Sleeping,false));
+                Check.True(TravelerExteriorMaterialization.ShouldExist(TravelerAdmission.Pending,TravelerPhase.AtInn,true));
+                Check.True(!TravelerExteriorMaterialization.ShouldExist(TravelerAdmission.Pending,TravelerPhase.AtInn,true,true));
+                Check.True(!TravelerExteriorMaterialization.ShouldExist(TravelerAdmission.Admitted,TravelerPhase.AtInn,false));
+                Check.True(TravelerExteriorMaterialization.ShouldExist(TravelerAdmission.Refused,TravelerPhase.WaitingForGate,false));
+                Check.True(TravelerExteriorMaterialization.ShouldExist(TravelerAdmission.Refused,TravelerPhase.Leaving,false));
+            })));
             cases.Add(("Refused travelers return immediately without acquiring a stay and respect closed gates",()=>{
                 var route=new[]{new RoutePoint(0,0),new RoutePoint(30,0)};
                 var journey=TravelerJourney.CreateRefused(1,43200,600,false,route,43800);

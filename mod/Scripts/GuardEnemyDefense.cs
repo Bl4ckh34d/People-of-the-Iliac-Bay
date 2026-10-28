@@ -45,6 +45,8 @@ namespace PeopleOfTheIliacBay.DFU
         {
             if(!target || !target.gameObject.activeInHierarchy || target.Entity==null || target.Entity.CurrentHealth<=0 ||
                 target.GetComponent<GuardActor>()) return false;
+            var captive=target.GetComponent<ResidentActor>();
+            if(captive && captive.Resident!=null && NativeNpcCustody.HoldsResident(worldStore,captive.Resident.Id))return false;
             bool witnessed=IsWitnessedResidentAssault(target,now);
             if(worldStore!=null && !witnessed)
             {
@@ -165,6 +167,7 @@ namespace PeopleOfTheIliacBay.DFU
                     geometry.ScenePoint(new RoutePoint(ground.X,ground.Z)).y>3 && TrySendForArcher(guard,report.ThreatId,now))
                 {actor.EndCombat();return true;}
             }
+            if(TryStartNpcCustody(guard,actor,report,target,now))return true;
             if (!target.Entity.IsInvisible && (guard.Duty == GuardDuty.Engaged || CivilianResponses.Sees(actor.transform.position,target.transform.position,20)))
                 actor.BeginDefenseCombat(target,now);
             return true;
@@ -203,6 +206,7 @@ namespace PeopleOfTheIliacBay.DFU
                 Roster.EndInteriorSearch(guard.Id,now); actor.Place(now);
                 return true;
             }
+            if(TryStartNpcCustody(guard,actor,report,target,now))return true;
             if(!target.Entity.IsInvisible && CivilianResponses.Sees(actor.transform.position,target.transform.position,20))
                 actor.BeginDefenseCombat(target,now);
             else if(!actor.CombatReady && guard.Interior.LastSeenSuspect!=null)

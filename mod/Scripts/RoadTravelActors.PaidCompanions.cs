@@ -14,19 +14,20 @@ namespace PeopleOfTheIliacBay.DFU
         private readonly Dictionary<string,string> paidActions=new Dictionary<string,string>();
         private readonly HashSet<string> retiredPaidCompanions=new HashSet<string>();
 
-        private bool HasPaidCompanions { get { return paidCompanions.Count>0 || paidActions.Count>0; } }
+        private bool HasPaidCompanions { get { return paidCompanions.Count>0 || paidActions.Count>0 || fastTravelFollowers.Count>0 || fastTravelTransit!=null; } }
 
         public bool OwnsPaidCompanion(string residentId)
         {
             return !string.IsNullOrEmpty(residentId) &&
-                (paidActions.ContainsKey(residentId) || paidCompanions.ContainsKey(residentId));
+                (paidActions.ContainsKey(residentId) || paidCompanions.ContainsKey(residentId) || fastTravelFollowers.ContainsKey(residentId) ||
+                 fastTravelTransit!=null && fastTravelTransit.Members.Exists(member=>member.Actor && member.Actor.Resident.Id==residentId));
         }
 
         public ResidentActor FindPaidCompanion(string residentId)
         {
             ResidentActor actor;
             paidCompanions.TryGetValue(residentId,out actor);
-            return actor;
+            return actor?actor:FindFastTravelFollower(residentId);
         }
 
         // A native exterior door adapter may inspect this live body before it
@@ -36,8 +37,10 @@ namespace PeopleOfTheIliacBay.DFU
             actor=null;
             NpcServiceContract contract;
             var action=store==null?null:store.ActiveNpcAction(residentId);
-            return ReferenceEquals(current,store) && paidCompanions.TryGetValue(residentId,out actor) && actor &&
-                actor.gameObject.activeInHierarchy && NpcPaidCompanionTravel.TryReadActiveTravel(store,action,now,out contract);
+            actor=FindPaidCompanion(residentId);
+            return ReferenceEquals(current,store) && actor && actor.gameObject.activeInHierarchy &&
+                (NpcPaidCompanionTravel.TryReadActiveTravel(store,action,now,out contract) ||
+                 action!=null && action.FastTravelFollowOwner && NpcCompanionFastTravel.CanFollow(store,action,now));
         }
 
         // Caller has already captured the actual exterior body point for the
@@ -45,7 +48,7 @@ namespace PeopleOfTheIliacBay.DFU
         public bool TryReleasePaidCompanionToStreet(string residentId,WorldStateStore store,double now,out ResidentActor actor)
         {
             if(!TryGetPaidCompanionForDoor(residentId,store,now,out actor))return false;
-            paidCompanions.Remove(residentId);paidActions.Remove(residentId);retiredPaidCompanions.Remove(residentId);
+            paidCompanions.Remove(residentId);paidActions.Remove(residentId);retiredPaidCompanions.Remove(residentId);fastTravelFollowers.Remove(residentId);
             return true;
         }
 
@@ -56,6 +59,12 @@ namespace PeopleOfTheIliacBay.DFU
             if(!actor || actor.Resident==null || !actor.Resident.IsAlive || source==null ||
                 !ReferenceEquals(source(),store)) return false;
             var action=store.ActiveNpcAction(actor.Resident.Id);
+            if(action!=null && action.FastTravelFollowOwner && !NpcPaidCompanionAction.IsPaidFollowJob(action) &&
+                NpcCompanionFastTravel.CanFollow(store,action,now))
+            {
+                current=store;actor.TransferOwner(transform,navigation);
+                fastTravelFollowers[actor.Resident.Id]=new CompanionFastTravelMember {Actor=actor,ActionId=action.Id,OriginalOwner=true};return true;
+            }
             NpcServiceContract contract;
             if(!NpcPaidCompanionTravel.TryReadActiveTravel(store,action,now,out contract)) return false;
             if(action.PaidTravelHandoff==null)
@@ -87,7 +96,7 @@ namespace PeopleOfTheIliacBay.DFU
             foreach(var pair in new List<KeyValuePair<string,string>>(paidActions))
             {
                 string residentId=pair.Key;
-                if(OwnsDungeonFollow(residentId))continue;
+                if(OwnsDungeonFollow(residentId) || fastTravelFollowers.ContainsKey(residentId))continue;
                 var action=store.ReadNpcAction(pair.Value);
                 NpcServiceContract contract;
                 if(!NpcPaidCompanionTravel.TryReadActiveTravel(store,action,now,out contract))
@@ -120,7 +129,7 @@ namespace PeopleOfTheIliacBay.DFU
             // actually live. A failed prefab/scene attach must leave it retryable.
             if(!actor.gameObject.activeInHierarchy)
             { actor.gameObject.SetActive(false); Destroy(body); actor=null; return false; }
-            Vector3 ground=GameManager.Instance.PlayerMotor.transform.position-Vector3.up;
+            Vector3 ground=GameManager.Instance.PlayerMotor.FindGroundPosition();
             actor.Place(ground,-GameManager.Instance.PlayerMotor.transform.forward,preferNative:false);
             // No yield occurs between this live body and the claim. If service
             // changed, discard it before it can become a second owner.
@@ -131,9 +140,12 @@ namespace PeopleOfTheIliacBay.DFU
 
         private static void FollowPlayer(ResidentActor actor)
         {
-            Vector3 player=GameManager.Instance.PlayerMotor.transform.position-Vector3.up;
+            Vector3 player=GameManager.Instance.PlayerMotor.FindGroundPosition();
             Vector3 delta=player-(actor.transform.position-Vector3.up); delta.y=0;
-            if(delta.sqrMagnitude>1.8f*1.8f) actor.Place(player,delta.normalized,preferNative:false);
+            // Keep the actual body as the navigation origin. The native route
+            // handles buildings between a traveling follower and the player;
+            // the existing collision-checked crowd path remains the fallback.
+            if(delta.sqrMagnitude>1.8f*1.8f) actor.Place(player,delta.normalized,navigationDestination:player);
             else actor.Place(actor.transform.position-Vector3.up,
                 delta.sqrMagnitude>0.0001f?delta.normalized:actor.transform.forward,
                 standing:true,freeStanding:true,preferNative:false);
@@ -182,8 +194,11 @@ namespace PeopleOfTheIliacBay.DFU
         {
             ResidentActor actor;
             if(!paidCompanions.TryGetValue(residentId,out actor) || !actor)return false;
-            if(action!=null && !NpcActionExecutor.IsTerminal(action) &&
-                store.TryReleaseExpiredPaidTravel(action.Id,action.Revision,now))
+            // A completed native doorway has already consumed its handoff.
+            // Expiry still ends that paid action; release a handoff only if present.
+            if(action!=null && !NpcActionExecutor.IsTerminal(action) && NpcPaidCompanionAction.IsPaidFollowJob(action) &&
+                now>=action.FinishAt && (action.PaidTravelHandoff==null ||
+                store.TryReleaseExpiredPaidTravel(action.Id,action.Revision,now)))
             {
                 action=store.ReadNpcAction(action.Id);
                 if(action!=null && !NpcActionExecutor.IsTerminal(action))

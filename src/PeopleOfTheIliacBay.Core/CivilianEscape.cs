@@ -100,27 +100,6 @@ namespace PeopleOfTheIliacBay.Core
                 !Finite(result.ReportAt)) throw new ArgumentException("Invalid escape duration.");
             return result;
         }
-        public void MigrateClockScale(double now, double previousRate, double currentRate)
-        {
-            if (EffectiveTimeScale == currentRate) return;
-            double oldRate = previousRate;
-            double oldExitAt = ExitAt;
-            double oldExteriorStart = ExteriorStart;
-            double oldReportAt = ReportAt;
-            var interior = ClockRateMigration.RescaleInterval(StartedAt, oldExitAt, now, oldRate, currentRate);
-            StartedAt = interior.Start;
-            TimeScale = currentRate;
-            if (now >= oldExitAt && now < oldReportAt)
-            {
-                var exterior = ClockRateMigration.RescaleInterval(oldExteriorStart, oldReportAt, now, oldRate, currentRate);
-                RedirectedAt = exterior.Start;
-            }
-            else if (RedirectedAt != 0)
-            {
-                var exterior = ClockRateMigration.RescaleInterval(RedirectedAt, oldReportAt, now, oldRate, currentRate);
-                RedirectedAt = exterior.Start;
-            }
-        }
         private GuardPoint3 AlongExterior(double distance)
         {
             for (int i = 1; i < ExteriorRoute.Count; i++)

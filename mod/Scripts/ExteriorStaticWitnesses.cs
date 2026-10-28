@@ -43,44 +43,76 @@ namespace PeopleOfTheIliacBay.DFU
         }
         private List<SavedRoutePoint> CorpseSearchPatrol(CivilianIncident alarm,SavedRoutePoint body)
         {
-            // Visit a physically visible caller through the ordinary search loop.
-            // Their identity evidence is still obtained only by actual questioning.
-            var people=new List<AlarmPerson>(alarm.People);
-            people.Sort((a,b)=>((a.X-body.X)*(a.X-body.X)+(a.Z-body.Z)*(a.Z-body.Z)).CompareTo(
-                (b.X-body.X)*(b.X-body.X)+(b.Z-body.Z)*(b.Z-body.Z)));
-            foreach(var witness in people)
+            if(alarm==null || body==null || geometry==null)return null;
+            double timeScale=DaggerfallUnity.Instance.WorldTime.TimeScale;
+            if(timeScale<=0 || double.IsNaN(timeScale) || double.IsInfinity(timeScale))return null;
+            var destinations=CorpseInquiryDestinations(body);
+            // Stable per case so retries and saved search routes agree. Different
+            // scenes explore different points, without using suspect knowledge.
+            int seed=17;unchecked {foreach(char value in alarm.Id)seed=seed*31+value;}
+            var random=new System.Random(seed);
+            for(int i=0;i<12;i++)
             {
-                if(!witness.StaticWitness || !witness.DirectWitness || witness.StatementDelivered || !witness.HasPosition)continue;
-                var native=worldStore.NativePeopleFor(directory.MapID).Find(p=>p.Id==witness.ResidentId && p.IsAlive);
-                var point=directory.transform.TransformPoint(new Vector3((float)witness.X,(float)witness.Y,(float)witness.Z));
-                if(native==null || !HasPhysicalStaticWitness(native,point) ||
-                    !CivilianResponses.Sees(geometry.ScenePoint(new RoutePoint(body.X,body.Z))+Vector3.up,point,20))continue;
-                foreach(var offset in new[] {new Vector2(2,0),new Vector2(-2,0),new Vector2(0,2),new Vector2(0,-2)})
-                {
-                    var approach=new SavedRoutePoint{X=witness.X+offset.x,Z=witness.Z+offset.y};
-                    var contact=geometry.ScenePoint(new RoutePoint(approach.X,approach.Z))+Vector3.up;
-                    if(Vector3.Distance(contact,point)>4 || !CivilianResponses.Sees(contact,point,5))continue;
-                    var route=CorpsePatrolLoop(body,approach);if(route==null)continue;
-                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_CORPSE_STATIC_PATROL: incident="+alarm.Id+"; person="+native.Id);
-                    return route;
-                }
+                double angle=random.NextDouble()*Math.PI*2,radius=8+random.NextDouble()*12;
+                destinations.Add(new SavedRoutePoint{X=body.X+Math.Cos(angle)*radius,Z=body.Z+Math.Sin(angle)*radius});
             }
-            foreach(var offset in new[] {new Vector2(12,0),new Vector2(-12,0),new Vector2(0,12),new Vector2(0,-12)})
+            var result=new List<SavedRoutePoint>{new SavedRoutePoint{X=body.X,Z=body.Z}};
+            var current=body;double length=0,limit=Math.Min(400,UnwitnessedScene.OccupationSeconds*2.8/timeScale);
+            int visited=0;
+            foreach(var destination in destinations)
             {
-                var route=CorpsePatrolLoop(body,new SavedRoutePoint{X=body.X+offset.x,Z=body.Z+offset.y});
-                if(route!=null)return route;
+                double dx=destination.X-current.X,dz=destination.Z-current.Z;
+                if(dx*dx+dz*dz<4)continue;
+                var leg=geometry.RouteBetweenPoints(current,destination);
+                var back=geometry.RouteBetweenPoints(destination,body);
+                if(leg==null || back==null || leg.Count<2 || back.Count<2 ||
+                    result.Count+leg.Count+back.Count>10000)continue;
+                double legLength=CorpseSearchRouteLength(leg),backLength=CorpseSearchRouteLength(back);
+                if(legLength<2 || length+legLength+backLength>limit)continue;
+                for(int index=1;index<leg.Count;index++)result.Add(leg[index]);
+                current=leg[leg.Count-1];length+=legLength;
+                if(++visited>=4)break;
             }
-            return null;
+            if(visited==0)return null;
+            var home=geometry.RouteBetweenPoints(current,body);
+            if(home==null || home.Count<2 || length+CorpseSearchRouteLength(home)>limit)return null;
+            for(int index=1;index<home.Count;index++)result.Add(home[index]);
+            return result;
         }
-        private List<SavedRoutePoint> CorpsePatrolLoop(SavedRoutePoint body,SavedRoutePoint destination)
+
+        private List<SavedRoutePoint> CorpseInquiryDestinations(SavedRoutePoint body)
         {
-            var route=geometry.RouteBetweenPoints(body,destination);if(route.Count<2)return null;
+            var result=new List<SavedRoutePoint>();
+            var eye=geometry.ScenePoint(new RoutePoint(body.X,body.Z))+Vector3.up;
+            var streets=GetComponent<StreetPopulation>();
+            if(streets)
+                foreach(var person in streets.NearbyCorpseInquiryPeople(eye,20))
+                {
+                    if(!CivilianResponses.Sees(eye,person.transform.position,20))continue;
+                    var target=Local(person.transform.position);
+                    double dx=body.X-target.X,dz=body.Z-target.Z,distance=Math.Sqrt(dx*dx+dz*dz);
+                    if(distance>2){target.X+=dx*2/distance;target.Z+=dz*2/distance;}
+                    result.Add(target);if(result.Count>=2)return result;
+                }
+            foreach(var npc in directory.GetComponentsInChildren<StaticNPC>())
+            {
+                if(!npc || !npc.gameObject.activeInHierarchy || !RDBLayout.IsNPCFlat(npc.Data.billboardArchiveIndex) ||
+                    !CivilianResponses.Sees(eye,npc.transform.position,20))continue;
+                SleepingPose sleep=npc.GetComponent<SleepingPose>();if(sleep && sleep.Active)continue;
+                var target=Local(npc.transform.position);
+                double dx=body.X-target.X,dz=body.Z-target.Z,distance=Math.Sqrt(dx*dx+dz*dz);
+                if(distance>2){target.X+=dx*2/distance;target.Z+=dz*2/distance;}
+                result.Add(target);if(result.Count>=2)break;
+            }
+            return result;
+        }
+
+        private static double CorpseSearchRouteLength(List<SavedRoutePoint> route)
+        {
             double length=0;
-            for(int i=1;i<route.Count;i++)
-            {double x=route[i].X-route[i-1].X,z=route[i].Z-route[i-1].Z;length+=Math.Sqrt(x*x+z*z);}
-            if(length<2 || length>400 || 2*length/2.8*DaggerfallUnity.Instance.WorldTime.TimeScale>UnwitnessedScene.OccupationSeconds)return null;
-            for(int i=route.Count-2;i>=0;i--)route.Add(new SavedRoutePoint{X=route[i].X,Z=route[i].Z});
-            return route;
+            for(int index=1;index<route.Count;index++)
+            {double x=route[index].X-route[index-1].X,z=route[index].Z-route[index-1].Z;length+=Math.Sqrt(x*x+z*z);}
+            return length;
         }
         private void SurveyStaticWitnessStatements(double now)
         {

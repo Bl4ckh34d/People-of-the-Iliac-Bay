@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T07:53:07.3766211Z",
+    "portraitRecord":  80,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Create one exact 2-by-2 atlas for a Daggerfall Unity NPC portrait\u0027s horizontal thinking eyes. Use the single inspected reference image as the exact source for identity, olive eye palette, face framing, native pixel-art style, guarded expression, brow shape, eye spacing, and surrounding exterior. Canvas aspect ratio must be exactly 64:35, with four equal cells and no gutters, borders, labels, or margins. Cell order: top-left = LEFT gaze with open eyes; top-right = RIGHT gaze with open eyes; bottom-left = LEFT gaze with half-blink; bottom-right = RIGHT gaze with half-blink. Match each source cell\u0027s 64:35 composition. Preserve the portrait\u0027s guarded brows and expression, original skin, hair, shadows, eye size and spacing, native pixel grid, and every pixel outside eye features. Keep brows and face placement stable across all four cells. Within each eye opening, make a restrained horizontal pupil shift only: LEFT gaze looks clearly but subtly left; RIGHT gaze looks clearly but subtly right. Never look up, down, diagonally, or toward center. Keep both pupils fully inside their respective openings with continuous natural upper and lower lids in every cell. Preserve the source\u0027s muted olive iris color; use compact irregular stepped, shaded iris clusters that fit the native pixel anatomy, with tiny subdued glints. Half-blink cells show both upper lids lowered coherently while retaining a visible portion of each iris and pupil. Crisp native pixel art with hard pixel edges; no smoothing, antialiasing, blur, or new colors. Avoid round vector-like disks, perfect circles, rectangular bars, oversized pupils, missing or broken lids, bright white flashes, exaggerated gaze, changes to brows or expression, and any edits outside the eye features. No text or watermark.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-37c871d0-ae5f-4c29-8ed4-b4accac5b252.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-37c871d0-ae5f-4c29-8ed4-b4accac5b252.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "4ea9b975047475ae696146fbd02a9b005b16c4baab7e1c1e1c3651ee287f4b0b",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "979946502d862d34746a5f0cf583a46f592eb96e9364df3117daeb905df1df46",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-37c871d0-ae5f-4c29-8ed4-b4accac5b252.png",
+                      "sha256":  "2305da350228ac0b5c2d7636aa0fef7118490619845917d0f503cd64f633ef7b",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "2305da350228ac0b5c2d7636aa0fef7118490619845917d0f503cd64f633ef7b",
+                "width":  1695,
+                "height":  928
+            }
+}

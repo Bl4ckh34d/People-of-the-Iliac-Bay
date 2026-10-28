@@ -5,7 +5,7 @@ namespace PeopleOfTheIliacBay.Core
     [Serializable]
     public sealed class InnLodgerHomeReservation
     {
-        public string PersonId,RoomId;
+        public string PersonId,InnBedId;
         public int InnSettlement,InnKey,HomeSettlement,HomeKey,BedSlot,BedCapacity,Generation;
         public double ReservedAt;
     }
@@ -24,20 +24,19 @@ namespace PeopleOfTheIliacBay.Core
         public bool HousingReservedForRecovery(int town,int key)
         {return state.HouseholdRecoveries.Exists(r=>r.SettlementId==town && r.BuildingKey==key &&
             r.Status!=HouseholdRecoveryStatus.Settled);}
-        public InnLodgerHomeReservation TryReserveInnLodgerHome(string personId,string roomId,int homeTown,HomeProfile profile,double now)
+        public InnLodgerHomeReservation TryReserveInnLodgerHome(string personId,string innBedId,int homeTown,HomeProfile profile,double now)
         {
             Require(DefenseTime(now) && homeTown>=0 && profile!=null,"Invalid lodger household request.");
             InnLodgerHomeReservation existing;
             if(personId!=null && innLodgerHomeIndex.TryGetValue(personId,out existing)) return CopyLodgerHome(existing);
             var person=state.NativePeople.Find(p=>p.Id==personId);
             if(person==null || !person.IsAlive || person.RetiredBedroomFlat || person.HomeKey>=0 || homeTown==person.SettlementId ||
-                string.IsNullOrEmpty(roomId) || profile.BedCount<=0 || !profile.AvailableForResidents ||
+                string.IsNullOrEmpty(innBedId) || profile.BedCount<=0 || !profile.AvailableForResidents ||
                 HousingReservedForRecovery(homeTown,profile.BuildingKey)) return null;
             var inn=state.Lodgings.Find(t=>t.SettlementId==person.SettlementId && t.BuildingKey==person.WorkKey);
-            var room=inn?.Rooms.Find(r=>r.Id==roomId && !r.NonRentable);
-            if(room==null) return null;
+            if(inn==null || !inn.Beds.Exists(value=>value.Id==innBedId)) return null;
             var bed=inn.Occupants.Find(o=>o.PersonId==personId);
-            if(bed!=null && !room.Beds.Contains(bed.BedId)) return null;
+            if(bed==null || bed.BedId!=innBedId) return null;
             var town=CurrentPopulation(homeTown);
             var home=town?.Households.Find(h=>h.BuildingKey==profile.BuildingKey);
             bool created=home==null;
@@ -55,7 +54,7 @@ namespace PeopleOfTheIliacBay.Core
             foreach(var reservation in HouseholdInnLodgers(homeTown,home.BuildingKey)) occupied.Add(reservation.BedSlot);
             int slot=0;while(slot<home.BedCapacity && occupied.Contains(slot)) slot++;
             if(slot>=home.BedCapacity) return null;
-            var saved=new InnLodgerHomeReservation {PersonId=person.Id,RoomId=roomId,InnSettlement=person.SettlementId,InnKey=person.WorkKey,
+            var saved=new InnLodgerHomeReservation {PersonId=person.Id,InnBedId=innBedId,InnSettlement=person.SettlementId,InnKey=person.WorkKey,
                 HomeSettlement=homeTown,HomeKey=home.BuildingKey,BedSlot=slot,BedCapacity=home.BedCapacity,Generation=home.Generation,ReservedAt=now};
             if(created)
             {
@@ -66,23 +65,23 @@ namespace PeopleOfTheIliacBay.Core
             return CopyLodgerHome(saved);
         }
         private static InnLodgerHomeReservation CopyLodgerHome(InnLodgerHomeReservation r)
-        {return new InnLodgerHomeReservation {PersonId=r.PersonId,RoomId=r.RoomId,InnSettlement=r.InnSettlement,InnKey=r.InnKey,
+        {return new InnLodgerHomeReservation {PersonId=r.PersonId,InnBedId=r.InnBedId,InnSettlement=r.InnSettlement,InnKey=r.InnKey,
             HomeSettlement=r.HomeSettlement,HomeKey=r.HomeKey,BedSlot=r.BedSlot,BedCapacity=r.BedCapacity,Generation=r.Generation,ReservedAt=r.ReservedAt};}
         private static List<InnLodgerHomeReservation> CopyInnLodgerHomes(WorldState source,WorldState world)
         {
-            var result=new List<InnLodgerHomeReservation>();if(source.Version<24) return result;
+            var result=new List<InnLodgerHomeReservation>();if(source.Version<84) return result;
             Require(source.InnLodgerHomes!=null,"Missing inn lodger home reservations.");
             var people=new HashSet<string>();var slots=new HashSet<string>();
             foreach(var item in source.InnLodgerHomes)
             {
-                Require(item!=null && !string.IsNullOrEmpty(item.PersonId) && people.Add(item.PersonId) && !string.IsNullOrEmpty(item.RoomId) &&
+                Require(item!=null && !string.IsNullOrEmpty(item.PersonId) && people.Add(item.PersonId) && !string.IsNullOrEmpty(item.InnBedId) &&
                     item.HomeSettlement>=0 && item.HomeSettlement!=item.InnSettlement && item.HomeKey>=0 && item.BedCapacity>0 &&
                     item.BedSlot>=0 && item.BedSlot<item.BedCapacity && item.Generation>=0 && DefenseTime(item.ReservedAt),"Invalid inn lodger home reservation.");
                 var person=world.NativePeople.Find(p=>p.Id==item.PersonId);
                 Require(person!=null && !person.RetiredBedroomFlat && person.SettlementId==item.InnSettlement && person.WorkKey==item.InnKey && person.HomeKey<0,
                     "Lodger home lost its native identity or conflicts with a local home.");
                 var inn=world.Lodgings.Find(t=>t.SettlementId==item.InnSettlement && t.BuildingKey==item.InnKey);
-                Require(inn!=null && inn.Rooms.Exists(r=>r.Id==item.RoomId && !r.NonRentable),"Lodger home lacks a guest bedroom.");
+                Require(inn!=null && inn.Beds.Exists(value=>value.Id==item.InnBedId),"Lodger home lacks its Inn bed.");
                 var town=world.Settlements.Find(t=>t.SettlementId==item.HomeSettlement);
                 var home=town?.Households.Find(h=>h.BuildingKey==item.HomeKey && h.Generation==item.Generation);
                 if(home==null && !person.IsAlive) home=world.HouseholdHistory.Find(h=>h.SettlementId==item.HomeSettlement &&

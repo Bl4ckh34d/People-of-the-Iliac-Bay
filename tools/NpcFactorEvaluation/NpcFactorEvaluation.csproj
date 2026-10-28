@@ -8,9 +8,9 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../../src/PeopleOfTheIliacBay.Core/PeopleOfTheIliacBay.Core.csproj" />
-    <Compile Include="../../mod/Scripts/LocalDecisionWire.cs" Link="LocalDecisionWire.cs" />
-    <Compile Include="../../mod/Scripts/LocalSpeechActWire.cs" Link="LocalSpeechActWire.cs" />
-    <Compile Include="../../mod/Scripts/LocalDecisionWillingness.cs" Link="LocalDecisionWillingness.cs" />
+    <Compile Include="../archived/DecisionDiagnostics/LocalDecisionWire.cs" Link="LocalDecisionWire.cs" />
+    <Compile Include="../archived/DecisionDiagnostics/LocalSpeechActWire.cs" Link="LocalSpeechActWire.cs" />
+    <Compile Include="../../mod/Scripts/LocalActionWillingness.cs" Link="LocalActionWillingness.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fixtures/paired-scenarios-v1.json" CopyToOutputDirectory="PreserveNewest" />

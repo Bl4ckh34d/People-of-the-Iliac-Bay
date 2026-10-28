@@ -1,0 +1,36 @@
+{
+  "emotion": "happy",
+  "generator": "built-in image_gen",
+  "generation_count": 1,
+  "status": "prototype-user-review-pending-not-composited",
+  "source_inputs": [
+    {
+      "role": "2x2 eyes reference grid",
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\eyes-reference-grid.png",
+      "dimensions": "1024x560",
+      "sha256": "A533A7BD5E93C132A22191FB9C4EC35466840A8B0BAC4218064DB6BC5F4FAACC"
+    },
+    {
+      "role": "native identity and palette reference",
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\original.png",
+      "dimensions": "64x64",
+      "sha256": "4BBB1C9F6BEA7561D316FA6587A93FD0C9BCBFA3C9AA0992BB85B804AA213125"
+    }
+  ],
+  "generated_path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-8b98-7181-a1df-84e7b766303c\\exec-e05452bb-1e56-4fd3-8abb-2d1dc17ef0a4.png",
+  "output": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\eyes\\happy\\raw.png",
+    "dimensions": "1695x928",
+    "aspect_ratio": 1.82651,
+    "sha256": "094801E08239EFCEF5EB5C1D1F5F7275C4E0BF1FBAD57AED793299ADA3BAF0A2",
+    "copied_unaltered": true
+  },
+  "grid_order": [
+    "open",
+    "half",
+    "closed",
+    "open-reference"
+  ],
+  "visible_deviations": "Aspect ratio preserved within rounding. Open-reference cell has wider eyes than first open cell; first open reads as a softer, more squinted happy gaze. Eyelid/brow lines look darker and more defined than source, though not solid black. No compositing or cell sampling performed.",
+  "prompt": "Use case: stylized-concept\nAsset type: one complete 2×2 NPC portrait upper-half eye expression sheet\nInput images: Image 1 is the exact 2×2 upper-half layout, source geometry, and cell order. Image 2 is the immutable native 64×64 original, sole identity and palette reference.\nPrimary request: create one happy eye upper-half sheet, row-major: open / half blink / fully closed / open-reference.\nSubject: same woman, same exact cropped upper face in each cell.\nStyle/medium: original soft muted pixel-art palette and natural low-contrast skin shading. Preserve the original coarse pixel structure and proportions. No hard contrast.\nComposition/framing: reproduce Image 1's full 2×2 sheet, same aspect ratio, exact boundaries and complete upper halves. Do not crop or resize. Keep each eye at native original size and coordinates.\nLighting/mood: clearly warmer, friendlier happy gaze than neutral, with gently lifted outer eye corners and very subtle softened cheek lift. Expression feels kind and relaxed.\nConstraints: preserve exact face/head geometry, hairline, brows, iris size, eye spacing, skin tone, shading and framing from Image 1 and Image 2. Use same happy expression in all four cells. Only eyelid phase varies: cell 1 eyes open with friendly raised outer corners; cell 2 upper lids cover about half the irises; cell 3 eyes fully shut with no iris or sclera visible; cell 4 repeats cell 1 exactly in intent. Keep brows softly expressive and consistent. Original gentle palette remains.\nAvoid: full-face portrait, lower face/mouth, extra facial regions, enlarged or shifted eyes, shifted hairline, black hard cartoon brows, thick eyeliner, high-contrast shadows, sharpened edges, blur, smudging, airbrush, anatomy changes, text, labels, gutters, borders, missing cells."
+}

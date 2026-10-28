@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T01:34:21.0391336Z",
+    "portraitRecord":  87,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "angry",
+    "prompt":  "Use case: stylized-concept\nAsset type: pixel-art NPC portrait speech-mouth atlas, faithful edit of Image 1.\nInput image: Image 1 is NPC087\u0027s prepared 3×3 grid of repeated lower halves from the actual native portrait, nearest-neighbor enlarged. Edit only the lips and necessary tiny mouth interiors inside each cell; preserve the exact 3×3 layout, repeated face fragments, nose, chin, neck, hair, skin texture, framing, and background.\nPrimary request: Return a 3×3 atlas in row-major order A B C / D E F / G H X. The same NPC087 has muted warm tan skin and small soft rust-brown lips. Angry emotion is tense and pressed, with subtly tightened lips and slightly downturned mouth corners. Keep expression restrained and anatomically scaled; no smile. Preserve the original muted brown lip palette and soft pixel clusters. Do not add lipstick, bright red lips, orange skin, hard contrast, shiny white teeth, or changes to jaw/head/neck/nose.\nRhubarb poses must remain distinct and phonetically accurate:\nA: closed lightly pressured P/B/M lips.\nB: narrow horizontal opening with teeth nearly together, for consonants/EE.\nC: medium relaxed unrounded EH/AE opening, visibly larger than B.\nD: wide vertical AA opening, clearly larger than C.\nE: slightly rounded AO/ER opening, no wider than C.\nF: small forward pucker for UW/OW/W; no tooth biting or tooth contact.\nG: upper teeth gently touching the lower lip for F/V; not a wide vowel or pucker.\nH: tongue raised behind the upper teeth for L, opening between C and D; tiny tongue may be subtle at this scale.\nX: relaxed closed idle lips.\nVowel openings should show only small restrained warm teeth and softly shaded dark mouth cavities where appropriate. Do not make every cell clenched, toothy, or the same shape. Keep mouth width and lip size matching the original portrait. Maintain native-grid pixel-art edges and the source\u0027s gentle color transitions. Avoid added marks, facial repainting, or any atlas resizing/cropping.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-cafd-70e1-800c-efd1106f663d as C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-cafd-70e1-800c-efd1106f663d\\exec-befb5fee-2c8a-4000-a83a-784b5fc3d273.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-cafd-70e1-800c-efd1106f663d\\exec-befb5fee-2c8a-4000-a83a-784b5fc3d273.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "b8851f9df69ee15e297ab3aa7e70025710d27bd2e84dd0ed46d7ff7e94ab7717",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "2de54443db948c5d210edcfb3e4718f395f9d38ebd1d6afc77aac027d690e032",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-cafd-70e1-800c-efd1106f663d\\exec-befb5fee-2c8a-4000-a83a-784b5fc3d273.png",
+                      "sha256":  "8a7c7a81587427aa3c906636ddd9853680dcf8f5db71247c3c2a7c13e44318ba",
+                      "width":  1862,
+                      "height":  845
+                  },
+    "raw":  {
+                "path":  "mouth/angry/raw.png",
+                "sha256":  "8a7c7a81587427aa3c906636ddd9853680dcf8f5db71247c3c2a7c13e44318ba",
+                "width":  1862,
+                "height":  845
+            }
+}

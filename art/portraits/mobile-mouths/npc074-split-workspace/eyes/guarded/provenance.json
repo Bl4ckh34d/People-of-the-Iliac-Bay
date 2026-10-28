@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T10:28:42.3206936Z",
+    "portraitRecord":  74,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "guarded",
+    "prompt":  "Use case: stylized-concept\nAsset type: pixel-art upper-eye atlas for an existing DFU NPC talking portrait.\nInput image: Image 1 is the exact prepared 2x2 reference grid of NPC074\u0027s original upper halves. Use it as the identity, palette, eye spacing, source framing, cell geometry, pixel style, hair, and blue ornament reference.\nPrimary request: Create one clean 2x2 atlas at the same overall 64:35 aspect ratio. Each cell repeats the same complete 64x35 upper-half portrait crop. Row-major cells: OPEN / HALF CLOSED / FULLY CLOSED / OPEN REPEAT. No labels, dividers, gutters, borders, added margins, or different crops.\nExpression: guarded skeptical and appraising, visibly distinct from neutral and from a symmetric angry V. Preserve asymmetry: one brow distinctly raised while the opposite brow stays lower/flatter. Keep the same guarded brow expression and placement across all four phases.\nEyes: Preserve NPC074\u0027s narrow low-set eyes, original eye spacing and size, compact pale irises and their original highlights. Use natural source-like lid lines and soft brown shading. Half and closed eyelids descend naturally over the eyes without moving or enlarging the irises or changing the brow shape. The fully closed cell must close both eyes with clean continuous lids. Keep the eye color muted and the sclera subdued; do not add large bright white bands, oversized pupils, new glints, harsh outlines, or startled widening.\nIdentity and composition: Maintain the original face, source-like muted skin and hair palette, pixel-cluster edges, blond/light-brown hair framing, and blue ornament along the viewer-left side. Keep source registration and complete upper-half crop boundaries consistent in all cells.\nAvoid: symmetric angry brows, neutral expression, smile, changed head or hair shape, altered ornament, broadened eye openings, iris movement or size changes, broad white sclera, excessive highlights, smooth vector forms, antialias blur, labels, text, watermark.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-d3402095-2341-44e6-a97a-2816f7eb539b.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-d3402095-2341-44e6-a97a-2816f7eb539b.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "2efaad16ffae3fc9541f3d14137095db7cddeb908310fef80410ce201fd2ad84",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-d3402095-2341-44e6-a97a-2816f7eb539b.png",
+                      "sha256":  "3cb4c88944b18583e26ecddc72acca5f8a7d7606b56c23d41f70defb778410db",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/guarded/raw.png",
+                "sha256":  "3cb4c88944b18583e26ecddc72acca5f8a7d7606b56c23d41f70defb778410db",
+                "width":  1695,
+                "height":  928
+            }
+}

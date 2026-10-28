@@ -1,0 +1,41 @@
+{
+  "emotion": "happy",
+  "generator": "built-in image_gen",
+  "generation_count": 1,
+  "status": "prototype-user-review-pending-not-composited",
+  "source_inputs": [
+    {
+      "role": "3x3 approved mouth viseme layout",
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\mouth-reference-grid.png",
+      "dimensions": "1536x696",
+      "sha256": "81B130639901DA518717B9B48B461C210CE9F9D8D1C7141CE409D46E542DD7DE"
+    },
+    {
+      "role": "native identity and palette reference",
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\original.png",
+      "dimensions": "64x64",
+      "sha256": "4BBB1C9F6BEA7561D316FA6587A93FD0C9BCBFA3C9AA0992BB85B804AA213125"
+    }
+  ],
+  "generated_path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-8b98-7181-a1df-84e7b766303c\\exec-0120f42f-e166-4f10-8cf1-faf5619fb0a7.png",
+  "output": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\mouth\\happy\\raw.png",
+    "dimensions": "1862x845",
+    "aspect_ratio": 2.20355,
+    "sha256": "348515A788B6FC94676F7705C23769664F3A1CAFD2DB37393DB0BA84FEDFEC69",
+    "copied_unaltered": true
+  },
+  "grid_order": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "X"
+  ],
+  "visible_deviations": "Aspect ratio is close to target. Sheet order and distinct speech openings appear intact. At sheet scale, mouths—especially X—look somewhat wider than reference, with stronger lip outlines and local contrast. Parent should review before using masks.",
+  "prompt": "Use case: stylized-concept\nAsset type: complete 3×3 lower-half emotion mouth atlas for a 64×29 native NPC portrait\nInput images: Image 1 is the exact approved 3×3 lower-half viseme layout and speech-mouth poses. Image 2 is the immutable native 64×64 identity and palette reference.\nPrimary request: create happy emotion mouth set in the same 3×3 sheet.\nSubject: same woman, same lower portrait crop in every cell.\nStyle/medium: preserve original soft muted pixel art, gentle low-contrast skin shading, and native coarse pixel structure. No hard outlines or contrast boost.\nComposition/framing: reproduce Image 1's exact 3×3 grid and full lower-half cells, same aspect ratio about 2.20690, no crop, scale or gutters. Row-major A B C / D E F / G H X.\nLighting/mood: warm friendly happiness expressed through natural, gently lifted mouth corners and subtle local cheek warmth.\nConstraints: keep exact original mouth scale and anchors within each cell. Preserve distinct speech visemes: A lips fully closed for M/B/P; B narrow consonant with slight teeth; C medium EH; D moderately open AH; E rounded OH; F small OO/W; G upper teeth touching lower lip for F/V; H subtle raised tongue behind teeth for L; X relaxed closed mouth. Keep each opening and shape useful for speech. Put the clearly warm closed-mouth smile in X. Give the other poses only subtle happy corner warmth without changing their viseme. Keep nose, chin, face shape, hair/background edges, skin tone and framing aligned to reference.\nAvoid: giant grin, stretched mouth, oversized teeth, changed openings, identical smile pasted across all poses, mouth repositioning, extra teeth, tongue sticking out, harsh dark outlines, high contrast, blurry shading, airbrush, extra face or head, labels, dividers, borders, missing or reordered cells."
+}

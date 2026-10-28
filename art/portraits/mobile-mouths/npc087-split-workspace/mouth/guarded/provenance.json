@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "createdUtc": "2026-10-22T01:33:25.4242675Z",
+  "portraitRecord": 87,
+  "bank": "TFAC00I0.RCI",
+  "part": "mouth",
+  "emotion": "guarded",
+  "prompt": "Edit the provided 3x3 pixel-art lower-face reference grid for this exact portrait. It is a Daggerfall Unity speech animation atlas, not a new portrait. Keep exact canvas dimensions, 3x3 layout, equal cells, native pixel-art texture and original asymmetrical face identity. Every cell starts from the same original 64x29 lower half enlarged 8x with nearest-neighbor pixels. Change mouth/lips/oral interior only; preserve original nose, jaw, chin, neck, hair, background, face width and framing. Row-major A B C / D E F / G H X. Follow these Rhubarb mouth definitions exactly: A closed lightly pressured P/B/M lips. B narrow horizontal opening, nearly touching teeth, consonants/EE. C medium relaxed unrounded EH/AE opening. D wide vertical AA opening, clearly larger than C. E slightly rounded AO/ER opening, no wider than C. F small forward pucker for UW/OW/W, not tooth biting. G upper teeth touching lower lip for F/V, not a wide vowel or pucker. H tongue raised behind upper teeth for L, mouth opening between C and D; tiny tongue may be barely visible at this native size. X relaxed closed idle lips. Emotion: guarded skeptical, lightly pressed lips with slight asymmetry in the corners, cautious rather than angry. Preserve the original small lip scale and understated soft-brown color. Use restrained warm ivory teeth and dark-brown mouth interior only when pose requires them. Maintain muted warm tan skin, soft brown lips, olive/brown source shadows and soft pixel contrast. Do not alter skin hue, head proportions or face asymmetry. No red lipstick, orange skin, black outlines, oversized mouth, white tooth blocks, blur, vector smoothing, labels, text, borders or accidental marks.",
+  "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1612d-64fe-7be2-a882-c95bf1ade70e as C:\\Users\\Daniel\\.codex\\generated_images\\01a1612d-64fe-7be2-a882-c95bf1ade70e\\exec-8ca70159-459b-443f-b911-0924a408fd0d.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+  "generatedPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1612d-64fe-7be2-a882-c95bf1ade70e\\exec-8ca70159-459b-443f-b911-0924a408fd0d.png",
+  "sourceOriginal": {
+    "path": "original.png",
+    "sha256": "b8851f9df69ee15e297ab3aa7e70025710d27bd2e84dd0ed46d7ff7e94ab7717",
+    "width": 64,
+    "height": 64
+  },
+  "referenceGrid": {
+    "path": "mouth-reference-grid.png",
+    "sha256": "2de54443db948c5d210edcfb3e4718f395f9d38ebd1d6afc77aac027d690e032",
+    "width": 1536,
+    "height": 696
+  },
+  "generator": {
+    "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1612d-64fe-7be2-a882-c95bf1ade70e\\exec-8ca70159-459b-443f-b911-0924a408fd0d.png",
+    "sha256": "59b8d0c1e222d97df251a327429a4dbb2ad2d5f1793612bd805a8ba217063192",
+    "width": 1863,
+    "height": 844
+  },
+  "raw": {
+    "path": "mouth/guarded/raw.png",
+    "sha256": "59b8d0c1e222d97df251a327429a4dbb2ad2d5f1793612bd805a8ba217063192",
+    "width": 1863,
+    "height": 844
+  }
+}

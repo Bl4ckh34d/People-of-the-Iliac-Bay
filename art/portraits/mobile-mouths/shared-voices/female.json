@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "source": "work/breeze-tts-20261022/portrait-emotion-samples-long/manifest.json",
+  "sameText": "Before you leave, let me tell you about the old mill beyond the village. Follow the little yellow lanterns across the blue bridge, then turn left by the willow tree. The miller brings fresh bread, warm apple pies, and five fine bottles of wine to the market every morning. Oh, and do look out for the wolves near the ruined tower. If you hear a low howl, keep your bow close and walk home quietly. We can talk about your journey over a cup of tea when you return.",
+  "sameReferenceSha256": "e8ca4c1b5f252462ef86350435cf5b0e150d9bcc15002a63763b245d43253b0e",
+  "audioSets": [
+    {
+      "id": "neutral",
+      "audio": "../split-mask-prototype/audio/long/neutral.wav",
+      "timing": "../split-mask-prototype/audio/long/neutral.visemes.json",
+      "audioSha256": "9ff69a8fec74305db6887f2f61bd64e9f752dae0abf19a920bdacf0c367b17ca",
+      "exactText": "Before you leave, let me tell you about the old mill beyond the village. Follow the little yellow lanterns across the blue bridge, then turn left by the willow tree. The miller brings fresh bread, warm apple pies, and five fine bottles of wine to the market every morning. Oh, and do look out for the wolves near the ruined tower. If you hear a low howl, keep your bow close and walk home quietly. We can talk about your journey over a cup of tea when you return.",
+      "profileId": "npcvoice-01",
+      "referenceSha256": "e8ca4c1b5f252462ef86350435cf5b0e150d9bcc15002a63763b245d43253b0e",
+      "deliveryText": "neutral, calm, and conversational",
+      "visemeShapes": "ABCDEFGHX",
+      "durationSeconds": 26.48
+    },
+    {
+      "id": "happy",
+      "audio": "../split-mask-prototype/audio/long/happy.wav",
+      "timing": "../split-mask-prototype/audio/long/happy.visemes.json",
+      "audioSha256": "a4e04f6aaebdeb36c2255ef4264846efc7ff0e9a2bddad3165e38cb8c0684d7e",
+      "exactText": "Before you leave, let me tell you about the old mill beyond the village. Follow the little yellow lanterns across the blue bridge, then turn left by the willow tree. The miller brings fresh bread, warm apple pies, and five fine bottles of wine to the market every morning. Oh, and do look out for the wolves near the ruined tower. If you hear a low howl, keep your bow close and walk home quietly. We can talk about your journey over a cup of tea when you return.",
+      "profileId": "npcvoice-01",
+      "referenceSha256": "e8ca4c1b5f252462ef86350435cf5b0e150d9bcc15002a63763b245d43253b0e",
+      "deliveryText": "happy and warmly upbeat, with a light natural lift",
+      "visemeShapes": "ABCDEFGHX",
+      "durationSeconds": 30.24
+    },
+    {
+      "id": "angry",
+      "audio": "../split-mask-prototype/audio/long/angry.wav",
+      "timing": "../split-mask-prototype/audio/long/angry.visemes.json",
+      "audioSha256": "dca80f4062011c5b18558b69689ff867006534b095f2e3d8df46eded0d2d6122",
+      "exactText": "Before you leave, let me tell you about the old mill beyond the village. Follow the little yellow lanterns across the blue bridge, then turn left by the willow tree. The miller brings fresh bread, warm apple pies, and five fine bottles of wine to the market every morning. Oh, and do look out for the wolves near the ruined tower. If you hear a low howl, keep your bow close and walk home quietly. We can talk about your journey over a cup of tea when you return.",
+      "profileId": "npcvoice-01",
+      "referenceSha256": "e8ca4c1b5f252462ef86350435cf5b0e150d9bcc15002a63763b245d43253b0e",
+      "deliveryText": "angry but controlled, firm and restrained; do not shout",
+      "visemeShapes": "ABCDEFGHX",
+      "durationSeconds": 24.32
+    },
+    {
+      "id": "sad",
+      "audio": "../split-mask-prototype/audio/long/sad.wav",
+      "timing": "../split-mask-prototype/audio/long/sad.visemes.json",
+      "audioSha256": "10c2ea944cb26f52c5b3307ff2c80ee336a342742b282f5e04beca1fd6a7a576",
+      "exactText": "Before you leave, let me tell you about the old mill beyond the village. Follow the little yellow lanterns across the blue bridge, then turn left by the willow tree. The miller brings fresh bread, warm apple pies, and five fine bottles of wine to the market every morning. Oh, and do look out for the wolves near the ruined tower. If you hear a low howl, keep your bow close and walk home quietly. We can talk about your journey over a cup of tea when you return.",
+      "profileId": "npcvoice-01",
+      "referenceSha256": "e8ca4c1b5f252462ef86350435cf5b0e150d9bcc15002a63763b245d43253b0e",
+      "deliveryText": "sad and subdued, with restrained low-key warmth",
+      "visemeShapes": "ABCDEFGHX",
+      "durationSeconds": 28.72
+    },
+    {
+      "id": "afraid",
+      "audio": "../split-mask-prototype/audio/long/afraid.wav",
+      "timing": "../split-mask-prototype/audio/long/afraid.visemes.json",
+      "audioSha256": "e71b734756be0e4b52254d469ded93a318ef3cf93fbe8f81f984d03d7e9e8f83",
+      "exactText": "Before you leave, let me tell you about the old mill beyond the village. Follow the little yellow lanterns across the blue bridge, then turn left by the willow tree. The miller brings fresh bread, warm apple pies, and five fine bottles of wine to the market every morning. Oh, and do look out for the wolves near the ruined tower. If you hear a low howl, keep your bow close and walk home quietly. We can talk about your journey over a cup of tea when you return.",
+      "profileId": "npcvoice-01",
+      "referenceSha256": "e8ca4c1b5f252462ef86350435cf5b0e150d9bcc15002a63763b245d43253b0e",
+      "deliveryText": "afraid and tense, alert and anxious, without panic",
+      "visemeShapes": "ABCDEFGHX",
+      "durationSeconds": 25.04
+    },
+    {
+      "id": "guarded",
+      "audio": "../split-mask-prototype/audio/long/guarded.wav",
+      "timing": "../split-mask-prototype/audio/long/guarded.visemes.json",
+      "audioSha256": "14579e678a69f2929f47a390f30884cf80d2408921150184949a68d9b55b1f2b",
+      "exactText": "Before you leave, let me tell you about the old mill beyond the village. Follow the little yellow lanterns across the blue bridge, then turn left by the willow tree. The miller brings fresh bread, warm apple pies, and five fine bottles of wine to the market every morning. Oh, and do look out for the wolves near the ruined tower. If you hear a low howl, keep your bow close and walk home quietly. We can talk about your journey over a cup of tea when you return.",
+      "profileId": "npcvoice-01",
+      "referenceSha256": "e8ca4c1b5f252462ef86350435cf5b0e150d9bcc15002a63763b245d43253b0e",
+      "deliveryText": "guarded, cautious, reserved, and emotionally contained",
+      "visemeShapes": "ABCDEFGHX",
+      "durationSeconds": 23.92
+    }
+  ],
+  "listeningAcceptance": "pending",
+  "voiceSet": "female"
+}

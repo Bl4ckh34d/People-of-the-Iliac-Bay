@@ -19,6 +19,9 @@ namespace PeopleOfTheIliacBay.DFU
     {
         private bool TryOpenConversationPersonalTradeWindow(DaggerfallTalkWindow talk, out string reason)
         {
+            bool vendor;
+            bool opened=TryOpenConversationNativeVendorTrade(talk,out vendor,out reason);
+            if(vendor)return opened;
             var manager = GameManager.Instance == null ? null : GameManager.Instance.TalkManager;
             return manager != null && manager.CurrentNPCType == TalkManager.NPCType.Static
                 ? TryOpenStaticPersonalTradeWindow(talk, out reason)
@@ -236,7 +239,7 @@ namespace PeopleOfTheIliacBay.DFU
                     Disposition = result.Disposition, ProposalMoodDelta = result.ProposalMoodDelta, ProposalRound = round.Round,
                     ProposalEffectId = NpcCommerceHagglingPolicy.ProposalEffectId(haggle.NegotiationId, round.Round),
                     Status = acceptedRound != null ? "The offer is accepted." : result.Disposition == NpcCommerceHaggleDisposition.Reject
-                        ? "They refuse that offer." : "They suggest another amount." };
+                        ? npc.DisplayName + " refuses that offer." : npc.DisplayName + " suggests another amount." };
                 acceptedQuote = quote;
                 return true;
             };

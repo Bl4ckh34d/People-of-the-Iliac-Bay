@@ -1,0 +1,57 @@
+{
+  "emotion": "afraid",
+  "npc": "077",
+  "phase_order": [
+    "open",
+    "half",
+    "closed"
+  ],
+  "viseme_order": "A B C / D E F / G H X",
+  "source": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\tfac-077-full-frame-v5.png",
+    "sha256": "d2bd017e7773336de704bf3e4c935ab1ef7d0fc84dd4bbc551a61e22af322223"
+  },
+  "generator": "built-in image_gen",
+  "generation_count": 4,
+  "status": "revision2-prototype-user-review-pending-not-installed",
+  "visible_deviations": "Selected open sheet has strongly angled raised brows with a slight angry edge; eyes are wide, sharp and alarmed, clearly distinct from revision 1 sad/downcast look. One brow-only correction was rejected because it read as sorrowful and pleading.",
+  "outputs": [
+    {
+      "phase": "open",
+      "input_path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\tfac-077-full-frame-v5.png",
+      "generated_original_path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-2ede-7fc1-b24a-9d18707baa51\\exec-f5fbb159-7d2c-4229-8bfb-86231dc8b324.png",
+      "output_path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\afraid-open.png",
+      "output_sha256": "21c0538a3daeec8131adec168a65a5c54fe8331704227aaeaabac8683aa9fb91",
+      "dimensions": "1254x1254",
+      "prompt": "Use case: illustration-story\nAsset type: complete 3×3 pixel-art dialogue portrait atlas, game NPC 077\nInput image: Image 1 is approved complete version-5 atlas and exact portrait edit target.\nPrimary request: Create a fresh afraid emotion atlas. Same adult woman looks alert and alarmed, with WIDE OPEN sharp eyes, clear visible sclera around the irises, visible iris and pupil, and a straight-ahead gaze. Raise brows in clear alarm, but keep brow arches balanced and tense; do not lift inner brows into a sad, pleading, worried or sorrowful expression. Lips and face show restrained physical tension.\nStyle: Match the original coarse retro pixel-art pixels, muted game palette, skin, hair, lighting and purple background. Eyes must read as crisp deliberate pixel clusters at native 64×64 face size: sharp dark eyelid outline, clean iris/pupil, restrained sclera highlights, no fuzzy airbrushed shadow across the iris, no smoky blur.\nKeep: same identity, haircut, head angle, head size, framing, face alignment, background, cell boundaries and square 3×3 atlas.\nMouths: Preserve nine useful distinct visemes in row-major order A B C / D E F / G H X: A closed M/B/P; B narrow consonant with slight teeth; C medium EH; D moderate AH; E rounded OH; F small OO/W; G upper teeth touch lower lip for F/V; H subtle tongue behind upper teeth for L; X relaxed closed. Keep mouth scale natural, no huge teeth or yawn.\nExpression must differ immediately from a drooping, downcast sad face: wide alert eyes, forward attention, raised alarm brows, tense mouth corners. Keep same eye and brow expression across all nine cells.\nAvoid: downcast gaze, drooping eyelids, inner-brow pleading arch, sad/sorrowful face, giant cartoon eyes, oversized sclera, changed head angle, added props, sweat, tears, labels, new borders or gutters, cropped facial parts, reordered or duplicated mouth poses. Full-frame complete sheet only."
+    },
+    {
+      "phase": "half",
+      "input_path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\afraid-open.png",
+      "generated_original_path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-2ede-7fc1-b24a-9d18707baa51\\exec-069a5576-16fe-4262-9ed5-eca0d4720654.png",
+      "output_path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\afraid-half.png",
+      "output_sha256": "f984e3d95d40c08bddbe07ba7b6dddac79b44ea296b8c46fea49edf1019cacc2",
+      "dimensions": "1254x1254",
+      "prompt": "Use case: illustration-story\nAsset type: complete 3×3 pixel-art half-blink dialogue portrait atlas for NPC 077\nInput image: Image 1 is the selected afraid-open v2 sheet and exact edit target.\nPrimary request: Generate matching half-blink atlas. Change eyelids only. Upper eyelids cover about half the iris in every cell; lower iris halves remain visible.\nKeep unchanged: alarmed afraid emotion, raised tense brows, wide alert eyes, all nine exact matching mouth poses and placement, face, hair, pixel style, muted palette, lighting, framing, purple background, and grid. Keep brows and gaze fixed in all cells.\nConstraints: preserve all nine mouths in row-major A B C / D E F / G H X. No fully closed eyes, no change to any mouth or other feature. No tears, sweat, props, labels, borders, gutters, overlays, or cropped patches. Complete full-frame square atlas only."
+    },
+    {
+      "phase": "closed",
+      "input_path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\afraid-open.png",
+      "generated_original_path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-2ede-7fc1-b24a-9d18707baa51\\exec-895bc6ec-d4a5-4697-aac3-fb15a75cf9ef.png",
+      "output_path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\afraid-closed.png",
+      "output_sha256": "98fa163ebbee23929e220cbfb5f1feb6048c6d43dc669ad37d4423f1dfb83763",
+      "dimensions": "1254x1254",
+      "prompt": "Use case: illustration-story\nAsset type: complete 3×3 pixel-art closed-blink dialogue portrait atlas for NPC 077\nInput image: Image 1 is the selected afraid-open v2 sheet and exact edit target.\nPrimary request: Generate matching closed-blink atlas. Change eyelids only. Both eyes fully shut in all nine cells; no iris or sclera visible beneath closed lids.\nKeep unchanged: alarmed afraid emotion, raised tense brows, direct alert gaze implied beneath closed lids, all nine exact matching mouth poses and placement, face, hair, pixel style, muted palette, lighting, framing, purple background, and grid. Keep brows fixed in all cells.\nConstraints: preserve all nine mouths in row-major A B C / D E F / G H X. Fully closed natural eyelids; do not alter any mouth or other feature. No tears, sweat, props, labels, borders, gutters, overlays, or cropped patches. Complete full-frame square atlas only."
+    }
+  ],
+  "rejected_attempts": [
+    {
+      "phase": "open-correction-rejected",
+      "generated_original_path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-2ede-7fc1-b24a-9d18707baa51\\exec-a99ef20b-fa99-4e0b-b902-202f169fad49.png",
+      "output_path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\afraid-open-rejected-v1.png",
+      "output_sha256": "0e4bb6edd1f5be3c9f9d1c63641d238c8c1f66ef23ddbd6ce0f413e85d6f3c7f",
+      "reason": "Correction reads sorrowful and pleading, repeating revision 1 defect; not selected.",
+      "prompt": "Use case: illustration-story\nAsset type: full-frame 3×3 pixel-art dialogue portrait atlas correction\nInput image: Image 1 is the first fresh afraid atlas; use it as exact edit target.\nPrimary request: Correct eyebrow direction so expression reads alarmed fear, not anger. Change brow shape only: lift both brows evenly in short, crisp upward arcs above the wide eyes. Do not angle inner brow ends downward or pinch brows together. Keep a small natural gap between brows.\nKeep all other features: same sharp wide-open eyes and visible sclera, direct alert gaze, crisp iris and pupil clusters, restrained highlights, same face and mouth poses, same hair, framing, pixels, muted palette, background, and 3×3 grid. Keep eye scale natural and restrained while clearly wide open; do not enlarge them further.\nEmotion: immediate high-alert fear, tense and startled. Not sad, not pleading, not angry, not surprised-comic.\nConstraints: preserve exact row-major viseme order A B C / D E F / G H X and nine distinct mouth poses. Full complete square sheet only. No edit to eyelids, mouth, head angle, identity, lighting, border, or gutter. No blurry eye shadow, tears, sweat, props, labels or added detail."
+    }
+  ]
+}

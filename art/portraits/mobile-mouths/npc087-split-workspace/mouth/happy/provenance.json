@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "createdUtc": "2026-10-22T01:33:29.9569357Z",
+  "portraitRecord": 87,
+  "bank": "TFAC00I0.RCI",
+  "part": "mouth",
+  "emotion": "happy",
+  "prompt": "Use case: illustration-story\nAsset type: pixel-art NPC speech mouth atlas for Daggerfall Unity\nInput image: Image 1 is the supplied mouth-reference-grid.png; use it as exact face, palette, scale, asymmetry, and framing reference.\nPrimary request: Create only this portrait's happy speech-mouth atlas. Give the same woman a subtly warm, friendly mouth expression while preserving her original small lip scale and distinctive facial asymmetry. Keep phonetic shapes readable and distinct; happiness affects corner tension, not pose family.\nComposition/framing: Exactly nine equal lower-face tiles in a strict 3-by-3 grid, each tile exactly 64x29 source pixels and framed identically to the reference. Row-major A B C / D E F / G H X. No gutters, labels, borders, extra panels, or crop changes.\nSubject: Preserve original muted brown/tan skin, softly blended brown lips, nose, chin, neck, hair edge and surrounding pixels. Use restrained warm teeth only when the pose requires them; no lipstick-red, orange halo, bright white tooth blocks, or mouth wider than source.\nStyle/medium: faithfully aligned low-resolution DFU pixel art on the native pixel grid; keep source's soft muted contrast, no smooth vector shapes, blur, or painterly repaint.\nExact pose definitions:\nA: closed lips, lightly pressed for P/B/M.\nB: narrow horizontal opening with teeth nearly together for consonants and EE.\nC: medium relaxed unrounded EH/AE opening.\nD: wide vertical AA opening, visibly larger than C.\nE: slightly rounded AO/ER opening, no wider than C.\nF: small forward pucker for UW/OW/W; not tooth biting.\nG: upper teeth touching lower lip for F/V; not a wide vowel and not a pucker.\nH: tongue raised behind upper teeth for L, opening between C and D; tiny tongue may be barely visible at this scale.\nX: relaxed closed idle mouth.\nConstraints: Keep all nine pose silhouettes distinct and anatomically plausible at original small mouth size. Keep face width, expression identity, pixel alignment, tile scale, and original asymmetry. No giant grin, no arbitrary repeated smiles, no oversized cavity, no broad white teeth, no red lipstick, no extra face repaint, no text, no watermark.",
+  "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-9bd3-7e53-9a05-a02b7e03724a as C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-9bd3-7e53-9a05-a02b7e03724a\\exec-47c84e6f-c7ce-4b8f-a816-e4ecdcb140fe.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+  "generatedPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-9bd3-7e53-9a05-a02b7e03724a\\exec-47c84e6f-c7ce-4b8f-a816-e4ecdcb140fe.png",
+  "sourceOriginal": {
+    "path": "original.png",
+    "sha256": "b8851f9df69ee15e297ab3aa7e70025710d27bd2e84dd0ed46d7ff7e94ab7717",
+    "width": 64,
+    "height": 64
+  },
+  "referenceGrid": {
+    "path": "mouth-reference-grid.png",
+    "sha256": "2de54443db948c5d210edcfb3e4718f395f9d38ebd1d6afc77aac027d690e032",
+    "width": 1536,
+    "height": 696
+  },
+  "generator": {
+    "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-9bd3-7e53-9a05-a02b7e03724a\\exec-47c84e6f-c7ce-4b8f-a816-e4ecdcb140fe.png",
+    "sha256": "a9389a6938095a9141040b86a29a39cea234193287fe612c53e1b85fc1df7dd6",
+    "width": 1863,
+    "height": 844
+  },
+  "raw": {
+    "path": "mouth/happy/raw.png",
+    "sha256": "a9389a6938095a9141040b86a29a39cea234193287fe612c53e1b85fc1df7dd6",
+    "width": 1863,
+    "height": 844
+  }
+}

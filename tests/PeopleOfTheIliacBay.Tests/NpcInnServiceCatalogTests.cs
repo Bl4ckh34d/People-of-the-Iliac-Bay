@@ -112,14 +112,12 @@ namespace PeopleOfTheIliacBay.Tests
                 var item=((IList)Field<object>(draft,"Menu"))[0];Set(item,"Kind",NpcInnConsumptionKind.Food);
                 Check.Throws<ArgumentException>(()=>Seal(draft));
             }));
-            cases.Add(("Catalog restore keeps native source and rejects future data in schema72",()=>{
+            cases.Add(("Catalog restore keeps native source",()=>{
                 var store=Store(out var keeper);var catalog=Seal(Draft(keeper.Id));Publish(store,catalog);
                 var serializer=new FullSerializer.fsSerializer();FullSerializer.fsData data;
                 Check.True(serializer.TrySerialize(store.Snapshot(),out data).Succeeded);WorldState decoded=null;
                 Check.True(serializer.TryDeserialize(data,ref decoded).Succeeded);var restored=new WorldStateStore(0);restored.Restore(decoded);
                 Check.Equal(Field<string>(catalog,"Fingerprint"),Field<string>(Read(restored),"Fingerprint"));
-                var saved=store.Snapshot();saved.Version=72;Check.Throws<ArgumentException>(()=>restored.Restore(saved));
-                ((IList)typeof(WorldState).GetField("NpcInnServiceCatalogs").GetValue(saved)).Clear();restored.Restore(saved);Check.True(Read(restored)==null);
             }));
             cases.Add(("Catalog cannot claim a different keeper building or duplicate its saved owner",()=>{
                 var store=Store(out var keeper);var draft=Draft(keeper.Id);Set(draft,"BuildingKey",10);

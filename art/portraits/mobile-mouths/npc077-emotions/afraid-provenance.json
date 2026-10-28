@@ -1,0 +1,44 @@
+{
+  "emotion": "afraid",
+  "atlas": "npc 077",
+  "phase_order": [
+    "open",
+    "half",
+    "closed"
+  ],
+  "viseme_order": "A B C / D E F / G H X",
+  "dimensions": "1254x1254",
+  "source": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\tfac-077-full-frame-v5.png",
+    "sha256": "d2bd017e7773336de704bf3e4c935ab1ef7d0fc84dd4bbc551a61e22af322223"
+  },
+  "generation_count": 3,
+  "generator": "built-in image_gen",
+  "status": "prototype; user-review-pending; not installed",
+  "outputs": [
+    {
+      "phase": "open",
+      "input_path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\tfac-077-full-frame-v5.png",
+      "generated_original_path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-fb9b-7322-8190-74bf6fb54c9d\\exec-ef134f00-94a9-42bc-a177-47e6752b0866.png",
+      "output_path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\afraid-open.png",
+      "output_sha256": "3ede72729ccd5813c120122cc981c5c607f27d9798e913c288c36e10174b1c71",
+      "prompt": "Use case: illustration-story\nAsset type: complete 3×3 pixel-art dialogue portrait atlas for a game NPC\nInput image: Image 1 is the approved complete portrait atlas and the edit target.\nPrimary request: Edit the full atlas to show the same adult woman NPC worried and afraid. Keep face identity recognizable and proportions unchanged.\nStyle/medium: Preserve the exact retro pixel-art rendering, muted warm colors, pixel scale, shading, purple background, and full square 3×3 atlas.\nComposition/framing: Keep exact cell boundaries, grid alignment, face framing, hair, head scale, shoulders, and portrait placement in every cell.\nEmotion: Subtle anxious fear; eyebrows raised and tense, eyes slightly widened, mouth corners tense. Emotion readable at 64px. Natural, restrained expression. No giant cartoon eyes.\nMouth layout: Preserve nine distinct useful speech mouth openings in row-major order A B C / D E F / G H X. A lips closed for M/B/P. B narrow consonant opening with slight teeth. C medium EH. D moderately open AH, no yawn. E rounded OH. F small OO/W. G upper teeth touching lower lip for F/V. H subtle raised tongue behind upper teeth for L, no tongue protruding. X relaxed closed mouth. Preserve mouth size and natural viseme articulation in all cells.\nConstraints: Change eyebrows, eyes and mouth-corner tension for afraid emotion while retaining all nine visemes, grid, and the same character. No props, sweat, tears, labels, borders, added gutters, huge eyes, huge teeth, puffy lips, cropped mouth patches, or reordered/duplicated poses. Produce one complete square full-frame atlas."
+    },
+    {
+      "phase": "half",
+      "input_path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\afraid-open.png",
+      "generated_original_path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-2ede-7fc1-b24a-9d18707baa51\\exec-d4d25c43-1c5d-427d-af57-f853a99f826b.png",
+      "output_path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\afraid-half.png",
+      "output_sha256": "64ac22afe8b161dcbde54888bcddf153b9aa739b783a334d1547283bf936b829",
+      "prompt": "Use case: illustration-story\nAsset type: full-frame half-blink phase of the same 3×3 game dialogue portrait atlas\nInput image: Image 1 is the completed afraid-open atlas and exact edit target.\nPrimary request: Create the half-blink phase. Change only eyelids: upper lids now cover roughly half of each iris in all nine cells, with no change to eye expression other than the lids.\nStyle/medium: Preserve the existing pixel-art style, colors, lighting, shading, grid, purple background and complete square framing.\nConstraints: Keep raised tense eyebrows and afraid emotion unchanged. Preserve the same character, hair, face, all nine exact mouth poses, mouth shapes and positions, cell boundaries, scale, alignment and crop. Do not close eyes fully; retain visible lower halves of irises. No new objects, tears, sweat, labels, border, gutter, or other edits. Full-frame image, not overlay or crop."
+    },
+    {
+      "phase": "closed",
+      "input_path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\afraid-open.png",
+      "generated_original_path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-2ede-7fc1-b24a-9d18707baa51\\exec-14aeb422-8ff4-4c2d-8b3b-f74c837573e6.png",
+      "output_path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\afraid-closed.png",
+      "output_sha256": "e494d4b20c764100c69ce76ba56b84454f6fceec94b22d36e38c790fc424e8af",
+      "prompt": "Use case: illustration-story\nAsset type: full-frame closed-blink phase of the same 3×3 game dialogue portrait atlas\nInput image: Image 1 is the completed afraid-open atlas and exact edit target.\nPrimary request: Create the fully closed-eyes blink phase. Change only eyelids: both eyes fully shut in all nine cells, with no iris or sclera visible beneath.\nStyle/medium: Preserve the existing pixel-art style, colors, lighting, shading, grid, purple background and complete square framing.\nConstraints: Keep raised tense eyebrows and afraid emotion unchanged. Preserve same character, hair, face, all nine exact speech mouth poses, mouth shapes and positions, cell boundaries, scale, alignment and crop. Eyelids fully closed in every cell, natural closed-lid line matching pixel-art style. No new objects, tears, sweat, labels, border, gutter, or other edits. Full-frame image, not overlay or crop."
+    }
+  ]
+}

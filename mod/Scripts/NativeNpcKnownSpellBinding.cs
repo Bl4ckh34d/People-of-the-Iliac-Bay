@@ -87,6 +87,10 @@ namespace PeopleOfTheIliacBay.DFU
             if (packet == lastPacket) return true;
             if (!store.TryCaptureNpcKnownSpellbook(epoch, resident.Id, packet)) return false;
             lastPacket = packet;
+            // A first saved book initializes seed-only vitals at revision one.
+            // Adopt that unchanged baseline before the next observed resource spend.
+            var vitals = GetComponent<NativeNpcVitalsBinding>();
+            if (vitals) vitals.RebaselineAfterExternalCommit();
             return true;
         }
 

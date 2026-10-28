@@ -7,7 +7,11 @@ using System.Text.Json;
 namespace UnityEngine
 {
     public class Object { public static implicit operator bool(Object value) => value != null; }
-    public class MonoBehaviour : Object { public GameObject gameObject; }
+    public class MonoBehaviour : Object
+    {
+        public GameObject gameObject;
+        public T GetComponent<T>() where T : MonoBehaviour => gameObject.GetComponent<T>();
+    }
     public sealed class GameObject : Object
     {
         private readonly Dictionary<Type, MonoBehaviour> components = new Dictionary<Type, MonoBehaviour>();
@@ -52,4 +56,9 @@ namespace DaggerfallWorkshop.Game.Serialization
 namespace PeopleOfTheIliacBay.DFU
 {
     public sealed class ResidentActor : UnityEngine.MonoBehaviour { public PeopleOfTheIliacBay.Core.Resident Resident; }
+    public sealed class NativeNpcVitalsBinding : UnityEngine.MonoBehaviour
+    {
+        public Action Rebaseline;
+        public bool RebaselineAfterExternalCommit() { Rebaseline?.Invoke(); return true; }
+    }
 }

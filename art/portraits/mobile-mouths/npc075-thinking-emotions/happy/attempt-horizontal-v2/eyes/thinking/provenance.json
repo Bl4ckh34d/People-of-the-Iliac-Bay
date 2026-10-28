@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T12:06:24.6515516Z",
+    "portraitRecord":  75,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Use case: illustration-story. Asset type: NPC075 happy horizontal-thinking eye atlas. Use only the single supplied local reference grid. It shows the selected happy open-eye source on the top row and the selected happy half-lid source on the bottom row.\n\nCreate exactly one 2×2 atlas of equal complete 64×35 native upper-face crops, canvas ratio 64:35. No labels, gutters, dividers, borders, padding, zooms, extra rows, or panels. Exact row-major order: LEFT OPEN / RIGHT OPEN / LEFT HALF / RIGHT HALF.\n\nPreserve the selected NPC075 happy expression, including its newly corrected warm, relaxed cheerful brow arc, soft smile-eye creases, exact eye spacing, source aperture, hair fringe, framing, and low-contrast warm-brown pixel palette. Keep the original compact dark olive-brown/amber iris and dark pupil clusters. Only shift gaze horizontally, about one native pixel per eye. In LEFT poses, both iris/pupil clusters shift toward the same canvas-left side; in RIGHT poses, both shift toward the same canvas-right side. Keep both eyes aligned and convergent; neither iris may stay centered while its partner moves. Do not change iris size, color, shape, or lid anatomy.\n\nKeep sclera shaded dark olive-brown like the reference and mostly lost in shadow. Do not create cream-white horizontal bands, broad pale patches, bright white flashes, or enlarged eyeball whites. Use only tiny muted warm glints. The lower row must retain the source half-lid aperture, with upper lids covering most of each iris; do not reopen the eyes or shrink the irises to fit. Keep hair and all pixels outside the eye feature unchanged. Preserve native pixel clusters, no smooth/vector look, blur, gradients, text, watermark, or new objects.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-94a4cecf-5330-4a7a-8e10-18c731688470.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-94a4cecf-5330-4a7a-8e10-18c731688470.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "8463405cebcad01cbedd44056b9837ddd1ef85eb82652049aceffeed92572163",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-94a4cecf-5330-4a7a-8e10-18c731688470.png",
+                      "sha256":  "f02ff8bb7818160573345171a05b1aa907e4db7471c55ce84b4525c4327bfb71",
+                      "width":  1696,
+                      "height":  927
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "f02ff8bb7818160573345171a05b1aa907e4db7471c55ce84b4525c4327bfb71",
+                "width":  1696,
+                "height":  927
+            }
+}

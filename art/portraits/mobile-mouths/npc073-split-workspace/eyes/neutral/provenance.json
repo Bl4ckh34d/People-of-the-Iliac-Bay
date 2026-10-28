@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T10:08:29.7147584Z",
+    "portraitRecord":  73,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Edit the provided exact NPC073 reference grid into one neutral-eye sprite atlas. Preserve the 2×2 layout, complete native 64×35 upper-half crop in each cell, and overall 64:35 aspect ratio. Keep this same woman’s identity, original low-contrast brow shape, brow placement, face, hair, framing, compact dark-brown irises, tiny original highlights, and muted tan/brown pixel-art palette. The source image-left blue-and-silver wand and all hair/background outside the eyes must remain visually unchanged. Neutral expression only: retain forward gaze and make a natural, subtle blink with continuous lids, not a new emotion. Exact row-major order: top-left OPEN, top-right HALF CLOSED, bottom-left FULLY CLOSED, bottom-right OPEN REPEAT. The half and closed cells keep the open-cell brow placement; closed lids cover both eyes opaquely. Do not widen the eye aperture, expose broad white sclera, enlarge or shift irises, move brows, brighten highlights, introduce new colors, add outlines, smooth pixels, or draw vector-like shapes. No labels, gutters, border, full-face panels, or isolated eye closeups.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54 as C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-cdb40c76-bf46-466a-9396-3d1ea5457fbb.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-cdb40c76-bf46-466a-9396-3d1ea5457fbb.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "8505d9e9fde3c536cf08958e97076aba44aa5d60e2e76ba6fc3fdb1384b8d643",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "c6d813083b72162535d946fdab92c8327e91b20edef562492001ed6bf5d023ce",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-cdb40c76-bf46-466a-9396-3d1ea5457fbb.png",
+                      "sha256":  "524eb8d4cf222aad504b3616fea9dacf1e943abec3c0f2f7134d73e7d9e8e3d6",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "524eb8d4cf222aad504b3616fea9dacf1e943abec3c0f2f7134d73e7d9e8e3d6",
+                "width":  1695,
+                "height":  928
+            }
+}

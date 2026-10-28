@@ -1,0 +1,769 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 75,
+  "bank": "TFAC00I0.RCI",
+  "thinkingEyeSets": [
+    {
+      "id": "left",
+      "label": "Left",
+      "phases": {
+        "open": {
+          "file": "eyes/thinking/left/open.png",
+          "sha256": "82339009f8416d0dcacb9f10ab2712370ecca38d5d5a58720dfd553edd0646f3",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/angry/open-brow-master-repaired.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "afb646e4758064c4e35a9d37afa14e57f4d49092025ef7d03672c863e73781bc"
+            },
+            {
+              "file": "eyes/angry/open-brow-master-repaired.png",
+              "sha256": "bb94d8f50ece9fa055de66c4de3a9cd2867654f0c57ce361af1ce42a47aed18b"
+            }
+          ],
+          "sourceSha256": "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 0,
+            "cellColumn": 0,
+            "cellIndex": 0,
+            "eyeRegions": [
+              {
+                "x": 18,
+                "y": 15,
+                "width": 15,
+                "height": 14
+              },
+              {
+                "x": 38,
+                "y": 15,
+                "width": 13,
+                "height": 14
+              }
+            ],
+            "originalLockRegions": [],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 24,
+            "nearestNeighbor": true,
+            "browBoundaryPixels": [
+              {
+                "x": 37,
+                "y": 20,
+                "expectedOriginalRgb": [
+                  87,
+                  55,
+                  27
+                ],
+                "expectedBrowRgb": [
+                  120,
+                  74,
+                  42
+                ]
+              }
+            ],
+            "browBoundarySource": {
+              "file": "eyes/angry/open-brow-master-repaired.png",
+              "sha256": "bb94d8f50ece9fa055de66c4de3a9cd2867654f0c57ce361af1ce42a47aed18b"
+            }
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 1,
+            "browLockPixels": 280,
+            "originalLockPixels": 0,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0,
+            "browBoundaryPixelComparisons": 1,
+            "declaredOutsideMaskChangedPixels": 1
+          },
+          "changedPixels": 359,
+          "reviewedRepair20261023": {
+            "candidateSha256": "82339009f8416d0dcacb9f10ab2712370ecca38d5d5a58720dfd553edd0646f3",
+            "previousSha256": "019c7698269a68d2e2ab8a2b2eca15fad08e8134403b3826b9f4faf50dc0e60a",
+            "masterSha256": "ed8aa8845e71dafd5337b98193bde92ee93ae818f505a5924450839420839ab7",
+            "allowedSourceChangeRegions": [
+              [
+                17,
+                17,
+                34,
+                25
+              ],
+              [
+                36,
+                17,
+                52,
+                25
+              ]
+            ],
+            "method": "Generated source-palette brows across matching gaze phases; angry HALF own-OPEN iris repair; afraid HALF same-gaze CLOSED lash row28 to26 with iris/corners preserved."
+          }
+        },
+        "half": {
+          "file": "eyes/thinking/left/half.png",
+          "sha256": "08d61147126eead078830668873eb8abe69a4758a8e3f2e98117379b33b93f0c",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/angry/open-brow-master-repaired.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "afb646e4758064c4e35a9d37afa14e57f4d49092025ef7d03672c863e73781bc"
+            },
+            {
+              "file": "eyes/angry/open-brow-master-repaired.png",
+              "sha256": "bb94d8f50ece9fa055de66c4de3a9cd2867654f0c57ce361af1ce42a47aed18b"
+            }
+          ],
+          "sourceSha256": "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 1,
+            "cellColumn": 0,
+            "cellIndex": 2,
+            "eyeRegions": [
+              {
+                "x": 18,
+                "y": 15,
+                "width": 15,
+                "height": 14
+              },
+              {
+                "x": 38,
+                "y": 15,
+                "width": 13,
+                "height": 14
+              }
+            ],
+            "originalLockRegions": [],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 24,
+            "nearestNeighbor": true,
+            "browBoundaryPixels": [
+              {
+                "x": 37,
+                "y": 20,
+                "expectedOriginalRgb": [
+                  87,
+                  55,
+                  27
+                ],
+                "expectedBrowRgb": [
+                  120,
+                  74,
+                  42
+                ]
+              }
+            ],
+            "browBoundarySource": {
+              "file": "eyes/angry/open-brow-master-repaired.png",
+              "sha256": "bb94d8f50ece9fa055de66c4de3a9cd2867654f0c57ce361af1ce42a47aed18b"
+            }
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 1,
+            "browLockPixels": 280,
+            "originalLockPixels": 0,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0,
+            "browBoundaryPixelComparisons": 1,
+            "declaredOutsideMaskChangedPixels": 1
+          },
+          "changedPixels": 359,
+          "reviewedRepair20261023": {
+            "candidateSha256": "08d61147126eead078830668873eb8abe69a4758a8e3f2e98117379b33b93f0c",
+            "previousSha256": "fcf18bf8456e4e746fafd282d96fa57c52ebbb8069cad389ebb03def373bc0b3",
+            "masterSha256": "ed8aa8845e71dafd5337b98193bde92ee93ae818f505a5924450839420839ab7",
+            "allowedSourceChangeRegions": [
+              [
+                17,
+                17,
+                34,
+                25
+              ],
+              [
+                36,
+                17,
+                52,
+                25
+              ]
+            ],
+            "method": "Generated source-palette brows across matching gaze phases; angry HALF own-OPEN iris repair; afraid HALF same-gaze CLOSED lash row28 to26 with iris/corners preserved."
+          }
+        },
+        "closed": {
+          "file": "eyes/thinking/left/closed.png",
+          "sha256": "8d879e8928bd9f474a3af2928253ad4b2539b6a9452d0ac57b423efbcf2a71d8",
+          "sourceFiles": [
+            "eyes/angry/closed.png",
+            "eyes/angry/open-brow-master-repaired.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98"
+            },
+            {
+              "file": "eyes/angry/open-brow-master-repaired.png",
+              "sha256": "bb94d8f50ece9fa055de66c4de3a9cd2867654f0c57ce361af1ce42a47aed18b"
+            },
+            {
+              "file": "eyes/angry/closed.png",
+              "sha256": "2a83c8b433604afdc6509e9068ab549a809bd90d534bf2e44b29e88dcbb120cb"
+            }
+          ],
+          "sourceSha256": "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": null,
+            "cellColumn": null,
+            "cellIndex": -1,
+            "eyeRegions": [
+              {
+                "x": 18,
+                "y": 15,
+                "width": 15,
+                "height": 14
+              },
+              {
+                "x": 38,
+                "y": 15,
+                "width": 13,
+                "height": 14
+              }
+            ],
+            "originalLockRegions": [],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 24,
+            "nearestNeighbor": true,
+            "browBoundaryPixels": [
+              {
+                "x": 37,
+                "y": 20,
+                "expectedOriginalRgb": [
+                  87,
+                  55,
+                  27
+                ],
+                "expectedBrowRgb": [
+                  120,
+                  74,
+                  42
+                ]
+              }
+            ],
+            "browBoundarySource": {
+              "file": "eyes/angry/open-brow-master-repaired.png",
+              "sha256": "bb94d8f50ece9fa055de66c4de3a9cd2867654f0c57ce361af1ce42a47aed18b"
+            }
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 1,
+            "browLockPixels": 280,
+            "originalLockPixels": 0,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 112,
+            "halfLidOffset": 0,
+            "browBoundaryPixelComparisons": 1,
+            "declaredOutsideMaskChangedPixels": 1
+          },
+          "changedPixels": 359,
+          "reviewedRepair20261023": {
+            "candidateSha256": "8d879e8928bd9f474a3af2928253ad4b2539b6a9452d0ac57b423efbcf2a71d8",
+            "previousSha256": "d8cff92514ebd414f557d9c209af0caed0755e052fdcd1950980203c198a3b0e",
+            "masterSha256": "ed8aa8845e71dafd5337b98193bde92ee93ae818f505a5924450839420839ab7",
+            "allowedSourceChangeRegions": [
+              [
+                17,
+                17,
+                34,
+                25
+              ],
+              [
+                36,
+                17,
+                52,
+                25
+              ]
+            ],
+            "method": "Generated source-palette brows across matching gaze phases; angry HALF own-OPEN iris repair; afraid HALF same-gaze CLOSED lash row28 to26 with iris/corners preserved."
+          }
+        }
+      }
+    },
+    {
+      "id": "right",
+      "label": "Right",
+      "phases": {
+        "open": {
+          "file": "eyes/thinking/right/open.png",
+          "sha256": "c356cac6dd4f4bade84e8adc069df1812946fb934461151f39efc9248ff9a2b0",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/angry/open-brow-master-repaired.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "afb646e4758064c4e35a9d37afa14e57f4d49092025ef7d03672c863e73781bc"
+            },
+            {
+              "file": "eyes/angry/open-brow-master-repaired.png",
+              "sha256": "bb94d8f50ece9fa055de66c4de3a9cd2867654f0c57ce361af1ce42a47aed18b"
+            }
+          ],
+          "sourceSha256": "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 0,
+            "cellColumn": 1,
+            "cellIndex": 1,
+            "eyeRegions": [
+              {
+                "x": 18,
+                "y": 15,
+                "width": 15,
+                "height": 14
+              },
+              {
+                "x": 38,
+                "y": 15,
+                "width": 13,
+                "height": 14
+              }
+            ],
+            "originalLockRegions": [],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 24,
+            "nearestNeighbor": true,
+            "browBoundaryPixels": [
+              {
+                "x": 37,
+                "y": 20,
+                "expectedOriginalRgb": [
+                  87,
+                  55,
+                  27
+                ],
+                "expectedBrowRgb": [
+                  120,
+                  74,
+                  42
+                ]
+              }
+            ],
+            "browBoundarySource": {
+              "file": "eyes/angry/open-brow-master-repaired.png",
+              "sha256": "bb94d8f50ece9fa055de66c4de3a9cd2867654f0c57ce361af1ce42a47aed18b"
+            }
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 1,
+            "browLockPixels": 280,
+            "originalLockPixels": 0,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0,
+            "browBoundaryPixelComparisons": 1,
+            "declaredOutsideMaskChangedPixels": 1
+          },
+          "changedPixels": 359,
+          "reviewedRepair20261023": {
+            "candidateSha256": "c356cac6dd4f4bade84e8adc069df1812946fb934461151f39efc9248ff9a2b0",
+            "previousSha256": "9b33f2ba5b0460ed29c9ba6d6ff77a791740c0a6779b1920c0bae289d5c88389",
+            "masterSha256": "ed8aa8845e71dafd5337b98193bde92ee93ae818f505a5924450839420839ab7",
+            "allowedSourceChangeRegions": [
+              [
+                17,
+                17,
+                34,
+                25
+              ],
+              [
+                36,
+                17,
+                52,
+                25
+              ]
+            ],
+            "method": "Generated source-palette brows across matching gaze phases; angry HALF own-OPEN iris repair; afraid HALF same-gaze CLOSED lash row28 to26 with iris/corners preserved."
+          }
+        },
+        "half": {
+          "file": "eyes/thinking/right/half.png",
+          "sha256": "3eaabf63f09a6bccf6cd7748460b13a4066e0a32d5ceed80b82714bbfcfe23a5",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/angry/open-brow-master-repaired.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "afb646e4758064c4e35a9d37afa14e57f4d49092025ef7d03672c863e73781bc"
+            },
+            {
+              "file": "eyes/angry/open-brow-master-repaired.png",
+              "sha256": "bb94d8f50ece9fa055de66c4de3a9cd2867654f0c57ce361af1ce42a47aed18b"
+            }
+          ],
+          "sourceSha256": "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 1,
+            "cellColumn": 1,
+            "cellIndex": 3,
+            "eyeRegions": [
+              {
+                "x": 18,
+                "y": 15,
+                "width": 15,
+                "height": 14
+              },
+              {
+                "x": 38,
+                "y": 15,
+                "width": 13,
+                "height": 14
+              }
+            ],
+            "originalLockRegions": [],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 24,
+            "nearestNeighbor": true,
+            "browBoundaryPixels": [
+              {
+                "x": 37,
+                "y": 20,
+                "expectedOriginalRgb": [
+                  87,
+                  55,
+                  27
+                ],
+                "expectedBrowRgb": [
+                  120,
+                  74,
+                  42
+                ]
+              }
+            ],
+            "browBoundarySource": {
+              "file": "eyes/angry/open-brow-master-repaired.png",
+              "sha256": "bb94d8f50ece9fa055de66c4de3a9cd2867654f0c57ce361af1ce42a47aed18b"
+            }
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 1,
+            "browLockPixels": 280,
+            "originalLockPixels": 0,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0,
+            "browBoundaryPixelComparisons": 1,
+            "declaredOutsideMaskChangedPixels": 1
+          },
+          "changedPixels": 359,
+          "reviewedRepair20261023": {
+            "candidateSha256": "3eaabf63f09a6bccf6cd7748460b13a4066e0a32d5ceed80b82714bbfcfe23a5",
+            "previousSha256": "09fd3878900807e883d4abdffb03030dcd767c3586fa0035df55e7f5a2f48818",
+            "masterSha256": "ed8aa8845e71dafd5337b98193bde92ee93ae818f505a5924450839420839ab7",
+            "allowedSourceChangeRegions": [
+              [
+                17,
+                17,
+                34,
+                25
+              ],
+              [
+                36,
+                17,
+                52,
+                25
+              ]
+            ],
+            "method": "Generated source-palette brows across matching gaze phases; angry HALF own-OPEN iris repair; afraid HALF same-gaze CLOSED lash row28 to26 with iris/corners preserved."
+          }
+        },
+        "closed": {
+          "file": "eyes/thinking/right/closed.png",
+          "sha256": "8d879e8928bd9f474a3af2928253ad4b2539b6a9452d0ac57b423efbcf2a71d8",
+          "sourceFiles": [
+            "eyes/angry/closed.png",
+            "eyes/angry/open-brow-master-repaired.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98"
+            },
+            {
+              "file": "eyes/angry/open-brow-master-repaired.png",
+              "sha256": "bb94d8f50ece9fa055de66c4de3a9cd2867654f0c57ce361af1ce42a47aed18b"
+            },
+            {
+              "file": "eyes/angry/closed.png",
+              "sha256": "2a83c8b433604afdc6509e9068ab549a809bd90d534bf2e44b29e88dcbb120cb"
+            }
+          ],
+          "sourceSha256": "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": null,
+            "cellColumn": null,
+            "cellIndex": -1,
+            "eyeRegions": [
+              {
+                "x": 18,
+                "y": 15,
+                "width": 15,
+                "height": 14
+              },
+              {
+                "x": 38,
+                "y": 15,
+                "width": 13,
+                "height": 14
+              }
+            ],
+            "originalLockRegions": [],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 24,
+            "nearestNeighbor": true,
+            "browBoundaryPixels": [
+              {
+                "x": 37,
+                "y": 20,
+                "expectedOriginalRgb": [
+                  87,
+                  55,
+                  27
+                ],
+                "expectedBrowRgb": [
+                  120,
+                  74,
+                  42
+                ]
+              }
+            ],
+            "browBoundarySource": {
+              "file": "eyes/angry/open-brow-master-repaired.png",
+              "sha256": "bb94d8f50ece9fa055de66c4de3a9cd2867654f0c57ce361af1ce42a47aed18b"
+            }
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 1,
+            "browLockPixels": 280,
+            "originalLockPixels": 0,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 112,
+            "halfLidOffset": 0,
+            "browBoundaryPixelComparisons": 1,
+            "declaredOutsideMaskChangedPixels": 1
+          },
+          "changedPixels": 359,
+          "reviewedRepair20261023": {
+            "candidateSha256": "8d879e8928bd9f474a3af2928253ad4b2539b6a9452d0ac57b423efbcf2a71d8",
+            "previousSha256": "d8cff92514ebd414f557d9c209af0caed0755e052fdcd1950980203c198a3b0e",
+            "masterSha256": "ed8aa8845e71dafd5337b98193bde92ee93ae818f505a5924450839420839ab7",
+            "allowedSourceChangeRegions": [
+              [
+                17,
+                17,
+                34,
+                25
+              ],
+              [
+                36,
+                17,
+                52,
+                25
+              ]
+            ],
+            "method": "Generated source-palette brows across matching gaze phases; angry HALF own-OPEN iris repair; afraid HALF same-gaze CLOSED lash row28 to26 with iris/corners preserved."
+          }
+        }
+      }
+    }
+  ],
+  "source": {
+    "original": "original.png",
+    "sha256": "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98",
+    "referenceGrid": "thinking-reference-grid.png",
+    "referenceSha256": "d2a30739a60d328460388557afa791ce3b16bdd85ca74ed227a30aa80b93ae36",
+    "rawAtlas": "eyes/thinking/raw.png",
+    "rawAtlasSha256": "afb646e4758064c4e35a9d37afa14e57f4d49092025ef7d03672c863e73781bc",
+    "referenceUpper": {
+      "file": "eyes/angry/open.png",
+      "sha256": "02650ba0049b5c8f5df8d82f293e17a35d3ec5fd49be03db958addcb4138ea2b"
+    },
+    "browMaster": {
+      "file": "eyes/angry/open-brow-master-repaired.png",
+      "sha256": "bb94d8f50ece9fa055de66c4de3a9cd2867654f0c57ce361af1ce42a47aed18b"
+    },
+    "halfLid": {
+      "file": "eyes/angry/half.png",
+      "sha256": "86c237089506d525035f180e94ce966fe0eab436f4b44b50c63775ee41b7fa89"
+    },
+    "closedEye": {
+      "file": "eyes/angry/closed.png",
+      "sha256": "2a83c8b433604afdc6509e9068ab549a809bd90d534bf2e44b29e88dcbb120cb"
+    },
+    "browBoundary": {
+      "file": "eyes/angry/open-brow-master-repaired.png",
+      "sha256": "bb94d8f50ece9fa055de66c4de3a9cd2867654f0c57ce361af1ce42a47aed18b"
+    }
+  },
+  "geometry": {
+    "width": 64,
+    "height": 64,
+    "splitY": 35,
+    "frameWidth": 64,
+    "frameHeight": 35,
+    "eyeRegions": [
+      {
+        "x": 18,
+        "y": 15,
+        "width": 15,
+        "height": 14
+      },
+      {
+        "x": 38,
+        "y": 15,
+        "width": 13,
+        "height": 14
+      }
+    ],
+    "originalLockRegions": [],
+    "halfLidRegions": [],
+    "halfLidOffsetsByGaze": {},
+    "browLockEndY": 24,
+    "reference": {
+      "width": 1024,
+      "height": 560,
+      "scale": 8,
+      "cells": 4,
+      "exactSourceCells": true,
+      "columns": 2,
+      "rows": 2
+    },
+    "rawAspect": 1.8265086206896552,
+    "rawAspectTolerance": 0.01,
+    "cellOrder": [
+      "left",
+      "right"
+    ],
+    "browBoundaryPixels": [
+      {
+        "x": 37,
+        "y": 20,
+        "expectedOriginalRgb": [
+          87,
+          55,
+          27
+        ],
+        "expectedBrowRgb": [
+          120,
+          74,
+          42
+        ]
+      }
+    ],
+    "atlasColumns": 2,
+    "atlasRows": 2
+  },
+  "inputHashes": [
+    {
+      "file": "layout.json",
+      "sha256": "09a6332d071ead55932666d11e68b6bf8f007429fbea7b84ebf4eb7539a2a3d0"
+    },
+    {
+      "file": "thinking-layout.json",
+      "sha256": "b2f7b3aeb4117fe0a05505b1e14c33640e54f25ab7de8e0bdaaf9ecaaa98763e"
+    },
+    {
+      "file": "setup-provenance.json",
+      "sha256": "23ba66cef626260511d3e6b8af605c7e7192ebff041ac886ae864305044c79d9"
+    },
+    {
+      "file": "original.png",
+      "sha256": "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98"
+    },
+    {
+      "file": "thinking-reference-grid.png",
+      "sha256": "d2a30739a60d328460388557afa791ce3b16bdd85ca74ed227a30aa80b93ae36"
+    },
+    {
+      "file": "eyes/thinking/raw.png",
+      "sha256": "afb646e4758064c4e35a9d37afa14e57f4d49092025ef7d03672c863e73781bc"
+    },
+    {
+      "file": "eyes/angry/open.png",
+      "sha256": "02650ba0049b5c8f5df8d82f293e17a35d3ec5fd49be03db958addcb4138ea2b"
+    },
+    {
+      "file": "eyes/angry/half.png",
+      "sha256": "86c237089506d525035f180e94ce966fe0eab436f4b44b50c63775ee41b7fa89"
+    },
+    {
+      "file": "eyes/angry/closed.png",
+      "sha256": "2a83c8b433604afdc6509e9068ab549a809bd90d534bf2e44b29e88dcbb120cb"
+    },
+    {
+      "file": "eyes/angry/open-brow-master-repaired.png",
+      "sha256": "bb94d8f50ece9fa055de66c4de3a9cd2867654f0c57ce361af1ce42a47aed18b"
+    }
+  ],
+  "verification": {
+    "result": "pixel-invariants-pass-not-visual-acceptance",
+    "phaseCount": 6,
+    "expectedPhaseCount": 6,
+    "gazeSetCount": 2,
+    "expectedGazeSetCount": 2,
+    "sourceHashesUnchanged": true,
+    "referenceExact": true,
+    "outsideMaskChangedPixels": 6,
+    "noExistingOutputsOverwritten": true,
+    "declaredOutsideMaskChangedPixels": 6,
+    "undeclaredOutsideMaskChangedPixels": 0,
+    "pixelComparisons": 13440
+  },
+  "emotionId": "angry",
+  "gazeLayout": "horizontal-pair"
+}

@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T08:20:11.4984259Z",
+    "portraitRecord":  82,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Use case: stylized-concept\nAsset type: Daggerfall Unity NPC eye-animation atlas in native pixel-art style.\nInput image: Image 1 is the inspected 2×2 neutral source grid for NPC 082. Use it as exact identity, palette, pixel-grid, eye-contour and aperture reference.\nPrimary request: Create one exact 2×2 atlas, 1024×560 pixels total, with each cell at 64:35 aspect and enlarged consistently. Row-major cells: top-left image-left gaze, open eyes; top-right image-right gaze, open eyes; bottom-left image-left gaze, half blink; bottom-right image-right gaze, half blink.\nSubject and consistency: same NPC 082 face in all cells. Preserve exact original upper/lower lid contours, eye aperture, iris size, neutral brows through their source band, eye spacing, face framing, hair, background, muted palette, and all anatomy outside the eye regions. Change gaze only by a gentle approximately one-native-pixel horizontal shift of each iris/pupil. Both eyes look in the named image direction together. Keep the source\u0027s own iris color, muted beige sclera, tiny mild glints, and native pixel clusters. Do not widen either eye opening. Half-blink cells retain original lid contours and aperture shape while showing restrained upper-lid coverage.\nConstraints: Exact 2×2 layout and 64:35 cell aspect. Native hard pixel edges, no antialiasing or blur. No vertical or diagonal gaze, no extra phases, no enlarged irises, no broad white bands, no new colors, no facial or brow changes, no labels, borders, gutters, text, or watermark.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54 as C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-55d4a791-a68a-4a7c-a0eb-f99f1ac4686f.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-55d4a791-a68a-4a7c-a0eb-f99f1ac4686f.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "37270c9eb3e1260c3774263d512bfd0bab8e144fef129b32a0f065c92aa48d26",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "f222fdb0e5f09b2a3985c6ea50fd7d70d1fb1b3efb67a5435d39900fc179996f",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-55d4a791-a68a-4a7c-a0eb-f99f1ac4686f.png",
+                      "sha256":  "0732d2cf7044d2c8f0b4c152a545cee9094c7f79acf443de13b47871b74fbc34",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "0732d2cf7044d2c8f0b4c152a545cee9094c7f79acf443de13b47871b74fbc34",
+                "width":  1695,
+                "height":  928
+            }
+}

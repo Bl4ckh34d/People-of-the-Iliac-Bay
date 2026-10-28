@@ -45,6 +45,32 @@ namespace PeopleOfTheIliacBay.Core
 
         public static NpcInnServiceCatalog Seal(NpcInnServiceCatalog source)
         {var copy=CopyData(source);copy.Fingerprint=Hash(copy);return copy;}
+        // Unity world/local round trips can differ by a few micrometres. Apply
+        // this only to a newly measured draft before sealing. Persisted catalogs
+        // keep their original payload and fingerprint during Copy().
+        public static void CanonicalizeMeasuredRoutes(NpcInnServiceCatalog source)
+        {
+            if(source==null || source.EntryToCounter==null || source.EntryToCounter.Count<2 || source.Pairs==null)
+                throw new ArgumentException("Incomplete measured Inn service routes.");
+            var entry=source.EntryToCounter[0];var counter=source.EntryToCounter[source.EntryToCounter.Count-1];
+            foreach(var pair in source.Pairs)
+            {
+                if(pair==null || pair.First==null || pair.Second==null || !RoutePair(pair.FirstCounterToSeat,pair.FirstSeatToEntry) ||
+                    !RoutePair(pair.SecondCounterToSeat,pair.SecondSeatToEntry) ||
+                    !Connected(counter,pair.FirstCounterToSeat[0]) || !Connected(counter,pair.SecondCounterToSeat[0]) ||
+                    !Connected(entry,pair.FirstSeatToEntry[pair.FirstSeatToEntry.Count-1]) ||
+                    !Connected(entry,pair.SecondSeatToEntry[pair.SecondSeatToEntry.Count-1]) ||
+                    !Connected(pair.FirstCounterToSeat[pair.FirstCounterToSeat.Count-1],pair.FirstSeatToEntry[0]) ||
+                    !Connected(pair.SecondCounterToSeat[pair.SecondCounterToSeat.Count-1],pair.SecondSeatToEntry[0]) ||
+                    !AtConnectedSeat(pair.FirstSeatToEntry[0],pair.First) || !AtConnectedSeat(pair.SecondSeatToEntry[0],pair.Second))
+                    throw new ArgumentException("Inn catalog routes do not connect the real entry, counter and selected seats.");
+                pair.FirstCounterToSeat[0]=Point(counter);pair.SecondCounterToSeat[0]=Point(counter);
+                pair.FirstSeatToEntry[pair.FirstSeatToEntry.Count-1]=Point(entry);
+                pair.SecondSeatToEntry[pair.SecondSeatToEntry.Count-1]=Point(entry);
+                CanonicalizeSeatJoin(pair.FirstCounterToSeat,pair.FirstSeatToEntry,pair.First);
+                CanonicalizeSeatJoin(pair.SecondCounterToSeat,pair.SecondSeatToEntry,pair.Second);
+            }
+        }
         public static NpcInnServiceCatalog Copy(NpcInnServiceCatalog source)
         {
             var copy=CopyData(source);copy.Fingerprint=Hash(copy);
@@ -74,7 +100,8 @@ namespace PeopleOfTheIliacBay.Core
                 source.RegionIndex<0 || source.RegionIndex>255 || !Text(source.KeeperId,240) || !Time(source.CapturedAt) ||
                 source.OpenMinute<0 || source.OpenMinute>=1440 || source.CloseMinute<0 || source.CloseMinute>1440 ||
                 source.OpenMinute==source.CloseMinute || source.Menu==null || source.Menu.Count!=11 ||
-                source.Pairs==null || source.Pairs.Count<1 || source.Pairs.Count>32)
+                source.Pairs==null || source.Pairs.Count>32 || source.EntryToCounter==null ||
+                source.Pairs.Count>0 && source.EntryToCounter.Count<2)
                 throw new ArgumentException("Incomplete native Inn catalog source, hours or menu.");
             var copy=new NpcInnServiceCatalog{ModelVersion=source.ModelVersion,SettlementId=source.SettlementId,BuildingKey=source.BuildingKey,
                 BlockIndex=source.BlockIndex,RecordIndex=source.RecordIndex,Climate=source.Climate,RegionIndex=source.RegionIndex,
@@ -87,7 +114,9 @@ namespace PeopleOfTheIliacBay.Core
                     throw new ArgumentException("Inn catalog does not preserve the complete native menu.");
                 copy.Menu.Add(new NpcInnMenuItem{MenuIndex=i,Kind=item.Kind,ProductName=item.ProductName,BasePriceGold=item.BasePriceGold});
             }
-            int budget=20000;copy.EntryToCounter=Route(source.EntryToCounter,ref budget);
+            int budget=20000;
+            if(source.EntryToCounter.Count==0 && source.Pairs.Count==0)return copy;
+            copy.EntryToCounter=Route(source.EntryToCounter,ref budget);
             var entry=copy.EntryToCounter[0];var counter=copy.EntryToCounter[copy.EntryToCounter.Count-1];
             var pairs=new HashSet<string>(StringComparer.Ordinal);
             var seats=new Dictionary<string,TableSeatPosition>(StringComparer.Ordinal);
@@ -144,6 +173,20 @@ namespace PeopleOfTheIliacBay.Core
             if(length<=0 || length>100000)throw new ArgumentException("Inn service route has no measured movement.");
             return result;
         }
+        private static void CanonicalizeSeatJoin(List<GuardPoint3> fromCounter,List<GuardPoint3> toEntry,TableSeatPosition seat)
+        {
+            var ground=toEntry[0];
+            var canonical=new GuardPoint3{X=seat.X,Y=ground.Y,Z=seat.Z};
+            fromCounter[fromCounter.Count-1]=Point(canonical);toEntry[0]=Point(canonical);
+        }
+        private static bool RoutePair(List<GuardPoint3> fromCounter,List<GuardPoint3> toEntry)
+        {return fromCounter!=null && fromCounter.Count>=2 && toEntry!=null && toEntry.Count>=2;}
+        private static GuardPoint3 Point(GuardPoint3 source){return new GuardPoint3{X=source.X,Y=source.Y,Z=source.Z};}
+        private const double CoordinateRoundTripTolerance=0.00001;
+        private static bool Connected(GuardPoint3 a,GuardPoint3 b){return Math.Abs(a.X-b.X)<=CoordinateRoundTripTolerance &&
+            Math.Abs(a.Y-b.Y)<=CoordinateRoundTripTolerance && Math.Abs(a.Z-b.Z)<=CoordinateRoundTripTolerance;}
+        private static bool AtConnectedSeat(GuardPoint3 p,TableSeatPosition seat){return Math.Abs(p.X-seat.X)<=CoordinateRoundTripTolerance &&
+            Math.Abs(p.Z-seat.Z)<=CoordinateRoundTripTolerance;}
         private static bool AtSeat(GuardPoint3 p,TableSeatPosition seat){return Math.Abs(p.X-seat.X)<=0.000001 && Math.Abs(p.Z-seat.Z)<=0.000001;}
         private static bool Same(GuardPoint3 a,GuardPoint3 b){return Math.Abs(a.X-b.X)<=0.000001 && Math.Abs(a.Y-b.Y)<=0.000001 && Math.Abs(a.Z-b.Z)<=0.000001;}
         private static bool Time(double number){return !double.IsNaN(number) && !double.IsInfinity(number) && number>=0;}
@@ -184,7 +227,7 @@ namespace PeopleOfTheIliacBay.Core
             p.NativeHash==catalog.KeeperHash && (!alive || p.IsAlive)),"Inn catalog keeper does not match its native building source.");}
         private static List<NpcInnServiceCatalog> CopyNpcInnServiceCatalogs(WorldState source,WorldState validated)
         {
-            var result=new List<NpcInnServiceCatalog>();if(source.Version<73)return result;
+            var result=new List<NpcInnServiceCatalog>();
             Require(source.NpcInnServiceCatalogs!=null && source.NpcInnServiceCatalogs.Count<=100000,"Missing or unbounded Inn catalogs.");
             var owners=new HashSet<string>(StringComparer.Ordinal);
             foreach(var sourceCatalog in source.NpcInnServiceCatalogs)

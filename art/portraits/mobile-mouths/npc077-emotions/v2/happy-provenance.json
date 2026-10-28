@@ -1,0 +1,59 @@
+{
+  "emotion": "happy",
+  "revision": 2,
+  "generator": "built-in image_gen",
+  "status": "revision2-prototype-user-review-pending-not-installed",
+  "source": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\tfac-077-full-frame-v5.png",
+    "sha256": "D2BD017E7773336DE704BF3E4C935AB1EF7D0FC84DD4BBC551A61E22AF322223"
+  },
+  "dimensions": "1254x1254",
+  "cell_order": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "X"
+  ],
+  "generation_count": 3,
+  "phases": [
+    {
+      "phase": "open",
+      "generated_path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-8b98-7181-a1df-84e7b766303c\\exec-ec432874-dd3b-4123-bf41-c0325d2a1e34.png",
+      "output": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\happy-open.png",
+        "sha256": "943DB38596F458527F2186E1354863C0F8EA9CA9A8C7EE7A5A997523FB4D239B",
+        "dimensions": "1254x1254"
+      },
+      "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\tfac-077-full-frame-v5.png",
+      "prompt": "Use case: stylized-concept\nAsset type: complete 3×3 NPC portrait viseme atlas for a 64×64 native game portrait\nInput image: Image 1 is the approved full-frame version-5 source. Preserve same woman, face, hair, framing, palette, coarse pixel structure, and exact grid.\nPrimary request: make fresh happy OPEN-EYE atlas. Character feels warmly friendly and genuinely cheerful.\nStyle/medium: crisp native-resolution pixel art, same muted game palette and existing blocky pixel scale. Every eye feature must use clean, deliberate, hard-edged pixel clusters with clear iris and pupil, tiny restrained sclera highlights, crisp eyelid line, and brows. No soft blur.\nComposition/framing: exact square 3×3 atlas of complete head-and-shoulder frames; same cell boundaries and alignment; row-major A B C / D E F / G H X.\nLighting/mood: gently lifted cheeks and friendly open eyes. Natural restrained smile, visible warm mouth corners, subtle cheek lift.\nConstraints: retain all nine distinct speech poses in order and their practical openings: A closed M/B/P; B narrow consonant with tiny teeth; C medium EH; D moderately open AH; E rounded OH; F small OO/W; G upper teeth touching lower lip F/V; H slight tongue behind teeth for L; X relaxed closed mouth. Preserve modest natural mouth size. Smile changes mouth-corner tension and cheeks, not viseme category or opening. Keep brows calm and eyes bright, no dramatic angle.\nAvoid: blur, airbrushed or smoky eye shadows over iris, soft painted shading, smudged lines, high-resolution smooth painting, giant grin, large tooth blocks, manic expression, oversized mouth, caricature, changed identity or hair, framing changes, objects, text, grid lines, borders, missing cells."
+    },
+    {
+      "phase": "half",
+      "generated_path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-8b98-7181-a1df-84e7b766303c\\exec-1c8225fd-54ea-4e02-af16-f2b58f75783e.png",
+      "output": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\happy-half.png",
+        "sha256": "52E35D736D11F55E6565456F7784F92D23035A32F7E0AD9B21FF6EA835D60595",
+        "dimensions": "1254x1254"
+      },
+      "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\happy-open.png",
+      "prompt": "Use case: stylized-concept\nAsset type: complete square 3×3 blink atlas for a 64×64 native NPC game portrait\nInput image: Image 1 is the finished happy open-eye revision-2 atlas.\nPrimary request: create HALF-BLINK atlas.\nStyle/medium: preserve exact crisp, hard-edged pixel-art clusters and muted original palette. Keep eyes sharp.\nComposition/framing: same complete portraits, exact 3×3 grid, square canvas and cell alignment; A B C / D E F / G H X.\nConstraints: Change only upper eyelids in every cell. Upper lid covers about half each iris. Preserve cheerful brows, lifted cheeks, face, hair, colors, and each exact corresponding speech-mouth shape and opening. Preserve crisp visible pupil/iris detail. Full sheets only.\nAvoid: blur, airbrushed shadows, changed eyes beyond lids, mouth edits, expression change, cropped frames, overlays, missing cells, labels, borders, grid separators, new objects."
+    },
+    {
+      "phase": "closed",
+      "generated_path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-8b98-7181-a1df-84e7b766303c\\exec-89296a75-3f9c-4ba9-9ba5-90223241e7d3.png",
+      "output": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\happy-closed.png",
+        "sha256": "768AEBE771F7051973BE5B8D1BB095FCFAB4C8496B1473ACB6783D073BCDF339",
+        "dimensions": "1254x1254"
+      },
+      "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\happy-open.png",
+      "prompt": "Use case: stylized-concept\nAsset type: complete square 3×3 blink atlas for a 64×64 native NPC game portrait\nInput image: Image 1 is the finished happy open-eye revision-2 atlas.\nPrimary request: create CLOSED-BLINK atlas.\nStyle/medium: preserve exact crisp, hard-edged pixel-art clusters and muted original palette. Keep eyes sharp.\nComposition/framing: same complete portraits, exact 3×3 grid, square canvas and cell alignment; A B C / D E F / G H X.\nConstraints: Change only eyelids in every cell. Both eyes fully shut with no iris or sclera visible. Preserve cheerful brows, lifted cheeks, face, hair, colors, and each exact corresponding speech-mouth shape and opening. Preserve all complete portrait frames.\nAvoid: blur, airbrushed shadows, partly open eyes, visible pupils, altered mouths, expression change, cropped frames, overlays, missing cells, labels, borders, grid separators, new objects."
+    }
+  ],
+  "visible_deviations": "At sheet scale, C/D/G show visible teeth but remain moderate. Dark pixel eye shadow remains close to source style; iris/pupil and eyelid clusters read crisply."
+}

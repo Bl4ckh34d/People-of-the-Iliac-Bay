@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T12:39:30.8735335Z",
+    "portraitRecord":  75,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "angry",
+    "prompt":  "Create a pixel-art eye animation atlas for the exact same NPC face shown in the supplied reference grid. Output one image exactly 128 by 70 pixels, with four equal 64 by 35 pixel cells in a 2-column by 2-row layout, no gutters or borders. In row-major order: top-left OPEN, top-right HALF, bottom-left CLOSED, bottom-right OPEN REPEAT. Each cell must show the same unchanged upper-face crop and character identity; only the eyelids and eye contents may change between phases.\n\nPreserve the reference\u0027s muted warm-brown skin, dark brown hair, existing angry expression, brow placement and shape, eye spacing, nose bridge, shading, and native stepped pixel-art clusters. Keep both brows stable and identical in all four cells. The brows should read as clearly angry with lowered inner ends and slight nose-bridge tension, but remain soft, natural, and continuous. In particular, keep the viewer-right eyebrow connected as one gently tapered brow. Do not create a detached dark island or extra dark pixels around x44–49, y23–24 in that 64x35 face crop. Avoid broken, doubled, squared-off, or heavily blackened brows. Do not alter hair, forehead, fringe, or the rest of the face.\n\nKeep eye anatomy compact and close to the original: small dark amber-brown irises and pupils, tiny restrained warm glints, softly shadowed sclera, and narrow apertures. Do not enlarge the eye openings, add bright white bands, make round smooth vector-like irises, or add large highlights. For HALF, upper lids descend and occlude the upper part of each iris. For CLOSED, draw a natural closed upper-lid line. Keep the lower lids fixed at the original lower-lid row 28 and keep the cheeks stationary; do not lift or puff the cheeks, move the lower lids, or create a squint by changing the cheek shape. Keep all iris and closed-lid pixels within rows 25–28 of each face crop, below the fixed angry brows. The upper eyelid must close within this same narrow eye area. Preserve the reference\u0027s unobstructed eyes and original face framing. No text, labels, extra panels, new objects, or decorative marks.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-d7e75e00-ef3d-413b-a28a-5cea890cf67e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-d7e75e00-ef3d-413b-a28a-5cea890cf67e.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "e2e7919bfc72eb52738873b46bffa3a1eb3ca2b503bd62101ac973e8f30cd8b3",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-d7e75e00-ef3d-413b-a28a-5cea890cf67e.png",
+                      "sha256":  "b7bb85fac182061fb62f138e10c209df7f2e1e3f4a0e9c3e0099e8bb34a67fb1",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/angry/raw.png",
+                "sha256":  "b7bb85fac182061fb62f138e10c209df7f2e1e3f4a0e9c3e0099e8bb34a67fb1",
+                "width":  1695,
+                "height":  928
+            }
+}

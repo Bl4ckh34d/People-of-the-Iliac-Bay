@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T05:44:40.8249916Z",
+    "portraitRecord":  78,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "stylized-concept. Create one clean 3-by-3 gaze atlas from the supplied exact 1536x840 nearest-neighbor reference grid. Each cell is a complete 64x35 upper portrait at identical scale, in a 192x105-cell atlas with no gutters, labels, text, borders, or added padding. The supplied grid repeats the exact same native portrait as a visual source; do not reproduce nine identical outputs.\n\nKeep the face, hair, skin, lighting, texture, eyebrows, and all pixels outside the two eye-feature rectangles unchanged from the reference. Keep both eyes coherent, narrow, naturally hooded, and the same size. Do not enlarge the eye openings or thicken brows.\n\nMake a clearly readable row-major gaze matrix: UP-LEFT, UP, UP-RIGHT; LEFT, CENTER, RIGHT; DOWN-LEFT, DOWN, DOWN-RIGHT. Both olive-gold irises and pupils move together in each named direction and agree across both eyes. Diagonals combine the horizontal and vertical movement.\n\nAt native 64x35 scale, place every top-row iris/pupil center 1 to 2 pixels HIGHER than its matching middle-row center. Keep the middle row vertically centered. For every bottom-row gaze, move the iris and pupil themselves visibly DOWN by at least 1 native pixel relative to the matching middle-row center, aiming for 2 pixels only where the narrow opening permits. Do not create down gaze by only moving, lowering, or darkening the upper lid over an unmoved iris. Keep the lower lid and original eye identity fixed. The upper lid may follow the down gaze by at most one native pixel if needed, but the iris itself must remain visibly lower and recognizable above the lower lid. Retain the up-shifted irises in the top row.\n\nPreserve the source\u0027s compact olive-gold iris and dark pupil footprint, approximately four native pixels across including the tiny highlight. Do not make irises rounder, larger, brighter, or more saturated. Keep sclera and highlights tiny and source-like; no broad white crescents, giant whites, or bright flashes. Use the exact source palette and pixel texture. Do not add details or change expression. Return only the 3x3 atlas.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-b4514ad8-6089-4ac7-9cfa-9f3e580e22bb.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-b4514ad8-6089-4ac7-9cfa-9f3e580e22bb.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "4cfab5dce8d40ff0246728c2c28922d9b5627cec9549f9b5252f2f601e4978ce",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "63430030c4d9ccd4d7c3a2e735537d01160bee5ac0046bd83773b8aeec0a0fba",
+                          "width":  1536,
+                          "height":  840
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-b4514ad8-6089-4ac7-9cfa-9f3e580e22bb.png",
+                      "sha256":  "1b21f35d07be76fe3944969359d13f0e6eebb5dad9242923ae5420ec1666e598",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "1b21f35d07be76fe3944969359d13f0e6eebb5dad9242923ae5420ec1666e598",
+                "width":  1695,
+                "height":  928
+            }
+}

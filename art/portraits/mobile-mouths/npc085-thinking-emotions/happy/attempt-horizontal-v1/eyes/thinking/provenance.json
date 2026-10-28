@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T08:43:40.2811271Z",
+    "portraitRecord":  85,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Using the single provided image as the exact source reference, create one 2×2 pixel-art atlas on a 64:35 aspect canvas. Each reference cell contains this same NPC and same source eye phase: top row is HAPPY open eyes; bottom row is HAPPY half-lidded eyes. Arrange output cells exactly: top-left LEFT gaze open; top-right RIGHT gaze open; bottom-left LEFT gaze half-lidded; bottom-right RIGHT gaze half-lidded. Preserve identity, hair, face, original framing, colors, pixels, happy brows and their exact shapes. Preserve the exact original upper- and lower-eyelid contours and eye aperture in every cell; do not widen, enlarge, brighten, lift, or otherwise alter the eyelids or visible eye opening. Keep each iris compact and the same small size and actual warm amber-brown / olive-brown hue as the source, with its tiny subdued source-like glint. Make only a gentle approximately one-native-pixel horizontal iris/pupil glance for left versus right, keeping the pupil inside each existing opening. Avoid broad pale sclera bands, bright white patches, new or stronger highlights, larger eyeballs, vertical or diagonal gaze, new colors, smooth edges, anti-aliasing, text, labels, panels, and borders. Half-lidded cells must retain the source half-lid coverage exactly. Keep crisp stepped pixel art.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-c8c862cc-a1f7-4309-8f8d-4c1760dc2e04.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-c8c862cc-a1f7-4309-8f8d-4c1760dc2e04.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "8381f07edb8751dd0dfa93e4049c5ae00563c75ba9b0bb1fb5dfa80ca2a001d4",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "d960060751fbc34cf09849c2706be5cb0ffe2a6c67725d32bd54c2195fe06a1f",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-c8c862cc-a1f7-4309-8f8d-4c1760dc2e04.png",
+                      "sha256":  "bf4801caf800d8e4967e3eca7b14bd5a16aa43a73d2c56d75767b58263bddc4d",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "bf4801caf800d8e4967e3eca7b14bd5a16aa43a73d2c56d75767b58263bddc4d",
+                "width":  1695,
+                "height":  928
+            }
+}

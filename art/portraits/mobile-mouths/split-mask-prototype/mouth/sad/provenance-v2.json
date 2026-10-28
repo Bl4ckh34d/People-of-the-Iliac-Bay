@@ -1,0 +1,33 @@
+{
+  "emotion": "sad",
+  "revision": 2,
+  "generator": "built-in image_gen",
+  "generation_count": 1,
+  "status": "prototype-user-review-pending-not-accepted",
+  "source": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\mouth-reference-grid.png",
+    "dimensions": "1536x696",
+    "sha256": "81B130639901DA518717B9B48B461C210CE9F9D8D1C7141CE409D46E542DD7DE"
+  },
+  "generated_path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-8b98-7181-a1df-84e7b766303c\\exec-42c6a401-6361-4403-b8cb-53cbe45ece7c.png",
+  "output": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\mouth\\sad\\raw-v2.png",
+    "dimensions": "1863x844",
+    "aspect_ratio": 2.20735,
+    "sha256": "D45ABC6B90AA9B169BF12576DB4A5162937893A5E98B7582D9A0EF78CE24A5D8",
+    "copied_unaltered": true
+  },
+  "grid_order": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "X"
+  ],
+  "visible_deviations": "Aspect ratio is close to target. A/X look subdued without a deep pout; A–H speech poses remain distinct at sheet scale. Some open poses retain broad soft lip shading; inspect native mask fit before use. Visual review only; no acceptance claimed.",
+  "prompt": "Use case: stylized-concept\nAsset type: revised 3×3 sad-emotion lower-half speech mouth atlas for a 64×29 NPC portrait\nInput image: Image 1 is the immutable approved mouth grid and the sole geometry, scale, palette, framing, and pose reference.\nPrimary request: create one revised, subdued sad mouth sheet. Preserve exact 3×3 lower-half layout, cell boundaries, and mouth anchors.\nStyle/medium: retain the original soft muted low-contrast pixel-art palette, skin shading, and small natural pixel structure. Keep facial anatomy consistent with reference.\nComposition/framing: full 3×3 lower-half sheet, same aspect ratio about 2.20690, no crop, resizing, gutters, or added dividers. Row-major A B C / D E F / G H X.\nLighting/mood: restrained sadness: low-energy and gently subdued. Lip corners relax slightly downward, without theatrical expression.\nConstraints: keep all mouth sizes and anatomical shapes close to the source. Make sadness visible through only mild, natural corner tension. A stays fully closed for M/B/P. B narrow consonant with slight teeth; C medium EH; D moderately open AH; E rounded OH; F small OO/W; G upper teeth touching lower lip for F/V; H subtle raised tongue behind upper teeth for L. Keep these as distinct speech forms, not identical frowns. X is closed and mildly subdued, with only a small soft downward corner. Preserve each viseme's natural practical opening and original placement.\nAvoid: deep inverted smile, theatrical pout, drooping or enlarged mouth, oversized lips, excessive teeth, exaggerated frown lines, harsh dark outlines, high contrast, airbrush, blur, changed nose/chin/head/hair geometry, altered framing, labels, text, border, missing or reordered cells."
+}

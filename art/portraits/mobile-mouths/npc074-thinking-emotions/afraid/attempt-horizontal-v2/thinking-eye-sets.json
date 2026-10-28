@@ -1,0 +1,556 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 74,
+  "bank": "TFAC00I0.RCI",
+  "thinkingEyeSets": [
+    {
+      "id": "left",
+      "label": "Left",
+      "phases": {
+        "open": {
+          "file": "eyes/thinking/left/open.png",
+          "sha256": "6a5d19a8c63ddccb0595cb907dc9c31fd308b87fb8fa4162667fa63687455ccd",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "e84dc7f953b98f25ac2512c0bc208c9dedb961668ed1c56752060f8b9ea326d1"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "b29b198f4065759158fb2298b130146e10b960cdba7be94bc6e2dbd6ab75b24f"
+            }
+          ],
+          "sourceSha256": "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 0,
+            "cellColumn": 0,
+            "cellIndex": 0,
+            "eyeRegions": [
+              {
+                "x": 14,
+                "y": 16,
+                "width": 17,
+                "height": 16
+              },
+              {
+                "x": 33,
+                "y": 16,
+                "width": 18,
+                "height": 16
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 25,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 350,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "half": {
+          "file": "eyes/thinking/left/half.png",
+          "sha256": "c5e8f32362de49a31788b7c26ad0b154215aaa3ef45cd00c073fd40dd0aa3ba1",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "e84dc7f953b98f25ac2512c0bc208c9dedb961668ed1c56752060f8b9ea326d1"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "b29b198f4065759158fb2298b130146e10b960cdba7be94bc6e2dbd6ab75b24f"
+            }
+          ],
+          "sourceSha256": "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 1,
+            "cellColumn": 0,
+            "cellIndex": 2,
+            "eyeRegions": [
+              {
+                "x": 14,
+                "y": 16,
+                "width": 17,
+                "height": 16
+              },
+              {
+                "x": 33,
+                "y": 16,
+                "width": 18,
+                "height": 16
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 25,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 350,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          },
+          "changedPixels": 557,
+          "reviewedRepair20261023": {
+            "candidateSha256": "c5e8f32362de49a31788b7c26ad0b154215aaa3ef45cd00c073fd40dd0aa3ba1",
+            "previousSha256": "39829e2f6864f5084f2468c5772e85f8acb6a9f193975189b6f46ca4e6de32ec",
+            "masterSha256": "0113a4ae2e874cd9e03f2e26c56096e5797c83777d8d08bf12fb295e6be35c13",
+            "allowedSourceChangeRegions": [
+              [
+                14,
+                16,
+                31,
+                32
+              ],
+              [
+                33,
+                16,
+                51,
+                32
+              ]
+            ],
+            "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+          }
+        },
+        "closed": {
+          "file": "eyes/thinking/left/closed.png",
+          "sha256": "d4d1b09bb82b75ceb88b35a8bd28415717396898f37085c5be84dac6c0add3cc",
+          "sourceFiles": [
+            "eyes/afraid/closed.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "b29b198f4065759158fb2298b130146e10b960cdba7be94bc6e2dbd6ab75b24f"
+            },
+            {
+              "file": "eyes/afraid/closed.png",
+              "sha256": "95aeea67f876701ca49500bf21d63669a7b2f0b98e05cef0bc78aec8dff4b468"
+            }
+          ],
+          "sourceSha256": "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": null,
+            "cellColumn": null,
+            "cellIndex": -1,
+            "eyeRegions": [
+              {
+                "x": 14,
+                "y": 16,
+                "width": 17,
+                "height": 16
+              },
+              {
+                "x": 33,
+                "y": 16,
+                "width": 18,
+                "height": 16
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 25,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 350,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 210,
+            "halfLidOffset": 0
+          },
+          "changedPixels": 557,
+          "reviewedRepair20261023": {
+            "candidateSha256": "d4d1b09bb82b75ceb88b35a8bd28415717396898f37085c5be84dac6c0add3cc",
+            "previousSha256": "95aeea67f876701ca49500bf21d63669a7b2f0b98e05cef0bc78aec8dff4b468",
+            "masterSha256": "0113a4ae2e874cd9e03f2e26c56096e5797c83777d8d08bf12fb295e6be35c13",
+            "allowedSourceChangeRegions": [
+              [
+                14,
+                16,
+                31,
+                32
+              ],
+              [
+                33,
+                16,
+                51,
+                32
+              ]
+            ],
+            "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+          }
+        }
+      }
+    },
+    {
+      "id": "right",
+      "label": "Right",
+      "phases": {
+        "open": {
+          "file": "eyes/thinking/right/open.png",
+          "sha256": "745c71da54dccbfd97ba0f5a10a5ebba7d35a80e88f84dffccfda73477304a99",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "e84dc7f953b98f25ac2512c0bc208c9dedb961668ed1c56752060f8b9ea326d1"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "b29b198f4065759158fb2298b130146e10b960cdba7be94bc6e2dbd6ab75b24f"
+            }
+          ],
+          "sourceSha256": "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 0,
+            "cellColumn": 1,
+            "cellIndex": 1,
+            "eyeRegions": [
+              {
+                "x": 14,
+                "y": 16,
+                "width": 17,
+                "height": 16
+              },
+              {
+                "x": 33,
+                "y": 16,
+                "width": 18,
+                "height": 16
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 25,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 350,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "half": {
+          "file": "eyes/thinking/right/half.png",
+          "sha256": "eac6f81d16bc35f0cd086e422c2a5e6aa9e8ffaa917224ede11a768df4f14654",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "e84dc7f953b98f25ac2512c0bc208c9dedb961668ed1c56752060f8b9ea326d1"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "b29b198f4065759158fb2298b130146e10b960cdba7be94bc6e2dbd6ab75b24f"
+            }
+          ],
+          "sourceSha256": "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 1,
+            "cellColumn": 1,
+            "cellIndex": 3,
+            "eyeRegions": [
+              {
+                "x": 14,
+                "y": 16,
+                "width": 17,
+                "height": 16
+              },
+              {
+                "x": 33,
+                "y": 16,
+                "width": 18,
+                "height": 16
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 25,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 350,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          },
+          "changedPixels": 557,
+          "reviewedRepair20261023": {
+            "candidateSha256": "eac6f81d16bc35f0cd086e422c2a5e6aa9e8ffaa917224ede11a768df4f14654",
+            "previousSha256": "b83f589dc3ba574d6fbba577806be27a6513ea90c65cbe1d47b582b9694472d2",
+            "masterSha256": "0113a4ae2e874cd9e03f2e26c56096e5797c83777d8d08bf12fb295e6be35c13",
+            "allowedSourceChangeRegions": [
+              [
+                14,
+                16,
+                31,
+                32
+              ],
+              [
+                33,
+                16,
+                51,
+                32
+              ]
+            ],
+            "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+          }
+        },
+        "closed": {
+          "file": "eyes/thinking/right/closed.png",
+          "sha256": "fdbebe932f8ca8a9421c096886e8ced0e0b400e25e98fe5aa01d3675e331296b",
+          "sourceFiles": [
+            "eyes/afraid/closed.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "b29b198f4065759158fb2298b130146e10b960cdba7be94bc6e2dbd6ab75b24f"
+            },
+            {
+              "file": "eyes/afraid/closed.png",
+              "sha256": "95aeea67f876701ca49500bf21d63669a7b2f0b98e05cef0bc78aec8dff4b468"
+            }
+          ],
+          "sourceSha256": "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": null,
+            "cellColumn": null,
+            "cellIndex": -1,
+            "eyeRegions": [
+              {
+                "x": 14,
+                "y": 16,
+                "width": 17,
+                "height": 16
+              },
+              {
+                "x": 33,
+                "y": 16,
+                "width": 18,
+                "height": 16
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 25,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 350,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 210,
+            "halfLidOffset": 0
+          },
+          "changedPixels": 557,
+          "reviewedRepair20261023": {
+            "candidateSha256": "fdbebe932f8ca8a9421c096886e8ced0e0b400e25e98fe5aa01d3675e331296b",
+            "previousSha256": "95aeea67f876701ca49500bf21d63669a7b2f0b98e05cef0bc78aec8dff4b468",
+            "masterSha256": "0113a4ae2e874cd9e03f2e26c56096e5797c83777d8d08bf12fb295e6be35c13",
+            "allowedSourceChangeRegions": [
+              [
+                14,
+                16,
+                31,
+                32
+              ],
+              [
+                33,
+                16,
+                51,
+                32
+              ]
+            ],
+            "method": "Own-gaze OPEN retained outside native lid apertures; generated original-palette angry/guarded brows copied consistently across phases without eyelid overlap."
+          }
+        }
+      }
+    }
+  ],
+  "source": {
+    "original": "original.png",
+    "sha256": "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae",
+    "referenceGrid": "thinking-reference-grid.png",
+    "referenceSha256": "f6c464fac465cd50e4a08f9b0d43069c927e2f65bca6575a7bcd88a7fa0d8259",
+    "rawAtlas": "eyes/thinking/raw.png",
+    "rawAtlasSha256": "e84dc7f953b98f25ac2512c0bc208c9dedb961668ed1c56752060f8b9ea326d1",
+    "referenceUpper": {
+      "file": "eyes/afraid/open.png",
+      "sha256": "b29b198f4065759158fb2298b130146e10b960cdba7be94bc6e2dbd6ab75b24f"
+    },
+    "browMaster": {
+      "file": "eyes/afraid/open.png",
+      "sha256": "b29b198f4065759158fb2298b130146e10b960cdba7be94bc6e2dbd6ab75b24f"
+    },
+    "halfLid": {
+      "file": "eyes/afraid/half.png",
+      "sha256": "64f6f28cfbd933d9e56e4439105213946cd2bb5226ff563728ba1701a004665b"
+    },
+    "closedEye": {
+      "file": "eyes/afraid/closed.png",
+      "sha256": "95aeea67f876701ca49500bf21d63669a7b2f0b98e05cef0bc78aec8dff4b468"
+    }
+  },
+  "geometry": {
+    "width": 64,
+    "height": 64,
+    "splitY": 35,
+    "frameWidth": 64,
+    "frameHeight": 35,
+    "eyeRegions": [
+      {
+        "x": 14,
+        "y": 16,
+        "width": 17,
+        "height": 16
+      },
+      {
+        "x": 33,
+        "y": 16,
+        "width": 18,
+        "height": 16
+      }
+    ],
+    "halfLidRegions": [],
+    "halfLidOffsetsByGaze": {},
+    "browLockEndY": 25,
+    "reference": {
+      "width": 1024,
+      "height": 560,
+      "scale": 8,
+      "cells": 4,
+      "exactSourceCells": true,
+      "columns": 2,
+      "rows": 2
+    },
+    "rawAspect": 1.8265086206896552,
+    "rawAspectTolerance": 0.01,
+    "cellOrder": [
+      "left",
+      "right"
+    ],
+    "atlasColumns": 2,
+    "atlasRows": 2
+  },
+  "inputHashes": [
+    {
+      "file": "layout.json",
+      "sha256": "9fd909344e780753f4260af7138fe402ca53ab5d838267005be2deed759010fd"
+    },
+    {
+      "file": "thinking-layout.json",
+      "sha256": "7c02f97a1a9dcaf977f02b097915331f1ed5231f0e761503486d8a2758b57da3"
+    },
+    {
+      "file": "setup-provenance.json",
+      "sha256": "51c624c5dfb6d99756ad5b5fca24a453cd434d07569a47c6976fba1cc3b8016b"
+    },
+    {
+      "file": "original.png",
+      "sha256": "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae"
+    },
+    {
+      "file": "thinking-reference-grid.png",
+      "sha256": "f6c464fac465cd50e4a08f9b0d43069c927e2f65bca6575a7bcd88a7fa0d8259"
+    },
+    {
+      "file": "eyes/thinking/raw.png",
+      "sha256": "e84dc7f953b98f25ac2512c0bc208c9dedb961668ed1c56752060f8b9ea326d1"
+    },
+    {
+      "file": "eyes/afraid/open.png",
+      "sha256": "b29b198f4065759158fb2298b130146e10b960cdba7be94bc6e2dbd6ab75b24f"
+    },
+    {
+      "file": "eyes/afraid/half.png",
+      "sha256": "64f6f28cfbd933d9e56e4439105213946cd2bb5226ff563728ba1701a004665b"
+    },
+    {
+      "file": "eyes/afraid/closed.png",
+      "sha256": "95aeea67f876701ca49500bf21d63669a7b2f0b98e05cef0bc78aec8dff4b468"
+    }
+  ],
+  "verification": {
+    "result": "pixel-invariants-pass-not-visual-acceptance",
+    "phaseCount": 6,
+    "expectedPhaseCount": 6,
+    "gazeSetCount": 2,
+    "expectedGazeSetCount": 2,
+    "sourceHashesUnchanged": true,
+    "referenceExact": true,
+    "outsideMaskChangedPixels": 0,
+    "noExistingOutputsOverwritten": true,
+    "pixelComparisons": 13440
+  },
+  "emotionId": "afraid",
+  "gazeLayout": "horizontal-pair"
+}

@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T15:32:05.5265512Z",
+    "portraitRecord":  91,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "afraid",
+    "prompt":  "Create a native pixel-art 2x2 eye-phase atlas for the supplied NPC 091 face, preserving the complete original 64x35 upper-half crop, face identity, hair, pixel scale, and framing in every cell. Row-major cell order must be top-left OPEN, top-right HALF CLOSED, bottom-left FULLY CLOSED, bottom-right OPEN REPEAT. This is AFRAID: both inner brows are visibly raised and pinched with tense forehead expression; keep eye opening alert but moderate, not giant or round. Use compact warm brown/olive irises fully inside the original eye apertures, with small muted source-like highlights only. Preserve the source\u0027s narrow eye geometry and muted tan/terracotta palette; do not add broad pale sclera, shiny white highlights, vector eyes, new colors, or enlarged irises. Keep the same fearful brow shape and placement across all four phases. In HALF CLOSED, upper lids descend to cover the upper part of both stationary irises; do not move iris or pupil. In FULLY CLOSED, skin-toned lids cover all iris and sclera while the brow expression stays stable. OPEN REPEAT must repeat OPEN exactly. Keep the lower lid and cheek fixed; do not raise cheeks or shift eyeballs for the blink. Preserve the original nose, fringe, face outline, and pixels outside the eye masks.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-2e46286b-8e66-403a-a3bb-1d8b79c24d62.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-2e46286b-8e66-403a-a3bb-1d8b79c24d62.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "428f65da65c68b7c50b7cefcf4fde03aa83505c54de6ccbb2ac3ab018f8a5c51",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "4bc32091eba9e8ef44f76a0ec4c1fe6c6b26be1c59c3ec999c9bd3709e281c2f",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-2e46286b-8e66-403a-a3bb-1d8b79c24d62.png",
+                      "sha256":  "9c97cddb43a17d6f6aa36e39b34c6c93ff1cdfd30e21eb0612c3f076f426cb62",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/afraid/raw.png",
+                "sha256":  "9c97cddb43a17d6f6aa36e39b34c6c93ff1cdfd30e21eb0612c3f076f426cb62",
+                "width":  1695,
+                "height":  928
+            }
+}

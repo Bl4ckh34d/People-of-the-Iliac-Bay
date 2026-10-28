@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "portraitId": "common-072",
+  "profileId": "common-072-voice-normal-03",
+  "profilePath": "work/portrait-female-voice-normal-03/profiles/common-072.json",
+  "profileSha256": "360a6f44a85f2a5d2f4dc497a91ea2fdc29ccfec82e3c4623c02a56eb8feab4a",
+  "attributes": {
+    "pitch": "a natural middle female register",
+    "timbre": "balanced, warm and clear, with balanced natural resonance",
+    "roughness": "mostly clear with a little natural texture",
+    "breathiness": "distinctly breathy but clearly articulated",
+    "vocalFry": "with minimal habitual creak",
+    "pace": "a slightly brisk conversational pace"
+  },
+  "latentZ": {
+    "pitch": 0.7154110705154604,
+    "brightness": 0.5006584548899777,
+    "resonance": 0.9441332099603695,
+    "roughness": -0.9755539807013835,
+    "breathiness": 2.371293379489431,
+    "vocalFry": -0.06924549018184001,
+    "pace": 1.2609085443257668
+  },
+  "stableInstruction": "An adult woman speaking British English with a neutral southern English accent. Her individual voice has a natural middle female register. Its timbre is balanced, warm and clear, with balanced natural resonance; it is mostly clear with a little natural texture, distinctly breathy but clearly articulated, with minimal habitual creak. Use a slightly brisk conversational pace. Maintain this individual vocal identity. Speak naturally without caricature, shouting, or added vocal events.",
+  "profileMapSha256": "acacbea9d947b909c5de6741690e8cf64f8df94ada4f61979e7b6f35eaa75e59",
+  "seed": 1518509153,
+  "guidanceScale": 4.0,
+  "anchorText": "Good day. I have been in this town for many years. What brings you here today?",
+  "anchorRequestPurpose": "Breeze VoiceDesign without voice_ref; stable per-woman profile instruction and seed.",
+  "requestPayload": {
+    "model": "breeze",
+    "input": "Good day. I have been in this town for many years. What brings you here today?",
+    "response_format": "pcm",
+    "stream_format": "sse",
+    "options": {
+      "instruct": "An adult woman speaking British English with a neutral southern English accent. Her individual voice has a natural middle female register. Its timbre is balanced, warm and clear, with balanced natural resonance; it is mostly clear with a little natural texture, distinctly breathy but clearly articulated, with minimal habitual creak. Use a slightly brisk conversational pace. Maintain this individual vocal identity. Speak naturally without caricature, shouting, or added vocal events.",
+      "guidance_scale": 4.0,
+      "stream_lookahead_margin": 0,
+      "stream_chunk_policy": "grow",
+      "seed": 1518509153
+    }
+  },
+  "requestPayloadSha256": "e1e1940efed8f48b97ee5d8ad142703f3436cf39f47a90d36b3dc92202d0323e",
+  "referenceWav": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait-female-voice-normal-03\\anchors\\common-072\\reference.wav",
+  "referenceSha256": "6e4644eeff3938794bf0e820ab38f436a10089462faf6f5cbe919193ab04aab9",
+  "referenceRawWav": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait-female-voice-normal-03\\anchors\\common-072\\reference.raw.wav",
+  "referenceRawSha256": "c370894d9ffbf24bb7ca1afec4f5409fc611dd92ea4daafcad24f3fd865d2073",
+  "audioSampleRate": 24000,
+  "audioFrames": 90240,
+  "normalization": {
+    "schemaVersion": 1,
+    "normalizer": "pcm16-active-rms-v1",
+    "status": "normalized",
+    "targetActiveRmsDbfs": -20.0,
+    "peakCeilingDbfs": -3.0,
+    "maxBoostDb": 12.0,
+    "gateDbfs": -50.0,
+    "appliedGainDb": 0.3560581867334616,
+    "input": {
+      "sha256": "c370894d9ffbf24bb7ca1afec4f5409fc611dd92ea4daafcad24f3fd865d2073",
+      "sampleRate": 24000,
+      "channels": 1,
+      "sampleWidthBytes": 2,
+      "frames": 90240,
+      "peakDbfs": -4.652932413359791,
+      "activeRmsDbfs": -20.35605818673346,
+      "activeFrames": 72000
+    },
+    "output": {
+      "sha256": "6e4644eeff3938794bf0e820ab38f436a10089462faf6f5cbe919193ab04aab9",
+      "sampleRate": 24000,
+      "channels": 1,
+      "sampleWidthBytes": 2,
+      "frames": 90240,
+      "peakDbfs": -4.297089021395088,
+      "activeRmsDbfs": -20.028828174178138,
+      "activeFrames": 72480
+    }
+  },
+  "synthesis": {
+    "outputWav": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait-female-voice-normal-03\\anchors\\common-072\\reference.raw.wav",
+    "pcmBytes": 180480,
+    "sampleRate": 24000,
+    "channels": 1,
+    "synthesisMs": 1835.55,
+    "firstAudioMs": 325.028,
+    "audioDeltaCount": 6,
+    "serverTiming": {
+      "ttft_ms": 323.698
+    }
+  }
+}

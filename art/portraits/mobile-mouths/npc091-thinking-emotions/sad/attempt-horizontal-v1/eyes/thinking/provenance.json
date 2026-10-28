@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T15:40:47.7249192Z",
+    "portraitRecord":  91,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Use case: stylized-concept\nAsset type: 2×2 native-scale pixel-art horizontal gaze atlas for an animated Daggerfall Unity NPC portrait\nInput image: Image 1 is the sole exact local reference grid. It contains the selected SAD open and half-closed source phases. Preserve this woman\u0027s identity, exact upper-face framing, source palette, brow shape, narrow eye apertures, iris size and pixel-cluster style.\nPrimary request: Create one clean 2×2 atlas with equal complete 64×35 upper-half cells, in this exact row-major order: LEFT OPEN, RIGHT OPEN / LEFT HALF, RIGHT HALF. No labels, borders, gutters, zooming or rescaling.\nGaze: In both LEFT cells, move BOTH colored iris/dark-pupil clusters together a very small, matched amount toward the viewer\u0027s LEFT (about one native pixel); in both RIGHT cells, move BOTH together toward the viewer\u0027s RIGHT by the same subtle amount. Keep both eyes aligned with natural source-like convergence: neither iris may stay centered while the other moves, and the pair must not look cross-eyed. Preserve the original compact warm brown-amber iris width and location, tiny muted highlights, and subdued sclera; do not enlarge, round, brighten or recolor either iris.\nPhases: The top cells are the source SAD OPEN anatomy. In each bottom HALF cell, use the selected sad upper lid to occlude the upper part of the corresponding iris while keeping that iris at the same horizontal and vertical position as its matching top cell. The opening remains narrow and source-like; do not widen the eye or create a pale horizontal white band. Keep lower lids, cheeks, hair, nose, brow lines and all other face pixels stationary.\nExpression and composition: Preserve the same distinct sad brow master in all four cells; no brow movement, shape change, or emotion drift. Copy the complete upper portrait half from the reference at identical framing and native pixel scale. Only the two irises/pupils shift laterally as specified and the upper lids lower in the bottom row. Muted source-matched brow, skin and hair colors.\nAvoid: vertical eye jumps, cheek movement, mismatched eye directions, cross-eyed gaze, tiny/shrunken irises, round/vector-like irises, widened white bands, bright glints, detached brows, labels, text or watermark.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-fd97ec6a-300a-4bd2-a38a-18cf0ea863ae.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-fd97ec6a-300a-4bd2-a38a-18cf0ea863ae.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "428f65da65c68b7c50b7cefcf4fde03aa83505c54de6ccbb2ac3ab018f8a5c51",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "9dcdb1bdfa5402d6ad72937a2731f6f5b87b929ee32db0f766fc451741bf6137",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-fd97ec6a-300a-4bd2-a38a-18cf0ea863ae.png",
+                      "sha256":  "350b5cc4a64b8bcefcbea1f823fd99accf1fb72fff5153803db6a396634072a3",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "350b5cc4a64b8bcefcbea1f823fd99accf1fb72fff5153803db6a396634072a3",
+                "width":  1695,
+                "height":  928
+            }
+}

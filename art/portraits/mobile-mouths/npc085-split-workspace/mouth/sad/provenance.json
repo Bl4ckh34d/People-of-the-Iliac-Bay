@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T00:47:53.1023110Z",
+    "portraitRecord":  85,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "sad",
+    "prompt":  "Use case: stylized-concept\nAsset type: DFU 64x29 pixel-art NPC lower-half speech atlas\nInput images: Image 1 is the exact full portrait source for identity and original colors. Image 2 is the 3x3 original lower-half reference grid; use it for atlas cell order, mouth scale, face alignment and pixel texture.\nPrimary request: Create exactly one seamless 3x3 atlas for the sad speech mouth. Row-major cells are A B C / D E F / G H X. Keep the same original lower 64x29 half, alignment and face scale in every cell. Show restrained sadness with gently downturned mouth corners and relaxed jaw. Keep all nine articulation families distinct; do not make them nine closed mouths or exaggerated pout poses.\nPose definitions in this exact cell order: A closed lips with light pressure for P/B/M. B slightly open narrow horizontal slit with nearly together teeth for consonants/EE. C medium open, relaxed and unrounded for EH/AE. D wide vertical opening, larger than C, for AA. E slightly rounded AO/ER opening, no wider than C. F small forward rounded pucker for UW/OW/W, not a tooth bite. G upper teeth touch the lower lip for F/V, not a wide vowel or pucker. H tongue raised behind upper teeth for L, with opening between C and D; tongue can be tiny at native scale. X closed relaxed idle lips.\nPalette and style: preserve source muted brown lips and warm tan skin, original subdued brown shadows, soft pixel contrast, original lip scale. Teeth, where required, are tiny restrained warm highlights that read in context but do not flash white.\nConstraints: Change only mouth articulation and subtle sad corner tension. Keep nose, cheeks, jaw, chin, hair, neck, framing and background aligned to Image 1. Keep openings inside the original mouth region; allow vertical opening without widening the face. No labels, borders, gutters or text.\nAvoid: all-closed repetition, F/G confusion, exaggerated pout, stark white teeth, lipstick red, orange skin patches or halos, black outlines, altered head shape, smoothing, extra features, watermark.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-f89c-7311-8494-3e110d1dc05c as C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-f89c-7311-8494-3e110d1dc05c\\exec-ae0b9d66-63d6-4cb1-987b-a7821288d8a8.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-f89c-7311-8494-3e110d1dc05c\\exec-ae0b9d66-63d6-4cb1-987b-a7821288d8a8.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "8381f07edb8751dd0dfa93e4049c5ae00563c75ba9b0bb1fb5dfa80ca2a001d4",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "7b7a44274d6593733f56b7ed6838224154a6606fb0818d05641509d4bc13fcfa",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-f89c-7311-8494-3e110d1dc05c\\exec-ae0b9d66-63d6-4cb1-987b-a7821288d8a8.png",
+                      "sha256":  "dafd00dad4537274aebf380920a0b55107024b585e5426596be551d20af02f32",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/sad/raw.png",
+                "sha256":  "dafd00dad4537274aebf380920a0b55107024b585e5426596be551d20af02f32",
+                "width":  1863,
+                "height":  844
+            }
+}

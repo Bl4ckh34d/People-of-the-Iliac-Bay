@@ -1,12 +1,12 @@
 # People of the Iliac Bay
 
-Updated 26 October 2026: the playtest follow-up removes repeated full-world copies during NPC inventory creation, separates overlapping bodies, checks fleeing detours against obstacles, completes native starting outfits, and connects ambient shop purchases to actual stock and wallets. Trade keeps the original **NPC ITEMS** heading, omits the name, and uses a larger centered animated portrait. Trade handoff preserves the actual conversation; returning greetings use the speech pipeline. Rhubarb uses two CPU threads. Core 2121/2121 and focused regressions pass. See [Testing](docs/TESTING.md) for native evidence, installed-package status and remaining acceptance; [performance measurements](docs/audits/2026-10-26-loiter-performance.md) distinguish improvements from remaining stalls. Start with the [short playtest guide](docs/PLAYTEST.md) and [roadmap](docs/ROADMAP.md). Normal play uses Gemma + Breeze.
+Updated 26 October 2026: Inn capacity now uses only physical beds. Every bed has one stable ID and one occupant or booking; a family reserves one bed per person. Native rental markers and permanent occupants map directly to exact beds. No floor-area grouping participates in capacity, persistence or admission. Native inventory audits pass all 5 Gothway and all 19 Daggerfall City Inns; the reported Inn263174 also passes ordinary admission, physical doorway completion and interior materialization. After loading, loitering or another time jump, a guest whose scheduled arrival has passed never materializes briefly at the exterior door: after bed admission the guest first appears inside the loaded Inn. Only a continuously visible arrival without catch-up finishes its physical walk through the door. The new policy passes all **2147/2147** current-schema Core checks and RuntimeCompile with no warnings or errors; its updated native assertion still needs a fresh package run. [Evidence and limits](docs/audits/2026-10-26-inn-pending-door-crowd.md). Broader shop, guard-shift and dungeon checks remain in progress. See [Testing](docs/TESTING.md) for package checkpoints, the [playtest guide](docs/PLAYTEST.md) and [roadmap](docs/ROADMAP.md). Normal dialogue uses Gemma + Breeze; Rhubarb uses two CPU threads.
 
 A Daggerfall Unity mod that brings NPCs to life through persistent households, daily itineraries, visitors, finite guards, crime reactions, and optional local LLM dialogue.
 
 **Development snapshot, not a finished release.** Several NPC categories and quest interactions remain incomplete. Start with the [NPC integration audit](docs/NPC-SYSTEMS.md#inventory) for verified coverage and limitations, rather than assuming every authored NPC is already simulated.
 
-Current local bundle **D3CA68C3D919** is installed (26 October), with matching
+Earlier integrated checkpoint **D3CA68C3D919** was installed (26 October), with matching
 distribution/Player hashes and Unity package verification. Its Core source passed
 **2162/2162** checks. Companion pay now uses **10 gold per actual NPC level** for
 each begun 24-hour service block. Successful companion assistance can progress
@@ -17,10 +17,10 @@ native acceptance of these latest three changes remains open.
 Controlled native guard tests now pass observed and unobserved
 door crossings, interior reacquisition and target loss. Theft memory passes22
 native mobile/stationary witness cases; private containers were staged in a shop.
-Dungeon Follow source and its round-trip probe are included; the first native run
-stops at traveler-fixture readiness, before exercising dungeon entry. Diagnostic
-route attempts return no usable gate-to-Inn routes; increasing the wait did not
-resolve readiness. These scoped
+Dungeon Follow source and its round-trip probe are included. The earlier native
+runs stopped at traveler-fixture readiness. Subsequent native gate repairs pass
+all19 tested Inns and physical gate crossings; ordinary admission is now verified
+at the reported crowded Inn. Dungeon Follow acceptance remains separate. These scoped
 results do not establish all layouts, natural combat or full game reload.
 
 Native family tests confirm both purchases, stable seating and receipt memories

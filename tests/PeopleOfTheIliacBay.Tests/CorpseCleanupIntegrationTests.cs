@@ -27,6 +27,31 @@ namespace PeopleOfTheIliacBay.Tests
         }
         internal static void Add(List<(string,Action)> cases)
         {
+            cases.Add(("Actual visiting traveler can report an aggressor corpse and retain that evidence after death and restore",()=>{
+                string observer,guard;var store=Create(out observer,out guard);
+                var origin=store.GetOrCreate(2,new[]{20},1).Households[0].Residents[0];origin.FullName="Visiting witness";origin.Race=0;
+                store.RegisterTraveler(new TravelerPerson {Id=origin.Id,Name=origin.FullName,HomeSettlement=2,HomeKey=20,
+                    Race=origin.Race,Sex=origin.Sex,AppearanceSeed=origin.AppearanceSeed});
+                var corpse=Dead(store,"visitor-corpse",CombatOrigin.HostileAttacker);
+                Check.Throws<ArgumentException>(()=>store.NoticeDefenseCorpse(corpse.Id,origin.Id,false,125));
+                store.RegisterTravelerVisit(new TravelerVisit {Id="actual-visit",PersonId=origin.Id,SettlementId=1,TavernKey=7,
+                    DesiredArrival=100,Nights=1,CommuteSeconds=10,Route=new List<SavedRoutePoint>{new SavedRoutePoint(),new SavedRoutePoint{X=10}}});
+                var report=store.NoticeDefenseCorpse(corpse.Id,origin.Id,false,125);
+                Check.True(report!=null);Check.Equal(origin.Id,corpse.Death.Cleanup.FirstObserverId);
+                store.RegisterDefenseCombatant("observed-fight",1,CombatOrigin.HostileAttacker,100);
+                store.RecordDefensePlayerHit("observed-fight",105,true);
+                store.RecordDefenseWitness("observed-fight",origin.Id,false,110);
+                var restored=new WorldStateStore(51);restored.Restore(store.Snapshot());
+                Check.Equal(origin.Id,restored.GetDefenseCombatant(corpse.Id).Death.Cleanup.Reports[0].ObserverId);
+                Check.Equal(origin.Id,restored.GetDefenseCombatant("observed-fight").Witnesses[0].ObserverId);
+                Check.True(store.KillTraveler(origin.Id,126));
+                Check.Throws<ArgumentException>(()=>store.NoticeDefenseCorpse(corpse.Id,origin.Id,false,127));
+                Check.Throws<ArgumentException>(()=>store.RecordDefenseWitness("observed-fight",origin.Id,false,127));
+                restored.Restore(store.Snapshot());
+                Check.Equal(origin.Id,restored.GetDefenseCombatant(corpse.Id).Death.Cleanup.FirstObserverId);
+                var forged=store.Snapshot();forged.TravelerVisits.Clear();
+                Check.Throws<ArgumentException>(()=>restored.Restore(forged));
+            }));
             cases.Add(("Aggressor corpse reports persist without attributing a new murder",()=>{
                 string observer,guard;var store=Create(out observer,out guard);var record=Dead(store,"native:1",CombatOrigin.HostileAttacker);
                 var report=store.NoticeDefenseCorpse(record.Id,observer,false,125);

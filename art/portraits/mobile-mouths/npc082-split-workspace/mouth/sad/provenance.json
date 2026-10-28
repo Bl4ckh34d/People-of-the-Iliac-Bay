@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 82,
+  "bank": "TFAC00I0.RCI",
+  "emotion": "sad",
+  "asset": "mouth/sad/raw.png",
+  "tool": "built-in image_gen",
+  "prompt": "Edit the supplied 3×3 native lower-face reference atlas for Daggerfall Unity portrait record 82 into a SAD speech-mouth atlas. Preserve the exact nine-cell grid, framing, face identity, pixel-art shading, original muted soft palette, and scale. Each cell remains a complete same-size lower portrait half with nose, cheeks, jaw, hair, neck, background unchanged; change only the compact mouth/lip/oral interior region. Keep sadness low-energy and clear through only moderately lowered mouth corners and gentle tension, never an exaggerated pout. All nine visemes must remain visibly articulated, not collapsed into closed sad mouths. Preserve the exact row-major labels/order A B C / D E F / G H X: A closed lips; B narrow opening with slight tooth contact; C medium opening with muted teeth; D wide open Ah; E rounded O; F puckered U; G lower lip touching upper teeth for F/V; H small visible tongue tip for L; X relaxed closed sad rest. Use original lip hue and mouth scale; no lipstick red, no orange/brightened skin, no bright white teeth, no hard contrast. Keep nose, neck, hair silhouette and background fixed. No text, labels, dividers, additional tiles, objects, tears, rescaling or blur. Return only complete atlas.",
+  "promptSha256": "f5d40d2f478aa873c1ef713233e808bb8be25ccd5b39171aa8e7f1994574f50c",
+  "references": [
+    {
+      "path": "mouth-reference-grid.png",
+      "sha256": "8ea66062585e7c7159318ec4a9cf0f55485324ebfcbd412fdb6e841179667724"
+    }
+  ],
+  "generationOutputPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-fb9b-7322-8190-74bf6fb54c9d\\exec-42275599-986e-4b09-98b6-ce51a479e879.png",
+  "resultSha256": "006fbe1df61091af9926da613b0a1d1363196903b98d51846b20a28e3643612d",
+  "dimensions": {
+    "height": 844,
+    "width": 1863
+  },
+  "rawCopiedUnchanged": true,
+  "visibleDefects": [
+    "Mouth shapes appear distinct and follow the requested row order.",
+    "Lip color appears somewhat red/saturated and teeth are bright; compare to original palette before selection.",
+    "No obvious large head, jaw, neck, hair or background drift at sheet view; native-cell and mask validation remain pending."
+  ]
+}

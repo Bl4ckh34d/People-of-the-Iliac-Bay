@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Current-byte emotional thinking input copy; no generated atlas or historical setup is claimed.",
+  "createdUtc": "2026-10-22T05:51:38.013284+00:00",
+  "preparationMethod": "copied approved current source files and manifest-selected emotion phases by bytes",
+  "portraitRecord": 77,
+  "bank": "TFAC00I0.RCI",
+  "sourceWorkspace": "art/portraits/mobile-mouths/split-mask-prototype",
+  "emotionId": "sad",
+  "sourcePath": "original.png",
+  "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+  "sourceWidth": 64,
+  "sourceHeight": 64,
+  "splitY": 35,
+  "browLockEndY": 22,
+  "parentComponentHashes": {
+    "open": {
+      "file": "eyes/sad/open.png",
+      "sha256": "b35659fd476291c1b2df2cd8ef89fe68850f644652426313716c5a5361cbc574"
+    },
+    "half": {
+      "file": "eyes/sad/half.png",
+      "sha256": "2690e1456299df1e3fda01e6d3214f512d27bc35946505427f6abd38765bbf62"
+    },
+    "closed": {
+      "file": "eyes/sad/closed.png",
+      "sha256": "b188771a1965834ada9c3eddfee88dc37e7a639ce5f98edcad720bd558feabd1"
+    }
+  },
+  "parentManifestSha256": "ac89fa4f794a139cb0d3c761db8181967091da308cc823cf845106b949b40364",
+  "copiedInputs": {
+    "original.png": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+    "source-upper.png": "1ac0547d22fdefb5dda5874acd21aef2069bc8d55d05513b7724211ff9187db4",
+    "source-lower.png": "727ddb78360be5114c9c1296de4ceb023726055cf58b66d984bbe82061f30367",
+    "layout.json": "2b54678470e2778b95bda1524b157cd89b3cf477d226da07ee0c203d9500adc5",
+    "eyes/sad/open.png": "b35659fd476291c1b2df2cd8ef89fe68850f644652426313716c5a5361cbc574",
+    "eyes/sad/half.png": "2690e1456299df1e3fda01e6d3214f512d27bc35946505427f6abd38765bbf62",
+    "eyes/sad/closed.png": "b188771a1965834ada9c3eddfee88dc37e7a639ce5f98edcad720bd558feabd1"
+  },
+  "note": "No generated raw atlas, reference grid, or staging provenance exists yet; the updated emotional-input helper will create and bind the new grid later."
+}

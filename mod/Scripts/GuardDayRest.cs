@@ -14,18 +14,26 @@ namespace PeopleOfTheIliacBay.DFU
     {
         private Coroutine dayRestSurvey;
         private float nextDayRestAttempt;
+        private int nextRestGuard;
 
         private void UpdateDayRest(double now)
         {
             if (dayRestSurvey != null || Time.unscaledTime < nextDayRestAttempt || !OwnsExterior || GameManager.IsGamePaused) return;
-            var guard = Roster.Guards.Find(g => g.IsAlive && g.DayRestUntil > now &&
-                g.Duty == GuardDuty.Posted && g.Interior == null && g.Refuge == null &&
-                !Roster.IsOnPatrol(g.Id) && g.IncidentId == null && !IsGateGuard(g.Id));
+            bool shelter=HauntingShelterNow(now);
+            GuardRecord guard = null;
+            for (int i = 0; i < Roster.Guards.Count; i++)
+            {
+                nextRestGuard %= Roster.Guards.Count;
+                var candidate = Roster.Guards[nextRestGuard++];
+                if (!candidate.IsAlive || candidate.Interior != null || candidate.Refuge != null || IsCustodyEscort(candidate) ||
+                    !shelter && (GuardShifts.OnDuty(candidate,now) || candidate.DayRestUntil<=now || candidate.Duty!=GuardDuty.Posted ||
+                        Roster.IsOnPatrol(candidate.Id) || candidate.IncidentId!=null || IsGateGuard(candidate.Id))) continue;
+                guard = candidate; break;
+            }
             if (guard != null)
             {
-                // Replacement interiors can omit wall beds. Retry at a bounded
-                // cadence instead of resurveying every gameplay tick.
-                nextDayRestAttempt = Time.unscaledTime + 4f;
+                // Retry unavailable exterior entrances at a bounded cadence.
+                nextDayRestAttempt = Time.unscaledTime + (shelter ? .5f : 4f);
                 dayRestSurvey = StartCoroutine(PrepareDayRest(guard, now));
             }
         }
@@ -33,11 +41,17 @@ namespace PeopleOfTheIliacBay.DFU
         private IEnumerator PrepareDayRest(GuardRecord guard, double started)
         {
             var roster = Roster; var town = directory;
+            bool shelter=HauntingShelterNow(Now());
             Func<bool> valid = () => OwnsExterior && Roster == roster && directory == town &&
-                guard.IsAlive && guard.DayRestUntil > started && guard.Duty == GuardDuty.Posted &&
-                guard.Refuge == null && guard.Interior == null && !Roster.IsOnPatrol(guard.Id) && guard.IncidentId == null;
+                guard.IsAlive && !IsCustodyEscort(guard) && (shelter ? HauntingShelterNow(Now()) &&
+                    (guard.Duty==GuardDuty.Posted || guard.Duty==GuardDuty.Engaged || guard.Duty==GuardDuty.Responding ||
+                     guard.Duty==GuardDuty.Searching || guard.Duty==GuardDuty.Returning) : !GuardShifts.OnDuty(guard, Now()) && guard.DayRestUntil > Now() && guard.Duty == GuardDuty.Posted &&
+                    !Roster.IsOnPatrol(guard.Id) && guard.IncidentId == null) && guard.Refuge == null && guard.Interior == null;
+            Func<SavedRoutePoint,SavedRoutePoint,bool> samePoint=(a,b)=>
+                a!=null && b!=null && (a.X-b.X)*(a.X-b.X)+(a.Z-b.Z)*(a.Z-b.Z)<.05*.05;
             try
             {
+                yield return null; // Completion must not leave a stale coroutine handle.
                 if (refugeGeometry == null)
                 {
                     var mapped = new TownGeometry(directory, GameManager.Instance.StreamingWorld.GetCurrentCityNavigation(), false);
@@ -62,48 +76,113 @@ namespace PeopleOfTheIliacBay.DFU
                 foreach (var entrance in candidates)
                 {
                     if (!valid()) yield break;
+                    var origin=Roster.Position(guard.Id,Now());
                     var route = new TownGeometry.RouteResult();
-                    yield return refugeGeometry.ReadRouteSteps(guard.Post,
+                    yield return refugeGeometry.ReadRouteSteps(origin,
                         new SavedRoutePoint { X = entrance.LocalDoor.x, Z = entrance.LocalDoor.z }, route, valid);
                     if (!valid() || route.Points == null || route.Points.Count < 2) continue;
-                    List<List<GuardPoint3>> rooms;
-                    if (!refugeInteriors.TryGetValue(entrance.BuildingKey, out rooms) ||
-                        !wallBedRoutes.ContainsKey(entrance.BuildingKey))
+                    List<SavedRoutePoint> home=null;
+                    if(shelter && guard.Duty!=GuardDuty.Posted)
                     {
-                        DaggerfallStaticDoors owner = null; StaticDoor selected = default(StaticDoor); float closest = float.MaxValue;
-                        foreach (var doors in directory.GetComponentsInChildren<DaggerfallStaticDoors>())
-                        for (int index = 0; index < (doors.Doors == null ? 0 : doors.Doors.Length); index++)
-                        {
-                            var door = doors.Doors[index];
-                            if (door.doorType != DoorTypes.Building || door.buildingKey != entrance.BuildingKey) continue;
-                            float distance = (doors.GetDoorPosition(index) - refugeGeometry.SceneDoor(entrance)).sqrMagnitude;
-                            if (distance < closest) { closest = distance; owner = doors; selected = door; }
-                        }
-                        if (!owner) continue;
-                        rooms = new List<List<GuardPoint3>>(); var beds = new List<WallQuarterBeds.SurveyedBed>();
-                        var survey = RefugeGeometry.SurveySteps(owner.transform, selected, rooms, beds);
-                        try { while (survey.MoveNext()) { yield return null; if (!valid()) yield break; } }
-                        finally { (survey as IDisposable)?.Dispose(); }
-                        refugeInteriors[entrance.BuildingKey] = rooms; wallBedRoutes[entrance.BuildingKey] = beds;
+                        var returning=new TownGeometry.RouteResult();
+                        yield return refugeGeometry.ReadRouteSteps(origin,guard.Post,returning,valid);
+                        home=returning.Points;
+                        if(!valid() || home==null || home.Count<2)continue;
                     }
-                    foreach (var bed in wallBedRoutes[entrance.BuildingKey])
-                    {
-                        if (!WallAvailable(entrance.BuildingKey, guard.Id, null, bed.Anchor.RecordIndex)) continue;
-                        var exterior = route.Points.ConvertAll(p => new GuardPoint3 { X = p.X, Z = p.Z });
-                        var plan = GuardRefugeJourney.Create(entrance.BuildingKey, exterior, bed.EntranceRoute, started, 1.3, DaggerfallUnity.Instance.WorldTime.TimeScale);
-                        plan.WallDuty = true; plan.RestBedRecord = bed.Anchor.RecordIndex;
-                        try
-                        {
-                            Roster.TakeRefuge(guard.Id, plan, started);
-                            guard.Refuge.Release(guard.DayRestUntil);
-                            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARD_DAY_REST: " + guard.Id + "; building=" + entrance.BuildingKey);
-                            yield break;
-                        }
-                        catch (ArgumentException) { /* Another guard can claim this bed during a yielded survey. */ }
-                    }
+                    // Withdrawal needs a real reachable quarters entrance. Interior furniture
+                    // and bed routes are resolved only when the player loads these quarters.
+                    double departure=Now();
+                    // Route surveys yield. A time jump, patrol or post migration
+                    // can invalidate their start/home while the survey is running.
+                    // Advance first, then recheck immediately before strict mutation.
+                    var current=Roster.Position(guard.Id,departure);
+                    if(!valid() || !samePoint(current,route.Points[0]) ||
+                        shelter && guard.Duty!=GuardDuty.Posted &&
+                        (home==null || home.Count<2 || !samePoint(home[0],current) || !samePoint(home[home.Count-1],guard.Post)))
+                        yield break;
+                    var plan=GuardRefugeJourney.Create(entrance.BuildingKey,
+                        route.Points.ConvertAll(p=>new GuardPoint3{X=p.X,Z=p.Z}),null,
+                        departure,1.3,DaggerfallUnity.Instance.WorldTime.TimeScale);
+                    plan.HauntingShelter=shelter;
+                    var timing=GuardRefugeJourney.CopyValidated(plan);
+                    if(!shelter && !timing.ReleaseToReturnBy(guard.DayRestUntil))continue;
+                    Roster.TakeRefuge(guard.Id,plan,departure,home);
+                    if(!shelter)guard.Refuge.ReleaseToReturnBy(guard.DayRestUntil);
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARD_SHIFT_REST: "+guard.Id+"; shift="+guard.Shift+
+                        "; building="+entrance.BuildingKey+"; bedDeferred=true; hauntingShelter="+shelter);
+                    yield break;
                 }
             }
             finally { dayRestSurvey = null; }
+        }
+        private DaggerfallInterior restLayout;
+        private List<WallQuarterBeds.SurveyedBed> loadedRestBeds;
+        private List<List<GuardPoint3>> loadedRestFloors;
+
+        private void MaterializeDayRest(double now)
+        {
+            if(!interior) {restLayout=null;loadedRestBeds=null;loadedRestFloors=null;return;}
+            int building=interior.EntryDoor.buildingKey;
+            if(!Roster.Guards.Exists(g=>g.IsAlive && g.Refuge!=null && g.Refuge.BuildingKey==building && g.Refuge.RestPending))return;
+            if(!ReferenceEquals(restLayout,interior))
+            {
+                restLayout=interior;
+                loadedRestBeds=new List<WallQuarterBeds.SurveyedBed>();
+                loadedRestFloors=new List<List<GuardPoint3>>();
+                var beds=new List<BedAnchor>();
+                foreach(var furnished in WallQuarterBeds.Furnish(interior))beds.Add(furnished.Anchor);
+                beds.AddRange(BedGeometry.Read(interior));
+                var navigation=new InteriorGeometry(interior);
+                foreach(var bed in beds)
+                {
+                    Vector3 beside;
+                    if(!navigation.StandBesideBed(bed,out beside))continue;
+                    var route=navigation.RouteToExit(beside);
+                    if(route.Count<2)continue;
+                    route.Reverse();loadedRestBeds.Add(new WallQuarterBeds.SurveyedBed {Anchor=bed,EntranceRoute=route});
+                }
+                foreach(var anchor in navigation.LocalAnchors)
+                {
+                    var route=navigation.RouteToExit(interior.transform.TransformPoint(anchor));
+                    if(route.Count<2)continue;
+                    route.Reverse();loadedRestFloors.Add(route);
+                }
+            }
+            foreach(var guard in Roster.Guards)
+            {
+                var rest=guard.Refuge;
+                if(!guard.IsAlive || rest==null || !rest.RestPending || rest.BuildingKey!=building)continue;
+                var phase=rest.Evaluate(now).Phase;
+                if(phase!=RefugePhase.Approaching && phase!=RefugePhase.Sheltered)continue;
+                double returnBy=guard.DayRestUntil>now ? guard.DayRestUntil : GuardShifts.NextChange(now);
+                bool placed=false;
+                foreach(var bed in loadedRestBeds)
+                    if(RestDestinationAvailable(guard.Id,building,bed.EntranceRoute,bed.Anchor.RecordIndex) &&
+                        rest.MaterializeRest(bed.EntranceRoute,bed.Anchor.RecordIndex,now,returnBy))
+                    {placed=true;break;}
+                if(!placed)
+                    foreach(var route in loadedRestFloors)
+                        if(RestDestinationAvailable(guard.Id,building,route,null) &&
+                            rest.MaterializeRest(route,null,now,returnBy))break;
+            }
+        }
+
+        private bool RestDestinationAvailable(string guardId,int building,List<GuardPoint3> route,int? bed)
+        {
+            var destination=route[route.Count-1];
+            foreach(var other in Roster.Guards)
+            {
+                var rest=other.Refuge;
+                if(other.Id==guardId || rest==null || rest.BuildingKey!=building || rest.RestPending || rest.WallRoute!=null)continue;
+                var snapshot=rest.Evaluate(other.IsAlive ? Now() : other.DiedAt);
+                if(snapshot.Phase==RefugePhase.Returning || snapshot.Phase==RefugePhase.Complete)continue;
+                if(bed.HasValue && rest.RestBedRecord==bed)return false;
+                var point=other.IsAlive ? rest.Interior[rest.Interior.Count-1] : snapshot.Position;
+                if(point==null)continue;
+                double x=destination.X-point.X,z=destination.Z-point.Z;
+                if(Math.Abs(destination.Y-point.Y)<1.8 && x*x+z*z<.8*.8)return false;
+            }
+            return true;
         }
     }
 }

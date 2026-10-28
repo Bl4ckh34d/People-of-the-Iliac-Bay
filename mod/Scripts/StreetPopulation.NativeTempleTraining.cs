@@ -105,7 +105,11 @@ namespace PeopleOfTheIliacBay.DFU
         {
             point = Vector3.zero;
             Vector3 actual = actor.transform.position - Vector3.up;
-            Vector3 target = trainer.transform.position;
+            // Native RMB people are positioned at their billboard centre.
+            // Route and floor queries, like existing keeper standing positions,
+            // require the actual native foot point instead.
+            var billboard=trainer.GetComponent<DaggerfallBillboard>();
+            Vector3 target = trainer.transform.position-Vector3.up*(billboard?billboard.Summary.Size.y*.5f:1f);
             Vector3 away = actual - target; away.y = 0;
             if (away.sqrMagnitude < .001f) { away = -trainer.transform.forward; away.y = 0; }
             if (away.sqrMagnitude < .001f) away = Vector3.forward;

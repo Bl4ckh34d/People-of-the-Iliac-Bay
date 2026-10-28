@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Current-byte emotional thinking input copy; no generated atlas or historical setup is claimed.",
+  "createdUtc": "2026-10-22T05:51:37.991537+00:00",
+  "preparationMethod": "copied approved current source files and manifest-selected emotion phases by bytes",
+  "portraitRecord": 77,
+  "bank": "TFAC00I0.RCI",
+  "sourceWorkspace": "art/portraits/mobile-mouths/split-mask-prototype",
+  "emotionId": "angry",
+  "sourcePath": "original.png",
+  "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+  "sourceWidth": 64,
+  "sourceHeight": 64,
+  "splitY": 35,
+  "browLockEndY": 22,
+  "parentComponentHashes": {
+    "open": {
+      "file": "eyes/angry/open.png",
+      "sha256": "0eb0f97c4923cc2e927c00da5f428da6061819cea78ffcde5f82d6a42f72be38"
+    },
+    "half": {
+      "file": "eyes/angry/half.png",
+      "sha256": "548570818ae91851b3f9a6724677defe3aa7eb4c524923031e663b3c630569aa"
+    },
+    "closed": {
+      "file": "eyes/angry/closed.png",
+      "sha256": "2c0447861c32779d42b9b65be8c51e439d7c49ed235302a87eee8511e5d18ccd"
+    }
+  },
+  "parentManifestSha256": "ac89fa4f794a139cb0d3c761db8181967091da308cc823cf845106b949b40364",
+  "copiedInputs": {
+    "original.png": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+    "source-upper.png": "1ac0547d22fdefb5dda5874acd21aef2069bc8d55d05513b7724211ff9187db4",
+    "source-lower.png": "727ddb78360be5114c9c1296de4ceb023726055cf58b66d984bbe82061f30367",
+    "layout.json": "2b54678470e2778b95bda1524b157cd89b3cf477d226da07ee0c203d9500adc5",
+    "eyes/angry/open.png": "0eb0f97c4923cc2e927c00da5f428da6061819cea78ffcde5f82d6a42f72be38",
+    "eyes/angry/half.png": "548570818ae91851b3f9a6724677defe3aa7eb4c524923031e663b3c630569aa",
+    "eyes/angry/closed.png": "2c0447861c32779d42b9b65be8c51e439d7c49ed235302a87eee8511e5d18ccd"
+  },
+  "note": "No generated raw atlas, reference grid, or staging provenance exists yet; the updated emotional-input helper will create and bind the new grid later."
+}

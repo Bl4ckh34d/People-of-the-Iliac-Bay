@@ -1,0 +1,7 @@
+{
+  "prompt": "Use case: image edit\nAsset type: Daggerfall Unity NPC neutral thinking-eye atlas\nInput images: Image 1 is the exact source grid; preserve this NPC's face, neutral brows and original eye anatomy.\nComposition: Exact 2×2 pixel-art atlas on a 64:35 canvas; cells each 64×35 native pixels. Top-left: image-left glance, eyes open. Top-right: image-right glance, eyes open. Bottom-left: image-left glance, half blink. Bottom-right: image-right glance, half blink.\nConstraints: Preserve the exact narrow source aperture and lid contours, compact stepped iris/pupil size, actual gray-blue source hue, neutral brows, skin palette and identity. Shift only each iris/pupil cluster about one native pixel horizontally, keeping pupils inside each eye. Use tiny subdued source-like glints. Keep continuous lids and correct partial coverage in the half row. No widened openings, broad sclera bands, glint flashes, vertical/diagonal movement, color changes, makeup, text, borders or extra detail. Align cells exactly.",
+  "referenced_image_paths": [
+    "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc089-thinking-emotions\\neutral\\attempt-horizontal-v1\\thinking-reference-grid.png"
+  ],
+  "transparent_background": false
+}

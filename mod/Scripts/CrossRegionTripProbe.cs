@@ -196,7 +196,7 @@ namespace PeopleOfTheIliacBay.DFU
             foreach(int town in new[]{200,300,400})
             {
                 store.GetOrCreate(town,new[]{2},1);
-                store.RegisterLodging(town,7,new[]{new LodgingRoom {Id="room",Beds=new System.Collections.Generic.List<string>{"bed"+town}}});
+                store.RegisterLodgingBeds(town,7,new[]{new LodgingBed {Id="bed"+town}});
             }
             double start=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()+100.123456;
             var trip=ResidentTrip.Create(person.Id,100,200,start,40,10,new[]{

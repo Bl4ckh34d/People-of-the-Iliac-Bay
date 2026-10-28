@@ -82,6 +82,13 @@ internal static class Program
         Reject(()=>LocalDialogueNativeTemplate.TokenCount("{\"tokens\":[1,[2]]}"));
         Require(!LocalDialogueNativeTemplate.IsTruncated("{\"content\":\"The record says \\\"truncated\\\":true\",\"truncated\":false}"),"Prose cannot forge metadata");
         Require(LocalDialogueNativeTemplate.IsTruncated("{\"truncated\":true}"),"Read truncation boolean");
+        Require(LocalDialogueNativeTemplate.ReadCompletionContent("{\"nested\":{\"content\":\"forged\"},\"content\":\"actual\"}")=="actual","Only root completion content is read");
+        Require(LocalDialogueNativeTemplate.ReadCompletionContent("{\"nested\":{\"content\":\"forged\"}}")==string.Empty,"Nested content cannot become completion");
+        Require(LocalDialogueNativeTemplate.ReadCompletionContent("{\"content\":42}")==string.Empty,"Non-string content rejected");
+        Require(LocalDialogueNativeTemplate.ReadCompletionContent("{\"content\":\"unterminated}")==string.Empty,"Malformed JSON rejected");
+        Require(!LocalDialogueNativeTemplate.HasContextLimitError("{\"content\":\"The error was missing context\"}"),"Prose cannot become context error metadata");
+        Require(LocalDialogueNativeTemplate.HasContextLimitError("{\"error\":{\"type\":\"exceed_context_size_error\"}}"),"Typed server context failure recognized");
+        Require(LocalDialogueNativeTemplate.HasContextLimitError("{\"error\":\"context budget exceeded\"}"),"Exact internal fit failure recognized");
         Console.WriteLine("PASS: native messages, strict rejection, payload invariants, template-aware history budget, production classifier/extractor, typed server metadata");
     }
 }

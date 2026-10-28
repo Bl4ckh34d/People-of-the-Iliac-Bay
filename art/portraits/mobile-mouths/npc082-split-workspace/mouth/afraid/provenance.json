@@ -1,0 +1,22 @@
+{
+  "portraitRecord": 82,
+  "emotion": "afraid",
+  "asset": "viseme-atlas",
+  "generationMode": "built-in image_gen edit",
+  "layout": "3x3 row-major A B C / D E F / G H X",
+  "sourcePortrait": "art/portraits/mobile-mouths/npc082-split-workspace/original.png",
+  "sourcePortraitSha256": "37270c9eb3e1260c3774263d512bfd0bab8e144fef129b32a0f065c92aa48d26",
+  "reference": "art/portraits/mobile-mouths/npc082-split-workspace/mouth-reference-grid.png",
+  "referenceSha256": "8ea66062585e7c7159318ec4a9cf0f55485324ebfcbd412fdb6e841179667724",
+  "referenceDimensions": "1536x696",
+  "generatedSourcePath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-2ede-7fc1-b24a-9d18707baa51\\exec-3e2b7ba2-051d-4c74-aaa6-83b9bfe6cf90.png",
+  "output": "art/portraits/mobile-mouths/npc082-split-workspace/mouth/afraid/raw.png",
+  "outputDimensions": "1863x844",
+  "outputSha256": "51972ba5576479c65b14af563db3b79ffbbecc57d6035b506f6d50f3faeab71e",
+  "prompt": "Use case: precise-object-edit. Asset type: pixel-art NPC portrait mouth viseme atlas. Input image: Image 1 is NPC082's exact 3x3 repeated lower-face reference grid; preserve its character identity, native pixel-art scale, palette, framing, jaw, nose, hair and neck. Create a 3x3 sheet in row-major A B C / D E F / G H X order, with nine genuinely distinct readable visemes: A closed, B teeth together, C small open, D wide open, E rounded open, F puckered, G upper teeth, H tongue visible, X resting closed. Keep mouth shapes compact at the original lip scale and inside the original mouth footprint. Emotion is afraid/alarmed: tense uncertain corners, restrained fear, no extreme grimace. Preserve the source's muted rose-brown lips, soft contrast and original skin tone exactly; no lipstick-red lips and no orange skin. Teeth should be small and subdued, not bright white flashes; dark cavities remain restrained. Keep all non-mouth details and full lower-half framing consistent across cells. No changed face geometry, no extra object, text, watermark, photorealism, hard outlines, or separate mouth enlargement.",
+  "visibleQaIssues": [
+    "3x3 atlas contains distinct closed, teeth, small/wide open, rounded, puckered, tongue and rest poses.",
+    "Teeth cells appear bright against the muted source; one/two teeth shapes may be visually similar.",
+    "Lip saturation appears slightly stronger than reference; skin warmth/color should be checked after native composition. No palette correction performed."
+  ]
+}

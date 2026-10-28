@@ -19,6 +19,7 @@ namespace PeopleOfTheIliacBay.DFU
             public int BuildingKey;
             public GridCell Cell;
             public Vector3 LocalDoor;
+            internal bool NativeStreetConnected;
         }
         private readonly CityNavigation navigation;
         private readonly Transform origin;
@@ -46,6 +47,16 @@ namespace PeopleOfTheIliacBay.DFU
         public System.Collections.IEnumerator ReadEntranceSteps()
         {
             var found=new SortedDictionary<int,Entrance>();
+            Vector3 street=Vector3.zero;bool hasStreet=false;
+            if(UsesNativeNavigation)
+                foreach(var gate in origin.GetComponentsInChildren<DaggerfallCityGate>())
+                {
+                    NativeCityGateNavigation.Aperture aperture;
+                    if(!NativeCityGateNavigation.TryAperture(gate,SceneCell(new GridCell(Width/2,Height/2)),out aperture))continue;
+                    var local=origin.InverseTransformPoint(aperture.Inner);NavMeshHit sample;
+                    if(!NavMesh.SamplePosition(ScenePoint(new RoutePoint(local.x,local.z)),out sample,0.4f,NavMesh.AllAreas))continue;
+                    street=sample.position;hasStreet=true;break;
+                }
             int work=0;
             foreach (var owner in directory.GetComponentsInChildren<DaggerfallStaticDoors>())
             {
@@ -63,10 +74,19 @@ namespace PeopleOfTheIliacBay.DFU
                     GridCell cell;
                     if (!FindEntranceCell(door, out cell)) { RejectedDoors++; continue; }
                     Vector3 local = origin.InverseTransformPoint(door);
+                    bool connected=false;
+                    if(hasStreet)
+                    {
+                        NavMeshHit end;var path=new NavMeshPath();
+                        connected=NavMesh.SamplePosition(ScenePoint(new RoutePoint(local.x,local.z)),out end,0.4f,NavMesh.AllAreas) &&
+                            NavMesh.CalculatePath(street,end.position,NavMesh.AllAreas,path) && path.status==NavMeshPathStatus.PathComplete;
+                    }
                     Entrance existing;
-                    // Multiple entrances: stable geometric ordering, never hierarchy order.
-                    if (found.TryGetValue(key, out existing) && Compare(local, existing.LocalDoor) >= 0) continue;
-                    found[key] = new Entrance { BuildingKey = key, Cell = cell, LocalDoor = local };
+                    // Prefer the actual exterior-connected door over disconnected
+                    // door islands, retaining stable ordering and fallback elsewhere.
+                    if (found.TryGetValue(key, out existing) &&
+                        (existing.NativeStreetConnected && !connected || existing.NativeStreetConnected==connected && Compare(local,existing.LocalDoor)>=0))continue;
+                    found[key] = new Entrance { BuildingKey = key, Cell = cell, LocalDoor = local,NativeStreetConnected=connected };
                 }
             }
             Entrances.Clear();
@@ -186,10 +206,12 @@ namespace PeopleOfTheIliacBay.DFU
             var path=new NavMeshPath();
             if(!NavMesh.CalculatePath(start.position,end.position,NavMesh.AllAreas,path) ||
                 path.status!=NavMeshPathStatus.PathComplete)return true;
+            var corners=path.corners;
+            if(!NativeNavigationWorld.Current.ClearCityGatePath(corners))return true;
             // Store the same route used by the native mover. Grid detours would
             // otherwise inflate walking times and leave early arrivals at doors.
             result=new List<SavedRoutePoint>{new SavedRoutePoint {X=localFrom.x,Z=localFrom.z}};
-            foreach(var corner in path.corners)
+            foreach(var corner in corners)
             {
                 var local=origin.InverseTransformPoint(corner);var last=result[result.Count-1];
                 if(Math.Abs(last.X-local.x)+Math.Abs(last.Z-local.z)>0.01)

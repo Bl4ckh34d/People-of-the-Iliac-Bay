@@ -1,0 +1,165 @@
+﻿{
+    "kind":  "derived-whole-native-cell-atlas",
+    "status":  "review-candidate",
+    "portraitRecord":  79,
+    "sourceRaw":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait079-happy-mouth-contract-v2\\source\\happy-v1-raw.png",
+    "sourceRawSha256":  "2b67f0e8038b73929c4b1122284cdeb0d8ea4e1b158bc34d2de2f02b6f64ef04",
+    "sourceRawDimensions":  [
+                                1863,
+                                844
+                            ],
+    "sourceLower":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait079-happy-mouth-contract-v2\\source\\source-lower.png",
+    "sourceLowerSha256":  "1b6897e2dbbb5efea3b70f83544169ae8044f79b5ff42e55e5e0c3997d09326b",
+    "sourceOriginal":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait079-happy-mouth-contract-v2\\candidate\\original.png",
+    "sourceOriginalSha256":  "70b1b52df73159543afd5776eae7565bfd3619fd31bc5fd90af674e42520d460",
+    "v1SelectedRaw":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait079-happy-mouth-contract-v1\\candidate\\mouth\\happy\\contract-v1\\raw.png",
+    "v1SelectedRawSha256":  "2b67f0e8038b73929c4b1122284cdeb0d8ea4e1b158bc34d2de2f02b6f64ef04",
+    "sampling":  {
+                     "interpolation":  "NearestNeighbor",
+                     "pixelOffsetMode":  "Half",
+                     "targetCell":  [
+                                        64,
+                                        29
+                                    ],
+                     "cellOrder":  "A B C / D E F / G H X",
+                     "atlas":  [
+                                   192,
+                                   87
+                               ],
+                     "compositingMode":  "SourceCopy"
+                 },
+    "registration":  {
+                         "teethOnlyEdit":  false,
+                         "newGeneration":  false,
+                         "shape":  "H",
+                         "offsetX":  0,
+                         "cellIndex":  7,
+                         "vacatedTopRow":  "original lower-half row 0",
+                         "mouthCropResize":  false,
+                         "scope":  "entire native raw cell before existing mouth mask and feather",
+                         "offsetY":  1,
+                         "recolor":  false
+                     },
+    "cells":  [
+                  {
+                      "cellIndex":  0,
+                      "shape":  "A",
+                      "sourceBounds":  {
+                                           "left":  0,
+                                           "width":  621,
+                                           "top":  0,
+                                           "height":  281
+                                       },
+                      "changedPixels":  0,
+                      "method":  "standard native whole-cell sample; unchanged"
+                  },
+                  {
+                      "cellIndex":  1,
+                      "shape":  "B",
+                      "sourceBounds":  {
+                                           "left":  621,
+                                           "width":  621,
+                                           "top":  0,
+                                           "height":  281
+                                       },
+                      "changedPixels":  0,
+                      "method":  "standard native whole-cell sample; unchanged"
+                  },
+                  {
+                      "cellIndex":  2,
+                      "shape":  "C",
+                      "sourceBounds":  {
+                                           "left":  1242,
+                                           "width":  621,
+                                           "top":  0,
+                                           "height":  281
+                                       },
+                      "changedPixels":  0,
+                      "method":  "standard native whole-cell sample; unchanged"
+                  },
+                  {
+                      "cellIndex":  3,
+                      "shape":  "D",
+                      "sourceBounds":  {
+                                           "left":  0,
+                                           "width":  621,
+                                           "top":  281,
+                                           "height":  281
+                                       },
+                      "changedPixels":  0,
+                      "method":  "standard native whole-cell sample; unchanged"
+                  },
+                  {
+                      "cellIndex":  4,
+                      "shape":  "E",
+                      "sourceBounds":  {
+                                           "left":  621,
+                                           "width":  621,
+                                           "top":  281,
+                                           "height":  281
+                                       },
+                      "changedPixels":  0,
+                      "method":  "standard native whole-cell sample; unchanged"
+                  },
+                  {
+                      "cellIndex":  5,
+                      "shape":  "F",
+                      "sourceBounds":  {
+                                           "left":  1242,
+                                           "width":  621,
+                                           "top":  281,
+                                           "height":  281
+                                       },
+                      "changedPixels":  0,
+                      "method":  "standard native whole-cell sample; unchanged"
+                  },
+                  {
+                      "cellIndex":  6,
+                      "shape":  "G",
+                      "sourceBounds":  {
+                                           "left":  0,
+                                           "width":  621,
+                                           "top":  562,
+                                           "height":  282
+                                       },
+                      "changedPixels":  0,
+                      "method":  "standard native whole-cell sample; unchanged"
+                  },
+                  {
+                      "cellIndex":  7,
+                      "shape":  "H",
+                      "sourceBounds":  {
+                                           "left":  621,
+                                           "width":  621,
+                                           "top":  562,
+                                           "height":  282
+                                       },
+                      "changedPixels":  1710,
+                      "method":  "whole-cell rigid offset (0,+1), from original raw native cell; vacated top row filled from original lower-half row 0"
+                  },
+                  {
+                      "cellIndex":  8,
+                      "shape":  "X",
+                      "sourceBounds":  {
+                                           "left":  1242,
+                                           "width":  621,
+                                           "top":  562,
+                                           "height":  282
+                                       },
+                      "changedPixels":  0,
+                      "method":  "standard native whole-cell sample; unchanged"
+                  }
+              ],
+    "output":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait079-happy-mouth-contract-v2\\candidate\\candidates\\happy-mouth-contract-v2-derived\\raw.png",
+    "outputSha256":  "de059767432f08047674edb8f04afc38aa0badaa474299e772f337d3ef6f7562",
+    "outputDimensions":  [
+                             192,
+                             87
+                         ],
+    "selectedCandidateLayout":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait079-happy-mouth-contract-v2\\candidate\\layout.json",
+    "selectedCandidateLayoutSha256":  "2ecdd29c527648e86ee11615f6db388b3feafd3431ba309d9a11876b7ff6f972",
+    "sourceProvenance":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait079-happy-mouth-contract-v2\\source\\happy-v1-raw-provenance.json",
+    "sourceProvenanceSha256":  "0797db586f5da597070c0dcde7ac131d8061d4222144870185662c7c8825477a",
+    "otherEightRawCellsUnchanged":  true,
+    "v1Preserved":  true
+}

@@ -1,0 +1,15 @@
+{
+  "portraitRecord":88,
+  "bank":"TFAC00I0.RCI",
+  "width":64,
+  "height":64,
+  "splitY":35,
+  "browLockEndY":18,
+  "eyeRegions":[
+    {"x":12,"y":12,"width":18,"height":19},
+    {"x":36,"y":12,"width":19,"height":19}
+  ],
+  "mouthRegion":{"x":21,"y":39,"width":23,"height":15},
+  "eyeFeatureLocks":[],
+  "maskBoundsRationale":"Parent inspected actual088 native8x and numbered coordinate grid. Brows16..18, eye detail20..27 and lower shadow through28. browEnd18 precedes upper lid and irises. Expanded eye headroom allows raised emotion brows without clipping; mouth39..53 allows wide AA below original lips40..45. Preserve asymmetric gray-violet irises and muted brown lips. Do not inherit87 pixel locks, geometry or color policy. These are safety envelopes, not repaint regions."
+}

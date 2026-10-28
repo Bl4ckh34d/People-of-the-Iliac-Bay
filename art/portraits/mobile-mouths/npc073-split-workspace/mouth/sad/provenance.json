@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T10:07:26.9133533Z",
+    "portraitRecord":  73,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "sad",
+    "prompt":  "Create a crisp pixel-art speech-mouth atlas for the exact NPC073 face in a restrained SAD expression. Use the supplied single 3×3 reference grid as the identity, original lip scale and center, jaw, nose, blue wand, neck, hair, background registration, palette, and native-pixel guide.\n\nCanvas: exactly 3 columns by 3 rows, with every cell the same complete lower-half crop of 64×29 native pixels; overall aspect ratio 64:29. No labels, gutters, borders, margins, text, or extra panels. Row-major cells are A B C / D E F / G H X.\n\nUse these actual Rhubarb mouth-shape definitions exactly:\nA: Closed lips with light pressure for P, B, M.\nB: Slightly open, nearly together teeth; narrow horizontal opening for most consonants and EE.\nC: Medium open mouth with relaxed unrounded lips for EH and AE.\nD: Wide vertical opening for an open vowel AA; larger than C.\nE: Slightly rounded lips with an opening no wider than C for AO and ER.\nF: Puckered rounded lips with a small forward opening for UW, OW, W; not a tooth bite.\nG: Upper teeth touch lower lip for F and V; not a wide open vowel.\nH: Tongue raised behind upper teeth for long L, with an opening between C and D; tongue may be small or invisible at native scale.\nX: Relaxed closed idle lips.\n\nKeep the SAD mood restrained and consistent across poses: subtly lowered corners and soft lip tension, not a severe frown or complete smile. Preserve the source small muted pink/terracotta lips and exact mouth center, jaw, nose, chin, neck, hair, blue wand, and lower-half registration. Where teeth are visible, use muted neutral ivory/gray clearly distinct from skin, with modest mouth-cavity contrast. Do not use lipstick-red lips, warm skin-colored teeth, tooth gaps, bright white shiny teeth, excessive dark cavity, exaggerated corners, or a large surrounding skin repaint. Keep every phoneme pose recognizable. Crisp stepped native pixel clusters; no blur, smoothing, antialiasing, resampling, or vector shapes.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-a5e466db-b2ea-41bb-bdf3-e5dbd96ff383.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-a5e466db-b2ea-41bb-bdf3-e5dbd96ff383.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "8505d9e9fde3c536cf08958e97076aba44aa5d60e2e76ba6fc3fdb1384b8d643",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "9de10294b0248c194428d55abb5ba8cd5db8e0fc0f5225856c816e765b076f52",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-a5e466db-b2ea-41bb-bdf3-e5dbd96ff383.png",
+                      "sha256":  "a893e00cd63ea4ff814987789a4ef43239d5cafbe96eb0a99737168c60d0cd8a",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/sad/raw.png",
+                "sha256":  "a893e00cd63ea4ff814987789a4ef43239d5cafbe96eb0a99737168c60d0cd8a",
+                "width":  1863,
+                "height":  844
+            }
+}

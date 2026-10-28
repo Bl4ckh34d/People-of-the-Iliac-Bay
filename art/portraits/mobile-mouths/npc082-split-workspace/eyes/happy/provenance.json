@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "portrait": "npc082",
+  "emotion": "happy",
+  "artifact": "eyes-2x2",
+  "tool": "built-in image_gen",
+  "toolCallCountForThisArtifact": 1,
+  "prompt": "Edit Image 1, the NPC082 upper-portrait 2×2 reference grid. Return one complete 2×2 atlas with the same four equal cells, same framing, and no labels. Each cell is a full upper half from the same original 64×35 portrait enlarged in the reference, not a new crop. Row-major: open, half-closed, fully closed, repeat-open. Make the expression clearly warm and friendly: gently relaxed, slightly lifted brows and soft smiling eyes with a mild lift to the lower eye corners. Keep brow shape, height, and angle identical across all four phases; no angry V or harsh dark eyebrow bars. Preserve the original identity, head/hair contour, forehead, spacing, face geometry, soft muted palette, pixel clusters and background exactly. Keep pupils and irises the same size and horizontal position as in the open pose; half-lids descend over stationary eyeballs, and closed lids fully cover both eyes with no iris remnants. The repeat-open pose matches open. No upward gaze jumps, iris shrinkage, new whites, blur, smoothing, extra contrast, extra orange skin, or other facial edits. Crisp pixel art, no text or borders.",
+  "sourceOriginal": {
+    "path": "art/portraits/mobile-mouths/npc082-split-workspace/original.png",
+    "sha256": "37270c9eb3e1260c3774263d512bfd0bab8e144fef129b32a0f065c92aa48d26",
+    "dimensions": [
+      64,
+      64
+    ]
+  },
+  "referenceGrid": {
+    "path": "art/portraits/mobile-mouths/npc082-split-workspace/eyes-reference-grid.png",
+    "sha256": "8bae461f66a90aa6765a4ab9879e23172d11eb901b6551fe0f910224c970d5a7",
+    "dimensions": [
+      1024,
+      560
+    ],
+    "expectedLayout": "2x2 open, half-closed, closed, repeated open"
+  },
+  "exactOutputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-8b98-7181-a1df-84e7b766303c as C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-8b98-7181-a1df-84e7b766303c\\exec-3d72533e-f69f-41ab-b9d7-14d7731c5cc4.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+  "exactOutputPathParsedFromHint": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-8b98-7181-a1df-84e7b766303c\\exec-3d72533e-f69f-41ab-b9d7-14d7731c5cc4.png",
+  "savedRaw": {
+    "path": "art/portraits/mobile-mouths/npc082-split-workspace/eyes/happy/raw.png",
+    "copiedByteForByteFromExactOutputHint": true,
+    "resizedOrPostProcessed": false
+  },
+  "limitations": [
+    "Generated dimensions and exact per-pixel feature placement must be inspected; no user visual acceptance claimed."
+  ]
+}

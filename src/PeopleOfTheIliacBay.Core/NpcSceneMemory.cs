@@ -203,6 +203,9 @@ namespace PeopleOfTheIliacBay.Core
                 SubjectId=subject,ResponsibleId=responsible});
             var entries=SceneMemoriesFor(observer,true);
             foreach(var previous in entries)if(previous.EventId==eventId && previous.Kind==kind)return false;
+            NpcSceneMemorySummary refinement=null;
+            if(HasSummarizedSceneEvent(observer,eventId,kind) &&
+                (refinement=SummarizedSceneActorRefinement(memory))==null)return false;
             // Age out background detail before applying the per-person bound.
             for(int i=entries.Count-1;i>=0;i--)
                 if(at>=entries[i].ExpiresAt)
@@ -210,24 +213,45 @@ namespace PeopleOfTheIliacBay.Core
             if(entries.Count>=32)
             {
                 NpcSceneMemory least=entries[0];
+                NpcSceneMemory redundant=null;
                 foreach(var previous in entries)
+                {
+                    if(SceneFactHasSummary(previous) && (redundant==null || previous.At<redundant.At))redundant=previous;
                     if(previous.Salience<least.Salience || previous.Salience==least.Salience && previous.At<least.At)least=previous;
-                if(least.Salience>memory.Salience)return false;
+                }
+                // A stored compact source already preserves this exact fact.
+                // Its redundant raw copy must not exclude a new actual event.
+                if(redundant!=null)least=redundant;
+                else if(least.Salience>memory.Salience && refinement==null)return false;
                 entries.Remove(least);state.SceneMemories.Remove(least);
+            }
+            if(refinement!=null)
+            {
+                // Native refinement replaces a retained source, never its time.
+                // Consolidate again only at the next actual recall.
+                refinement.Sources.RemoveAll(x=>x.EventId==eventId);
+                if(refinement.Sources.Count==0)RemoveSceneSummary(SceneSummariesFor(observer,false),refinement);
             }
             entries.Add(memory);state.SceneMemories.Add(memory);SceneMemoryRevision++;return true;
         }
         public string RecallSceneEvents(string observer,double now,int maximumCharacters=1200)
+        {return RecallSceneEvents(observer,now,maximumCharacters,true);}
+        private string RecallSceneEvents(string observer,double now,int maximumCharacters,bool consolidate)
         {
             if(string.IsNullOrWhiteSpace(observer)||!Finite(now)||now<0||maximumCharacters<128||maximumCharacters>2000)
                 throw new ArgumentException("Invalid scene recall request.");
-            var entries=SceneMemoriesFor(observer,false);if(entries==null)return "";
+            var entries=SceneMemoriesFor(observer,false);
+            if(consolidate)ConsolidateSceneMemories(observer,now,entries);
+            var covered=new HashSet<string>(StringComparer.Ordinal);
+            string summaries=RenderSceneSummaries(observer,now,maximumCharacters/2,covered);
             var eligible=new List<NpcSceneMemory>();
-            foreach(var entry in entries)if(now>=entry.At && now<entry.ExpiresAt)eligible.Add(entry);
+            if(entries!=null)foreach(var entry in entries)if(now>=entry.At && now<entry.ExpiresAt &&
+                !covered.Contains(((int)entry.Kind).ToString(CultureInfo.InvariantCulture)+"\n"+entry.EventId))eligible.Add(entry);
             eligible.Sort((a,b)=>{int importance=RecallPriority(b,now).CompareTo(RecallPriority(a,now));
                 return importance!=0?importance:b.At.CompareTo(a.At);});
-            if(eligible.Count==0)return "";
+            if(eligible.Count==0 && summaries.Length==0)return "";
             var text=new StringBuilder("Personal recollections (past observations, not proof of what is happening now): ");
+            int headingLength=text.Length;
             foreach(var entry in eligible)
             {
                 double age=now-entry.At;
@@ -235,10 +259,11 @@ namespace PeopleOfTheIliacBay.Core
                     ((int)(age/86400)).ToString(CultureInfo.InvariantCulture)+" days ago";
                 string feeling=entry.Valence==0?"neutral":entry.Valence>0?"positive +"+entry.Valence:"negative "+entry.Valence;
                 string line="["+when+"; my evaluation "+feeling+"] "+entry.Observation+" ";
-                if(text.Length+line.Length>maximumCharacters)continue;
+                if(text.Length+line.Length+summaries.Length>maximumCharacters)continue;
                 text.Append(line);
             }
-            return text.ToString();
+            text.Append(summaries);
+            return text.Length==headingLength?"":text.ToString();
         }
         private static int RecallPriority(NpcSceneMemory memory,double now)
         {

@@ -24,7 +24,7 @@ namespace PeopleOfTheIliacBay.DFU
             Require(body.GetComponent<DaggerfallEnemy>().LoadID!=0,"Native murderer lacks stable LoadID.");
             Quiesce(entity);entity.GetComponent<EnemyAttack>().enabled=true;return entity;
         }
-        internal static void Attack(DaggerfallEntityBehaviour killer,ResidentActor victim,bool armed)
+        internal static void Attack(DaggerfallEntityBehaviour killer,ResidentActor victim,bool armed,bool verifyConcealment=true)
         {
             Quiesce(killer);killer.Entity.Level=10;
             killer.Entity.Skills.SetPermanentSkillValue(DaggerfallConnect.DFCareer.Skills.HandToHand,100);
@@ -36,17 +36,17 @@ namespace PeopleOfTheIliacBay.DFU
             var effects=killer.GetComponent<EntityEffectManager>();
             var concealment=effects.CreateSpellBundle(InvisibilityNormal.EffectKey,ElementTypes.Magic,
                 new EffectSettings{DurationBase=2000,DurationPerLevel=1});
-            effects.AssignBundle(concealment,AssignBundleFlags.BypassSavingThrows|AssignBundleFlags.BypassChance);
+            if(verifyConcealment)effects.AssignBundle(concealment,AssignBundleFlags.BypassSavingThrows|AssignBundleFlags.BypassChance);
             var normal=effects.FindIncumbentEffect<InvisibilityNormal>();
-            Require(normal!=null && !normal.HasEnded && killer.Entity.IsMagicallyConcealedNormalPower,
+            Require(!verifyConcealment || normal!=null && !normal.HasEnded && killer.Entity.IsMagicallyConcealedNormalPower,
                 "Native incoming-melee fixture did not start normal-power invisibility.");
             var hit=typeof(EnemyAttack).GetMethod("ApplyDamageToNonPlayer",BindingFlags.Instance|BindingFlags.NonPublic);
             for(int i=0;i<30 && victim.Resident.IsAlive;i++)
                 hit.Invoke(killer.GetComponent<EnemyAttack>(),new object[]{weapon,victim.transform.position-killer.transform.position,false});
             Require(!victim.Resident.IsAlive,"Native NPC melee did not kill the controlled injured resident.");
-            Require(normal.HasEnded && !killer.Entity.IsMagicallyConcealedNormalPower,
+            Require(!verifyConcealment || normal.HasEnded && !killer.Entity.IsMagicallyConcealedNormalPower,
                 "Native NPC hit on an actual civilian retained normal-power invisibility.");
-            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_CIVILIAN_HIT_CONCEALMENT_PASS: normalEffectEnded=true; nativeMelee=true; actualCivilianEntity=true; armed="+armed);
+            if(verifyConcealment)Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_CIVILIAN_HIT_CONCEALMENT_PASS: normalEffectEnded=true; nativeMelee=true; actualCivilianEntity=true; armed="+armed);
             Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_NPC_MURDER_ATTACK_PASS: nativeMelee=true; actualCivilianEntity=true; sourceIsNpc=true; playerUncharged=true; armed="+armed);
         }
         private static void Quiesce(DaggerfallEntityBehaviour body)

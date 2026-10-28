@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T04:13:35.9617059Z",
+    "portraitRecord":  90,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "guarded",
+    "prompt":  "Use case: stylized-concept. Asset type: pixel-art speech atlas for native 64×29 lower portrait half. Edit only the supplied local reference grid. Image 1 is the inspected exact 3×3 grid of nine identical original lower halves enlarged 8×. Preserve exact 3×3 row-major cells, native mouth scale, exact 64:29 overall aspect ratio, pixel lattice, and lower-half crop. No labels, letters, borders, grid lines, padding, or extra cells.\n\nCreate nine distinct but restrained guarded / skeptical mouth poses. Preserve the person and all lower-face anatomy. Keep nose, nose shadow, cheeks, jaw, chin, hair, neck, skin, clothing, and background unchanged from reference in shape, location, color, texture, and pixels. Change only the mouth and the tiny interior area required for each viseme. Match the source\u0027s muted tan-brown skin exactly; do not brighten, warm, orange, copper-shift, smooth, repaint, or add skin. Keep lips dark muted brown, soft low contrast. No red lipstick, orange skin, blue marks, bright white teeth, cartoon scale, or photo detail. A and X remain closed, subtle doubtful guarded poses, never angry. Open poses remain small and natural, never shouting or smiling broadly.\n\nRow-major cells must follow full Rhubarb pose definitions:\nA: closed pressured lips for P/B/M, restrained skeptical tension.\nB: narrow opening with nearly together teeth for consonants and EE.\nC: medium unrounded opening for EH/AE.\nD: wide AA opening.\nE: slightly rounded AO/ER opening, no wider than C.\nF: puckered lips for UW/OW/W.\nG: upper teeth touching lower lip for F/V, with clear subtle contact.\nH: tongue raised behind upper teeth for L, opening between C and D.\nX: relaxed closed idle lips, still subtly guarded.\n\nUse dark oral cavity and muted ivory only where required. Keep skin and all non-mouth regions visually source-exact. Deliver clean atlas only.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161cc-e1ce-7d23-a48b-7b5d73a7b8a6 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161cc-e1ce-7d23-a48b-7b5d73a7b8a6\\exec-31f8f5f4-a972-4f51-985a-cf3bb1b29145.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161cc-e1ce-7d23-a48b-7b5d73a7b8a6\\exec-31f8f5f4-a972-4f51-985a-cf3bb1b29145.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "b8b0a0da8a68fea050774dbe95633fcb561aa0d4a4b316a787b9831b46247489",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "6d0e071a4214165c5ddd1c2776549d45f2ec9da101b32701771a203ab73c1de2",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161cc-e1ce-7d23-a48b-7b5d73a7b8a6\\exec-31f8f5f4-a972-4f51-985a-cf3bb1b29145.png",
+                      "sha256":  "c83278e13e91c36bd501b773a2b62747aec652a155573808bf1a98060ee9e7a1",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/guarded/raw.png",
+                "sha256":  "c83278e13e91c36bd501b773a2b62747aec652a155573808bf1a98060ee9e7a1",
+                "width":  1863,
+                "height":  844
+            }
+}

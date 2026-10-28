@@ -25,16 +25,10 @@ namespace PeopleOfTheIliacBay.Tests
         }
         private static void SkipOnlyInfeasibleStop()
         {
-            var plan=Build(Routine(),9*3600+50*60);
-            Check.Equal(100,plan.SettlementId);
-            Check.Equal(1,plan.SkippedStopIndices.Count); Check.Equal(0,plan.SkippedStopIndices[0]);
-            Check.Equal(2,plan.Legs.Count); Check.Equal(30,plan.Legs[0].BuildingKey);
-            Check.Equal(1,plan.Legs[0].OriginalStopIndex);
-            Check.Near(10*3600+100,plan.Legs[0].EnterAt); Check.Near(11*3600+100,plan.Legs[0].LeaveAt);
-            Check.True(plan.Legs[1].ReturnsHome); Check.Equal(10,plan.Legs[1].BuildingKey);
-            Check.Near(200,plan.Legs[0].ArriveAt-plan.Legs[0].WalkAt);
-            Check.Equal(Activity.Visit,plan.Evaluate(10*3600+200).Activity);
-            Check.Equal(30,plan.Evaluate(10*3600+200).BuildingKey);
+            var plan=Build(Routine(),9*3600+50*60,30);
+            Check.Equal(2,plan.SkippedStopIndices.Count);Check.Equal(1,plan.Legs.Count);
+            Check.True(plan.Legs[0].ReturnsHome);Check.Near(200,plan.EndsAt-plan.DepartAt);
+            Check.Equal(Activity.Travel,plan.Evaluate(plan.DepartAt+100).Activity);
             Check.Equal(Activity.Home,plan.Evaluate(plan.EndsAt).Activity);
             Check.Equal(Activity.Sleep,plan.Evaluate(22*3600).Activity);
         }
@@ -55,7 +49,7 @@ namespace PeopleOfTheIliacBay.Tests
             var meeting=plan.Legs.Find(l=>l.AppointmentId=="meeting");
             Check.True(meeting!=null); Check.Equal(-1,meeting.OriginalStopIndex);
             Check.Near(booking.StartsAt,meeting.EnterAt); Check.Near(booking.EndsAt+30,meeting.LeaveAt);
-            Check.Equal(30,plan.Legs[0].BuildingKey);
+            Check.Equal("meeting",plan.Legs[0].AppointmentId);
             var missed=BuildRequest(Routine(),12*3600+10,10,new[]{booking},out var reason);
             Check.True(missed==null,"Recovery silently moved or erased an unreachable required appointment.");
             Check.True(reason.Contains("appointment"));
@@ -97,10 +91,10 @@ namespace PeopleOfTheIliacBay.Tests
             Check.True(plan.OriginOutside);Check.Near(now,plan.CreatedAt);Check.Near(exitAt,plan.DepartAt);
             Check.True(plan.SkippedStopIndices.Contains(0),"No-show departure replayed the source visit.");
             Check.True(!plan.Legs.Exists(leg=>leg.AppointmentId==booking.Id));
-            Check.Equal(30,plan.Legs[0].BuildingKey);Check.True(plan.Legs[plan.Legs.Count-1].ReturnsHome);
+            Check.Equal(10,plan.Legs[0].BuildingKey);Check.True(plan.Legs[0].ReturnsHome);
             Check.Near(100,plan.Legs[0].Route[0].X);
             Check.Near(100,plan.Evaluate(exitAt).Position.X);
-            Check.Equal(Activity.Visit,plan.Evaluate(plan.Legs[0].EnterAt).Activity);
+            Check.Equal(Activity.Home,plan.Evaluate(plan.Legs[0].EnterAt).Activity);
             Check.Equal(Activity.Home,plan.Evaluate(plan.EndsAt).Activity);
         }
         private static void FingerprintCoversTimingAndGeometry()
@@ -126,7 +120,7 @@ namespace PeopleOfTheIliacBay.Tests
         private static void MalformedContinuationRejected()
         {
             var plan=Build(Routine(),9*3600+50*60);
-            plan.Legs[1].Route[0].X++;
+            plan.Legs[0].Route.Insert(1,new SavedRoutePoint {X=50,Z=double.NaN});
             Check.Throws<ArgumentException>(()=>RoutineRecoveryPlan.Copy(plan));
             Check.True(BuildRequest(Routine(),9*3600,99,null,out var reason)==null);
             Check.True(!string.IsNullOrEmpty(reason));
@@ -134,23 +128,23 @@ namespace PeopleOfTheIliacBay.Tests
         private static void ResumeCurrentVisitWithoutExtendingItsWindow()
         {
             var plan=Build(Routine(),9*3600+30*60,20);
-            Check.True(!plan.SkippedStopIndices.Contains(0),"Current visit was discarded only because local resume took ten seconds.");
-            Check.Equal(20,plan.Legs[0].BuildingKey); Check.Near(10*3600,plan.Legs[0].LeaveAt);
-            Check.Equal(30,plan.Legs[1].BuildingKey);
+            Check.True(plan.SkippedStopIndices.Contains(0));Check.True(plan.SkippedStopIndices.Contains(1));
+            Check.Equal(1,plan.Legs.Count);Check.True(plan.Legs[0].ReturnsHome);
+            Check.Near(100,plan.Legs[0].Route[0].X);
         }
         private static void OutsideOriginSkipsCurrentSourceStopAndKeepsLaterStop()
         {
             var plan=Build(Routine(),9*3600+30*60,20,null,true);
             Check.True(plan.OriginOutside);
             Check.True(plan.SkippedStopIndices.Contains(0),"Outdoor recovery re-entered the current source visit.");
-            Check.True(plan.Legs.Exists(l=>l.OriginalStopIndex==1&&l.BuildingKey==30),"Outdoor recovery dropped later feasible visit.");
+            Check.True(!plan.Legs.Exists(l=>l.OriginalStopIndex>=0),"Outdoor recovery replayed optional errands.");
         }
         private static void OutsideOriginKeepsFutureVisitAtSameBuilding()
         {
             var plan=Build(Routine(),8*3600+50*60,20,null,true);
             Check.True(plan.OriginOutside);
-            Check.True(!plan.SkippedStopIndices.Contains(0),"Future visit at actual origin was skipped.");
-            Check.Equal(20,plan.Legs[0].BuildingKey);
+            Check.True(plan.SkippedStopIndices.Contains(0),"Recovery replayed future optional visit.");
+            Check.True(plan.Legs[0].ReturnsHome);
         }
         private static void OutsideOriginStillKeepsRequiredAppointmentAtSource()
         {
@@ -166,15 +160,12 @@ namespace PeopleOfTheIliacBay.Tests
         {
             var routine=Routine();
             var original=DailySchedule.ItineraryDay(10,routine.Itinerary,routine.ItineraryDepartureSeconds,360,1320);
-            Check.True(RoutineRecoveryPlanner.TryCreate(100,Person(),routine,original,null,0,9*3600+30*60,20,
-                9*3600+30*60+10,360,1320,1,out var first,out var reason),reason);
+            var first=Build(routine,9*3600+30*60,20);
             var resumed=DailySchedule.ContinueDay(original,first);
-            Check.Near(9*3600+30*60+10,resumed.ScheduledVisits()[0].EnterAt);
             Check.True(RoutineRecoveryPlanner.TryCreate(100,Person(),routine,resumed,null,0,9*3600+31*60,20,
-                9*3600+31*60+10,360,1320,1,out var second,out reason),reason);
-            Check.True(!second.SkippedStopIndices.Contains(0),"Second recovery dropped current visit after wrapper changed its start time.");
-            Check.Equal(20,second.Legs[0].BuildingKey); Check.Near(10*3600,second.Legs[0].LeaveAt);
-            Check.Equal(30,second.Legs[1].BuildingKey);
+                9*3600+31*60+10,360,1320,1,out var second,out var reason),reason);
+            Check.Equal(1,second.Legs.Count);Check.True(second.Legs[0].ReturnsHome);
+            Check.Near(100,second.Legs[0].Route[0].X);
         }
         private static void ResumeAppointmentAlreadyAtVenue()
         {
@@ -188,48 +179,44 @@ namespace PeopleOfTheIliacBay.Tests
         private static void ContinuedScheduleUsesItsOwnDayOnly()
         {
             var routine=Routine();var original=DailySchedule.ItineraryDay(10,routine.Itinerary,routine.ItineraryDepartureSeconds,360,1320);
-            var plan=Build(routine,9*3600+50*60);
+            var plan=Build(routine,9*3600+50*60,30);
             var schedule=DailySchedule.ContinueDay(original,plan);
-            Check.Equal(1,schedule.ScheduledVisits().Count);
-            Check.Equal(30,schedule.ScheduledVisits()[0].TargetBuildingKey);
-            Check.True(!schedule.ContainsVisitBuilding(20));
-            Check.True(schedule.TryVisitWindowForBuilding(10*3600,30,out var start,out var end));
-            Check.Near(10*3600+100,start);Check.Near(11*3600+100,end);
+            Check.Equal(0,schedule.ScheduledVisits().Count);Check.True(!schedule.ContainsVisitBuilding(20));
             Check.Near(plan.EndsAt,schedule.ReturnHomeAt(10*3600));
-            Check.Equal(Activity.Home,schedule.EvaluateSeconds(9*3600+50*60).Activity);
-            Check.Equal(Activity.Visit,schedule.EvaluateSeconds(9*3600+20*60).Activity);
+            Check.Equal(Activity.Travel,schedule.EvaluateSeconds(plan.DepartAt+50).Activity);
             Check.Equal(20,schedule.EvaluateSeconds(9*3600+20*60).BuildingKey);
             Check.Equal(20,schedule.EvaluateSeconds(86400+9*3600+20*60).BuildingKey);
             plan.Legs[0].Route[0].X=999;
-            Check.Equal(30,schedule.Evaluate((10*3600+120)/60).BuildingKey);
+            Check.Near(150,schedule.EvaluateSeconds(plan.DepartAt+50).Position.X);
         }
-        private static void HomeReturnCannotCrossSleepBoundary()
+        private static void HomeReturnMayCrossSleepBoundary()
         {
             var late=BuildRequest(Routine(),22*3600-60,30,null,out var reason);
-            Check.True(late==null,"Recovery invented a home arrival after protected sleep.");
-            Check.True(reason.Contains("home return"));
+            Check.True(late!=null,reason);Check.Near(22*3600+150,late.EndsAt);
+            Check.Equal(Activity.Travel,late.Evaluate(22*3600).Activity);
+            Check.Equal(Activity.Sleep,late.Evaluate(late.EndsAt).Activity);
             var feasible=Build(Routine(),22*3600-300,30);
             Check.True(feasible.Legs.Count==1 && feasible.Legs[0].ReturnsHome);
             Check.True(feasible.EndsAt<=22*3600);
         }
         public static void Add(List<(string Name,Action Body)> cases)
         {
-            cases.Add(("Routine recovery drops only the infeasible optional stop and keeps a later stop",SkipOnlyInfeasibleStop));
+            cases.Add(("Routine recovery skips optional errands and keeps measured home route",SkipOnlyInfeasibleStop));
             cases.Add(("Routine recovery never replays expired visits and copies exact connected return routes",ExpiredStopsNeverReplay));
             cases.Add(("Routine recovery protects exact appointment times and rejects impossible arrival",AppointmentTimesStayFixed));
             cases.Add(("Routine recovery keeps captured appointment patience and invalidates changed outcomes",CapturedPatienceSurvivesRoutineRecovery));
-            cases.Add(("No-show continuation starts at measured exit and preserves later visit and home",NoShowExitContinuesFromSameDoor));
+            cases.Add(("No-show continuation starts at measured exit and returns home",NoShowExitContinuesFromSameDoor));
             cases.Add(("Routine recovery identity changes with timing or geometry",FingerprintCoversTimingAndGeometry));
             cases.Add(("Routine recovery identity survives native fifteen-digit number serialization",FingerprintSurvivesNativeDoubleFormatting));
             cases.Add(("Routine recovery rejects disconnected continuations and unknown origins",MalformedContinuationRejected));
-            cases.Add(("Routine recovery resumes an interrupted current visit without extending its slot",ResumeCurrentVisitWithoutExtendingItsWindow));
-            cases.Add(("Outdoor recovery skips current source visit and keeps later feasible visit",OutsideOriginSkipsCurrentSourceStopAndKeepsLaterStop));
-            cases.Add(("Outdoor recovery keeps future visit at same building",OutsideOriginKeepsFutureVisitAtSameBuilding));
+            cases.Add(("Routine recovery skips interrupted optional visit and returns home",ResumeCurrentVisitWithoutExtendingItsWindow));
+            cases.Add(("Outdoor recovery skips optional source and later errands",OutsideOriginSkipsCurrentSourceStopAndKeepsLaterStop));
+            cases.Add(("Outdoor recovery skips future optional visit at same building",OutsideOriginKeepsFutureVisitAtSameBuilding));
             cases.Add(("Outdoor recovery preserves required appointment at source",OutsideOriginStillKeepsRequiredAppointmentAtSource));
-            cases.Add(("Repeated routine recovery matches a current visit after continuation shifts its start",RepeatedErrandKeepsCurrentVisitAfterContinuationChangesItsStart));
+            cases.Add(("Repeated routine recovery preserves physical return without replaying errands",RepeatedErrandKeepsCurrentVisitAfterContinuationChangesItsStart));
             cases.Add(("Routine recovery preserves an appointment already underway at the actual venue",ResumeAppointmentAlreadyAtVenue));
-            cases.Add(("Continued schedules expose remaining visits without rewriting another day or earlier history",ContinuedScheduleUsesItsOwnDayOnly));
-            cases.Add(("Routine recovery retains measured home travel and refuses crossing the protected sleep boundary",HomeReturnCannotCrossSleepBoundary));
+            cases.Add(("Continued schedules skip errands without rewriting another day or earlier history",ContinuedScheduleUsesItsOwnDayOnly));
+            cases.Add(("Routine recovery retains measured home travel across ordinary sleep",HomeReturnMayCrossSleepBoundary));
         }
     }
 }

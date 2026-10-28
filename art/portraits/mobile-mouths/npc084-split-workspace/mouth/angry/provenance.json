@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-21T23:44:52.4109580Z",
+    "portraitRecord":  84,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "angry",
+    "prompt":  "Use case: stylized-concept\nAsset type: DFU record084 angry Rhubarb mouth atlas, pixel-art portrait animation\nInput image: Image 1 is original prepared 3×3 mouth reference grid and exact edit target, with nine copies of the original muted-brown closed lips.\nPrimary request: Edit only mouth pixels in each cell. Preserve original lip scale and face framing. Add angry corner tension and compressed shapes while retaining original muted brown lip color. Do not show clenched teeth in every cell. Keep all nine poses anatomically distinct and faithful to Rhubarb\u0027s exact pose meanings below.\nExact cell order and pose definitions:\nA: Closed lips with light pressure; sounds P, B, M. Angry expression: closed lips, slight tension.\nB: Slightly open, nearly together teeth; narrow horizontal opening; sounds most consonants, EE. Angry expression: narrow slit, subtle teeth only.\nC: Medium open mouth, relaxed unrounded lips; sounds EH, AE. Angry expression: medium open, unrounded.\nD: Wide vertical opening for an open vowel; larger opening than C; sounds AA. Angry expression: wide vertical opening, the largest vertical opening.\nE: Slightly rounded lips; opening no wider than C; sounds AO, ER. Angry expression: rounded, moderate or smaller opening.\nF: Puckered rounded lips, small forward opening; not a tooth bite; sounds UW, OW, W. Angry expression: small puckered rounded opening with no teeth bite.\nG: Upper teeth touch lower lip; not a wide open vowel; sounds F, V. Angry expression: upper teeth lightly meet lower lip, narrow mouth.\nH: Tongue raised behind upper teeth, opening between C and D; tongue may be invisible at native scale; sounds long L. Angry expression: medium-to-wide opening, tongue raised subtly if visible.\nX: Closed relaxed idle lips; sounds silence. Angry expression: closed with light residual corner tension, less pressed than A.\nStyle: match original muted-brown skin, muted brown lips, golden wavy hair, soft pixel clusters, low contrast, exact native pixel-art scale.\nConstraints: keep nose, jaw, chin, neck, hair, lighting, background, crop, face and 3×3 grid unchanged. Change mouth expression only. No red lipstick, orange skin, harsh contrast, broad white teeth, repeated teeth poses, repeated closed mouths, extra shine, or changed head shape. Teeth may appear only where pose meaning calls for them.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-cafd-70e1-800c-efd1106f663d as C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-cafd-70e1-800c-efd1106f663d\\exec-4e408d6a-5c25-417e-b3b0-560de6aec2c5.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-cafd-70e1-800c-efd1106f663d\\exec-4e408d6a-5c25-417e-b3b0-560de6aec2c5.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "10ec019f2359c6e700ebcba2286778ad666255ba107e21849cbe885f65de2d88",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "47a9646b4ccc362eba8f1855ca36d8b0a14294103b22c6a2f9ede335c0459d47",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-cafd-70e1-800c-efd1106f663d\\exec-4e408d6a-5c25-417e-b3b0-560de6aec2c5.png",
+                      "sha256":  "830b38e978875fa13580f01b620df7ca57de7d8576f77e93dce3b88617e38595",
+                      "width":  1862,
+                      "height":  845
+                  },
+    "raw":  {
+                "path":  "mouth/angry/raw.png",
+                "sha256":  "830b38e978875fa13580f01b620df7ca57de7d8576f77e93dce3b88617e38595",
+                "width":  1862,
+                "height":  845
+            }
+}

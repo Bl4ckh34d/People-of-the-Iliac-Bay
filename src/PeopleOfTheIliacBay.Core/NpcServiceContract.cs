@@ -320,7 +320,7 @@ namespace PeopleOfTheIliacBay.Core
     [Serializable]
     public sealed class NpcServiceContract
     {
-        public const int VersionCurrent = 2;
+        public const int VersionCurrent = 3;
         public const double BillingPeriodSeconds = 86400d;
         private readonly List<NpcServiceTransferReceipt> receipts;
         private readonly List<NpcServiceProtectedTarget> protectedTargets;
@@ -362,12 +362,12 @@ namespace PeopleOfTheIliacBay.Core
         public double LastServiceUpdateAt { get; private set; }
         /// <summary>Actual native settlement receipt time, separate from the effective service update time.</summary>
         public double SettlementRecordedAt { get; private set; }
-        public double EligibleServiceSeconds { get; private set; }
-        public double CurrentBlockEligibleSeconds { get; private set; }
+        public double EligibleServiceSeconds { get { return 0; } }
+        public double CurrentBlockEligibleSeconds { get { return 0; } }
         public int FundedGold { get; private set; }
-        public int EscrowGold { get; private set; }
-        public int EarnedGold { get; private set; }
-        public int ReleasedGold { get; private set; }
+        public int EscrowGold { get { return 0; } }
+        public int EarnedGold { get { return BlockStartAt < 0 ? 0 : FundedGold; } }
+        public int ReleasedGold { get { return FundedGold - RefundedGold; } }
         public int RefundedGold { get; private set; }
         public IReadOnlyList<NpcServiceTransferReceipt> TransferReceipts { get; private set; }
 
@@ -377,7 +377,7 @@ namespace PeopleOfTheIliacBay.Core
             reserved = null;
             if (terms == null || funding == null ||
                 funding.ContractId != terms.ContractId || funding.Kind != NpcServiceTransferKind.Funding ||
-                funding.FromOwnerId != terms.PayerId || funding.ToOwnerId != EscrowOwner(terms.ContractId) ||
+                funding.FromOwnerId != terms.PayerId || funding.ToOwnerId != terms.NpcId ||
                 funding.Amount != terms.RatePer24GameHours) return false;
             var receipt = NpcServiceTransferReceipt.CopyValidated(funding);
             var value = new NpcServiceContract
@@ -390,7 +390,7 @@ namespace PeopleOfTheIliacBay.Core
                 ResupplyResponsibility = terms.ResupplyResponsibility,
                 Status = NpcServiceContractStatus.Reserved, Revision = 1, AcceptedAt = receipt.GameTime,
                 BlockStartAt = -1, BlockEndAt = -1, LastServiceUpdateAt = -1, SettlementRecordedAt = -1,
-                FundedGold = receipt.Amount, EscrowGold = receipt.Amount
+                FundedGold = receipt.Amount
             };
             foreach (var target in terms.ProtectedTargets) value.protectedTargets.Add(target.CopyValidated());
             foreach (var obligation in terms.ReservedObligations) value.reservedObligations.Add(obligation.CopyValidated());
@@ -402,14 +402,12 @@ namespace PeopleOfTheIliacBay.Core
             updated = null;
             if (Status != NpcServiceContractStatus.Reserved || expectedRevision != Revision || Revision == long.MaxValue ||
                 !Finite(actualServiceStartAt) || actualServiceStartAt < AcceptedAt ||
-                actualServiceStartAt > double.MaxValue - BillingPeriodSeconds || EscrowGold < RatePer24GameHours ||
+                actualServiceStartAt > double.MaxValue - BillingPeriodSeconds || ReleasedGold < RatePer24GameHours ||
                 HasAdmissionConflict(actualServiceStartAt, actualServiceStartAt + BillingPeriodSeconds)) return false;
             var copy = Copy(); copy.Status = NpcServiceContractStatus.Active;
             copy.BlockStartAt = actualServiceStartAt; copy.BlockEndAt = actualServiceStartAt + BillingPeriodSeconds;
             // A started 24-hour block earns its agreed fee once. Calendar midnight,
             // pauses and early dismissal do not create another charge or a partial refund.
-            copy.CurrentBlockEarnedGold = copy.RatePer24GameHours;
-            copy.EarnedGold = copy.FundedGold;
             copy.LastServiceUpdateAt = actualServiceStartAt; copy.Revision++; updated = copy; return true;
         }
 
@@ -418,24 +416,17 @@ namespace PeopleOfTheIliacBay.Core
             updated = null;
             if (Status != NpcServiceContractStatus.Active || expectedRevision != Revision || Revision == long.MaxValue ||
                 !Finite(now) || now < LastServiceUpdateAt || now > BlockEndAt) return false;
-            updated = AccrueCandidate(now); return true;
+            updated = AccrueCandidate(now); updated.Revision++; return true;
         }
 
         public bool TryReleaseEarnings(long expectedRevision, double now,
             NpcServiceTransferReceipt earningsReceipt, out NpcServiceContract updated)
         {
             updated = null;
-            if (Status != NpcServiceContractStatus.Active || expectedRevision != Revision || Revision == long.MaxValue ||
+            if (earningsReceipt != null || Status != NpcServiceContractStatus.Active || expectedRevision != Revision || Revision == long.MaxValue ||
                 !Finite(now) || now < LastServiceUpdateAt || now > BlockEndAt) return false;
-            var candidate = AccrueCandidate(now);
-            int amount = candidate.EarnedGold - candidate.ReleasedGold;
-            if (!ValidateTransfer(earningsReceipt, NpcServiceTransferKind.Earnings, EscrowOwner(ContractId), NpcId, amount, now)) return false;
-            if (amount > 0)
-            {
-                candidate.AddReceipt(earningsReceipt); candidate.ReleasedGold += amount; candidate.EscrowGold -= amount;
-                candidate.CurrentBlockReleasedGold += amount;
-            }
-            candidate.Revision++; updated = candidate; return true;
+            // The daily fee already reached the NPC wallet during funding.
+            updated = AccrueCandidate(now); updated.Revision++; return true;
         }
 
         public bool TrySuspend(long expectedRevision, double now, out NpcServiceContract updated)
@@ -526,19 +517,12 @@ namespace PeopleOfTheIliacBay.Core
                 LastServiceUpdateAt > boundaryAt || boundaryAt > double.MaxValue - BillingPeriodSeconds ||
                 HasAdmissionConflict(boundaryAt, boundaryAt + BillingPeriodSeconds)) return false;
             var closed = AccrueCandidate(boundaryAt);
-            int earnedDue = closed.EarnedGold - closed.ReleasedGold;
-            int refundDue = closed.EscrowGold - earnedDue;
-            if (!ValidateTransfer(priorEarnings, NpcServiceTransferKind.Earnings, EscrowOwner(ContractId), NpcId, earnedDue, boundaryAt) ||
-                !ValidateTransfer(priorRefund, NpcServiceTransferKind.Refund, EscrowOwner(ContractId), PayerId, refundDue, boundaryAt) ||
-                !ValidateTransfer(funding, NpcServiceTransferKind.Funding, PayerId, EscrowOwner(ContractId), RatePer24GameHours, boundaryAt))
+            if (priorEarnings != null || priorRefund != null ||
+                !ValidateTransfer(funding, NpcServiceTransferKind.Funding, PayerId, NpcId, RatePer24GameHours, boundaryAt))
                 return false;
-            if (earnedDue > 0) { closed.AddReceipt(priorEarnings); closed.ReleasedGold += earnedDue; closed.CurrentBlockReleasedGold += earnedDue; closed.EscrowGold -= earnedDue; }
-            if (refundDue > 0) { closed.AddReceipt(priorRefund); closed.RefundedGold += refundDue; closed.EscrowGold -= refundDue; }
-            if (closed.EscrowGold != 0 || closed.FundedGold > int.MaxValue - RatePer24GameHours) return false;
-            closed.AddReceipt(funding); closed.FundedGold += RatePer24GameHours; closed.EscrowGold = RatePer24GameHours;
-            closed.CurrentBlockEligibleSeconds = 0; closed.CurrentBlockEarnedGold = RatePer24GameHours;
-            closed.EarnedGold = closed.FundedGold;
-            closed.CurrentBlockReleasedGold = 0; closed.BlockStartAt = boundaryAt;
+            if (closed.FundedGold > int.MaxValue - RatePer24GameHours) return false;
+            closed.AddReceipt(funding); closed.FundedGold += RatePer24GameHours;
+            closed.BlockStartAt = boundaryAt;
             closed.BlockEndAt = boundaryAt + BillingPeriodSeconds; closed.LastServiceUpdateAt = boundaryAt;
             if (!Finite(closed.BlockEndAt)) return false;
             closed.Revision++; updated = closed; return true;
@@ -559,16 +543,13 @@ namespace PeopleOfTheIliacBay.Core
                 reason == NpcServiceEndReason.NaturalExpiry && now > BlockEndAt;
             var candidate = Status == NpcServiceContractStatus.Active
                 ? AccrueCandidate(lateExpiry ? BlockEndAt : now) : Copy();
-            int earnedDue = candidate.EarnedGold - candidate.ReleasedGold;
-            int refundDue = candidate.EscrowGold - earnedDue;
+            int refundDue = Status == NpcServiceContractStatus.Reserved ? candidate.FundedGold : 0;
             string recipient = reason == NpcServiceEndReason.Death ? settlementRecipientId : NpcId;
             if (!ValidId(recipient, 240) || reason == NpcServiceEndReason.Death &&
                 string.IsNullOrWhiteSpace(recipient) || reason != NpcServiceEndReason.Death && settlementRecipientId != NpcId ||
-                !ValidateTransfer(earningsReceipt, NpcServiceTransferKind.Earnings, EscrowOwner(ContractId), recipient, earnedDue, now) ||
-                !ValidateTransfer(refundReceipt, NpcServiceTransferKind.Refund, EscrowOwner(ContractId), PayerId, refundDue, now)) return false;
-            if (earnedDue > 0) { candidate.AddReceipt(earningsReceipt); candidate.ReleasedGold += earnedDue; candidate.CurrentBlockReleasedGold += earnedDue; candidate.EscrowGold -= earnedDue; }
-            if (refundDue > 0) { candidate.AddReceipt(refundReceipt); candidate.RefundedGold += refundDue; candidate.EscrowGold -= refundDue; }
-            if (candidate.EscrowGold != 0) return false;
+                earningsReceipt != null ||
+                !ValidateTransfer(refundReceipt, NpcServiceTransferKind.Refund, NpcId, PayerId, refundDue, now)) return false;
+            if (refundDue > 0) { candidate.AddReceipt(refundReceipt); candidate.RefundedGold += refundDue; }
             candidate.Status = NpcServiceContractStatus.Terminated; candidate.EndReason = reason;
             candidate.SuspensionOwnerKind = NpcServiceSuspensionOwnerKind.None;
             candidate.SuspensionOwnerId = null;
@@ -591,15 +572,6 @@ namespace PeopleOfTheIliacBay.Core
         {
             var copy = Copy();
             double through = Math.Min(now, copy.BlockEndAt);
-            if (copy.Status == NpcServiceContractStatus.Active)
-            {
-                double elapsed = through - copy.LastServiceUpdateAt;
-                if (elapsed > 0)
-                {
-                    copy.CurrentBlockEligibleSeconds = Math.Min(BillingPeriodSeconds, copy.CurrentBlockEligibleSeconds + elapsed);
-                    copy.EligibleServiceSeconds += elapsed;
-                }
-            }
             copy.LastServiceUpdateAt = through;
             return copy;
         }
@@ -654,8 +626,6 @@ namespace PeopleOfTheIliacBay.Core
                 Revision != other.Revision || AcceptedAt != other.AcceptedAt || BlockStartAt != other.BlockStartAt ||
                 BlockEndAt != other.BlockEndAt || LastServiceUpdateAt != other.LastServiceUpdateAt ||
                 SettlementRecordedAt != other.SettlementRecordedAt ||
-                EligibleServiceSeconds != other.EligibleServiceSeconds || CurrentBlockEligibleSeconds != other.CurrentBlockEligibleSeconds ||
-                CurrentBlockEarnedGold != other.CurrentBlockEarnedGold || CurrentBlockReleasedGold != other.CurrentBlockReleasedGold ||
                 FundedGold != other.FundedGold || EscrowGold != other.EscrowGold || EarnedGold != other.EarnedGold ||
                 ReleasedGold != other.ReleasedGold || RefundedGold != other.RefundedGold || receipts.Count != other.receipts.Count ||
                 authorizationReceiptIds.Count != other.authorizationReceiptIds.Count || protectedTargets.Count != other.protectedTargets.Count ||
@@ -722,18 +692,12 @@ namespace PeopleOfTheIliacBay.Core
                 (((Coverage & NpcServiceCoverage.Resupply) != 0) !=
                     (ResupplyResponsibility != NpcServiceResupplyResponsibility.SeparatelyNegotiated)) ||
                 Coverage == NpcServiceCoverage.None || RatePer24GameHours <= 0 || Revision <= 0 ||
-                !Finite(AcceptedAt) || AcceptedAt < 0 || FundedGold < 0 || EscrowGold < 0 ||
-                EarnedGold < 0 || EarnedGold > FundedGold || ReleasedGold < 0 || RefundedGold < 0 || ReleasedGold > EarnedGold ||
-                (long)ReleasedGold + RefundedGold + EscrowGold != FundedGold ||
+                !Finite(AcceptedAt) || AcceptedAt < 0 || FundedGold < 0 || EscrowGold != 0 ||
+                EarnedGold < 0 || EarnedGold > FundedGold || ReleasedGold < 0 || RefundedGold < 0 ||
+                (long)ReleasedGold + RefundedGold != FundedGold ||
                 receipts.Count > 4096 || authorizationReceiptIds.Count > 4096 ||
                 protectedTargets.Count > 64 || reservedObligations.Count > 64 ||
-                !Finite(EligibleServiceSeconds) || EligibleServiceSeconds < 0 ||
-                !Finite(CurrentBlockEligibleSeconds) || CurrentBlockEligibleSeconds < 0 ||
-                CurrentBlockEligibleSeconds > BillingPeriodSeconds || CurrentBlockEarnedGold < 0 ||
-                CurrentBlockReleasedGold < 0 || CurrentBlockReleasedGold > CurrentBlockEarnedGold ||
-                EarnedGold < CurrentBlockEarnedGold || ReleasedGold < CurrentBlockReleasedGold ||
-                CurrentBlockEarnedGold != (BlockStartAt < 0 ? 0 : RatePer24GameHours) ||
-                BlockStartAt >= 0 && (EarnedGold != FundedGold || RefundedGold != 0))
+                BlockStartAt >= 0 && RefundedGold != 0)
                 throw new ArgumentException("Invalid service contract state.");
             if (!Enum.IsDefined(typeof(NpcServiceSuspensionOwnerKind), SuspensionOwnerKind) ||
                 (Status != NpcServiceContractStatus.Suspended &&
@@ -753,8 +717,8 @@ namespace PeopleOfTheIliacBay.Core
             {
                 if (BlockStartAt != -1 || BlockEndAt != -1 ||
                     (cancelledBeforeStart ? !Finite(LastServiceUpdateAt) || LastServiceUpdateAt < AcceptedAt : LastServiceUpdateAt != -1) ||
-                    EligibleServiceSeconds != 0 || EarnedGold != 0 || ReleasedGold != 0 ||
-                    (cancelledBeforeStart ? RefundedGold != FundedGold || EscrowGold != 0 : RefundedGold != 0 || EndReason.HasValue || EscrowGold != FundedGold))
+                    EligibleServiceSeconds != 0 || EarnedGold != 0 ||
+                    (cancelledBeforeStart ? RefundedGold != FundedGold || ReleasedGold != 0 : RefundedGold != 0 || EndReason.HasValue || ReleasedGold != FundedGold))
                     throw new ArgumentException("Invalid pre-service contract state.");
             }
             else if (BlockStartAt < AcceptedAt || !Finite(BlockStartAt) || !Finite(BlockEndAt) ||
@@ -804,10 +768,7 @@ namespace PeopleOfTheIliacBay.Core
                 HasEndReason = EndReason.HasValue, EndReason = EndReason.GetValueOrDefault(),
                 Revision = Revision, AcceptedAt = AcceptedAt, BlockStartAt = BlockStartAt, BlockEndAt = BlockEndAt,
                 LastServiceUpdateAt = LastServiceUpdateAt, SettlementRecordedAt = SettlementRecordedAt,
-                EligibleServiceSeconds = EligibleServiceSeconds,
-                CurrentBlockEligibleSeconds = CurrentBlockEligibleSeconds, CurrentBlockEarnedGold = CurrentBlockEarnedGold,
-                CurrentBlockReleasedGold = CurrentBlockReleasedGold, FundedGold = FundedGold, EscrowGold = EscrowGold,
-                EarnedGold = EarnedGold, ReleasedGold = ReleasedGold, RefundedGold = RefundedGold
+                FundedGold = FundedGold, RefundedGold = RefundedGold
             };
             state.AuthorizationReceiptIds.AddRange(authorizationReceiptIds);
             foreach (var receipt in receipts)
@@ -853,11 +814,7 @@ namespace PeopleOfTheIliacBay.Core
             out NpcServiceContract restored)
         {
             restored = null;
-            if (state == null || (state.Version != 1 && state.Version != NpcServiceContractState.VersionCurrent) ||
-                state.Version == 1 && (state.SuspensionOwnerKind != NpcServiceSuspensionOwnerKind.None ||
-                    state.SuspensionOwnerId != null || state.SettlementRecordedAt != -1) ||
-                knownActor == null || requireCurrentReferences && (knownHome == null || knownProtectedTarget == null || knownObligation == null ||
-                    nativeTransferExists == null || nativeAuthorizationExists == null) ||
+            if (state == null || (state.Version != NpcServiceContractState.VersionCurrent) ||
                 !requireCurrentReferences && evidence == null ||
                 (!state.HasEndReason && state.EndReason != default(NpcServiceEndReason)) ||
                 (state.HasEndReason && !Enum.IsDefined(typeof(NpcServiceEndReason), state.EndReason)) ||
@@ -879,20 +836,13 @@ namespace PeopleOfTheIliacBay.Core
                     RatePer24GameHours = state.RatePer24GameHours, StandingRenewalPermission = state.StandingRenewalPermission,
                     RiskScope = state.RiskScope, RestTreatment = state.RestTreatment,
                     ResupplyResponsibility = state.ResupplyResponsibility, Status = state.Status,
-                    SuspensionOwnerKind = state.Version == 1 && state.Status == NpcServiceContractStatus.Suspended
-                        ? NpcServiceSuspensionOwnerKind.LegacyUnknown : state.SuspensionOwnerKind,
+                    SuspensionOwnerKind = state.SuspensionOwnerKind,
                     SuspensionOwnerId = state.SuspensionOwnerId,
                     EndReason = state.HasEndReason ? (NpcServiceEndReason?)state.EndReason : null, Revision = state.Revision,
                     AcceptedAt = state.AcceptedAt, BlockStartAt = state.BlockStartAt, BlockEndAt = state.BlockEndAt,
                     LastServiceUpdateAt = state.LastServiceUpdateAt,
-                    SettlementRecordedAt = state.Version == 1 && state.Status == NpcServiceContractStatus.Terminated
-                        ? state.LastServiceUpdateAt : state.SettlementRecordedAt,
-                    EligibleServiceSeconds = state.EligibleServiceSeconds,
-                    CurrentBlockEligibleSeconds = state.CurrentBlockEligibleSeconds,
-                    CurrentBlockEarnedGold = state.CurrentBlockEarnedGold,
-                    CurrentBlockReleasedGold = state.CurrentBlockReleasedGold, FundedGold = state.FundedGold,
-                    EscrowGold = state.EscrowGold, EarnedGold = state.EarnedGold,
-                    ReleasedGold = state.ReleasedGold, RefundedGold = state.RefundedGold
+                    SettlementRecordedAt = state.SettlementRecordedAt,
+                    FundedGold = state.FundedGold, RefundedGold = state.RefundedGold
                 };
                 foreach (var item in state.TransferReceipts)
                 {
@@ -968,10 +918,9 @@ namespace PeopleOfTheIliacBay.Core
 
         internal bool HasConsistentReceiptAccounting()
         {
-            long funding = 0, earnings = 0, refunds = 0;
+            long funding = 0, refunds = 0;
             int fundingCount = 0;
             double priorReceiptTime = AcceptedAt;
-            string escrow = EscrowOwner(ContractId);
             for (int i = 0; i < receipts.Count; i++)
             {
                 var receipt = receipts[i];
@@ -981,27 +930,21 @@ namespace PeopleOfTheIliacBay.Core
                 priorReceiptTime = receipt.GameTime;
                 if (receipt.Kind == NpcServiceTransferKind.Funding)
                 {
-                    if (receipt.FromOwnerId != PayerId || receipt.ToOwnerId != escrow ||
+                    if (receipt.FromOwnerId != PayerId || receipt.ToOwnerId != NpcId ||
                         receipt.Amount != RatePer24GameHours || (funding == 0 && receipt.GameTime != AcceptedAt)) return false;
                     fundingCount++;
                     funding += receipt.Amount;
                 }
-                else if (receipt.Kind == NpcServiceTransferKind.Earnings)
-                {
-                    if (receipt.FromOwnerId != escrow ||
-                        (receipt.ToOwnerId != NpcId && !(Status == NpcServiceContractStatus.Terminated && EndReason == NpcServiceEndReason.Death)))
-                        return false;
-                    earnings += receipt.Amount;
-                }
                 else if (receipt.Kind == NpcServiceTransferKind.Refund)
                 {
-                    if (receipt.FromOwnerId != escrow || receipt.ToOwnerId != PayerId) return false;
+                    if (Status != NpcServiceContractStatus.Terminated || EndReason != NpcServiceEndReason.CancelledBeforeService ||
+                        receipt.FromOwnerId != NpcId || receipt.ToOwnerId != PayerId || receipt.Amount != RatePer24GameHours) return false;
                     refunds += receipt.Amount;
                 }
                 else return false;
             }
             if (fundingCount == 0 || (long)fundingCount * RatePer24GameHours != FundedGold ||
-                funding != FundedGold || earnings != ReleasedGold || refunds != RefundedGold) return false;
+                funding != FundedGold || funding-refunds != ReleasedGold || refunds != RefundedGold) return false;
             if (Status == NpcServiceContractStatus.Reserved ||
                 Status == NpcServiceContractStatus.Terminated && EndReason == NpcServiceEndReason.CancelledBeforeService)
                 return fundingCount == 1;
@@ -1040,10 +983,7 @@ namespace PeopleOfTheIliacBay.Core
                 EndReason = EndReason, Revision = Revision, AcceptedAt = AcceptedAt,
                 BlockStartAt = BlockStartAt, BlockEndAt = BlockEndAt, LastServiceUpdateAt = LastServiceUpdateAt,
                 SettlementRecordedAt = SettlementRecordedAt,
-                EligibleServiceSeconds = EligibleServiceSeconds, CurrentBlockEligibleSeconds = CurrentBlockEligibleSeconds,
-                CurrentBlockEarnedGold = CurrentBlockEarnedGold, CurrentBlockReleasedGold = CurrentBlockReleasedGold,
-                FundedGold = FundedGold, EscrowGold = EscrowGold, EarnedGold = EarnedGold,
-                ReleasedGold = ReleasedGold, RefundedGold = RefundedGold,
+                FundedGold = FundedGold, RefundedGold = RefundedGold,
                 derivedFrom = this
             };
             foreach (var receipt in receipts) copy.receipts.Add(NpcServiceTransferReceipt.CopyValidated(receipt));
@@ -1053,10 +993,7 @@ namespace PeopleOfTheIliacBay.Core
             return copy;
         }
 
-        private int CurrentBlockEarnedGold { get; set; }
-        private int CurrentBlockReleasedGold { get; set; }
 
-        private static string EscrowOwner(string id) { return "contract:" + id + ":escrow"; }
         private static bool ValidId(string value, int max)
         {
             if (string.IsNullOrWhiteSpace(value) || value.Length > max) return false;

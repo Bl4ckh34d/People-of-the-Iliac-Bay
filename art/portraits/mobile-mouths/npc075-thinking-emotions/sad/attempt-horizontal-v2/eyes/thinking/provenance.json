@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T12:01:21.1453207Z",
+    "portraitRecord":  75,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Create one exact 2-by-2 pixel-art atlas, 1024x560 pixels, using only the attached local reference grid. Each cell is a complete 64x35 upper portrait crop enlarged 8x with crisp nearest-neighbor pixels. Keep original framing, identity, hair, face, eyebrows, sad expression, eyelid contours, and narrow eye aperture. Cell order: LEFT OPEN, RIGHT OPEN / LEFT HALF, RIGHT HALF. No labels, borders, margins, or new objects. Make a small lateral iris/pupil shift only: both eyes look toward viewer-left in the left cells, both look toward viewer-right in the right cells, preserving source convergence. Keep the source\u0027s dark shaded olive-brown/amber eye interiors. Preserve the source iris size and color, compact dark pupil, and tiny warm glint. Do not brighten, whiten, or widen either eye. Do not add cream, white, ivory, or pale sclera pixels anywhere. Do not create pale bands or large white areas; keep the existing narrow pale pixels only where shown in the source. No enlarged aperture, round eyes, alert stare, heavy highlights, or colorized eye whites. The bottom cells must retain the exact source half-closed anatomy and narrow opening; upper lids occlude most of each iris, with no widening. Preserve native pixel-art clusters and original muted palette. Output only opaque atlas, exactly four portrait cells in 2x2 layout.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-01fc6821-a7b5-4823-aa81-226b0305c49d.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-01fc6821-a7b5-4823-aa81-226b0305c49d.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "806216f22d115a83d7ffa3f832a403b2b147ecd42498231d06d5cad0c144ee2e",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-01fc6821-a7b5-4823-aa81-226b0305c49d.png",
+                      "sha256":  "673ea636298e60a747650c1b1ab57f16087c31684dc2856d6101089ca6e7f8b6",
+                      "width":  1696,
+                      "height":  927
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "673ea636298e60a747650c1b1ab57f16087c31684dc2856d6101089ca6e7f8b6",
+                "width":  1696,
+                "height":  927
+            }
+}

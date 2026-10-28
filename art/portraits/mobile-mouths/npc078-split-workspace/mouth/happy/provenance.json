@@ -1,0 +1,34 @@
+{
+  "portraitRecord": 78,
+  "emotion": "happy",
+  "asset": "lower-half speech-mouth atlas",
+  "generator": "built-in image_gen",
+  "generation_count": 1,
+  "source": {
+    "path": "art/portraits/mobile-mouths/npc078-split-workspace/mouth-reference-grid.png",
+    "sha256": "723A29C0E82DC6A0B811139C36F110100A031876B51EA7EEA10984DD1A3E9F45",
+    "dimensions_px": [1536, 696]
+  },
+  "generated": {
+    "path": "C:/Users/Daniel/.codex/generated_images/01a15fde-8b98-7181-a1df-84e7b766303c/exec-b5fa74dd-ab4c-4237-90ce-455f845f7580.png",
+    "sha256": "79C4BCFBB35C568456C3DDE57739671139C63746D884B028F8E8970DFC1077E7",
+    "dimensions_px": [1863, 844]
+  },
+  "output": {
+    "path": "art/portraits/mobile-mouths/npc078-split-workspace/mouth/happy/raw.png",
+    "sha256": "79C4BCFBB35C568456C3DDE57739671139C63746D884B028F8E8970DFC1077E7",
+    "dimensions_px": [1863, 844]
+  },
+  "grid": {
+    "rows": 3,
+    "columns": 3,
+    "row_major_order": ["A", "B", "C", "D", "E", "F", "G", "H", "X"],
+    "native_cell_dimensions_px": [64, 29],
+    "closed_pose_letters": ["A", "X"]
+  },
+  "prompt": "Edit this pixel-art reference into one complete HAPPY speech-mouth 3x3 atlas for the same woman. This reference is the sole source for identity, geometry, soft muted palette, framing, lip scale, and pixel texture. Keep each lower-face cell as the same 64x29 native lower half enlarged 8x. Preserve exact nose, philtrum, cheeks, jaw, chin, neck, hair, background, skin shading, and crop; change only the small mouth/lips inside the existing mouth region. Use nine distinct but natural modest speech poses in row-major order A B C / D E F / G H X. A and X are closed-mouth poses with a restrained friendly happy smile. Other poses show varied small speech shapes: light lip contact, narrow gently spread opening, small relaxed open vowel, medium vertical opening, modest rounded opening, soft teeth/lip contact, wider but still restrained opening, and rounded vowel. Keep original mouth size and anatomy; slight warm upward lip corners may remain through the set, but no giant grin, oversized teeth, theatrical expression, or large mouth. Maintain the reference's low contrast, warm soft palette, and coarse crisp pixel-art blocks. No sharpening, blur, smoothing, new detail, labels, gutters, text, or objects. Preserve complete equal-cell 3x3 sheet and reference canvas ratio. Output only the full 3x3 sheet.",
+  "visual_review": {
+    "status": "raw generation; parent review pending",
+    "notes": "Nine small distinct mouth shapes visible. Most poses remain modest and preserve face framing. A appears closed. X at bottom-right appears slightly parted with a pale interior, so closed-pose compliance is uncertain. Output is 1863x844 rather than reference 1536x696; no resizing or postprocessing performed. Check native-cell geometry and A/X closure before adoption."
+  }
+}

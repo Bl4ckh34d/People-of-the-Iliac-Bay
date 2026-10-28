@@ -11,39 +11,35 @@ using UnityEngine;
 
 namespace PeopleOfTheIliacBay.DFU
 {
-    public sealed class NativeTavernRentals : IDisposable
+    public sealed partial class NativeTavernRentals : IDisposable
     {
         // Shared by exterior and remote preparation. No NPC admission is allowed
         // until native paid receipts and permanent occupants have been reconciled.
         internal static void RegisterInventory(WorldStateStore store,int town,DFLocation location,StaticDoor entry,
-            TavernRoomSurvey.Result inventory,RoomRental_v1 receipt,double now)
+            TavernBedSurvey.Result inventory,RoomRental_v1 receipt,double now)
         {
-            if(store==null || inventory==null || inventory.Rooms==null || inventory.Markers==null || inventory.Occupants==null)
+            if(store==null || inventory==null || inventory.Beds==null || inventory.Markers==null || inventory.Occupants==null)
                 throw new ArgumentException("Incomplete inn inventory.");
             string allocated=null;
             if(receipt!=null && receipt.expiryTime>now &&
                 (receipt.mapID!=town || receipt.buildingKey!=entry.buildingKey || !inventory.Markers.TryGetValue(receipt.allocatedBedIndex,out allocated)))
-                throw new InvalidOperationException("Native paid rental has no matching destination room.");
-            // Remote and loaded surveys must agree on rooms without native
-            // rental markers (staff/common rooms), before comparing inventories.
-            var eligible=new HashSet<string>(inventory.Markers.Values);
-            foreach(var room in inventory.Rooms) room.NonRentable=!eligible.Contains(room.Id);
-            store.RegisterLodging(town,entry.buildingKey,inventory.Rooms);
+                throw new InvalidOperationException("Native paid rental has no matching destination bed.");
+            store.RegisterLodgingBeds(town,entry.buildingKey,inventory.Beds);
             if(allocated!=null && !store.ReconcilePlayerLodging(town,entry.buildingKey,allocated,now,receipt.expiryTime))
                 throw new InvalidOperationException("Native paid rental conflicts with destination inventory.");
-            NativeInnOccupants.Claim(store,town,location,entry,inventory.Rooms,inventory.Occupants,now,inventory.KeeperHash);
+            NativeInnOccupants.Claim(store,town,location,entry,inventory.Beds,inventory.Occupants,now,inventory.KeeperHash);
             StreetPopulation.RegisterSurveyedInnCatalog(store,town,location,entry,inventory,now);
         }
         private DaggerfallInterior surveyed;
-        private List<LodgingRoom> rooms;
+        private List<LodgingBed> beds;
         private Dictionary<int,string> markers;
-        private Dictionary<int,string> roomOccupants;
-        private Dictionary<int,string> bedroomOccupants;
-        public string BedroomFor(DaggerfallInterior room,int hash)
+        private Dictionary<int,string> bedOccupants;
+        private Dictionary<int,string> assignedBedOccupants;
+        public string BedFor(DaggerfallInterior loadedInterior,int hash)
         {
             string id;
-            return surveyed==room && bedroomOccupants!=null && bedroomOccupants.TryGetValue(hash,out id) &&
-                rooms!=null && rooms.Exists(r=>r.Id==id && !r.NonRentable) ? id : null;
+            return surveyed==loadedInterior && assignedBedOccupants!=null && assignedBedOccupants.TryGetValue(hash,out id) &&
+                beds!=null && beds.Exists(b=>b.Id==id) ? id : null;
         }
         private string lastFailure;
         private Func<WorldStateStore> getStore;
@@ -51,10 +47,11 @@ namespace PeopleOfTheIliacBay.DFU
         private IDisposable hooks;
         private BuildingDirectory inventoryDirectory;
         private readonly List<int> inventoryBuildings=new List<int>();
+        private readonly Dictionary<int,Vector3> inventoryDoors=new Dictionary<int,Vector3>();
         private readonly Dictionary<int,Inventory> inventory=new Dictionary<int,Inventory>();
         private int nextInventory;
         private System.Collections.IEnumerator surveyOperation;
-        private TavernRoomSurvey.Result surveyResult;
+        private TavernBedSurvey.Result surveyResult;
         private Inventory surveyInventory;
         private int surveyKey;
         private float surveyStartsAt;
@@ -63,27 +60,69 @@ namespace PeopleOfTheIliacBay.DFU
         private object surveyEpoch;
         private sealed class Inventory
         {
-            public TavernRoomSurvey.Result Source;
-            public List<LodgingRoom> Rooms;
+            public TavernBedSurvey.Result Source;
+            public List<LodgingBed> Beds;
             public Dictionary<int,string> Markers;
             public Dictionary<int,string> Occupants;
             public StaticDoor Entry;
             public string Failure;
         }
 
+        internal bool HasPendingExteriorInventory(BuildingDirectory directory)
+        {
+            if(inventoryDirectory!=directory || surveyOperation!=null)return true;
+            foreach(int key in inventoryBuildings)if(!inventory.ContainsKey(key))return true;
+            return false;
+        }
+
+        internal int CompletedExteriorInventoryCount(BuildingDirectory directory)
+        {
+            if(inventoryDirectory!=directory)return 0;
+            int count=0;foreach(var item in inventory.Values)if(item.Beds!=null || item.Failure!=null)count++;
+            return count;
+        }
+
         private void RefreshExterior(WorldStateStore store,BuildingDirectory directory)
         {
+            if(assignmentAudit)return;
             if(inventoryDirectory!=directory)
             {
                 CancelSurvey();
-                inventoryDirectory=directory; inventory.Clear(); inventoryBuildings.Clear(); nextInventory=0;
+                inventoryDirectory=directory; inventory.Clear(); inventoryBuildings.Clear();inventoryDoors.Clear(); nextInventory=0;
                 foreach(var building in directory.GetBuildingsOfType(DFLocation.BuildingTypes.Tavern)) inventoryBuildings.Add(building.buildingKey);
                 inventoryBuildings.Sort();
+                foreach(var owner in directory.GetComponentsInChildren<DaggerfallStaticDoors>())
+                    for(int i=0;i<owner.Doors.Length;i++)
+                    {
+                        var door=owner.Doors[i];
+                        if(door.doorType==DoorTypes.Building && inventoryBuildings.Contains(door.buildingKey) && !inventoryDoors.ContainsKey(door.buildingKey))
+                            inventoryDoors.Add(door.buildingKey,directory.transform.InverseTransformPoint(owner.GetDoorPosition(i)));
+                    }
             }
             if(inventoryBuildings.Count==0) return;
-            if(surveyOperation!=null) return;
             int key=inventoryBuildings[nextInventory++%inventoryBuildings.Count];
             if(nextInventory>=inventoryBuildings.Count) nextInventory=0;
+            // Continue serving prepared Inns while another building is surveyed.
+            // Starting every remote survey before revisiting receipts/admissions
+            // left already-arrived guests waiting outside for the whole census.
+            Inventory prepared;
+            if(inventory.TryGetValue(key,out prepared) && prepared.Beds!=null)
+                ReconcileInventory(store,directory,key,prepared);
+            if(surveyOperation!=null)return;
+            // Prepare visible accommodation first; distant Inns remain ordinary
+            // background work. Use actual doors in settlement space so floating
+            // origin shifts do not invalidate the cache. BuildingSummary positions
+            // are relative to RMB blocks, not to the whole settlement.
+            float nearest=float.PositiveInfinity;
+            var player=directory.transform.InverseTransformPoint(GameManager.Instance.PlayerMotor.transform.position);
+            foreach(int candidate in inventoryBuildings)
+            {
+                if(inventory.ContainsKey(candidate))continue;
+                Vector3 door;
+                if(!inventoryDoors.TryGetValue(candidate,out door))continue;
+                float distance=(door-player).sqrMagnitude;
+                if(distance<nearest){nearest=distance;key=candidate;}
+            }
             Inventory item;
             if(!inventory.TryGetValue(key,out item))
             {
@@ -96,10 +135,10 @@ namespace PeopleOfTheIliacBay.DFU
                             if(door.doorType==DoorTypes.Building && door.buildingKey==key) { owner=candidate; entry=door; break; }
                     if(!owner) throw new InvalidOperationException("Tavern entrance unavailable.");
                     item.Entry=entry;
-                    surveyResult=new TavernRoomSurvey.Result(); surveyInventory=item; surveyKey=key;
+                    surveyResult=new TavernBedSurvey.Result(); surveyInventory=item; surveyKey=key;
                     var epoch=store.CaptureNpcVitalsWriteEpoch();
                     surveyStore=store;surveyEpoch=epoch;
-                    surveyOperation=TavernRoomSurvey.ReadServiceSteps(owner.transform,entry,directory.LocationData.Climate.ClimateType,surveyResult,
+                    surveyOperation=TavernBedSurvey.ReadServiceSteps(owner.transform,entry,directory.LocationData.Climate.ClimateType,surveyResult,
                         ()=>inventoryDirectory==directory && ReferenceEquals(getStore(),store) && store.IsNpcVitalsWriteEpochCurrent(epoch));
                     surveyStartsAt=Time.unscaledTime+0.1f;
                     surveyStarted=false;
@@ -111,8 +150,8 @@ namespace PeopleOfTheIliacBay.DFU
                     Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_TAVERN_SURVEY_FAILED: "+directory.MapID+":"+key+": "+item.Failure);
                 }
             }
-            if(item.Rooms==null) return; // Retry geometry only after the settlement layout reloads.
-            ReconcileInventory(store,directory,key,item);
+            if(item.Beds==null) return; // Retry geometry only after the settlement layout reloads.
+            if(!ReferenceEquals(item,prepared))ReconcileInventory(store,directory,key,item);
         }
         private void ReconcileInventory(WorldStateStore store,BuildingDirectory directory,int key,Inventory item)
         {
@@ -121,7 +160,7 @@ namespace PeopleOfTheIliacBay.DFU
                 var receipt=GameManager.Instance.PlayerEntity.GetRentedRoom(directory.MapID,key);
                 double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
                 RegisterInventory(store,directory.MapID,directory.LocationData,item.Entry,
-                    item.Source??new TavernRoomSurvey.Result {Rooms=item.Rooms,Markers=item.Markers,Occupants=item.Occupants},receipt,now);
+                    item.Source??new TavernBedSurvey.Result {Beds=item.Beds,Markers=item.Markers,Occupants=item.Occupants},receipt,now);
                 item.Failure=null;
                 store.AdvanceInnAdmissions(directory.MapID,now,8,key);
             }
@@ -137,7 +176,9 @@ namespace PeopleOfTheIliacBay.DFU
             getStore=store; available=enabled;
             var type=Type.GetType("PeopleOfTheIliacBay.QuestHooks.NativeTavernRentalHooks, PeopleOfTheIliacBay.QuestHooks",true);
             hooks=(IDisposable)Activator.CreateInstance(type,new object[] {
-                new Func<int,int,int,Action,bool>(Rent),new Func<bool,string>(RestBlocked) });
+                new Func<int,int,int,Action,bool>(Rent),new Func<bool,string>(RestBlocked),
+                new Func<DaggerfallInterior,Vector3[],Vector3[]>((room,original)=>available!=null && available()
+                    ? TavernBedSurvey.CompleteInnRestMarkers(room,original) : original) });
         }
         public void Dispose() { CancelSurvey(); if(hooks!=null) hooks.Dispose(); hooks=null; }
         private void CancelSurvey()
@@ -167,17 +208,15 @@ namespace PeopleOfTheIliacBay.DFU
                 if(surveyOperation.MoveNext()) return;
                 // Cancellation intentionally publishes no partial result. Drop
                 // its cache entry so the current save branch can survey again.
-                if(!surveyStore.IsNpcVitalsWriteEpochCurrent(surveyEpoch) || surveyResult==null || surveyResult.Rooms==null ||
+                if(!surveyStore.IsNpcVitalsWriteEpochCurrent(surveyEpoch) || surveyResult==null || surveyResult.Beds==null ||
                     surveyResult.Markers==null || surveyResult.Occupants==null)
                 {CancelSurvey();return;}
                 (surveyOperation as IDisposable)?.Dispose(); surveyOperation=null;
                 surveyInventory.Source=surveyResult;
                 surveyInventory.Markers=surveyResult.Markers; surveyInventory.Occupants=surveyResult.Occupants;
-                var eligible=new HashSet<string>(surveyResult.Markers.Values);
-                foreach(var room in surveyResult.Rooms) room.NonRentable=!eligible.Contains(room.Id);
-                surveyInventory.Rooms=surveyResult.Rooms;
+                surveyInventory.Beds=surveyResult.Beds;
                 ReconcileInventory(getStore(),inventoryDirectory,surveyKey,surveyInventory);
-                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TAVERN_INVENTORY: "+inventoryDirectory.MapID+":"+surveyKey+"; rooms="+surveyInventory.Rooms.Count);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TAVERN_INVENTORY: "+inventoryDirectory.MapID+":"+surveyKey+"; beds="+surveyInventory.Beds.Count);
                 surveyResult=null; surveyInventory=null;
                 surveyStore=null;surveyEpoch=null;
             }
@@ -211,10 +250,9 @@ namespace PeopleOfTheIliacBay.DFU
                 var receipt=game.PlayerEntity.GetRentedRoom(town,building);
                 if(!stayHere && receipt!=null && receipt.expiryTime>now)
                 {
-                    string room;
-                    if(!markers.TryGetValue(receipt.allocatedBedIndex,out room)) return "Your rented bed is unavailable.";
-                    var target=rooms.Find(r=>r.Id==room);
-                    return store.IsLodgingBedReserved(town,building,target.Beds[0],now,"player") ? occupied : null;
+                    string bed;
+                    if(!markers.TryGetValue(receipt.allocatedBedIndex,out bed)) return "Your rented bed is unavailable.";
+                    return store.IsLodgingBedReserved(town,building,bed,now,"player") ? occupied : null;
                 }
                 // Rest-here keeps the player's position instead of using the paid marker.
                 // Match only the mattress footprint and height, never beds on another floor.
@@ -226,7 +264,7 @@ namespace PeopleOfTheIliacBay.DFU
                         Mathf.Abs(Vector3.Dot(offset,bed.LocalHeadDirection))>bed.Length*.5f+.15f ||
                         Mathf.Abs(Vector3.Dot(offset,bed.LocalSideDirection))>bed.Width*.5f+.15f) continue;
                     string id="bed:"+bed.RecordIndex;
-                    if(rooms.Exists(r=>r.Beds.Contains(id)) && store.IsLodgingBedReserved(town,building,id,now,"player")) return occupied;
+                    if(beds.Exists(b=>b.Id==id) && store.IsLodgingBedReserved(town,building,id,now,"player")) return occupied;
                 }
                 return null;
             }
@@ -242,19 +280,17 @@ namespace PeopleOfTheIliacBay.DFU
             long started=RuntimeTiming.Start("inn-loaded-prepare");
             try
             {
-            if(surveyed!=interior) { surveyed=interior; rooms=null; markers=null; lastFailure=null; }
-            if(rooms==null)
+            if(surveyed!=interior) { surveyed=interior; beds=null; markers=null; lastFailure=null; }
+            if(beds==null)
             {
                 Dictionary<int,string> mapping;
-                var all=TavernRoomSurvey.Read(interior,out mapping,out roomOccupants,out bedroomOccupants);
-                var eligible=new HashSet<string>(mapping.Values);
-                foreach(var room in all) room.NonRentable=!eligible.Contains(room.Id);
-                rooms=all; markers=mapping;
+                beds=TavernBedSurvey.Read(interior,out mapping,out bedOccupants,out assignedBedOccupants);
+                markers=mapping;
             }
-            store.RegisterLodging(directory.MapID,interior.EntryDoor.buildingKey,rooms);
+            store.RegisterLodgingBeds(directory.MapID,interior.EntryDoor.buildingKey,beds);
             var guests=new Dictionary<int,string>();
-            if(bedroomOccupants!=null) foreach(var person in bedroomOccupants)
-                if(rooms.Exists(r=>r.Id==person.Value && !r.NonRentable)) guests.Add(person.Key,person.Value);
+            if(assignedBedOccupants!=null) foreach(var person in assignedBedOccupants)
+                if(beds.Exists(b=>b.Id==person.Value)) guests.Add(person.Key,person.Value);
             BedroomFlatReplacement.Apply(store,interior,DFLocation.BuildingTypes.Tavern,guests);
             }
             finally { RuntimeTiming.End("inn-loaded-prepare",started); }
@@ -273,11 +309,11 @@ namespace PeopleOfTheIliacBay.DFU
             catch(Exception error)
             {
                 // An unsupported layout without managed reservations remains vanilla.
-                // Once bookings exist, falling through could sell another guest's room.
+                // Once bookings exist, falling through could sell another guest's bed.
                 bool managed=store.Snapshot().Lodgings.Exists(t=>t.SettlementId==town && t.BuildingKey==building);
                 Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_RENTAL_SURVEY: "+town+":"+building+": "+error.Message);
                 if(!managed) return false;
-                close(); DaggerfallUI.MessageBox("The keeper cannot confirm rooms in this changed building."); return true;
+                close(); DaggerfallUI.MessageBox("The keeper cannot confirm beds in this changed building."); return true;
             }
             close();
             if(days<1 || days>350 || price<0) { DaggerfallUI.MessageBox("That stay cannot be booked."); return true; }
@@ -285,18 +321,18 @@ namespace PeopleOfTheIliacBay.DFU
             if(player.GetGoldAmount()<price) { DaggerfallUI.MessageBox(454); return true; }
             double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
             var receipt=player.GetRentedRoom(town,building);
-            string room=null;
+            string bed=null;
             try
             {
                 if(receipt!=null)
                 {
-                    if(receipt.expiryTime<=now || !markers.TryGetValue(receipt.allocatedBedIndex,out room) ||
-                        !store.ReconcilePlayerLodging(town,building,room,now,receipt.expiryTime))
-                        throw new InvalidOperationException("Existing paid room needs reconciliation.");
+                    if(receipt.expiryTime<=now || !markers.TryGetValue(receipt.allocatedBedIndex,out bed) ||
+                        !store.ReconcilePlayerLodging(town,building,bed,now,receipt.expiryTime))
+                        throw new InvalidOperationException("Existing paid bed needs reconciliation.");
                 }
                 // Earlier registered arrivals get first choice. Keep this UI action
                 // bounded; a full batch asks the player to wait for catch-up.
-                NativeInnOccupants.Claim(store,directory,interior.EntryDoor,rooms,roomOccupants,now);
+                NativeInnOccupants.Claim(store,directory,interior.EntryDoor,beds,bedOccupants,now);
                 AdvanceResidentInside(store,town,building,now);
                 if(store.HasDueTravelerAdmission(town,building,now) || store.HasDueResidentInnAdmission(town,building,now))
                 {
@@ -305,21 +341,28 @@ namespace PeopleOfTheIliacBay.DFU
                 }
                 double end=(receipt==null ? now : receipt.expiryTime)+days*86400d;
                 if(end-now>351*86400d) throw new InvalidOperationException("Rental duration exceeds native limit.");
-                if(receipt==null) room=store.AvailableLodgingRoom(town,building,1,now,end);
-                if(room==null || !store.ReconcilePlayerLodging(town,building,room,now,end))
+                if(receipt==null)
+                {
+                    var availableBeds=store.AvailableLodgingBeds(town,building,1,now,end);
+                    if(availableBeds!=null)
+                        foreach(var pair in markers)
+                            if(availableBeds.Contains(pair.Value) && (bed==null || pair.Key<MarkerFor(markers,bed)))bed=pair.Value;
+                }
+                if(bed==null || !store.ReconcilePlayerLodging(town,building,bed,now,end))
                 {
                     var next=store.EarliestLodgingStart(town,building,1,now,days*86400d);
-                    string message=receipt==null ? "No room is available for that stay." : "Your room cannot be extended for that stay.";
+                    string message=receipt==null ? "No bed is available for that stay." : "Your bed cannot be extended for that stay.";
                     if(next.HasValue)
                     {
                         var date=new DaggerfallDateTime(); date.FromSeconds((ulong)Math.Ceiling(next.Value));
-                        message+=" A room is available from "+date.DateTimeString()+".";
+                        message+=" A bed is available from "+date.DateTimeString()+".";
                     }
                     DaggerfallUI.MessageBox(message); return true;
                 }
                 if(receipt==null)
                 {
-                    int marker=-1; foreach(var pair in markers) if(pair.Value==room && (marker<0 || pair.Key<marker)) marker=pair.Key;
+                    int marker=MarkerFor(markers,bed);
+                    if(marker<0)throw new InvalidOperationException("Selected bed has no native rental marker.");
                     receipt=new RoomRental_v1 { name=game.PlayerEnterExit.BuildingDiscoveryData.displayName,mapID=town,
                         buildingKey=building,allocatedBedIndex=marker,expiryTime=(ulong)end };
                     player.RentedRooms.Add(receipt);
@@ -332,7 +375,7 @@ namespace PeopleOfTheIliacBay.DFU
             catch(Exception error)
             {
                 Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_RENTAL_REFUSED: "+town+":"+building+": "+error.Message);
-                DaggerfallUI.MessageBox("The keeper cannot confirm that room. Please try again later."); return true;
+                DaggerfallUI.MessageBox("The keeper cannot confirm that bed. Please try again later."); return true;
             }
         }
 
@@ -348,11 +391,18 @@ namespace PeopleOfTheIliacBay.DFU
             }
             finally { RuntimeTiming.End("inn-loaded-admissions",started); }
         }
+        private static int MarkerFor(Dictionary<int,string> markerBeds,string bedId)
+        {
+            int selected=-1;
+            foreach(var pair in markerBeds)
+                if(pair.Value==bedId && (selected<0 || pair.Key<selected))selected=pair.Key;
+            return selected;
+        }
         public void Refresh(WorldStateStore store,BuildingDirectory directory)
         {
             var game=GameManager.Instance;
             var interior=game.IsPlayerInside ? game.PlayerEnterExit.Interior : null;
-            if(surveyed!=interior) { surveyed=interior; rooms=null; markers=null; lastFailure=null; }
+            if(surveyed!=interior) { surveyed=interior; beds=null; markers=null; lastFailure=null; }
             if(!interior) { if(!game.IsPlayerInside) RefreshExterior(store,directory); return; }
             BuildingSummary summary;
             int building=interior.EntryDoor.buildingKey;
@@ -366,17 +416,17 @@ namespace PeopleOfTheIliacBay.DFU
                 // Reconcile any native payment before future NPC admission uses it.
                 if(receipt==null || receipt.expiryTime<=now)
                 {
-                    NativeInnOccupants.Claim(store,directory,interior.EntryDoor,rooms,roomOccupants,now);
+                    NativeInnOccupants.Claim(store,directory,interior.EntryDoor,beds,bedOccupants,now);
                     AdvanceResidentInside(store,directory.MapID,building,now);
                     lastFailure=null; return;
                 }
                 string allocated;
                 if(!markers.TryGetValue(receipt.allocatedBedIndex,out allocated))
-                    throw new InvalidOperationException("Native allocated bed marker has no surveyed guest room.");
+                    throw new InvalidOperationException("Native allocated bed marker has no surveyed bed.");
                 if(!store.ReconcilePlayerLodging(directory.MapID,building,allocated,now,receipt.expiryTime))
                     throw new InvalidOperationException("Native paid rental conflicts with saved lodging; receipt and existing bookings retained.");
                 lastFailure=null;
-                NativeInnOccupants.Claim(store,directory,interior.EntryDoor,rooms,roomOccupants,now);
+                NativeInnOccupants.Claim(store,directory,interior.EntryDoor,beds,bedOccupants,now);
                 AdvanceResidentInside(store,directory.MapID,building,now);
             }
             catch(Exception error)

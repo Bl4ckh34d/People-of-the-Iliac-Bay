@@ -8,28 +8,27 @@ namespace PeopleOfTheIliacBay.Tests
     {
         public static void Add(List<(string Name,Action Body)> cases)
         {
-            cases.Add(("Loaded cached daily routes keep physical walking speed at the 2x clock",()=>{
-                foreach(int version in new[]{21,22,23}) foreach(double encodedRate in new[]{12d,2d})
+            cases.Add(("Loaded current daily routes preserve their saved timing",()=>{
+                foreach(double encodedRate in new[]{12d,2d})
                 {
                     var source=new WorldStateStore(42);
                     var home=source.GetOrCreate(1,new[]{10}).Households[0];
                     string id=home.Residents[0].Id;
-                    double speed=ResidentMovement.WalkSpeedFor(home.Residents[0].AppearanceSeed);
                     source.SetRoutines(new TownRoutineState {SettlementId=1,ItineraryVersion=1,
                         Residents=new List<ResidentRoutine> {new ResidentRoutine {ResidentId=id,
                             ItineraryDepartureSeconds=8*3600,Itinerary=Destination(encodedRate)}}});
-                    var saved=source.Snapshot(); saved.Version=version;
+                    var saved=source.Snapshot();
                     var loaded=new WorldStateStore(0); loaded.Restore(saved,7*3600);
                     var routine=loaded.GetRoutines(1).Residents[0];
                     var journey=ResidentVisitJourney.Create(routine.ItineraryDepartureSeconds,routine.Itinerary);
                     double start=routine.ItineraryDepartureSeconds;
-                    Check.Near(speed*10,journey.Evaluate(start+20).Position.X-journey.Evaluate(start).Position.X);
-                    Check.Near(260/speed,routine.Itinerary.Stops[0].WalkSeconds);
-                    Check.Near(260/speed,routine.Itinerary.ExitWalkSeconds);
+                    Check.Near(130d*20/(100*encodedRate),journey.Evaluate(start+20).Position.X-journey.Evaluate(start).Position.X);
+                    Check.Near(100*encodedRate,routine.Itinerary.Stops[0].WalkSeconds);
+                    Check.Near(100*encodedRate,routine.Itinerary.ExitWalkSeconds);
                     Check.Near(600,routine.Itinerary.Stops[0].DwellSeconds);
                     Check.Near(100*encodedRate,saved.Routines[0].Residents[0].Itinerary.Stops[0].WalkSeconds);
                     loaded.Restore(loaded.Snapshot(),7*3600);
-                    Check.Near(260/speed,loaded.GetRoutines(1).Residents[0].Itinerary.Stops[0].WalkSeconds);
+                    Check.Near(100*encodedRate,loaded.GetRoutines(1).Residents[0].Itinerary.Stops[0].WalkSeconds);
                 }
             }));
             cases.Add(("Short fallback visits walk at the same physical speed at 12x and 2x",()=>{

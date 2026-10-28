@@ -7,7 +7,8 @@ namespace PeopleOfTheIliacBay.DFU
     // A nearby point on another floor is not evidence that a seat is reachable.
     internal static class NativeSeatNavigation
     {
-        public static bool TryApproach(FurnitureSeatCatalog catalog,FurnitureSeatSlot seat,Vector3 from,out NavMeshPath path,System.Action<string> trace=null)
+        public static bool TryApproach(FurnitureSeatCatalog catalog,FurnitureSeatSlot seat,Vector3 from,out NavMeshPath path,System.Action<string> trace=null,
+            System.Func<Vector3[],bool> allowsRoute=null)
         {
             path=null;
             NavMeshHit start;
@@ -26,6 +27,7 @@ namespace PeopleOfTheIliacBay.DFU
                 if(FurnitureSeatCatalog.Blocks(hit.position,hit.position,CrowdMotion.BodyRadius))continue;
                 var route=new NavMeshPath();
                 if(!NavMesh.CalculatePath(start.position,hit.position,NavMesh.AllAreas,route) || route.status!=NavMeshPathStatus.PathComplete)continue;
+                if(allowsRoute!=null && !allowsRoute(route.corners))continue;
                 connected++;
                 if(!catalog.SetApproach(seat,hit.position,reason=>{if(rejection.Length==0)rejection=reason;}))continue;
                 path=route;return true;

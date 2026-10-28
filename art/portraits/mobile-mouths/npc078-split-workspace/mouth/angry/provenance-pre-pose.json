@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 78,
+  "emotion": "angry",
+  "assetType": "speech-mouth 3x3 raw atlas",
+  "imageTool": "built-in image_gen",
+  "sourceReference": "mouth-reference-grid.png",
+  "sourceReferenceSha256": "723a29c0e82dc6a0b811139c36f110100a031876b51ea7eea10984dd1a3e9f45",
+  "originalSha256": "4cfab5dce8d40ff0246728c2c28922d9b5627cec9549f9b5252f2f601e4978ce",
+  "rawFile": "raw.png",
+  "rawSha256": "0aa6ac237a0eff417fd8b0ff3f0c6d7997f362cc403acccc1345d10396796603",
+  "imagegenOutputName": "exec-f929ef2b-0e64-4fd8-9b8e-cd7fc8afad4c.png",
+  "prompt": "Use case: stylized-concept\nAsset type: pixel-art emotional speech-mouth atlas for one Daggerfall Unity 64x64 NPC portrait\nInput image: Image 1 is the inspected NPC 78 mouth reference grid. Use it as exact identity, skin/hair palette, lower-face anatomy, source scale and fantasy pixel-art style reference.\nPrimary request: create one 3-by-3 atlas of the same NPC 78 lower-face crop with nine natural angry speech mouth poses. Exact row-major cells: A, B, C / D, E, F / G, H, X. No labels, gutters, borders, or extra cells.\nComposition/framing: nine equal cells. Each cell is the same lower half aligned at identical scale and position, with an aspect ratio close to the native 64x29 lower half. Keep the entire nose, lips, chin, jaw, neck and visible hair/background aligned exactly as in the reference; only the small mouth/lip expression varies. Crisp pixel-art with readable native-size features.\nEmotion and mouth shapes: controlled anger shown by restrained lip and corner tension, never a giant or cartoon mouth. Make all nine cues visibly distinct and usable for speech. A and X are closed lips with subtle tension. B is slightly parted, C is narrow mid-open, D is a natural wide ah-open, E is rounded, F is open with a small amount of upper teeth, G is asymmetrically open, H is a small rounded/pursed speech shape. Vary teeth exposure naturally; most open poses must not show clenched teeth. Keep lips within the reference's original small mouth envelope.\nStyle and palette: match the source's low-resolution fantasy portrait, warm medium skin, muted brown hair, existing natural red-brown lips and gentle shading. Preserve crisp pixel clusters; no blur or smudging.\nConstraints: change only mouth and immediate lip-corner expression. Preserve original nose, face shape, jaw, neck, hair, clothing, background, crop, palette and scale in every cell. No oversized mouth, red skin, cartoon rage, permanent clenched teeth, visible tongue emphasis, new wrinkles outside the mouth, text, watermark, seams, artifacts, or inconsistent alignment."
+}

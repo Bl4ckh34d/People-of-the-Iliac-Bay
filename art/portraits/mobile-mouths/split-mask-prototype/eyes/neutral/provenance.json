@@ -1,0 +1,38 @@
+{
+  "emotion": "neutral",
+  "generator": "built-in image_gen",
+  "status": "prototype; user-review-pending; not installed",
+  "generationCount": 1,
+  "prompt": "Edit the supplied 2×2 atlas of complete upper portrait halves for NEUTRAL emotion. Keep exact 1024×560 sheet size, exact 2×2 layout, 512×280 cell size, aspect ratio, crop, face framing, hair, forehead, skin, brows, eye size and position, soft muted original palette, low contrast shading, and pixel structure. Row-major cells: top-left OPEN, top-right HALF blink, bottom-left CLOSED blink, bottom-right repeated OPEN reference. The open cells must retain the same relaxed neutral eyes as the reference; make them visually identical in eye state. In HALF cell, lower upper eyelids to cover about half of each iris while keeping pupils visible. In CLOSED cell, close both eyes fully and hide all iris and sclera. Keep neutral level brows and original eye proportions across all four cells; only eyelid state changes. The fourth open cell duplicates the first open state. Preserve the upper-half portraits as complete cells; no separate eye crops or overlays. No face expression change, no gaze direction change, no eye enlargement, head tilt, shifted hairline, hard black brows, thick eyeliner, sharpened edges, blur, airbrush, labels, text, new gutters or borders. Return one unaltered 2×2 sheet with same layout and about 1.82857 aspect ratio.",
+  "source": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\eyes-reference-grid.png",
+    "sha256": "A533A7BD5E93C132A22191FB9C4EC35466840A8B0BAC4218064DB6BC5F4FAACC",
+    "width": 1024,
+    "height": 560
+  },
+  "generatedOriginal": {
+    "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-5744-7b43-9b03-e8cced819bb7\\exec-15f2e1aa-70a8-4b75-a3f5-b2be58ca7af8.png",
+    "sha256": "22730D7E8B85147D436CAD19E0D6D67BB36B297C4F017EEDE185E68201979636"
+  },
+  "output": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\eyes\\neutral\\raw.png",
+    "sha256": "22730D7E8B85147D436CAD19E0D6D67BB36B297C4F017EEDE185E68201979636",
+    "width": 1695,
+    "height": 928,
+    "aspectRatio": 1.826509,
+    "copiedUnmodified": true
+  },
+  "grid": {
+    "rows": 2,
+    "columns": 2,
+    "cellOrder": [
+      "open emotional neutral",
+      "half blink",
+      "closed blink",
+      "open reference duplicate"
+    ],
+    "referenceCellDimensions": "512×280 (64×35 enlarged 8×)",
+    "downstreamOpenPose": "Use exact native original; generated open cells are references only."
+  },
+  "visibleDeviations": "Sheet preserves clear 2×2 upper-portrait layout. Actual output is 1695×928 (aspect 1.826509), close to expected 1.828571, but odd width prevents equal integer-width columns. Open cells are similar neutral references; exact pixel identity is not assured. Parent must account for actual layout when sampling."
+}

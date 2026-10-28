@@ -98,8 +98,18 @@ namespace PeopleOfTheIliacBay.DFU
             while(next<route.Count)
             {
                 Vector3 waypoint=WorldPoint(interior,route[next]);
-                float reach=next==route.Count-1 ? arrivalRadius : 0.15f;
-                if(Vector3.Distance(actor.transform.position,waypoint+Vector3.up)>=reach) break;
+                var offset=actor.transform.position-(waypoint+Vector3.up);
+                if(next==route.Count-1)
+                {
+                    if(offset.magnitude>=arrivalRadius)break;
+                }
+                else
+                {
+                    // Grounded walking stops within its horizontal radius. A stair
+                    // height offset must not make that reached transit point unreachable.
+                    float height=Mathf.Abs(offset.y);offset.y=0;
+                    if(height>=0.4f || offset.sqrMagnitude>=0.4f*0.4f)break;
+                }
                 next++;
             }
             if(next>=route.Count)
@@ -142,9 +152,19 @@ namespace PeopleOfTheIliacBay.DFU
                 foreach(var hit in Physics.OverlapCapsule(currentWaypoint+Vector3.up*(0.51f+CrowdMotion.BodyRadius),
                     currentWaypoint+Vector3.up*1.65f,CrowdMotion.BodyRadius,~0,QueryTriggerInteraction.Ignore))
                     if(hit && !hit.transform.IsChildOf(actor.transform)) blockers+=hit.name+" ";
+                string segmentBlockers="";var segment=currentWaypoint-actual;
+                if(segment.sqrMagnitude>0.000001f)
+                    foreach(var hit in Physics.CapsuleCastAll(actual+Vector3.up*(0.51f+CrowdMotion.BodyRadius),
+                        actual+Vector3.up*1.65f,CrowdMotion.BodyRadius,segment.normalized,segment.magnitude,
+                        ~0,QueryTriggerInteraction.Ignore))
+                        if(hit.collider && !hit.transform.IsChildOf(actor.transform))segmentBlockers+=hit.collider.name+" ";
+                var physical=actor.GetComponent<CrowdMotion>();
                 Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_ROOM_ROUTE_STALL: resident="+actor.Resident.Id+"; next="+next+"/"+route.Count+
                     "; body="+actual.ToString("F3")+"; target="+currentWaypoint.ToString("F3")+"; distance="+targetDistance+
-                    "; neighbours="+people+"; targetColliders="+blockers+"; remaining="+remaining);
+                    "; neighbours="+people+"; targetColliders="+blockers+"; segmentColliders="+segmentBlockers+
+                    "; physicalSegmentClear="+(physical && physical.CanTraverseTo(currentWaypoint))+
+                    "; nativeFailure="+native?.FailureReason+"; nativePath="+native?.PathState+
+                    "; preciseWaypoint="+preciseWaypoint+"; remaining="+remaining);
             }
             if(targetDistance>=0.15f && stalledAt>0 && unscaledTime-stalledAt>=0.8 && unscaledTime>=nextDetourAt && !(seatAccess!=null&&next==route.Count-1))
                 TryDetour(actual,actor,interior,geometry,unscaledTime);
@@ -163,11 +183,10 @@ namespace PeopleOfTheIliacBay.DFU
             // comfort radius to another chair. Keep hard body separation and
             // exact furniture permission, without circling its seated neighbour.
             bool selectedSeatEndpoint=seatAccess!=null&&next==route.Count-1;
-            if(selectedSeatEndpoint || Vector3.Distance(actor.transform.position,point+Vector3.up)<=0.55f)
+            if(selectedSeatEndpoint || next==route.Count-1 && Vector3.Distance(actor.transform.position,point+Vector3.up)<=0.55f)
                 preciseWaypoint=next;
-            // Native pathing reaches the surveyed point's neighbourhood. The
-            // existing physical follower completes its last precise step and
-            // owns every reserved seat approach.
+            // Intermediate points only guide walking. Precise completion belongs
+            // to the final activity position, including reserved seats.
             var world=NativeNavigationWorld.Current;
             bool useNative=preciseWaypoint!=next && world && world.Ready &&
                 GameManager.Instance.PlayerGPS.HasCurrentLocation &&

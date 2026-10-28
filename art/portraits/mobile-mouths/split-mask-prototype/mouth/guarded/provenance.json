@@ -1,0 +1,28 @@
+{
+  "emotion": "guarded / skeptical",
+  "generator": "built-in image_gen",
+  "status": "prototype; user-review-pending; not installed",
+  "source_images": [
+    {
+      "role": "edit-target",
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\mouth-reference-grid.png",
+      "sha256": "81B130639901DA518717B9B48B461C210CE9F9D8D1C7141CE409D46E542DD7DE"
+    },
+    {
+      "role": "supporting-identity-palette-reference",
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\original.png",
+      "sha256": "4BBB1C9F6BEA7561D316FA6587A93FD0C9BCBFA3C9AA0992BB85B804AA213125"
+    }
+  ],
+  "generated_original": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-626e-7471-95f3-109617bb3581\\exec-bf26e1a2-aac0-44ca-b7b1-af8e31b4f0e6.png",
+  "output": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\mouth\\guarded\\raw.png",
+    "dimensions": "1863x844",
+    "aspect_ratio": "2.20735",
+    "sha256": "D1F600D3E3480D03BD492ACDCF1FB76998274028255A8434212347B17B8C9FC4"
+  },
+  "prompt": "Image 1 is the EDIT TARGET: keep its full 3x3 lower-half atlas, exact aspect ratio about 2.20690, equal cells and framing. Image 2 is supporting original identity, palette and soft-shading reference only. Make one GUARDED / SKEPTICAL lower-half mouth atlas. Preserve row-major speech order A B C / D E F / G H X, with original mouth scale and anchors: A closed M/B/P; B narrow consonant with slight teeth; C medium EH; D moderately open AH; E rounded OH; F small OO/W; G upper teeth against lower lip F/V; H subtle raised tongue behind upper teeth L; X emotional resting mouth. Keep all nine speech poses distinct and useful. Apply only restrained skeptical lip expression: slight asymmetric tightening at one mouth corner, subtle tension and reserved lips; X closed with a small asymmetric skeptical set. No broad smile, anger, scowl, rage, or exaggerated frown. Keep mouths inside the original lip area and native scale; do not widen or enlarge lips, alter nose or chin placement, shift anchors, or paste a separate crop. Preserve soft muted skin shading and the source's low contrast; no hard black outlines or extra folds beyond subtle natural corner tension. Keep the complete 3x3 lower-half layout with no text, labels, border, gutters, extra rows or crops. Output one raw full 3x3 lower-half sheet.",
+  "grid_order": "A B C / D E F / G H X",
+  "generation_count": 1,
+  "visible_deviations": "All nine full lower-half cells and viseme order remain visible; output aspect closely matches 2.20690 target. X reads restrained and closed; corner asymmetry is subtle."
+}

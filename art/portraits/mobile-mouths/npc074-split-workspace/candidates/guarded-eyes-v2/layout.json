@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 74,
+  "bank": "TFAC00I0.RCI",
+  "width": 64,
+  "height": 64,
+  "splitY": 35,
+  "browLockEndY": 25,
+  "eyeRegions": [
+    { "x": 14, "y": 16, "width": 17, "height": 16 },
+    { "x": 33, "y": 16, "width": 18, "height": 16 }
+  ],
+  "mouthRegion": { "x": 18, "y": 38, "width": 28, "height": 14 },
+  "sourceSha256": "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae",
+  "calibrationStatus": "provisional-source-only; parent review required before workspace preparation or generation",
+  "calibrationEvidence": [
+    "art/portraits/mobile-mouths/split-mask-prototype/catalog/common-074.png",
+    "work/portrait074-full-preflight/report.md",
+    "work/portrait074-full-preflight/common-074-mask-proposal.png"
+  ],
+  "calibrationReason": "The source is a native 64x64 RGBA portrait. Preserve the prior horizontal eye bounds (left x14..30, right x33..50) to keep the blue ornament and central nose bridge outside the masks; extend each eye mask upward to y16 for 1-2 pixels above the highest original brow pixels and retain lower-lid room through y31. browLockEndY=25 follows the source brow band and stops just above the narrow eye aperture, keeping brows consistent across phases. Expand the old mouth envelope to x18..45 and y38..51 for the wider AA pose while keeping it centered on the lips; bottom=52 stays above the neck and the side bounds stay within the face, away from hair. Bounds are provisional envelopes, not contours, and generated phases still require native review."
+}

@@ -1,0 +1,69 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T10:56:28.6479095Z",
+    "purpose":  "thinking-eye raw generation; standard helper receipt retained unchanged",
+    "emotionId":  "angry",
+    "referenceSource":  {
+                            "file":  "eyes/angry/open.png",
+                            "sha256":  "ac7b280c45c80a72466d12031028582bd866043f8a655eb772b118d8768c5456",
+                            "width":  64,
+                            "height":  35
+                        },
+    "portraitRecord":  74,
+    "bank":  "TFAC00I0.RCI",
+    "actualReference":  {
+                            "path":  "../../thinking-reference-grid.png",
+                            "absolutePath":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc074-thinking-emotions\\angry\\attempt-horizontal-v2\\thinking-reference-grid.png",
+                            "sha256":  "274533de9275c8ac9bd14d62f32c20220dfcc5802135aff0d38528849c4f7ccb",
+                            "width":  1024,
+                            "height":  560
+                        },
+    "actualArguments":  {
+                            "path":  "arguments.json",
+                            "sourcePath":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait074-horizontal-angry-v2\\imagegen-arguments.json",
+                            "sha256":  "c5ab623fc4edfa9fe7006f9eced0a5f6bad789f8d128a1c9a453aa7a6e568e04",
+                            "referencedImagePath":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc074-thinking-emotions\\angry\\attempt-horizontal-v2\\thinking-reference-grid.png",
+                            "normalizedReferencedImagePath":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc074-thinking-emotions\\angry\\attempt-horizontal-v2\\thinking-reference-grid.png",
+                            "transparentBackground":  false,
+                            "numLastImagesToInclude":  null
+                        },
+    "actualRequest":  {
+                          "path":  "request.json",
+                          "sourcePath":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait074-horizontal-angry-v2\\imagegen-request.json",
+                          "sha256":  "d0138d5ce33fbc11a6c4cf762b6809f99b8e9f911c7d1c02005325ce1791be75"
+                      },
+    "helperStage":  {
+                        "portraitRoot":  "C:\\Users\\Daniel\\AppData\\Local\\Temp\\portrait-thinking-stage-d45eb415d6674e1694a5162eaa5c68cf",
+                        "part":  "eyes",
+                        "emotion":  "neutral",
+                        "referencePath":  "eyes-reference-grid.png",
+                        "referenceSha256":  "274533de9275c8ac9bd14d62f32c20220dfcc5802135aff0d38528849c4f7ccb",
+                        "sourceOriginalSha256":  "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae",
+                        "provenance":  "provenance.json"
+                    },
+    "transferred":  {
+                        "rawPath":  "raw.png",
+                        "rawSha256":  "0a5c294ae2bdf278be5f09591c33e403bf26ed2d4d64a463a530639e26c0c384",
+                        "rawSize":  "1695x928",
+                        "helperProvenancePath":  "provenance.json",
+                        "savedReferencePath":  "eyes-reference-grid.png"
+                    },
+    "helperProvenanceNote":  "provenance.json is the unchanged SavePortraitRawOutput receipt from the isolated helper stage. Its eyes/neutral labels and eyes-reference-grid.png path describe that stage; this wrapper maps those bytes to eyes/thinking and the actual thinking grid.",
+    "gazeLayout":  "horizontal-pair",
+    "referenceSources":  [
+                             {
+                                 "phase":  "open",
+                                 "file":  "eyes/angry/open.png",
+                                 "sha256":  "ac7b280c45c80a72466d12031028582bd866043f8a655eb772b118d8768c5456",
+                                 "width":  64,
+                                 "height":  35
+                             },
+                             {
+                                 "phase":  "half",
+                                 "file":  "eyes/angry/half.png",
+                                 "sha256":  "b21826208c122504c360ad4adc941f2a127b8c0b6dfb8c25ced7a46e71f5c7cc",
+                                 "width":  64,
+                                 "height":  35
+                             }
+                         ]
+}

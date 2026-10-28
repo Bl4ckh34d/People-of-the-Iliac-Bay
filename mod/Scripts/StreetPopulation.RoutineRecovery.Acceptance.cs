@@ -51,10 +51,9 @@ namespace PeopleOfTheIliacBay.DFU
                 DaggerfallUnity.Instance.WorldTime.TimeScale/actor.WalkingSpeed,out recovery,out reason,out var failure,true)) return true;
 
             if(failure==RoutineRecoveryFailure.RequiredAppointmentUnreachable ||
-                failure==RoutineRecoveryFailure.HomeReturnUnavailable ||
-                failure==RoutineRecoveryFailure.ProtectedSleep)
+                failure==RoutineRecoveryFailure.HomeReturnUnavailable)
             {
-                reason="The measured return route leaves too little time for a fixed appointment or protected home sleep.";
+                reason="The measured return route cannot reach a fixed appointment or the resident's home.";
                 return false;
             }
             // Missing route evidence or invalid imported routine data cannot prove
@@ -73,25 +72,24 @@ namespace PeopleOfTheIliacBay.DFU
                     foreach(var stop in itinerary.Stops) keys.Add(stop.BuildingKey);
             else keys.Add(plan.Routine.DestinationKey);
 
-            float nearest=float.PositiveInfinity;SavedRoutePoint selected=null;
+            double nearest=double.PositiveInfinity;
+            var from=directory.transform.InverseTransformPoint(target);
+            var start=new SavedRoutePoint {X=from.x,Z=from.z};
             foreach(int key in keys)
             {
                 SavedRoutePoint door;
-                if(!TryRoutineRecoveryDoor(plan,key,out door)) continue;
-                var worldDoor=geometry.ScenePoint(new RoutePoint(door.X,door.Z));
-                float distance=(worldDoor-target).sqrMagnitude;
-                if(distance>=nearest) continue;
-                nearest=distance;origin=key;selected=door;
+                if(!TryRoutineRecoveryDoor(plan,key,out door))continue;
+                var route=geometry.RouteBetweenPoints(start,door);
+                if(route==null || route.Count<2)continue;
+                var end=geometry.ScenePoint(new RoutePoint(route[route.Count-1].X,route[route.Count-1].Z));
+                var expected=geometry.ScenePoint(new RoutePoint(door.X,door.Z));
+                if(Vector3.Distance(end,expected)>0.4f)continue;
+                double length=RouteLength(route);
+                if(length>=nearest)continue;
+                nearest=length;origin=key;
             }
-            if(selected==null) return false;
-
-            var from=directory.transform.InverseTransformPoint(target);
-            var route=geometry.RouteBetweenPoints(new SavedRoutePoint {X=from.x,Z=from.z},selected);
-            if(route==null || route.Count<2) return false;
-            var end=geometry.ScenePoint(new RoutePoint(route[route.Count-1].X,route[route.Count-1].Z));
-            var expected=geometry.ScenePoint(new RoutePoint(selected.X,selected.Z));
-            if(Vector3.Distance(end,expected)>0.4f) return false;
-            seconds=ConservativeReturnSeconds(RouteLength(route),range,actor);
+            if(origin<0)return false;
+            seconds=ConservativeReturnSeconds(nearest,range,actor);
             return seconds>0 && !double.IsNaN(seconds) && !double.IsInfinity(seconds);
         }
 

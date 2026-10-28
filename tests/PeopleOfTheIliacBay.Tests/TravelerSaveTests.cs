@@ -11,12 +11,13 @@ namespace PeopleOfTheIliacBay.Tests
         private static WorldStateStore Store()
         {
             var store=new WorldStateStore(42); store.GetOrCreate(1,new int[0]);
-            store.RegisterLodging(1,7,new[] { new LodgingRoom { Id="room",Beds=new List<string> { "bed" } } });
+            store.RegisterLodgingBeds(1,7,new[] { new LodgingBed {Id="bed"} });
             store.RegisterTraveler(new TravelerPerson { Id="traveler:a",Name="Test Visitor",HomeSettlement=2,AppearanceSeed=12,Sex=ResidentSex.Female,Race=1 });
             return store;
         }
         public static void Add(List<(string Name,Action Body)> cases)
         {
+            AddBoundActionAbsenceCase(cases);
             cases.Add(("Investigated inn refuses traveler without booking and reopens after occupation",()=>{
                 var store=Store(); store.RegisterTravelerVisit(Visit());
                 var roster=store.GetOrCreateGuards(1,1,new[]{new SavedRoutePoint()}); var guard=roster.Guards[0];
@@ -32,8 +33,9 @@ namespace PeopleOfTheIliacBay.Tests
                 var later=Visit("later"); later.DesiredArrival=48000; restored.RegisterTravelerVisit(later);
                 Check.True(restored.TryAdmitTraveler("later",48600));
             }));
-            cases.Add(("Saved refusal shortens runtime visit and never reserves a bed",()=>{
+            cases.Add(("Saved refusal retains unresolved shelter search without reserving a bed",()=>{
                 var store=Store(); store.RegisterTravelerVisit(Visit());
+                double intendedExit=store.TravelerJourneyFor("visit").ExitAt;
                 store.TryBookLodging(1,7,"full","player",1,true,1,43000,300000);
                 long revision=store.TravelerVisitRevision;
                 store.AdvanceTravelerAdmissions(1,44000,8);
@@ -42,7 +44,14 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.True(store.TravelerBed("visit",44000)==null);
                 store.Restore(store.Snapshot());
                 Check.Equal(TravelerPhase.Leaving,store.TravelerJourneyFor("visit").Evaluate(44000).Phase);
-                Check.Equal(0,store.TravelerVisitsDuring(1,86400,172800).Count);
+                Check.Equal(1,store.TravelerVisitsDuring(1,86400,172800).Count);
+                Check.True(store.TravelerAwaitingLodgingDecision("visit",86400));
+                Check.True(store.IsResidentAway("traveler:a",86400));
+                Check.True(store.TravelerBed("visit",86400)==null);
+                Check.Equal(1,store.Snapshot().Lodgings[0].Bookings.Count);
+                Check.Equal("full",store.Snapshot().Lodgings[0].Bookings[0].Id);
+                Check.True(!store.TravelerAwaitingLodgingDecision("visit",intendedExit+1));
+                Check.Equal(0,store.TravelerVisitsDuring(1,intendedExit+1,intendedExit+3600).Count);
             }));
             cases.Add(("Traveler physical bed requires an alive paid guest within the booked stay",()=>{
                 var store=Store(); store.RegisterTravelerVisit(Visit());
@@ -70,7 +79,7 @@ namespace PeopleOfTheIliacBay.Tests
             }));
             cases.Add(("Traveler admission only allocates the inn whose native receipts were reconciled",()=>{
                 var store=Store(); store.RegisterTravelerVisit(Visit());
-                store.RegisterLodging(1,8,new[]{new LodgingRoom { Id="other",Beds=new List<string>{"other-bed"} }});
+                store.RegisterLodgingBeds(1,8,new[]{new LodgingBed {Id="other-bed"}});
                 store.RegisterTraveler(new TravelerPerson { Id="traveler:b",Name="Other Visitor",HomeSettlement=3 });
                 var other=Visit("other-visit"); other.PersonId="traveler:b"; other.TavernKey=8;
                 store.RegisterTravelerVisit(other);
@@ -79,7 +88,7 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.True(!store.HasDueTravelerAdmission(1,7,50000));
                 Check.True(store.HasDueTravelerAdmission(1,8,50000));
                 Check.Equal(TravelerAdmission.Pending,store.Snapshot().TravelerVisits.Find(v=>v.Id=="other-visit").Admission);
-                Check.True(store.ReconcilePlayerLodging(1,8,"other",43000,60000));
+                Check.True(store.ReconcilePlayerLodging(1,8,"other-bed",43000,60000));
                 Check.Equal(1,store.AdvanceTravelerAdmissions(1,50000,10,8));
                 Check.Equal(TravelerAdmission.Refused,store.Snapshot().TravelerVisits.Find(v=>v.Id=="other-visit").Admission);
             }));
@@ -244,17 +253,27 @@ namespace PeopleOfTheIliacBay.Tests
                 var changed=Visit(); changed.Nights=3;
                 Check.Throws<ArgumentException>(()=>store.RegisterTravelerVisit(changed));
             }));
-            cases.Add(("Malformed traveler booking links fail restore atomically and old schemas gain empty visitors",()=>{
+            cases.Add(("Malformed traveler booking links fail restore atomically",()=>{
                 var store=Store(); store.RegisterTravelerVisit(Visit()); store.TryAdmitTraveler("visit",43800);
                 var bad=store.Snapshot(); bad.Lodgings[0].Bookings.Clear();
                 Check.Throws<ArgumentException>(()=>store.Restore(bad));
                 Check.Equal(TravelerAdmission.Admitted,store.Snapshot().TravelerVisits[0].Admission);
-                for(int version=1;version<=8;version++)
-                {
-                    var old=store.Snapshot(); old.Version=version; old.Travelers=null; old.TravelerVisits=null;
-                    var copy=new WorldStateStore(0); copy.Restore(old);
-                    Check.Equal(0,copy.Snapshot().Travelers.Count); Check.Equal(0,copy.Snapshot().TravelerVisits.Count);
-                }
+            }));
+        }
+        internal static void AddBoundActionAbsenceCase(List<(string Name,Action Body)> cases)
+        {
+            cases.Add(("An exactly observed current traveler visit does not self-block its local action",()=>{
+                var store=Store();store.RegisterTravelerVisit(Visit());
+                var journey=store.TravelerJourneyFor("visit");double now=journey.CheckInAt+1;
+                Check.True(store.IsResidentAway("traveler:a",now),"The visitor must remain away from their origin.");
+                var method=typeof(WorldStateStore).GetMethod("IsResidentAway",new[]{typeof(string),typeof(double),typeof(string)});
+                Func<string,bool> blocked=visit=>method==null?store.IsResidentAway("traveler:a",now):
+                    (bool)method.Invoke(store,new object[]{"traveler:a",now,visit});
+                Check.True(!blocked("visit"),"The exact present destination visit wrongly interrupts an admitted local action.");
+                Check.True(blocked(null),"Unbound absence must remain protected.");
+                Check.True(blocked("another-visit"),"A different journey must remain protected.");
+                store.KillTraveler("traveler:a",now);
+                Check.True(blocked("visit"),"A dead traveler must not obtain local action ownership.");
             }));
         }
     }

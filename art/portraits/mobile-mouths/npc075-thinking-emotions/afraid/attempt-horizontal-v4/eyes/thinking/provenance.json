@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T12:50:14.3993509Z",
+    "portraitRecord":  75,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Create a 2×2 horizontal afraid-thinking eye atlas from the single provided local reference grid. Layout: top-left LEFT OPEN, top-right RIGHT OPEN; bottom-left LEFT HALF, bottom-right RIGHT HALF. Each cell is one complete, identically framed native64×35 upper crop. Preserve this NPC’s fearful brows, including the lifted/pinched shape through row24, hair, source eye spacing, source muted olive-brown/amber iris hue, compact irises, dark pupils, and soft pixel clusters. The only movement in OPEN is a very small, about one-native-pixel horizontal iris/pupil shift: BOTH pupils and both colored iris centers move toward the same canvas side together, LEFT in the left column and RIGHT in the right column, with natural source-like convergence. Do not move only one eye, shift gaze vertically, cross eyes, enlarge irises, widen eye apertures, or add white/cream bands. Preserve dark shaded eye interiors with tiny muted warm glints, not bright or broad sclera. Preserve the lower lid contour at native row28 and every cheek pixel from row29 downward exactly as shown; do not let the cheek rise or repaint it to simulate a blink. In both HALF cells, the upper lid alone lowers over the same compact iris and visibly covers its upper portion; keep lower lid and cheek fixed, leave a narrow shaded opening, and do not widen whites. Keep the exact fearful expression, hairline, framing, background, and original pixel scale throughout. No labels, borders, smoothing, vectors, extra features, or rescaling.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-6448818f-dea3-489a-bdae-8d4c6ad84a74.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-6448818f-dea3-489a-bdae-8d4c6ad84a74.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "1436b12a74786d134652141c1c39493ea82f4abb88c31cf80fd8d43d977650d7",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-6448818f-dea3-489a-bdae-8d4c6ad84a74.png",
+                      "sha256":  "076a2c61c9212d48930b2c08c86a204074522821e6d1fd21012d98d9f3ddb57d",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "076a2c61c9212d48930b2c08c86a204074522821e6d1fd21012d98d9f3ddb57d",
+                "width":  1695,
+                "height":  928
+            }
+}

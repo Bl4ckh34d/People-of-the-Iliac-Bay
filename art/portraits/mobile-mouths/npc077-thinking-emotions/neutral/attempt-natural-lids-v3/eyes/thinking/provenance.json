@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T06:58:35.9020250Z",
+    "portraitRecord":  77,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Use case: precise-object-edit\nAsset type: DFU NPC pixel-art eye atlas\nPrimary request: Edit the supplied 3x3 reference atlas of this same woman into nine natural, clearly distinct gaze directions. Keep her neutral expression and original neutral brows intact in every cell. Each cell is the complete upper face, 64:35 aspect, with identical framing. Return only one 3x3 atlas.\nInput image: Image 1 is the sole reference. It is the exact inspected 3x3 grid made from this portrait\u0027s own neutral open-eye source.\nDirection order: top-left=up-left, top-center=up, top-right=up-right; middle-left=left, middle-center=center, middle-right=right; bottom-left=down-left, bottom-center=down, bottom-right=down-right. Both eyes point together. Diagonal cells must visibly combine horizontal and vertical gaze; do not repeat left, center, or right.\nEye anatomy: Keep each pupil and compact iris within the eye opening. Let upper and lower lids remain clear, continuous, and anatomically coherent; allow the upper lid to rise naturally for upward gaze and to partially occlude the iris as gaze changes. Let lower lids remain visible. Preserve eye corners and spacing. Keep iris scale coherent across all cells. Do not move brow or whole socket to fake gaze.\nIdentity and expression: Preserve this exact face, hair, skin, pixel lattice, palette, crop and neutral brow shape. Do not change the expression. Middle-center must match supplied source exactly. Keep everything outside eye features unchanged.\nStyle and constraints: Low-resolution softly shaded pixel art. Retain the original 64:35 upper-face landscape cell ratio exactly. Output one opaque landscape canvas of 1536x840 pixels arranged as three equal columns and three equal rows; each cell is 512x280 pixels, ratio 64:35, with identical framing. Do not add transparency, a checkerboard, a separate backing, or baked checker pattern; use the original portrait background in every cell. Keep original square pixel scale. Irises must be small irregular stepped native-pixel clusters with shaded uneven corners and partly lid-occluded edges, never smooth geometric circular disks and never rectangular purple bars. Keep tiny, muted warm glints only; no bright rings, no broad bright white or cream sclera, no extra shine. No vector-round eyes, giant irises, labels, borders, gutters, text, or extra content.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-549b-7ab2-8013-5f6ffd01d978 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-549b-7ab2-8013-5f6ffd01d978\\exec-2d1e242d-26a3-451d-b761-90793dedff1b.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-549b-7ab2-8013-5f6ffd01d978\\exec-2d1e242d-26a3-451d-b761-90793dedff1b.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "e797d4129c06130dd9a87c7b3a60ca36518adfe7128a4fc84b9626280e228bb6",
+                          "width":  1536,
+                          "height":  840
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-549b-7ab2-8013-5f6ffd01d978\\exec-2d1e242d-26a3-451d-b761-90793dedff1b.png",
+                      "sha256":  "c3b11731038e746829e4e5ee45f3fa9327b43de12243e9d6fe7cfc5c989ac29a",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "c3b11731038e746829e4e5ee45f3fa9327b43de12243e9d6fe7cfc5c989ac29a",
+                "width":  1695,
+                "height":  928
+            }
+}

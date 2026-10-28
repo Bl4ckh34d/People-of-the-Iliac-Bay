@@ -18,6 +18,28 @@ namespace PeopleOfTheIliacBay.Tests
         }
         public static void Add(List<(string, Action)> cases)
         {
+            foreach(bool departure in new[]{false,true})
+                cases.Add(("Guard report conversation preserves physical position and saved arrival: departure="+departure,()=>{
+                    CivilianIncident alarm;string witness;var store=Body(out alarm,out witness);
+                    var roster=store.GetOrCreateGuards(1,1,new[]{new SavedRoutePoint()});var guard=roster.Guards[0];
+                    var target=new SavedRoutePoint{X=20};
+                    var routes=new Dictionary<string,List<SavedRoutePoint>>{{guard.Id,new List<SavedRoutePoint>{guard.Post,target}}};
+                    var patrol=new List<SavedRoutePoint>{target,new SavedRoutePoint{X=25},target};
+                    if(departure)roster.DispatchDepartureInvestigation("outdoor:"+alarm.Id,200,200,routes,patrol,2,12);
+                    else roster.DispatchOutdoorInvestigation("outdoor:"+alarm.Id,200,routes,patrol,1,2,12);
+                    store.Restore(store.Snapshot());roster=store.GetGuards(1);guard=roster.Guards[0];
+                    double at=224,arrival=guard.ArrivesAt;var before=roster.Position(guard.Id,at);
+                    Check.True(roster.PauseResponseForReport(guard.Id,at,36d));
+                    Check.True(!roster.PauseResponseForReport(guard.Id,at,36d),"Repeated callback must not extend the conversation.");
+                    Check.Near(before.X,roster.Position(guard.Id,at+35).X);
+                    Check.Near(arrival+36,guard.ArrivesAt);
+                    Check.True(roster.Position(guard.Id,at+42).X>before.X);
+                    store.Restore(store.Snapshot());roster=store.GetGuards(1);
+                    Check.Near(before.X,roster.Position(guard.Id,at+35).X);
+                    roster.Advance(arrival+36);
+                    Check.Equal(GuardDuty.Searching,roster.Guards[0].Duty);
+                    Check.Near(20,roster.Position(guard.Id,arrival+36).X);
+                }));
             cases.Add(("Early physical corpse removal starts an immediate nonrenewable thirty-minute inquiry window",()=>{
                 CivilianIncident alarm;string witness;var store=Body(out alarm,out witness);
                 store.ObserveOutdoorCorpse(alarm.Id,false,200);
@@ -76,27 +98,6 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.True(store.TryQuestionCorpseCase(alarm.Id,guard.Id,witness,false,2,true,arrived,out statement));
                 store.Restore(store.Snapshot());store.GetGuards(1).Advance(3800);
                 Check.Equal(GuardDuty.Posted,store.GetGuards(1).Guards[0].Duty);
-            }));
-            cases.Add(("Schema63 inquiry history survives migration into a fixed cleanup window",()=>{
-                CivilianIncident alarm;string witness;var store=Body(out alarm,out witness);
-                store.ObserveOutdoorCorpse(alarm.Id,false,200);
-                var roster=store.GetOrCreateGuards(1,1,new[]{new SavedRoutePoint()});var guard=roster.Guards[0];
-                var target=new SavedRoutePoint{X=3,Z=4};
-                roster.DispatchDepartureInvestigation("outdoor:"+alarm.Id,200,200,
-                    new Dictionary<string,List<SavedRoutePoint>>{{guard.Id,new List<SavedRoutePoint>{guard.Post,target}}},
-                    new List<SavedRoutePoint>{target,new SavedRoutePoint{X=13,Z=4},target},2,10);
-                roster.Advance(2000);store.ObserveOutdoorCorpse(alarm.Id,true,2000);bool statement;
-                Check.True(store.TryQuestionCorpseCase(alarm.Id,guard.Id,witness,false,2,true,2000,out statement));
-                var legacy=store.Snapshot();legacy.Version=63;var report=legacy.Garrisons[0].Reports[0];
-                report.HasCorpseInquiryWindow=false;report.CorpseInquiryStartedAt=0;
-                report.CorpseSearchVersion=0;
-                legacy.AlarmIncidents[0].Corpse.Inquiries[0].WindowVersion=0;
-                var restored=new WorldStateStore(0);restored.Restore(legacy);
-                Check.True(restored.SynchronizeOutdoorCorpseInquiry(alarm.Id));
-                var person=restored.RegisterNativePerson(1,-1,1998,"Other bystander",ResidentSex.Male,0,0,182,0);
-                Check.True(restored.TryQuestionCorpseCase(alarm.Id,guard.Id,person.Id,true,2,true,2100,out statement));
-                restored.Restore(restored.Snapshot());var rows=restored.Snapshot().AlarmIncidents[0].Corpse.Inquiries;
-                Check.Equal(0,rows[0].WindowVersion);Check.Equal(1,rows[1].WindowVersion);
             }));
             cases.Add(("Late corpse responders return from their actual travelled route when inquiry expires",()=>{
                 CivilianIncident alarm;string witness;var store=Body(out alarm,out witness);
@@ -174,9 +175,8 @@ namespace PeopleOfTheIliacBay.Tests
                 store.GetGuards(1).Advance(3800);
                 Check.True(!store.TryQuestionCorpseCase(alarm.Id,guard.Id,"unknown",false,1,true,3800,out statement));
             }));
-            cases.Add(("Departure chronology rejects forged early cleanup and preserves genuine schema60 corpses", () => {
+            cases.Add(("Departure chronology rejects forged early cleanup", () => {
                 CivilianIncident alarm;string witness;var store=Body(out alarm,out witness);
-                var old=store.Snapshot();old.Version=60;store.Restore(old);
                 Check.True(store.Snapshot().AlarmIncidents[0].Corpse.Departure==null);
                 store.ObserveOutdoorCorpse(alarm.Id,false,200);
                 var corrupt=store.Snapshot();corrupt.AlarmIncidents[0].Corpse.Departure.AwaySince=201;

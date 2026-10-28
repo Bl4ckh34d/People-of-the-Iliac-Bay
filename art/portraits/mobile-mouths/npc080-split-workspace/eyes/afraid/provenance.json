@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 80,
+  "bank": "TFAC00I0.RCI",
+  "emotion": "afraid",
+  "asset": "eyes",
+  "rawPath": "art\\portraits\\mobile-mouths\\npc080-split-workspace\\eyes\\afraid\\raw.png",
+  "rawSha256": "0221e9ab458d6ad81a6e1b87dfe97199a5562688d5213d83f202fd68445ed757",
+  "generatedSourcePath": "C:/Users/Daniel/.codex/generated_images/01a15fdf-2ede-7fc1-b24a-9d18707baa51/exec-133e2913-6771-419a-817b-2dc22870520d.png",
+  "generatedSourceSha256": "0221e9ab458d6ad81a6e1b87dfe97199a5562688d5213d83f202fd68445ed757",
+  "referenceGridPath": "art\\portraits\\mobile-mouths\\npc080-split-workspace\\eyes-reference-grid.png",
+  "referenceGridSha256": "68275f3a970329cd449c3a75313210237ae84fe4ade1b0a18e6be6b93e7ee842",
+  "originalPath": "art\\portraits\\mobile-mouths\\npc080-split-workspace\\original.png",
+  "originalSha256": "4ea9b975047475ae696146fbd02a9b005b16c4baab7e1c1e1c3651ee287f4b0b",
+  "dimensions": {
+    "width": 1695,
+    "height": 928
+  },
+  "generationTool": "built-in image_gen",
+  "generationCallsForAsset": 1,
+  "rawCopiedWithoutModification": true,
+  "prompt": "Use case: Daggerfall Unity game sprite atlas. Create one 2x2 atlas of the complete 64x35 upper-face pixel-art half from the reference, four equal native-proportion cells, no margins. Row-major poses: OPEN, HALF-CLOSED, CLOSED, repeat OPEN. AFRAID should read worried and alert through slightly lifted, gently pinched inner brows and tense lids, not huge startled eyes. Preserve the exact face, hair, muted skin palette, crop, and original eye anatomy. Keep irises and pupils the same compact pixel width, shape, and horizontal location as the source; never stretch or enlarge them. No extra sclera or bright eye flashes. During blink phases, lids cover the same stationary eyeballs vertically only; pupils stay inside the lids. Keep both complete brows within every cell. Preserve soft original contrast and all other pixels/details, no extra props, sweat, tears, text, borders, or color grading. Output only the 2x2 atlas.",
+  "visualQaIssues": [
+    "Iris/pupils appear enlarged and higher-contrast versus source; bright white/black eye pixels are stronger than original. Do not process without review."
+  ],
+  "scope": "Raw generation only; no frame sampling, compositing, palette repair or registration."
+}

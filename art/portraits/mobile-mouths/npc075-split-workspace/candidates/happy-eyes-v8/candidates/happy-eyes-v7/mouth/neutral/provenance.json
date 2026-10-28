@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T11:01:04.1335023Z",
+    "portraitRecord":  75,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "neutral",
+    "prompt":  "Use the supplied exact NPC075 mouth reference grid as the only visual reference. Generate one clean 3-by-3 atlas of the same character\u0027s complete lower-half portrait crop. Each cell must match the native 64x29 lower crop, so the overall atlas is 192x87 aspect ratio (64:29), with equal cells and no added margins. Row-major order A B C / D E F / G H X. Preserve the character\u0027s identity, small warm tan face, dark brown side hair locks and framing, muted palette, soft pixel clusters and lighting. Change only the mouth shape; keep nose, chin, skin, hair and all other details consistent. Retain the source\u0027s small muted brown-rose lips, avoid saturated lipstick, oversized mouth, broad skin repaint or hard outlines. Keep tooth accents tiny and gray-ivory, with no bright white bands. Rhubarb mouth shapes: A closed lips with light pressure (P/B/M); B slight opening with nearly together teeth and a narrow horizontal gap (most consonants/EE); C medium relaxed unrounded opening (EH/AE); D wide vertical AA opening, wider than C; E slightly rounded AO/ER opening, no wider than C; F small forward puckered UW/OW/W opening, not a tooth bite; G upper teeth touching lower lip for F/V, not a wide vowel; H raised tongue behind upper teeth for long L, opening between C and D; X relaxed closed idle lips. A and X should match the supplied source\u0027s relaxed closed lips. Keep silhouettes and antialiasing natural in the same native pixel-art style. No text, labels, borders, panel lines or extra details.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54 as C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-70aae0cb-761d-431f-ac95-2d356218c00d.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-70aae0cb-761d-431f-ac95-2d356218c00d.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "38a9654e68f7a8e9995b0ac18f1abb0a44a4973ea2fdcc464a14185685328f53",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-70aae0cb-761d-431f-ac95-2d356218c00d.png",
+                      "sha256":  "8a61cfe54d1d159954dc9b835bf43cb7fa288411779f7448bcf5a3d087ca2ea2",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/neutral/raw.png",
+                "sha256":  "8a61cfe54d1d159954dc9b835bf43cb7fa288411779f7448bcf5a3d087ca2ea2",
+                "width":  1863,
+                "height":  844
+            }
+}

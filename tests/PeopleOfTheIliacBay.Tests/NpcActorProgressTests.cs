@@ -35,7 +35,7 @@ namespace PeopleOfTheIliacBay.Tests
                 progress.Skills.Clear();Check.Equal(1,store.ReadNpcProgress(id).Skills.Count);
                 Check.True(!store.AwardNpcSkillExperience("unknown",NpcArchetype.Thief,13,1000,0));
             }));
-            cases.Add(("Actor progression follows independent save branches and older schemas",()=>{
+            cases.Add(("Actor progression follows independent save branches",()=>{
                 string id;var store=Create(out id);store.AwardNpcSkillExperience(id,NpcArchetype.Thief,13,1000,0);
                 var save=store.Snapshot();store.AwardNpcSkillExperience(id,NpcArchetype.Thief,13,500,1);
                 store.Restore(save);Check.Equal(1000L,store.ReadNpcProgress(id).Skills[0].Experience);
@@ -44,7 +44,6 @@ namespace PeopleOfTheIliacBay.Tests
                 var json=JsonSerializer.Serialize(store.Snapshot(),new JsonSerializerOptions{IncludeFields=true});
                 var restored=new WorldStateStore(0);restored.Restore(JsonSerializer.Deserialize<WorldState>(json,new JsonSerializerOptions{IncludeFields=true}));
                 Check.Equal(store.ReadNpcSkill(id,NpcArchetype.Thief,16),restored.ReadNpcSkill(id,NpcArchetype.Thief,16));
-                save.Version=26;save.NpcActors=null;restored.Restore(save);Check.Equal(0,restored.Snapshot().NpcActors.Count);
             }));
             cases.Add(("Actor progression restore rejects invalid identities counters and duplicates",()=>{
                 string id;var store=Create(out id);store.AwardNpcSkillExperience(id,NpcArchetype.Thief,13,1000,0);

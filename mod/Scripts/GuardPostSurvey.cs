@@ -151,31 +151,13 @@ namespace PeopleOfTheIliacBay.DFU
                 { Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_GATE_SURVEY_GATE: gate="+index+" name="+gate.name+" missing MeshFilter/sharedMesh"); continue; }
                 var bounds=mesh.sharedMesh.bounds;
                 bool normalAlongX=bounds.size.x<bounds.size.z;
-                var localNormal=normalAlongX ? Vector3.right : Vector3.forward;
-                var localAxis=normalAlongX ? Vector3.forward : Vector3.right;
-                var worldNormal=gate.transform.TransformDirection(localNormal); worldNormal.y=0;
-                // Native 446/447 include the wall frame. The opening is offset from its bounds center.
-                // ARCH3D leaf inner edges: X=-298 and X=43, scaled by MeshReader.GlobalScale (.025).
-                bool nativeFrame=Mathf.Abs(bounds.size.x-25.6f)<0.05f && Mathf.Abs(bounds.size.z-9.6f)<0.05f;
-                var apertureCenter=bounds.center;
-                if(nativeFrame) apertureCenter.x=-3.1875f;
-                var middle=gate.transform.TransformPoint(apertureCenter);
-                if(worldNormal.sqrMagnitude<0.0001f)
-                { Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_GATE_SURVEY_GATE: gate="+index+" degenerate wall normal; localNormal="+localNormal+" transform="+gate.transform.rotation); continue; }
-                if(Vector3.Dot(worldNormal,center-middle)<0) worldNormal=-worldNormal;
-                worldNormal.Normalize();
-                var worldAxis=gate.transform.TransformDirection(localAxis); worldAxis.y=0;
-                if(worldAxis.sqrMagnitude<0.0001f)
-                { Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_GATE_SURVEY_GATE: gate="+index+" degenerate aperture axis; localAxis="+localAxis+" transform="+gate.transform.rotation); continue; }
-                worldAxis.Normalize();
+                NativeCityGateNavigation.Aperture aperture;
+                if(!NativeCityGateNavigation.TryAperture(gate,center,out aperture))continue;
+                var middle=aperture.Middle;var worldNormal=aperture.Inward;var worldAxis=aperture.Axis;
                 var localCenter=origin.InverseTransformPoint(middle);
                 var localCity=origin.InverseTransformDirection(worldNormal); localCity.y=0;
                 var localAxisDirection=origin.InverseTransformDirection(worldAxis); localAxisDirection.y=0;
-                float halfDepth=normalAlongX ? bounds.extents.x*gate.transform.lossyScale.x :
-                    bounds.extents.z*gate.transform.lossyScale.z;
-                float halfOpening=normalAlongX ? bounds.extents.z*gate.transform.lossyScale.z :
-                    bounds.extents.x*gate.transform.lossyScale.x;
-                if(nativeFrame) halfOpening=4.2625f*Mathf.Abs(gate.transform.lossyScale.x);
+                float halfDepth=aperture.HalfDepth,halfOpening=aperture.HalfOpening;
                 var inner=origin.InverseTransformPoint(middle+worldNormal*(halfDepth+2));
                 var outer=origin.InverseTransformPoint(middle-worldNormal*(halfDepth+2));
                 crossings.Add(new[] { new SavedRoutePoint { X=inner.x,Z=inner.z },

@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 80,
+  "emotion": "angry",
+  "assetType": "3x3 mouth-viseme atlas",
+  "imageTool": "built-in image_gen",
+  "sourceReferences": [
+    {
+      "sha256": "360fbbced7a02766a36b31374267af4e8c05702708815d7720b030712a5bd435",
+      "file": "../../mouth-reference-grid.png"
+    },
+    {
+      "sha256": "7ea9fbe88e2980c68ef561c974875e1b3d1e900eb5a7c6de119714d46ab0117c",
+      "file": "../../source-lower.png"
+    },
+    {
+      "sha256": "4ea9b975047475ae696146fbd02a9b005b16c4baab7e1c1e1c3651ee287f4b0b",
+      "file": "../../original.png"
+    }
+  ],
+  "prompt": "Use case: pixel-art angry speech-mouth atlas for Daggerfall Unity NPC 080.\nInput image 1 is the exact 3x3 repeated-original lower-half atlas; preserve its equal cell layout and crops. Row-major order must be A B C / D E F / G H X. Image 2 is the exact original native lower half. Image 3 is the complete original portrait, for palette and face identity.\nCreate nine small, natural angry speech mouth poses. Anger reads through controlled lip tension and firmer mouth corners, not an exaggerated frown. A and X are tightly closed with subtle tension. B is slightly parted; C narrow; D open ah; E rounded; F open with a small amount of upper teeth; G asymmetrically open; H rounded/pursed. Teeth appear only in appropriate open visemes.\nKeep exact native cell scale, alignment, 64x29 lower-half crop, mouth position and original lip width. Preserve all nose, skin, hair, jaw, chin, neck and backgrounds. Most critical: match exact muted original skin and terracotta-brown lip palette. No red lipstick, no orange skin, no increased saturation, contrast or brightness, no vivid reds. The lips must stay subdued like Image 2 and Image 3.\nUse crisp but soft low-resolution pixel clusters consistent with the original. No giant mouth, thick black contour, deep crease, hard shadow, blur, smudging, text, labels, borders, gutters or watermark.",
+  "rawFile": "raw.png",
+  "rawSha256": "65be8c35a0980c89031b043dc9b7eb8e55abbf8df1cf6e3d527d8c55ec90e65e",
+  "dimensions": {
+    "width": 1863,
+    "height": 844
+  },
+  "visibleIssues": [
+    "Lip hue appears somewhat rose/red at enlarged view; compare with original palette at native scale. Geometry and all nine poses remain candidate-only pending parent QA."
+  ],
+  "imagegenOutput": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-bfa3-7821-8c10-1973507e5744\\exec-09967449-9f1b-4e5c-97da-b16694216ab1.png"
+}

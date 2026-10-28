@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 79,
+  "bank": "TFAC00I0.RCI",
+  "emotion": "afraid",
+  "asset": "mouth",
+  "rawPath": "art/portraits/mobile-mouths/npc079-split-workspace/mouth/afraid/raw.png",
+  "rawSha256": "5d99df321e4a8edd8dff77d09da5cb7769e16ea104773a3b3020bef7380b237c",
+  "generatedSourcePath": "C:/Users/Daniel/.codex/generated_images/01a15fdf-2ede-7fc1-b24a-9d18707baa51/exec-77b6f611-9299-445c-9be0-8bdec5f63826.png",
+  "generatedSourceSha256": "5d99df321e4a8edd8dff77d09da5cb7769e16ea104773a3b3020bef7380b237c",
+  "referenceGrid": "art/portraits/mobile-mouths/npc079-split-workspace/mouth-reference-grid.png",
+  "referenceGridSha256": "51b7d166c01001213d48e19be135f463e41b6a9892da5abe9c686cf1ae53ca2a",
+  "originalPath": "art/portraits/mobile-mouths/npc079-split-workspace/original.png",
+  "originalSha256": "70b1b52df73159543afd5776eae7565bfd3619fd31bc5fd90af674e42520d460",
+  "dimensions": {
+    "width": 1863,
+    "height": 844
+  },
+  "generationTool": "built-in image_gen",
+  "generationCallsForAsset": 1,
+  "copyPreservedGeneratedBytes": true,
+  "prompt": "Use case: game sprite atlas. Make one 3x3 atlas of the same complete 64x29 lower-face pixel-art half shown in the reference grid, with nine equal cells and no margins. Row-major order A, B, C / D, E, F / G, H, X. AFRAID: mildly tense and uncertain mouth corners, with natural speech openings across B–H; A and X are closed but subtly anxious. Keep every shape useful and readable at 64px scale, not an extreme grimace, giant oval or pout. Preserve this woman's exact identity, face scale, soft original palette, nose, cheeks, jaw, chin, neck, hair and background. Change only lips and the small mouth opening area; no stretching the full lower face. Keep the entire native half-frame in every cell. No text, borders, tears, sweat, props or extra details. Output the atlas only.",
+  "visualQa": "Inspected saved raw atlas. Eye atlas reads alert/alarmed with compact pixel irises and complete brows; verify repeated open pose and stationary iris in processing review. Mouth atlas retains full lower half and moderate anxious speech poses; no processing or native-scale composition review performed."
+}

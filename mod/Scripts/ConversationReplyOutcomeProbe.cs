@@ -20,7 +20,7 @@ namespace PeopleOfTheIliacBay.DFU
         private const BindingFlags Members = BindingFlags.Instance | BindingFlags.Static |
             BindingFlags.Public | BindingFlags.NonPublic;
         private const string BaselineSave = "People - Gothway Garden";
-        private const string FixtureCharacter = "PeopleOfTheIliacBayTest-9a5f197b";
+        private const string FixtureCharacter = "Hakon Ironhand";
         private const string RunFlag = "-peopleoftheiliacbay-conversation-reply-outcome-probe";
 
         private sealed class Api

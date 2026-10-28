@@ -13,7 +13,7 @@ namespace PeopleOfTheIliacBay.DFU
     internal static class SocialDialogueStreamingProbe
     {
         private const string RunFlag = "-peopleoftheiliacbay-social-dialogue-stream-probe";
-        private const string OwnedCharacter = "PeopleOfTheIliacBayTest-9a5f197b";
+        private const string OwnedCharacter = "Hakon Ironhand";
         private const string BaselineSave = "People - Gothway Garden";
         private const BindingFlags PrivateInstance = BindingFlags.Instance | BindingFlags.NonPublic;
 

@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "createdUtc": "2026-10-22T18:27:53.0163517Z",
+  "portraitRecord": 87,
+  "bank": "TFAC00I0.RCI",
+  "part": "eyes",
+  "emotion": "guarded",
+  "prompt": "Edit Image 1, the current NPC087 2x2 guarded-eye atlas. Image 2 is the pinned original upper-face reference grid for this same face; use it only to keep identity, source palette, eye spacing, and pixel style.\n\nKeep the 2x2 atlas framing, exact four-cell structure, cell boundaries, hair, face, eye size, pupils, iris colors, and all non-brow pixels unchanged wherever possible. Row-major cells remain: top-left GUARDED straight OPEN; top-right GUARDED straight HALF; bottom-left GUARDED straight CLOSED; bottom-right duplicate GUARDED straight OPEN. Preserve source half proportions and crisp native pixel clusters.\n\nMake one targeted change to the guarded expression: replace the symmetric inward/down-slanting brows with clearly skeptical asymmetry. One full brow is gently raised and arched; the opposite full brow is lower and flatter, with one upper lid a little narrower. The difference must be visible in the OPEN cell at native scale and remain the same in the other three phases. Do not make either brow a sharp point; do not create a pair of brows slanting down toward the bridge. Avoid angry V, evenly stern brows, surprised high arches, fear, or a shaved/cropped brow. Keep both brows full, continuous, and inside the face.\n\nKeep straight gaze coordinated in both eyes. Preserve compact stationary brown/olive irises and pupils at identical size and position through all phases. HALF uses a continuous dark upper lid that lowers over the existing iris; no bright glint may interrupt that lid. CLOSED fully covers the iris and sclera with the upper lids. Do not move the eyeball, alter lower lids, lift cheeks, or change the nose bridge. No new marks, text, labels, borders, watermark, or transparency.",
+  "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1649b-737f-7f23-85cd-d1729bb2e3f5 as C:\\Users\\Daniel\\.codex\\generated_images\\01a1649b-737f-7f23-85cd-d1729bb2e3f5\\exec-020888ed-7ae5-49bb-96bd-5343f6d2bf95.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+  "generatedPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1649b-737f-7f23-85cd-d1729bb2e3f5\\exec-020888ed-7ae5-49bb-96bd-5343f6d2bf95.png",
+  "sourceOriginal": {
+    "path": "original.png",
+    "sha256": "b8851f9df69ee15e297ab3aa7e70025710d27bd2e84dd0ed46d7ff7e94ab7717",
+    "width": 64,
+    "height": 64
+  },
+  "referenceGrid": {
+    "path": "eyes-reference-grid.png",
+    "sha256": "e5eced47ef4d478fbdb37db34c991b62c22a3fe4a06d13ec0545bf27e0b32e7c",
+    "width": 1024,
+    "height": 560
+  },
+  "generator": {
+    "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1649b-737f-7f23-85cd-d1729bb2e3f5\\exec-020888ed-7ae5-49bb-96bd-5343f6d2bf95.png",
+    "sha256": "cd62a28b491bb73ff122b80baa19ce0a79a98c068baff7cab209e37da0fe7cfa",
+    "width": 1694,
+    "height": 928
+  },
+  "raw": {
+    "path": "eyes/guarded/raw.png",
+    "sha256": "cd62a28b491bb73ff122b80baa19ce0a79a98c068baff7cab209e37da0fe7cfa",
+    "width": 1694,
+    "height": 928
+  }
+}

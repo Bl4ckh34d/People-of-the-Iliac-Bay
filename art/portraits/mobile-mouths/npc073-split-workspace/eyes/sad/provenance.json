@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T18:19:36.7531530Z",
+    "portraitRecord":  73,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "sad",
+    "prompt":  "Use case: stylized-concept\nAsset type: native-resolution DFU NPC eye-animation atlas\nPrimary request: Create one clean 2×2 pixel-art upper-face atlas for the same woman in the inspected original reference. Show clear, restrained sadness, not neutral and not exaggerated.\nInput images: Image 1 only: exact NPC073 original upper-half reference grid, used for identity, framing, face, pixel scale, and colors.\nSubject: Preserve the same NPC woman, narrow eye shape, compact amber-olive irises, tiny subdued source-like glints, blue wand at left, hair, skin, nose bridge, and background.\nComposition: Four equal complete 64×35 upper-half cells in a 2×2 atlas, row-major: OPEN / HALF CLOSED / FULLY CLOSED / repeat OPEN. Keep every crop complete and aligned. No gutters, labels, borders, or added margins.\nStyle/medium: Crisp low-resolution pixel art with stepped native clusters and the source\u0027s muted brown shadows and restrained highlights.\nExpression: Show sadness through gently lifted inner brow ends and soft downward lid tension. Draw exactly one continuous, softly curved, tapered brown eyebrow over each eye. Each brow is one coherent arc with a clear skin gap above the eyelid. Keep both brows stable across all four cells. Do not add a second parallel brow, doubled upper-fold contour, floating dark mark, stacked stripe, disconnected brow segment, or angry V.\nEyes/blink: Keep both eyeballs and pupils stationary, same size, alignment, and hue in every cell. HALF must visibly close through the upper lids covering the upper iris. CLOSED must cover iris and sclera with continuous lids. Keep lower lids, cheeks, and nose bridge fixed. No horizontal pupil shift, cheek lift, white sclera stripe, or bright glint.\nConstraints: Change brows and lids only. Preserve source face, hairline, wand, framing, palette, and all other features. No extra creases, thick black outline, smooth/vector eyes, blur, or resampling within a cell.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1649a-d900-7861-bc09-97775a666080 as C:\\Users\\Daniel\\.codex\\generated_images\\01a1649a-d900-7861-bc09-97775a666080\\exec-eea2ea60-7a2e-4437-8a1b-a14b4ca4dfb2.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1649a-d900-7861-bc09-97775a666080\\exec-eea2ea60-7a2e-4437-8a1b-a14b4ca4dfb2.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "8505d9e9fde3c536cf08958e97076aba44aa5d60e2e76ba6fc3fdb1384b8d643",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "c6d813083b72162535d946fdab92c8327e91b20edef562492001ed6bf5d023ce",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1649a-d900-7861-bc09-97775a666080\\exec-eea2ea60-7a2e-4437-8a1b-a14b4ca4dfb2.png",
+                      "sha256":  "5a12cd7a59de381a1aadb257aa17dbc49844dfd22193825452097ecae60b9084",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/sad/raw.png",
+                "sha256":  "5a12cd7a59de381a1aadb257aa17dbc49844dfd22193825452097ecae60b9084",
+                "width":  1695,
+                "height":  928
+            }
+}

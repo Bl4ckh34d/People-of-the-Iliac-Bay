@@ -1,0 +1,25 @@
+{
+  "emotionId": "afraid",
+  "referenceUpperFile": "eyes/afraid/open.png",
+  "browSourceFile": "eyes/afraid/open.png",
+  "halfSourceFile": "eyes/afraid/half.png",
+  "closedSourceFile": "eyes/afraid/closed.png",
+  "halfLidRegions": [
+    {
+      "x": 18,
+      "y": 25,
+      "width": 11,
+      "height": 2
+    },
+    {
+      "x": 36,
+      "y": 25,
+      "width": 11,
+      "height": 2
+    }
+  ],
+  "sourceSha256": "c3a6864435906b99aac22f58bd30c06218030656df6346648a8db72579459503",
+  "referenceSha256": "4c00fe9b293e594ebb55835587becdb37e393bc738142c9e9d55602e5796d387",
+  "candidateOnly": true,
+  "rationale": "Provisional from npc078 portrait-specific neutral candidate, narrowed to y25..26 after viewing all six source emotion open/half/closed eye crops at native nearest-neighbor scale. Sclera/iris remain below this band in the inspected crops. Parent must verify mood-specific brow adjacency, especially angry/sad/afraid. Applies to afraid only after inspecting its source phase RGB; not an approval to build or publish."
+}

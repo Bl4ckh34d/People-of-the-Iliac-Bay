@@ -35,6 +35,8 @@ namespace PeopleOfTheIliacBay.DFU
             GameObject ghost=null,control=null;
             try
             {
+                TimeOfDay(19*3600);
+                yield return NativeHauntingTargetsProbe.Run(quest);
                 TimeOfDay(4*3600+59*60);
                 var position=game.PlayerMotor.transform.position+game.PlayerMotor.transform.forward*5;
                 ghost=GameObjectHelper.CreateFoeGameObjects(position,MobileTypes.Ghost,1,MobileReactions.Hostile,resource)[0];

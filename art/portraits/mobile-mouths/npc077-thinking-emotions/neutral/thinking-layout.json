@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "emotionId": "neutral",
+  "referenceUpperFile": "eyes/neutral/open.png",
+  "browSourceFile": "eyes/neutral/open.png",
+  "halfSourceFile": "eyes/neutral/half.png",
+  "closedSourceFile": "eyes/neutral/closed.png",
+  "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+  "referenceUpperSha256": "1ac0547d22fdefb5dda5874acd21aef2069bc8d55d05513b7724211ff9187db4",
+  "browSourceSha256": "1ac0547d22fdefb5dda5874acd21aef2069bc8d55d05513b7724211ff9187db4",
+  "halfSourceSha256": "e49b275b8f19968a4e10c722c2250ec8784d884895647ef44d94f2167fb9963a",
+  "closedSourceSha256": "ccc7a938e0e8bcdeb69dc7f88a4659933dd842aca7b1fee0e1cb5e95ba663068",
+  "halfLidRegions": [
+    {
+      "x": 15,
+      "y": 23,
+      "width": 16,
+      "height": 3
+    },
+    {
+      "x": 34,
+      "y": 23,
+      "width": 17,
+      "height": 3
+    }
+  ],
+  "rationale": "Calibrated against both neutral open and half native RGB rows. Proposed overlay rows y23-25 are below the y22 brow-lock boundary, and contain no detected violet iris-palette or pale highlight pixels in either source phase in either eye. First detected iris/highlight row is y27; preserve it and all lower gaze pixels. Exact open/half RGB rows are in work/portrait077-emotional-thinking-preflight/source-row-rgb-evidence.json."
+}

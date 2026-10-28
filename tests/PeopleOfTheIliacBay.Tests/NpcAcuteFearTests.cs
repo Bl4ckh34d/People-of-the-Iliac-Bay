@@ -18,7 +18,6 @@ namespace PeopleOfTheIliacBay.Tests
             cases.Add(("Unknown and dead NPCs cannot receive acute fear", UnknownAndDeadRejected));
             cases.Add(("Invalid and backward observations reject without mutation", InvalidAndBackwardRejected));
             cases.Add(("Acute fear reads are detached and immutable", DetachedRead));
-            cases.Add(("Schema 40 migration drops acute fear records", LegacySchemaMigration));
             cases.Add(("Malformed and duplicate acute fear records reject restore", MalformedAndDuplicateRecords));
             cases.Add(("Duplicate acute fear observers reject even when sources differ", DuplicateObserverDifferentSource));
             cases.Add(("Acute fear save fields and saved recovery rate survive personality change", SaveFieldsAndSavedRateRoundTrip));

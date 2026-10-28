@@ -73,7 +73,7 @@ internal static class Program
     private static void ScanBudgetCountsSkippedRows()
     {
         Fixture f=Create();
-        Check(f.Store.TryBookLodging(1,99,"old-player","player",1,true,1,0,100,"room:4"),"older ordinary booking");
+        Check(f.Store.TryBookLodging(1,99,"old-player","player",1,true,1,0,100,"bed:4"),"older ordinary booking");
         Reserve(f);EndCare(f);
         var first=f.Store.RetireExpiredNpcHealthRestLodging(Now+86400d,1);
         Equal(1,first.Scanned);Equal(0,first.Retired);
@@ -131,7 +131,7 @@ internal static class Program
         var nextRequest=new NpcHealthLodgingReservationRequest {ResidentId=f.ResidentId,CareEpisodeId=acting.Id,
             TaskId=nextId,ExpectedCareRevision=acting.Revision,
             ExpectedInventoryRevision=f.Store.ReadNpcInventory(f.ResidentId).Revision,
-            SettlementId=1,BuildingKey=99,RoomId="room:4",BedId="bed:4",StartsAt=retryAt,Nights=1,Price=14};
+            SettlementId=1,BuildingKey=99,BedId="bed:4",StartsAt=retryAt,Nights=1,Price=14};
         NpcHealthLodgingReservation reused;
         Check(f.Store.TryReserveNpcHealthRestLodging(nextRequest,out reused),"second task reuses paid bed");
         Equal(bookingId,reused.TaskId);Equal(86,f.Store.ReadNpcInventory(f.ResidentId).WalletGold);
@@ -185,7 +185,7 @@ internal static class Program
         string reason;
         Check(store.TryAcceptAndBindNpcHealthCareTask(resident.Id,care.Revision,task,Now-4,out reason),"accept and bind care: "+reason);
         care=store.ReadNpcHealthCare(resident.Id);
-        store.RegisterLodging(1,99,new List<LodgingRoom>{new LodgingRoom {Id="room:4",Beds=new List<string>{"bed:4"}}});
+        store.RegisterLodgingBeds(1,99,new List<LodgingBed>{new LodgingBed {Id="bed:4"}});
         return new Fixture {Store=store,ResidentId=resident.Id,Care=care,Task=task};
     }
 
@@ -193,7 +193,7 @@ internal static class Program
     {
         return new NpcHealthLodgingReservationRequest {ResidentId=f.ResidentId,CareEpisodeId=f.Care.Id,TaskId=f.Task.Id,
             ExpectedCareRevision=f.Care.Revision,ExpectedInventoryRevision=store.ReadNpcInventory(f.ResidentId).Revision,
-            SettlementId=1,BuildingKey=99,RoomId="room:4",BedId="bed:4",StartsAt=Now,Nights=1,Price=14};
+            SettlementId=1,BuildingKey=99,BedId="bed:4",StartsAt=Now,Nights=1,Price=14};
     }
 
     private static void Reserve(Fixture f)

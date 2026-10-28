@@ -1,0 +1,21 @@
+{
+  "asset": "NPC078 afraid eyes iris/pupil geometry correction",
+  "status": "FAILED: generated edit did not visibly correct the elongated iris geometry; not suitable as a correction",
+  "generation_count": 1,
+  "generator": "built-in image_gen edit",
+  "generated_original": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-626e-7471-95f3-109617bb3581\\exec-753afe20-850d-4460-b01e-20dbf90651e6.png",
+  "saved_output": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc078-split-workspace\\eyes\\afraid\\raw-v3.png",
+  "dimensions": "1695x928",
+  "output_sha256": "D33B8911109544393F4FDBA7262356493414ABC6CBC7807CFEA5CFCC60DE20DB",
+  "edit_target": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc078-split-workspace\\eyes\\afraid\\raw-v2.png",
+    "sha256": "242C5CE153565F6C70D735F7A5C93F78F0CA6CE1F3209FEBB5372B01C2D065AE"
+  },
+  "binding_original_upper_reference": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc078-split-workspace\\eyes-reference-grid.png",
+    "sha256": "770BCAF228993A243E7AF873727E0EA24EE1788439AFA29E5DFB66BED0581340"
+  },
+  "cells": "2x2 row-major: open, half blink, fully closed blink, repeated open",
+  "prompt": "Image 1 is the exact edit target and must remain a complete 2x2 eye atlas. Image 2 is the binding original upper-eye reference for natural iris and pupil scale, shape, color, and placement. Make ONLY one narrowly targeted correction to iris/pupil geometry in image 1: replace the overly tall, vertically stretched green irises with the compact, naturally small iris geometry shown in image 2. Retain the original green hue and small natural white catchlights. Keep iris width and horizontal position identical between open and half-blink cells; keep pupils compact and aligned. In the closed-blink cell, eyelids cover all iris and pupil completely. Preserve the worried, tense, raised-inner-brow expression from image 1 exactly; do not change either eyebrow shape, height, asymmetry, lid expression, eye opening, or the concern. Do not make eyes more open. Preserve all face geometry, hair, skin, soft low-contrast palette, crop, background, and other pixels as closely as possible. Keep eye/gaze direction forward, no gaze shifts. Preserve the original row-major phase order: open, half blink, fully closed blink, repeated open. Keep brow tension identical across all cells. No other modifications, no extra details or text. Return the full unchanged 2x2 atlas.",
+  "visual_review": "Compared generated result with edit target and original upper-eye reference. Generated eyes and atlas appear effectively unchanged from raw-v2; green irises remain visibly vertically elongated relative to the original compact reference. Brow expression is retained, but requested iris/pupil correction failed. Do not use this output as a corrected asset."
+}

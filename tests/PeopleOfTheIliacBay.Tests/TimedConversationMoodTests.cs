@@ -9,45 +9,6 @@ namespace PeopleOfTheIliacBay.Tests
     {
         public static void Add(List<(string Name, Action Body)> cases)
         {
-            cases.Add(Test("Schema 32 migration preserves mood and only anchors when load time is known", () =>
-            {
-                var source = new WorldStateStore(42).Snapshot();
-                source.Version = 32;
-                source.ConversationMoods.Add(new ConversationMood
-                {
-                    PersonId = "alice", Value = 27, AcceptedTurnSequence = 8,
-                    HasTimeAnchor = true, UpdatedAt = 90, Revision = 15
-                });
-
-                var unanchored = new WorldStateStore(1);
-                unanchored.Restore(source);
-                var raw = unanchored.CaptureConversationMood("alice");
-                Check.Equal(27, raw.Value);
-                Check.Equal(8L, raw.AcceptedTurnSequence);
-                Check.Equal(0L, raw.Revision);
-                Check.True(!raw.HasTimeAnchor);
-                Check.Equal(0d, raw.UpdatedAt);
-
-                var anchored = new WorldStateStore(2);
-                anchored.Restore(source, 500);
-                var migrated = anchored.CaptureConversationMood("alice", 500);
-                Check.Equal(27, migrated.Value);
-                Check.Equal(8L, migrated.AcceptedTurnSequence);
-                Check.Equal(0L, migrated.Revision);
-                Check.True(migrated.HasTimeAnchor);
-                Check.Equal(500d, migrated.UpdatedAt);
-
-                long accepted;
-                Check.True(unanchored.TryCommitAcceptedSocialExchange("alice", 8, 0, 3, 900,
-                    "day", "inn", "hello", "hello", out accepted));
-                Check.Equal(9L, accepted);
-                var afterFirstEvent = unanchored.CaptureConversationMood("alice");
-                Check.Equal(30, afterFirstEvent.Value);
-                Check.Equal(1L, afterFirstEvent.Revision);
-                Check.True(afterFirstEvent.HasTimeAnchor);
-                Check.Equal(900d, afterFirstEvent.UpdatedAt);
-            }));
-
             cases.Add(Test("Timed mood reads cool deterministically without mutating stored state", () =>
             {
                 var store = new WorldStateStore(1234);

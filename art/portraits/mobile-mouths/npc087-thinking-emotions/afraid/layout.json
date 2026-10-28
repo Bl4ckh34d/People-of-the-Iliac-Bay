@@ -1,0 +1,21 @@
+{
+  "portraitRecord":87,
+  "bank":"TFAC00I0.RCI",
+  "width":64,
+  "height":64,
+  "splitY":35,
+  "browLockEndY":21,
+  "eyeRegions":[
+    {"x":13,"y":14,"width":20,"height":18},
+    {"x":35,"y":14,"width":19,"height":18}
+  ],
+  "mouthRegion":{"x":22,"y":40,"width":22,"height":15},
+  "eyeFeatureLocks":[
+    {"emotion":"neutral","phase":"half","x":24,"y":26,"width":1,"height":1,"sourceFile":"source-upper.png"},
+    {"emotion":"neutral","phase":"half","x":45,"y":26,"width":1,"height":1,"sourceFile":"source-upper.png"},
+    {"emotion":"afraid","phase":"half","x":24,"y":26,"width":1,"height":1,"sourceFile":"eyes/afraid/open.png"},
+    {"emotion":"afraid","phase":"half","x":45,"y":26,"width":1,"height":1,"sourceFile":"eyes/afraid/open.png"}
+  ],
+  "blinkRepairRationale":"Parent and independent review confirmed source glints24,25/45,25 are occluded by half lids but neutral/afraid generation redraws them at24,26/45,26. Restore underlying source-upper dark pixels for neutral and same-emotion open-eye pixels for afraid. Four RED regression subtests establish wrong RGBA before repair; compare exactly four changed pixels against work/portrait087-pre-glint. No other face's coordinates inherited.",
+  "maskBoundsRationale":"Parent viewed actual087 original and numbered grid. Asymmetric face retained. Brows roughly18..21, upper lids around22..24, irises/glints25..27, lower shadow through30. Stationary brow boundary21 precedes eyelid detail. Expanded preflight masks give raised-brow and wide-AA headroom; mouth starts40 above native lips43..49 and ends54. Do not inherit86 locks/palette or symmetrize face geometry."
+}

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 79,
+  "bank": "TFAC00I0.RCI",
+  "emotion": "afraid",
+  "asset": "eyes",
+  "rawPath": "art/portraits/mobile-mouths/npc079-split-workspace/eyes/afraid/raw.png",
+  "rawSha256": "cf9eb47bfcdc870a0b8558106a775f8c427e3dda08669675a8eeebdaa590ab49",
+  "generatedSourcePath": "C:/Users/Daniel/.codex/generated_images/01a15fdf-2ede-7fc1-b24a-9d18707baa51/exec-e08c1166-96f2-4c06-bc4d-fc657b589bb7.png",
+  "generatedSourceSha256": "cf9eb47bfcdc870a0b8558106a775f8c427e3dda08669675a8eeebdaa590ab49",
+  "referenceGrid": "art/portraits/mobile-mouths/npc079-split-workspace/eyes-reference-grid.png",
+  "referenceGridSha256": "81737009a51fbafd2ca540f49ed88457428fda5bfa128c4cefd0b03debb867da",
+  "originalPath": "art/portraits/mobile-mouths/npc079-split-workspace/original.png",
+  "originalSha256": "70b1b52df73159543afd5776eae7565bfd3619fd31bc5fd90af674e42520d460",
+  "dimensions": {
+    "width": 1695,
+    "height": 928
+  },
+  "generationTool": "built-in image_gen",
+  "generationCallsForAsset": 1,
+  "copyPreservedGeneratedBytes": true,
+  "prompt": "Use case: game sprite atlas. Make one 2x2 atlas of the same complete 64x35 upper-face pixel-art half shown in the reference grid, with four equal cells and no margins. Row-major poses: open, half-closed, closed, repeat-open. AFRAID: signal alarm with slightly raised and gently drawn-together inner brows plus tense, alert lids; restrained and readable, not sad or pleading. Preserve this woman's exact face, hair, skin palette, lighting, crop and framing. Keep both original small pixelated irises and pupils compact, same width and same horizontal position as in the source, always anatomically inside the lids. Blink by moving lid coverage vertically only; do not enlarge, lengthen, reshape or shift iris/pupil. Both brows must remain fully visible inside each cell. Keep eyes sharp and attentive without bulging or cartoon roundness. No changes outside the brows/eyelid expression; preserve nose and forehead. No added details, tears, sweat, text, borders or props. Output the atlas only.",
+  "visualQa": "Inspected saved raw atlas. Eye atlas reads alert/alarmed with compact pixel irises and complete brows; verify repeated open pose and stationary iris in processing review. Mouth atlas retains full lower half and moderate anxious speech poses; no processing or native-scale composition review performed."
+}

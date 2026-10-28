@@ -65,7 +65,7 @@ namespace PeopleOfTheIliacBay.Core
             public ResidentTripSnapshot Visit;
             public double DueAt;
         }
-        // Call only after native receipts and permanent room claims are reconciled.
+        // Call only after native receipts and permanent bed claims are reconciled.
         public int AdvanceResidentInnAdmissions(int settlement,double now,int limit,int building)
         {
             Require(DefenseTime(now) && limit>0,"Invalid resident admission batch.");
@@ -175,23 +175,25 @@ namespace PeopleOfTheIliacBay.Core
         {
             Require(DefenseTime(now),"Invalid resident bed time."); ResidentTrip trip;
             if(!residentTripIndex.TryGetValue(id,out trip) || !TripResident(state,trip.HomeSettlement,id).IsAlive) return null;
-            var stay=trip.InnStays.Find(s=>s.Admission==TravelerAdmission.Admitted && now>=s.AttemptedAt && now<s.LeaveAt);
+            var stay=ResidentDetourStay(id,now) ?? trip.InnStays.Find(s=>s.Admission==TravelerAdmission.Admitted && now>=s.AttemptedAt && now<s.LeaveAt);
             if(stay==null) return null;
             var tavern=Lodging(stay.SettlementId.Value,stay.BuildingKey);
             var booking=tavern.Bookings.Find(b=>b.Id==stay.BookingId);
-            return booking==null ? null : tavern.Rooms.Find(r=>r.Id==booking.RoomId).Beds[0];
+            return booking==null || booking.BedIds.Count==0 ? null : booking.BedIds[0];
         }
         public ResidentInnStay ResidentInnStayAt(string id,double now)
         {
             Require(DefenseTime(now),"Invalid resident stay time."); ResidentTrip trip;
             if(!residentTripIndex.TryGetValue(id,out trip) || !TripResident(state,trip.HomeSettlement,id).IsAlive) return null;
-            var stay=trip.InnStays.Find(s=>s.Admission==TravelerAdmission.Admitted && now>=s.AttemptedAt && now<s.LeaveAt);
+            var stay=ResidentDetourStay(id,now) ?? trip.InnStays.Find(s=>s.Admission==TravelerAdmission.Admitted && now>=s.AttemptedAt && now<s.LeaveAt);
             return stay==null ? null : ResidentInnStay.Copy(stay);
         }
         public TravelerAdmission ResidentInnAdmission(string id,double now)
         {
             Require(DefenseTime(now),"Invalid resident admission query."); ResidentTrip trip;
             if(!residentTripIndex.TryGetValue(id,out trip)) return TravelerAdmission.Pending;
+            var detour=ResidentLodgingExit(id,now);
+            if(detour!=null)return detour.LodgingDetour!=null && !detour.LodgingDetour.Camping?TravelerAdmission.Admitted:TravelerAdmission.Refused;
             var visit=trip.Evaluate(now);
             var stay=ExistingInnStay(trip,visit);
             return stay==null ? TravelerAdmission.Pending : stay.Admission;
@@ -202,9 +204,10 @@ namespace PeopleOfTheIliacBay.Core
                 s.Admission==TravelerAdmission.Admitted && s.AttemptedAt<=visit.VisitEnterAt && s.LeaveAt+0.001>=trip.InnCheckout(visit)));
         }
         private static string ResidentBookingId(string id,double start)
-        {return "resident-room:"+id+":"+start.ToString("R",CultureInfo.InvariantCulture);}
+        {return "resident-stay:"+id+":"+start.ToString("R",CultureInfo.InvariantCulture);}
         private static void ValidateResidentInnBookings(WorldState world,ResidentTrip trip)
         {
+            ValidateResidentLodgingDetours(world,trip);
             foreach(var reception in trip.InnReceptions)
                 Require(reception.KeeperId==null || world.NativePeople.Exists(p=>p.Id==reception.KeeperId &&
                         p.SettlementId==reception.SettlementId && p.WorkKey==reception.BuildingKey),"Reception keeper does not belong to inn.");
@@ -217,7 +220,7 @@ namespace PeopleOfTheIliacBay.Core
                 var booking=tavern==null ? null : tavern.Bookings.Find(b=>b.Id==id);
                 if(stay.Admission==TravelerAdmission.Admitted)
                 {
-                    string prefix="resident-room:"+trip.ResidentId+":";double reference;
+                    string prefix="resident-stay:"+trip.ResidentId+":";double reference;
                     Require(id.StartsWith(prefix,StringComparison.Ordinal) && double.TryParse(id.Substring(prefix.Length),NumberStyles.Float,
                         CultureInfo.InvariantCulture,out reference) && ResidentVisitJourney.SameTime(reference,stay.EnterAt),"Invalid resident booking reference.");
                     Require(booking!=null && !booking.Player && booking.GuestId==trip.ResidentId &&

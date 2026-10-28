@@ -15,6 +15,7 @@ namespace PeopleOfTheIliacBay.DFU
             public Resident Resident;
             public TravelerJourney Journey;
             public TravelerAdmission JourneyAdmission;
+            public TravelerDiversion JourneyDiversion;
             public ResidentRoutine Routine;
             public Plan ActionPlan;
             public DaggerfallInterior RoomInterior;
@@ -27,6 +28,7 @@ namespace PeopleOfTheIliacBay.DFU
             public float NextRoomExitRetryAt;
             public bool ObservedOutdoorArrival;
             public bool PendingDoorwayArrival;
+            public bool ObservedOutdoorDeparture;
         }
         private readonly Dictionary<string,TravelerPlan> travelerPlans=new Dictionary<string,TravelerPlan>();
         private float nextTravelerRefresh;
@@ -49,21 +51,28 @@ namespace PeopleOfTheIliacBay.DFU
                 var plan=travelerPlans[id];
                 ResidentActor oldActor;
                 actors.TryGetValue(id,out oldActor);
-                if(plan.JourneyAdmission!=plan.Visit.Admission)
+                if(plan.JourneyAdmission!=plan.Visit.Admission || !ReferenceEquals(plan.JourneyDiversion,plan.Visit.Diversion))
                 {
                     plan.Journey=worldStore.TravelerJourneyFor(plan.Visit.Id);
                     plan.JourneyAdmission=plan.Visit.Admission;
+                    plan.JourneyDiversion=plan.Visit.Diversion;
+                    plan.Routine.DestinationKey=plan.Visit.TavernKey;
+                    plan.Routine.Route.Clear();
+                    foreach(var point in plan.Visit.Route)plan.Routine.Route.Add(new SavedRoutePoint {X=point.X,Z=point.Z});
                     plan.RoomWalk=null;
                     plan.RoomFollower=null;
                     plan.RoomInterior=null;
                 }
                 ObserveTravelerArrivalBoundary(oldActor,plan,seconds);
                 bool pendingArrival=IsPendingTravelerArrival(oldActor,plan,seconds);
+                Vector3 departureEndpoint;
+                bool pendingDeparture=PendingTravelerDeparture(oldActor,plan,seconds,out departureEndpoint);
                 bool pendingRoomExit=Reaction(id,seconds)==null && interior && plan.RoomInterior==interior && plan.RoomFollower!=null &&
                     (plan.RoomFollower.Leaving && !plan.RoomFollower.Arrived || seconds>=plan.Journey.CheckOutAt &&
                     (!plan.RoomFollower.Arrived || !plan.RoomFollower.Leaving));
                 if(plan.Person.IsAlive && ((seconds>=plan.Journey.EntryAt && seconds<plan.Journey.ExitAt) ||
-                    Reaction(id,seconds)!=null || pendingArrival || pendingRoomExit || TravelerActionOwnsVisit(id))) continue;
+                    Reaction(id,seconds)!=null || pendingArrival || pendingDeparture || pendingRoomExit ||
+                    worldStore.TravelerAwaitingLodgingDecision(plan.Visit.Id,seconds) || TravelerActionOwnsVisit(id))) continue;
                 if(oldActor) {oldActor.CaptureState();oldActor.gameObject.SetActive(false); Destroy(oldActor.gameObject);}
                 actors.Remove(id); travelerPlans.Remove(id);
             }
@@ -79,10 +88,13 @@ namespace PeopleOfTheIliacBay.DFU
             {
                 TravelerPlan previous;
                 travelerPlans.TryGetValue(visit.PersonId,out previous);
+                Vector3 retainedExit;
+                if(previous!=null && PendingTravelerDeparture(FindActor(visit.PersonId),previous,seconds,out retainedExit))continue;
                 if(previous!=null && previous.JourneyAdmission==visit.Admission && (previous.Visit.Id==visit.Id ||
                     seconds>=previous.Journey.EntryAt && seconds<previous.Journey.ExitAt)) continue;
                 var journey=worldStore.TravelerJourneyFor(visit.Id);
-                if((seconds<journey.EntryAt || seconds>=journey.ExitAt) && !TravelerActionOwnsVisit(visit.PersonId)) continue;
+                if((seconds<journey.EntryAt || seconds>=journey.ExitAt) && !TravelerActionOwnsVisit(visit.PersonId) &&
+                    !worldStore.TravelerAwaitingLodgingDecision(visit.Id,seconds)) continue;
                 var person=worldStore.Traveler(visit.PersonId);
                 if(!person.IsAlive) continue;
                 var routine=new ResidentRoutine { ResidentId=person.Id,DestinationKey=visit.TavernKey };
@@ -94,10 +106,10 @@ namespace PeopleOfTheIliacBay.DFU
                     { priorActor.CaptureState();priorActor.gameObject.SetActive(false); Destroy(priorActor.gameObject); }
                     actors.Remove(person.Id);
                 }
-                var resident=new Resident { Id=person.Id,FullName=person.Name,Race=person.Race,Sex=person.Sex,
+                var resident=worldStore.TravelerOriginResident(person.Id) ?? new Resident { Id=person.Id,FullName=person.Name,Race=person.Race,Sex=person.Sex,
                     AppearanceSeed=person.AppearanceSeed,AgeGroup=ResidentAgeGroup.Adult,HomeKey=-1,IsAlive=person.IsAlive };
                 travelerPlans[person.Id]=new TravelerPlan { Person=person,Visit=visit,Journey=journey,JourneyAdmission=visit.Admission,Routine=routine,
-                    Resident=resident,ActionPlan=new Plan {Resident=resident,Routine=routine} };
+                    JourneyDiversion=visit.Diversion,Resident=resident,ActionPlan=new Plan {Resident=resident,Routine=routine} };
             }
         }
         private ActivitySnapshot TravelerState(TravelerPlan plan,double seconds)
@@ -110,15 +122,25 @@ namespace PeopleOfTheIliacBay.DFU
             return new ActivitySnapshot(inside ? sleeping ? Activity.Sleep : Activity.Visit : Activity.Travel,
                 inside ? plan.Visit.TavernKey : -1,state.Position,0);
         }
-        private void UpdateTravelerActors(double seconds)
+        private void UpdateTravelerActors(double seconds,bool catchingUp)
         {
             EnsureInnTravelerDemand(seconds);
+            AdvanceTravelerLodgingFallback(seconds);
             RefreshTravelerPlans(seconds);
             foreach(var plan in travelerPlans.Values)
             {
                 ResidentActor actor; actors.TryGetValue(plan.Person.Id,out actor);
                 plan.Resident.IsAlive=plan.Person.IsAlive;
                 var state=plan.Journey.Evaluate(seconds);
+                // Rental preparation can admit a pending guest between the
+                // half-second plan refreshes. Preserve its body before this
+                // frame decides exterior visibility.
+                if(catchingUp && state.Phase!=TravelerPhase.Arriving)
+                {
+                    plan.ObservedOutdoorArrival=false;
+                    plan.PendingDoorwayArrival=false;
+                }
+                else ObserveTravelerArrivalBoundary(actor,plan,seconds);
                 if(state.Phase==TravelerPhase.Arriving && actor && directory && actor.transform.parent==directory.transform)
                     plan.ObservedOutdoorArrival=true;
                 var reaction=Reaction(plan.Person.Id,seconds);
@@ -126,18 +148,33 @@ namespace PeopleOfTheIliacBay.DFU
                 PrepareTravelerRoutineReturn(plan,seconds);
                 if(ApplyNpcActionOverlay(plan.ActionPlan,ref actor,seconds,reaction) || TravelerActionOwnsVisit(plan.Person.Id))continue;
                 if(PlaceTravelerInside(plan,actor,state,reaction,seconds)) continue;
-                bool route=state.Phase==TravelerPhase.Arriving || state.Phase==TravelerPhase.Leaving ||
-                    plan.Visit.Admission!=TravelerAdmission.Admitted && state.Phase!=TravelerPhase.NotArrived && state.Phase!=TravelerPhase.Departed;
+                bool route=TravelerExteriorMaterialization.ShouldExist(plan.Visit.Admission,state.Phase,
+                    plan.ObservedOutdoorArrival,catchingUp);
                 Vector3 ground=geometry.ScenePoint(state.Position);
                 bool continuingArrival=reaction==null && ContinueTravelerArrival(actor,plan,state,seconds,out ground);
+                if(reaction==null && worldStore.TravelerAwaitingLodgingDecision(plan.Visit.Id,seconds))
+                {
+                    var door=plan.Visit.Route[plan.Visit.Route.Count-1];
+                    ground=geometry.ScenePoint(new RoutePoint(door.X,door.Z));
+                    continuingArrival=true;route=true;
+                }
                 route|=continuingArrival;
+                Vector3 departureEndpoint=Vector3.zero;
+                bool continuingDeparture=reaction==null && !continuingArrival &&
+                    PendingTravelerDeparture(actor,plan,seconds,out departureEndpoint);
+                if(continuingDeparture)
+                {
+                    ground=departureEndpoint;route=true;
+                    var motion=actor.GetComponent<CrowdMotion>();if(motion)motion.ResumeFromPause();
+                }
                 if(reaction!=null && reaction.HasPosition)
                 {
                     route=reaction.BuildingKey==-1 && !reaction.ReachedRefuge;
                     ground=directory.transform.TransformPoint(new Vector3((float)reaction.X,(float)reaction.Y,(float)reaction.Z));
                 }
+                Vector3 visibilityPoint=actor && (continuingArrival || continuingDeparture)?actor.transform.position-Vector3.up:ground;
                 bool visible=!interior && !GameManager.Instance.IsPlayerInside && plan.Person.IsAlive && route &&
-                    (ground-GameManager.Instance.PlayerMotor.transform.position).sqrMagnitude<=(actor?165*165:140*140);
+                    (visibilityPoint-GameManager.Instance.PlayerMotor.transform.position).sqrMagnitude<=(actor?165*165:140*140);
                 if(!visible)
                 {
                     if(actor) {actor.CaptureState(); actor.gameObject.SetActive(false); Destroy(actor.gameObject);}
@@ -162,13 +199,15 @@ namespace PeopleOfTheIliacBay.DFU
                 else
                 {
                     var next=plan.Journey.Evaluate(seconds+0.1);
-                    Vector3 direction=continuingArrival ? ground-(actor.transform.position-Vector3.up) :
+                    Vector3 direction=continuingArrival || continuingDeparture ? ground-(actor.transform.position-Vector3.up) :
                         geometry.ScenePoint(next.Position)-ground;
                     RoutePoint endpoint;
                     Vector3? navigationDestination=plan.Journey.TryTravelEndpoint(
-                        continuingArrival?TravelerPhase.Arriving:state.Phase,out endpoint)
+                        continuingArrival?TravelerPhase.Arriving:continuingDeparture?TravelerPhase.Leaving:state.Phase,out endpoint)
                         ? (Vector3?)geometry.ScenePoint(endpoint):null;
                     actor.Place(ground,direction,navigationDestination:navigationDestination);
+                    if(!continuingArrival && state.Phase==TravelerPhase.Leaving)
+                        plan.ObservedOutdoorDeparture=true;
                 }
             }
         }
@@ -192,10 +231,15 @@ namespace PeopleOfTheIliacBay.DFU
                 plan.PendingDoorwayArrival=false;
                 return;
             }
-            if(plan.Visit.Admission!=TravelerAdmission.Admitted) return;
             var phase=plan.Journey.Evaluate(seconds).Phase;
             if(phase==TravelerPhase.Arriving) plan.ObservedOutdoorArrival=true;
-            else if(plan.ObservedOutdoorArrival && seconds>=plan.Journey.CheckInAt)
+            if(plan.Visit.Admission!=TravelerAdmission.Admitted) return;
+            // A real pending guest can already be waiting outside when room
+            // preparation completes. Admission must preserve that body's door
+            // approach even if its scheduled Arriving phase has already elapsed.
+            if(seconds>=plan.Journey.CheckInAt && seconds<plan.Journey.CheckOutAt)
+                plan.ObservedOutdoorArrival=true;
+            if(phase!=TravelerPhase.Arriving && plan.ObservedOutdoorArrival && seconds>=plan.Journey.CheckInAt)
             {
                 Vector3 doorway;
                 if(PendingTravelerDoorwayGeometry(actor,plan,out doorway) &&
@@ -238,6 +282,7 @@ namespace PeopleOfTheIliacBay.DFU
             bool pendingRoomExit=!reacting && plan.RoomInterior==interior && plan.RoomFollower!=null &&
                 (plan.RoomFollower.Leaving && !plan.RoomFollower.Arrived || seconds>=plan.Journey.CheckOutAt &&
                 (!plan.RoomFollower.Arrived || !plan.RoomFollower.Leaving));
+            if(pendingRoomExit)worldStore.ObserveTravelerDepartureDelay(plan.Visit.Id,seconds);
             bool present=reacting ? reaction.BuildingKey==interior.EntryDoor.buildingKey :
                 plan.Visit.Admission==TravelerAdmission.Admitted && seconds>=plan.Journey.CheckInAt &&
                 (seconds<plan.Journey.LeaveInnAt || pendingRoomExit) && plan.Visit.TavernKey==interior.EntryDoor.buildingKey;

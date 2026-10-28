@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "profileId": "common-152-voice-race-07",
+  "portraitId": "common-152",
+  "seed": 739641434,
+  "attributes": {
+    "pitch": "a natural middle female register",
+    "timbre": "balanced, warm and clear, with balanced natural resonance",
+    "roughness": "mostly clear with a little natural texture",
+    "breathiness": "with balanced natural breath support",
+    "vocalFry": "with minimal habitual creak",
+    "pace": "a slightly slower than average conversational pace"
+  },
+  "latentZ": {
+    "pitch": -0.7358107880197201,
+    "brightness": -0.024412169953789215,
+    "resonance": -0.07771906160471004,
+    "roughness": -0.515282902128461,
+    "breathiness": 0.15644769729420568,
+    "vocalFry": -0.7165894225511102,
+    "pace": -1.2021740865225279
+  },
+  "raceCandidates": [
+    "Redguard"
+  ],
+  "accentLabel": "Kenyan English",
+  "accentEvidence": "tools/BreezeTtsTrial/accent_voice_corpus_v2.json",
+  "raceAssignment": "Redguard unambiguous",
+  "stableInstruction": "An adult woman speaking English with clearly recognizable Kenyan English pronunciation and cadence, East African English vowel shaping, even syllable rhythm and clean consonant release. Her individual voice has a natural middle female register. Its timbre is balanced, warm and clear, with balanced natural resonance; it is mostly clear with a little natural texture, with balanced natural breath support, with minimal habitual creak. Use a slightly slower than average conversational pace. Maintain this individual vocal identity. Speak naturally without caricature, shouting, or added vocal events.",
+  "guidanceScale": 4.0,
+  "scope": "gallery voice review; no runtime assignment"
+}

@@ -20,7 +20,7 @@ namespace PeopleOfTheIliacBay.DFU
             if(worldStore==null || population==null || !DaggerfallUnity.Instance)return null;
             var capturedStore=worldStore;int settlement=population.SettlementId;
             var clock=DaggerfallUnity.Instance.WorldTime.Now;
-            double begins=clock.ToSeconds()+clock.Second-Math.Floor(clock.Second);
+            double begins=clock.ToSeconds()+(clock.Second-Math.Floor(clock.Second));
             var incidents=new HashSet<string>(StringComparer.Ordinal);
             // Court pauses gameplay; this confirmed custody path deliberately
             // does not require IsPlayingGame or infer presence from the old map.
@@ -33,7 +33,7 @@ namespace PeopleOfTheIliacBay.DFU
             {
                 if(!ReferenceEquals(capturedStore,worldStore))return;
                 var endClock=DaggerfallUnity.Instance.WorldTime.Now;
-                double ends=endClock.ToSeconds()+endClock.Second-Math.Floor(endClock.Second);
+                double ends=endClock.ToSeconds()+(endClock.Second-Math.Floor(endClock.Second));
                 if(ends<begins)return;
                 foreach(var alarm in capturedStore.OutdoorCorpses(settlement))
                     if(incidents.Contains(alarm.Id))capturedStore.ObserveOutdoorCorpse(alarm.Id,false,ends);

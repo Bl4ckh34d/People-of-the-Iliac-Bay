@@ -109,6 +109,37 @@ namespace PeopleOfTheIliacBay.DFU
                         sim.Phase+"; pause="+sim.PauseReason+"; service="+fixture.ReadHouseholdInnServiceAdmission(source.Id)?.Outcome);
                 }
                 if(end>DaggerfallUnity.Instance.WorldTime.Now.ToSeconds())DaggerfallUnity.Instance.WorldTime.Now.RaiseTime((float)(end-DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()));
+                double returnedAt=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
+                bool returnedAtNight=DaggerfallUnity.Instance.WorldTime.Now.IsNight;
+                // Preserve the completed world-time return before changing the
+                // observation clock. Native home bodies do not exist yet.
+                var returned=fixture.ReadHouseholdJointSimulation(source.SettlementId,source.HomeKey);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FAMILY_RETURN_PROJECTION: at="+returnedAt+"; isNight="+returnedAtNight+
+                    "; phase="+returned.Phase+"; first="+returned.First.Position.X+","+returned.First.Position.Z+
+                    "; second="+returned.Second.Position.X+","+returned.Second.Position.Z+
+                    "; projectedReturn=true; physicalHomeBodies=false");
+                if(returnedAtNight)
+                {
+                    if(streets.HouseholdRoutineLocked(source.HomeKey)!=true)
+                        throw new InvalidOperationException("Returned household did not retain its native nighttime lock.");
+                    ActivateFamilyHome(directory,source.HomeKey,false);
+                    DaggerfallUI.Instance.PopToHUD();
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FAMILY_RETURN_NIGHT_LOCK_PASS: at="+returnedAt+
+                        "; isNight=true; projectedReturn=true; physicalHomeBodies=false; sameEveningUnlocked=false");
+                    // An evening home arrival does not authorize a stranger to
+                    // enter a locked house. Observe entry next daylight instead.
+                    double dawn=Math.Floor(returnedAt/86400d)*86400d+6*3600;
+                    if(dawn<=returnedAt)dawn+=86400;
+                    DaggerfallUnity.Instance.WorldTime.Now.RaiseTime((float)(dawn+1-returnedAt));
+                    double daylightEnds=Math.Floor(dawn/86400d)*86400d+18*3600;
+                    while(DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()<daylightEnds &&
+                        streets.HouseholdRoutineLocked(source.HomeKey)!=false)
+                        DaggerfallUnity.Instance.WorldTime.Now.RaiseTime(60);
+                    if(DaggerfallUnity.Instance.WorldTime.Now.IsNight || streets.HouseholdRoutineLocked(source.HomeKey)!=false)
+                        throw new InvalidOperationException("Returned family has no actual awake-parent daylight home-entry interval.");
+                }
+                double homeEntryAt=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
+                bool homeEntryNight=DaggerfallUnity.Instance.WorldTime.Now.IsNight;
                 ActivateFamilyHome(directory,source.HomeKey,true);
                 yield return null;
                 // DFU defers residential entry until the greeting closes.
@@ -127,7 +158,15 @@ namespace PeopleOfTheIliacBay.DFU
                 fixture=NativeReload(fixture);storeField.SetValue(streets,fixture);
                 if(fixture.ReadHouseholdJointSimulation(source.SettlementId,source.HomeKey).HomeArrival==null ||
                     fixture.HasActiveHouseholdJoint(source.SettlementId,ids[0]))throw new InvalidOperationException("Native home proof did not survive serialization or release joint ownership.");
-                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FAMILY_RUNTIME_PASS: productionSelector=true; pairedNativeRoutes=true; exteriorBodies=true; conversationHoldsBoth=true; nativeActivateChildLock=true; nativeActivateHomeEntry=true; pairedHomeBodies=true; nativeSerializer=true; controlledClock=true");
+                if(Environment.GetEnvironmentVariable("POTIB_FAMILY_EXPERIENCE_PROBE")=="1")
+                {
+                    var familyExperience=VerifyFamilyExperienceSharingAtHome(fixture,source,streets);
+                    try {while(familyExperience.MoveNext())yield return familyExperience.Current;}
+                    finally {(familyExperience as IDisposable)?.Dispose();}
+                }
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FAMILY_RUNTIME_PASS: productionSelector=true; pairedNativeRoutes=true; exteriorBodies=true; conversationHoldsBoth=true; nativeActivateChildLock=true; nativeActivateHomeEntry=true; pairedHomeBodies=true; nativeSerializer=true; controlledClock=true"+
+                    "; projectedReturn=true; physicalReturnWalk=false; returnedAt="+returnedAt+"; returnNight="+returnedAtNight+
+                    "; homeEntryAt="+homeEntryAt+"; entryNight="+homeEntryNight+"; sameEveningUnlocked="+(!returnedAtNight));
             }
             finally
             {
@@ -139,11 +178,15 @@ namespace PeopleOfTheIliacBay.DFU
                 foreach(var pair in savedBodies)if(pair.Value){bodies[pair.Key]=pair.Value;pair.Value.gameObject.SetActive(bodyActive[pair.Key]);}
             }
         }
-        private static void ActivateFamilyHome(BuildingDirectory directory,int home,bool shouldEnter)
+        internal static void ActivateFamilyHome(BuildingDirectory directory,int home,bool shouldEnter)
         {
             var game=GameManager.Instance;var activate=game.PlayerActivate;BuildingSummary summary;
-            if(!directory.GetBuildingSummary(home,out summary) || activate.BuildingIsUnlocked(summary)!=shouldEnter)
-                throw new InvalidOperationException("Native household lock state differs from living parent presence.");
+            if(!directory.GetBuildingSummary(home,out summary))throw new InvalidOperationException("Native household building summary is unavailable.");
+            bool unlocked=activate.BuildingIsUnlocked(summary);
+            if(unlocked!=shouldEnter)
+                throw new InvalidOperationException("Native household lock state differs from the expected day/night access: home="+home+
+                    "; expectedUnlocked="+shouldEnter+"; actualUnlocked="+unlocked+"; at="+DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()+
+                    "; isNight="+DaggerfallUnity.Instance.WorldTime.Now.IsNight);
             foreach(var doors in directory.GetComponentsInChildren<DaggerfallStaticDoors>())foreach(var door in doors.Doors)
             {
                 if(door.doorType!=DoorTypes.Building || door.buildingKey!=home)continue;

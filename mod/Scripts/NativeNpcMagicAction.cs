@@ -280,17 +280,7 @@ namespace PeopleOfTheIliacBay.DFU
                 return key == CurePoison.EffectKey ? manager.PoisonCount :
                     key == CureDisease.EffectKey ? manager.DiseaseCount : -1;
             if (kind != NpcMagicEffectKind.TimedEffect || key != Shield.EffectKey) return -1;
-            int rounds = 0;
-            foreach (LiveEffectBundle bundle in manager.EffectBundles)
-            {
-                if (bundle == null || bundle.liveEffects == null) continue;
-                foreach (IEntityEffect effect in bundle.liveEffects)
-                {
-                    if (effect != null && effect.GetType() == typeof(Shield) && !effect.HasEnded &&
-                        effect.RoundsRemaining > rounds) rounds = effect.RoundsRemaining;
-                }
-            }
-            return rounds;
+            return NativeNpcShieldState.ProtectionRounds(manager);
         }
     }
 }

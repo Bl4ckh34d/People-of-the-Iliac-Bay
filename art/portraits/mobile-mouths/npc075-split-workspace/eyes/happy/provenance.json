@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T11:01:26.9600629Z",
+    "portraitRecord":  75,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "happy",
+    "prompt":  "Use case: illustration-story. Asset type: Daggerfall Unity NPC portrait happy-eye atlas. The single supplied image is the exact local NPC075 eyes-reference-grid.png; use it as the only reference.\n\nCreate one 2×2 atlas with four equal, complete native 64×35 upper-face crops at the same framing and pixel scale. Cell order is row-major: OPEN / HALF / CLOSED / OPEN REPEAT. No labels, gutters, borders, zooms, or extra panels.\n\nShow a clearly warm, relaxed happy expression that is visibly different from the neutral source: friendly softly arced brows, a gentle happy eye-smile with slight lifted lower lids and tiny outer-corner smile creases. Keep the eyes narrow and calm, not surprised, alarmed, angry, or near-neutral. Keep the center fringe and side hair exactly in place; preserve all original hair pixels in the top corners. Keep both eyes aligned and the original amber/olive-brown iris color, compact stepped iris clusters, tiny muted pale highlights, skin tones, and soft pixel-art palette.\n\nMake a consistent happy brow and eye-expression master across OPEN, HALF, CLOSED, and OPEN REPEAT. OPEN has the narrow natural source aperture. HALF is visibly a half blink with upper lids covering much of the iris. CLOSED is fully gently closed with continuous natural lids. OPEN REPEAT matches OPEN. Keep changes within the existing eye/brow envelopes; do not recolor or redraw the center fringe, side hair, face exterior, nose, or mouth. No oversized irises, broad white bands, bright glints, vector smoothness, blur, gradients, text, watermark, or extra subjects.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-95ed58e4-ac6d-403b-b640-a047962a428c.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-95ed58e4-ac6d-403b-b640-a047962a428c.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "e2e7919bfc72eb52738873b46bffa3a1eb3ca2b503bd62101ac973e8f30cd8b3",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-95ed58e4-ac6d-403b-b640-a047962a428c.png",
+                      "sha256":  "7606b9e12c7f0d34679447e91c1df4a8fe846647a2a809de7c9783ab869c604e",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/happy/raw.png",
+                "sha256":  "7606b9e12c7f0d34679447e91c1df4a8fe846647a2a809de7c9783ab869c604e",
+                "width":  1695,
+                "height":  928
+            }
+}

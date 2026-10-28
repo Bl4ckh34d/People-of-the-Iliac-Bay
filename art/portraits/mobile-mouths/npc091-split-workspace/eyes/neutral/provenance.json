@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T15:31:13.4976237Z",
+    "portraitRecord":  91,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Use case: stylized-concept\nAsset type: Daggerfall Unity native pixel-art NPC portrait eye atlas\nPrimary request: Create a seamless 2x2 atlas of complete upper-face cells, each with the exact native 64x35 composition and registration. Row-major order: OPEN, HALF CLOSED / FULLY CLOSED, OPEN REPEAT. Use only the supplied inspected local eye reference grid.\nSubject: Preserve this exact NPC091 identity, face shape, hairline, hair texture, forehead, nose bridge, eye spacing and original soft low-resolution pixel-art style.\nExpression: Neutral only. Keep both source brows exactly neutral in shape and placement; preserve their soft slightly asymmetric contours through native row22. Preserve the source eye size, narrow aperture and iris/pupil scale.\nBlink phases: In HALF CLOSED, only the upper lids descend to cover the upper portion of both irises, leaving the lower irises visible; no vertical eyeball or pupil movement. In FULLY CLOSED, upper lids cover both iris and sclera completely with natural closed-eye contours. OPEN REPEAT must match OPEN. Keep the lower-lid contour and cheek pixels at row29 and below fixed to the original.\nPalette and detail: Preserve muted warm-brown brows/lashes, source skin and hair colors, compact very dark brown irises/pupils, shaded muted beige sclera and only tiny restrained warm glints. Preserve native stepped pixel clusters with no smoothing.\nComposition constraints: All four cells have identical scale and framing, no labels, gutters, borders, extra margins, transparency, or face resizing. Keep hair, ears, nose, and all exterior unchanged. Use compact eye detail inside the calibrated eye areas [16,16,30,30) and [34,16,50,30); preserve the brow boundary through row22 and source cheek row29.\nAvoid: Enlarged or rounded eyes, broad white bands, bright flashes, changed brow emotion, brow clipping, pupils shifting between blink phases, moving lower lids or cheeks, hair or face-shape changes, and any content outside the source eye feature shapes.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54 as C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-eddeb792-09af-4958-bd60-29bffe82a01e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-eddeb792-09af-4958-bd60-29bffe82a01e.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "428f65da65c68b7c50b7cefcf4fde03aa83505c54de6ccbb2ac3ab018f8a5c51",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "4bc32091eba9e8ef44f76a0ec4c1fe6c6b26be1c59c3ec999c9bd3709e281c2f",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-eddeb792-09af-4958-bd60-29bffe82a01e.png",
+                      "sha256":  "edb385aa5b2ec4e54f676de0e2dd5bcf51a19c9464dc9bd8026a53a7c7ebcc77",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "edb385aa5b2ec4e54f676de0e2dd5bcf51a19c9464dc9bd8026a53a7c7ebcc77",
+                "width":  1695,
+                "height":  928
+            }
+}

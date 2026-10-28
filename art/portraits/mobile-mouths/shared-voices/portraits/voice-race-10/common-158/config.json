@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Same-text, same-reference long-utterance emotion set to exercise speech viseme coverage.",
+  "sourceAudio": "work/portrait-female-voice-race-10/anchors/common-158/reference.wav",
+  "sourceAudioSha256": "262ee50d0afd2928574eaf5b4dbe3be6eca952e2c7ca695b2e30a28da8ab7d05",
+  "exactText": "Before you leave, let me tell you about the old mill beyond the village. Follow the little yellow lanterns across the blue bridge, then turn left by the willow tree. The miller brings fresh bread, warm apple pies, and five fine bottles of wine to the market every morning. Oh, and do look out for the wolves near the ruined tower. If you hear a low howl, keep your bow close and walk home quietly. We can talk about your journey over a cup of tea when you return.",
+  "voice": {
+    "profileId": "common-158-voice-race-10",
+    "stableInstruction": "An adult woman speaking standardized American English with a neutral U.S. pronunciation and natural American cadence. Keep this Redguard voice clear and grounded; use no regional North African or Middle Eastern inflection for this default profile. Her individual voice has an upper mezzo-soprano register. Its timbre is balanced, warm and clear, with balanced natural resonance; it is noticeably husky, with a softly airy edge, with minimal habitual creak. Use a slightly slower than average conversational pace. Maintain this individual vocal identity. Speak naturally without caricature, shouting, or added vocal events.",
+    "seed": 1322519134,
+    "guidanceScale": 4.0,
+    "referenceWav": "work/portrait-female-voice-race-10/anchors/common-158/reference.wav",
+    "referenceText": "Good day. I have been in this town for many years. What brings you here today?",
+    "referenceSha256": "262ee50d0afd2928574eaf5b4dbe3be6eca952e2c7ca695b2e30a28da8ab7d05",
+    "profileSha256": "c5a559d29ccec74d88ddbd999abbca717a8108cc0ef6801c9be4a104a0a709a0"
+  },
+  "backend": {
+    "endpoint": "http://127.0.0.1:8094",
+    "apiPath": "/v1/audio/speech",
+    "modelId": "breeze",
+    "expectedModelFile": "breeze-tts-2-q4_0.gguf",
+    "expectedModelSha256": "56b3cc598b1f9220b6fb23dc9eaa098a9a1d0cc6604298a76faac79eef4824b8",
+    "audioCppRelease": "v0.9.2-drama3-base-small",
+    "requestOptions": [
+      "instruct",
+      "guidance_scale",
+      "seed"
+    ],
+    "streamFormat": "sse",
+    "responseFormat": "pcm"
+  },
+  "postprocess": {
+    "normalizer": "pcm16-active-rms-v1",
+    "targetActiveRmsDbfs": -20.0,
+    "peakCeilingDbfs": -3.0,
+    "maxBoostDb": 12.0,
+    "gateDbfs": -50.0,
+    "rhubarbRecognizer": "pocketSphinx",
+    "rhubarbThreads": 1,
+    "rhubarbTimeoutSeconds": 180
+  },
+  "samples": [
+    {
+      "id": "neutral",
+      "emotion": "neutral",
+      "deliveryText": "neutral, calm, and conversational"
+    },
+    {
+      "id": "happy",
+      "emotion": "joy",
+      "deliveryText": "happy and warmly upbeat, with a light natural lift"
+    },
+    {
+      "id": "angry",
+      "emotion": "anger",
+      "deliveryText": "angry but controlled, firm and restrained; do not shout"
+    },
+    {
+      "id": "sad",
+      "emotion": "grief",
+      "deliveryText": "sad and subdued, with restrained low-key warmth"
+    },
+    {
+      "id": "afraid",
+      "emotion": "fear",
+      "deliveryText": "afraid and tense, alert and anxious, without panic"
+    },
+    {
+      "id": "guarded",
+      "emotion": null,
+      "deliveryText": "guarded, cautious, reserved, and emotionally contained"
+    }
+  ],
+  "controlPolicy": "Only deliveryText changes between requests. Keep exactText, reference audio and transcript, stableInstruction, seed, guidance scale, model id, and normal delivery mode fixed. Do not reroll samples. Guarded is a prose-only instruction because the current coordinator emotion enum has no guarded value and the pinned Breeze server API has no typed emotion field.",
+  "seedExperiment": {
+    "portraitId": "common-158",
+    "profileMapSha256": "63b08ae5d7ecf76e39d2ae89687fe17e35689197c95dd58ee47593315b80cf8e",
+    "profileSha256": "c5a559d29ccec74d88ddbd999abbca717a8108cc0ef6801c9be4a104a0a709a0",
+    "referenceSha256": "262ee50d0afd2928574eaf5b4dbe3be6eca952e2c7ca695b2e30a28da8ab7d05",
+    "referenceText": "Good day. I have been in this town for many years. What brings you here today?",
+    "sameSeedAcrossSixMoods": true,
+    "sameOwnReferenceAcrossSixMoods": true,
+    "attributes": {
+      "pitch": "an upper mezzo-soprano register",
+      "timbre": "balanced, warm and clear, with balanced natural resonance",
+      "roughness": "noticeably husky",
+      "breathiness": "with a softly airy edge",
+      "vocalFry": "with minimal habitual creak",
+      "pace": "a slightly slower than average conversational pace"
+    },
+    "latentZ": {
+      "pitch": 1.4478500454534164,
+      "brightness": -0.8255550387006888,
+      "resonance": -0.4883696494286517,
+      "roughness": 1.1669690078014037,
+      "breathiness": 1.207772268892257,
+      "vocalFry": 0.6690092997388333,
+      "pace": -1.4154426016123658
+    }
+  }
+}

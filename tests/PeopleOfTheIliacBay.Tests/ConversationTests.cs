@@ -100,8 +100,8 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.True(grammar.Contains("topic")&&grammar.Contains("map")&&grammar.Contains("\"|-1|\""));
                 Check.True(!grammar.Contains("105")&&!grammar.Contains("topic-id"));
                 string rootRule=grammar.Substring(0,grammar.IndexOf('\n'));
-                Check.Equal("root ::= \"social|-1|\" tone \"|\" social-intent | (\"topic\" | \"map\" | \"unknown\" | \"action\" | \"guide\" | \"appointment\" | \"home\" | \"trade\" | \"borrow\" | \"return_loan\") \"|-1|\" tone \"|none\"",rootRule);
-                foreach(string intent in new[]{"social","topic","map","unknown","action","appointment","home","trade","borrow","return_loan"})
+                Check.Equal("root ::= \"social|-1|\" tone \"|\" social-intent | (\"topic\" | \"map\" | \"unknown\" | \"action\" | \"guide\" | \"appointment\" | \"home\" | \"trade\" | \"borrow\" | \"return_loan\" | \"biography\" | \"enterprise\") \"|-1|\" tone \"|none\"",rootRule);
+                foreach(string intent in new[]{"social","topic","map","unknown","action","guide","appointment","home","trade","borrow","return_loan","biography","enterprise"})
                 {
                     var route=ConversationKnowledge.ParseRouting(intent+"|-1|neutral|none");
                     Check.True(route!=null);Check.Equal(intent,route.Intent);Check.Equal(-1,route.TopicId);
@@ -109,7 +109,7 @@ namespace PeopleOfTheIliacBay.Tests
                 foreach(string effect in new[]{"busy_pause","family_threat"})
                 {
                     Check.True(ConversationKnowledge.ParseRouting("social|-1|neutral|"+effect)!=null);
-                    foreach(string intent in new[]{"topic","map","unknown","action","appointment","home","trade","borrow","return_loan"})
+                    foreach(string intent in new[]{"topic","map","unknown","action","guide","appointment","home","trade","borrow","return_loan","biography","enterprise"})
                         Check.True(ConversationKnowledge.ParseRouting(intent+"|-1|neutral|"+effect)==null,
                             "Only social route may carry social effect: "+intent+"/"+effect);
                 }
@@ -308,13 +308,11 @@ namespace PeopleOfTheIliacBay.Tests
                 store.ApplyConversationTone("resident:a", "insult", "You fool", 103);
                 Check.Equal(-37, restored.ConversationDisposition("resident:a"));
             }));
-            cases.Add(("Conversation effects are clamped and old saves migrate empty", () => {
+            cases.Add(("Conversation effects are clamped", () => {
                 var store = new WorldStateStore(1);
                 for (int i = 0; i < 100; i++) store.ApplyConversationTone("npc:a", "insult", "Insult " + i, i * 86400d);
                 Check.Equal(-200, store.ConversationDisposition("npc:a"));
                 Check.Equal(0, store.ApplyConversationTone("npc:a", "give_1000", "bad output", 100 * 86400d));
-                var old = new WorldState { ConversationAttitudes = null };
-                store.Restore(old); Check.Equal(0, store.ConversationDisposition("npc:a"));
             }));
             cases.Add(("Personal penalties reach absolute minimum; one encounter cannot exceed five goodwill", () => {
                 var store = new WorldStateStore(1);

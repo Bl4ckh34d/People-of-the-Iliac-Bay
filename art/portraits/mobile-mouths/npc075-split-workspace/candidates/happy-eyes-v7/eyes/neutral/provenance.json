@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T11:00:22.0858076Z",
+    "portraitRecord":  75,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Use the supplied exact NPC075 eyes reference grid as the only visual reference. Generate a single clean 2-by-2 atlas of the same character\u0027s complete upper-half portrait crop, row-major: OPEN, HALF, CLOSED, OPEN REPEAT. Keep the same neutral brow expression in every cell. Preserve the 64x35 native crop framing, character identity, compact warm tan face, exact dark-brown center fringe and side locks, colors, pixel-cluster scale, soft muted lighting and all original pixels outside the eye/brow feature area. The eye envelopes are left [18,15,33,33) and right [38,15,51,33) in native full-portrait coordinates; leave the source fringe pixels at left [18,15,22,17) and right [41,15,51,17) unchanged, with no edits to hair. Keep the source\u0027s compact amber/olive-brown irises and tiny pale highlights, original gaze, narrow lid aperture and lash/crease geometry. Make a natural blink sequence: open eyes in the first cell; gently half-lidded eyes in the second; fully closed eyelids in the third; repeat the first open pose in the fourth. Keep iris size and position consistent in open/half phases, pupils inside eyes, no broad white bands, no oversized/round pupils, no bright glints, no added makeup or hard outlines. Preserve the original soft pixel-art shading and stepped clusters. No text, labels, grid lines, borders, added props or facial changes.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54 as C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-136efc47-f023-4beb-81c7-75c3c30139e0.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-136efc47-f023-4beb-81c7-75c3c30139e0.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "e2e7919bfc72eb52738873b46bffa3a1eb3ca2b503bd62101ac973e8f30cd8b3",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-136efc47-f023-4beb-81c7-75c3c30139e0.png",
+                      "sha256":  "234113159e3aacf0b206f6702ed63f1e9f31d23dc320942114291d3f52365351",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "234113159e3aacf0b206f6702ed63f1e9f31d23dc320942114291d3f52365351",
+                "width":  1695,
+                "height":  928
+            }
+}

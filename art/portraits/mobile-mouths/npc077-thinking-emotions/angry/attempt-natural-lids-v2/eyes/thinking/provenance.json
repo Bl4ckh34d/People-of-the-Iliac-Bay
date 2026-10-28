@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T06:48:21.2788408Z",
+    "portraitRecord":  77,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Use case: precise-object-edit\nAsset type: DFU NPC pixel-art eye atlas\nPrimary request: Revise this 3x3 eye atlas for the same angry woman. Preserve the angry expression and make all nine gaze directions clear. Main correction target is the top-center UP cell: replace its square/blocky purple iris with a compact, naturally curved, softly stepped pixel iris; keep both irises aligned and aimed upward together. Use a tiny muted highlight with no bright white glare. Raise the upper lids naturally to make room for the UP irises. Keep the irises fully inside the eye openings.\nInput image: Image 1 is the sole reference. It is the exact inspected 3x3 grid made from this portrait\u0027s own angry open-eye source.\nDirection order: top-left=up-left, top-center=up, top-right=up-right; middle-left=left, middle-center=center, middle-right=right; bottom-left=down-left, bottom-center=down, bottom-right=down-right. Both eyes point together. Diagonals combine horizontal and vertical movement. Do not repeat directions.\nAnatomy and identity: Keep compact muted violet-gray irises, small pupils, warm subdued sclera, original face, pixel lattice, crop and palette. Preserve the angry brow angle, pinch and tension in every cell. Do not neutralize brows, change emotion, move brows or whole sockets, or enlarge the eyes. Keep middle-center gaze straight.\nStyle and constraints: Low-resolution softly shaded pixel art with coherent small pixel steps and rounded/curved iris contours. Keep natural eyelid contours and eye corners. No rectangular or square iris blocks, oversized iris, broad white sclera, bright white highlight, extra highlight, labels, borders, gutters, text, watermark, or extra content. Return only one 3x3 atlas.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-a9772783-5bb6-48c4-ad13-33b42c081cff.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-a9772783-5bb6-48c4-ad13-33b42c081cff.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "fd9639b64dcc7be26c3e75d284ec47979a87d62a6117e1044e76ea77739cfa57",
+                          "width":  1536,
+                          "height":  840
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-a9772783-5bb6-48c4-ad13-33b42c081cff.png",
+                      "sha256":  "a7522da7042dd828b7ad25c33263c254c1eac7e8322d5af82373337fa13d3ced",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "a7522da7042dd828b7ad25c33263c254c1eac7e8322d5af82373337fa13d3ced",
+                "width":  1695,
+                "height":  928
+            }
+}

@@ -32,13 +32,7 @@ namespace PeopleOfTheIliacBay.DFU
             int day=(int)Math.Floor(now/86400d),savedDay;
             if(!worldStore.TryGetRoutineRecoveryDay(residentId,out savedDay))
             { InvalidateRoutineRecovery(residentId); return ordinary; }
-            if(savedDay<day)
-            {
-                worldStore.RemoveRoutineRecovery(residentId);
-                InvalidateRoutineRecovery(residentId);
-                return ordinary;
-            }
-            if(savedDay!=day)
+            if(savedDay>day)
             { InvalidateRoutineRecovery(residentId); return ordinary; }
 
             RoutineRecoveryScheduleCache cached;
@@ -47,16 +41,23 @@ namespace PeopleOfTheIliacBay.DFU
                 cached.Day==day && cached.Restricted==restricted &&
                 cached.AppointmentRevision==worldStore.AppointmentRevision &&
                 cached.HouseholdRevision==worldStore.HouseholdDayRevision &&
-                cached.RecoveryRevision==worldStore.RoutineRecoveryRevision)
+                cached.RecoveryRevision==worldStore.RoutineRecoveryRevision &&
+                (savedDay==day || cached.Plan!=null && now<=cached.Plan.EndsAt))
                 return cached.Schedule;
 
             int wake=restricted?Math.Max(wakeHour*60,300):wakeHour*60;
             int sleep=restricted?Math.Min(sleepHour*60,1140):sleepHour*60;
             string routineFingerprint=RoutineRecoveryIdentity.Fingerprint(plan.Routine,plan.Resident.HomeKey,wake,sleep);
             string appointmentFingerprint=RoutineRecoveryIdentity.Appointments(
-                worldStore.AppointmentsFor(residentId),residentId,day);
-            var recovery=RuntimeFamily(plan,now)==null?null:worldStore.GetHouseholdRoutineRecovery(residentId,day);
-            if(recovery==null)recovery=worldStore.GetRoutineRecovery(residentId,day,routineFingerprint,appointmentFingerprint);
+                worldStore.AppointmentsFor(residentId),residentId,savedDay);
+            var recovery=worldStore.GetHouseholdRoutineRecovery(residentId,savedDay);
+            if(recovery==null)recovery=worldStore.GetRoutineRecovery(residentId,savedDay,routineFingerprint,appointmentFingerprint);
+            if(savedDay<day && (recovery==null || now>recovery.EndsAt))
+            {
+                worldStore.RemoveRoutineRecovery(residentId);
+                InvalidateRoutineRecovery(residentId);
+                return ordinary;
+            }
             if(recovery==null)
             {
                 routineRecoverySchedules[residentId]=new RoutineRecoveryScheduleCache
@@ -102,7 +103,7 @@ namespace PeopleOfTheIliacBay.DFU
                 cached.Day!=day || cached.AppointmentRevision!=worldStore.AppointmentRevision ||
                 cached.HouseholdRevision!=worldStore.HouseholdDayRevision ||
                 cached.RecoveryRevision!=worldStore.RoutineRecoveryRevision || cached.Plan==null ||
-                cached.Plan.AbsoluteDay!=day || now<cached.Plan.CreatedAt || now>=(day+1d)*86400d)
+                now<cached.Plan.CreatedAt || now>=Math.Max((cached.Plan.AbsoluteDay+1d)*86400d,cached.Plan.EndsAt+1))
                 return null;
             // Private read-only consumers share the resident cache. Store reads and
             // ContinueDay already detach ownership; never clone all route points per frame.

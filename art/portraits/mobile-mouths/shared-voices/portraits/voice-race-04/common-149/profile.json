@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "profileId": "common-149-voice-race-04",
+  "portraitId": "common-149",
+  "seed": 600271477,
+  "attributes": {
+    "pitch": "an upper mezzo-soprano register",
+    "timbre": "dark and mellow, rounded and fairly full",
+    "roughness": "smooth and clear",
+    "breathiness": "with balanced natural breath support",
+    "vocalFry": "with minimal habitual creak",
+    "pace": "a slightly slower than average conversational pace"
+  },
+  "latentZ": {
+    "pitch": 1.130564717370888,
+    "brightness": -2.2896313087567357,
+    "resonance": -1.0067213124707521,
+    "roughness": -1.0047994563424383,
+    "breathiness": 0.19802700683574104,
+    "vocalFry": -0.0027808283935489733,
+    "pace": -1.2061993496710008
+  },
+  "raceCandidates": [
+    "Redguard"
+  ],
+  "accentLabel": "Kenyan English",
+  "accentEvidence": "tools/BreezeTtsTrial/accent_voice_corpus_v2.json",
+  "raceAssignment": "Redguard unambiguous",
+  "stableInstruction": "An adult woman speaking English with clearly recognizable Kenyan English pronunciation and cadence, East African English vowel shaping, even syllable rhythm and clean consonant release. Her individual voice has an upper mezzo-soprano register. Its timbre is dark and mellow, rounded and fairly full; it is smooth and clear, with balanced natural breath support, with minimal habitual creak. Use a slightly slower than average conversational pace. Maintain this individual vocal identity. Speak naturally without caricature, shouting, or added vocal events.",
+  "guidanceScale": 4.0,
+  "scope": "gallery voice review; no runtime assignment"
+}

@@ -1,0 +1,19 @@
+{
+  "portrait": 79,
+  "emotion": "guarded / skeptical",
+  "status": "generated; visual review pending; not installed",
+  "generator": "built-in image_gen edit",
+  "generation_attempts": 1,
+  "generated_original": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-626e-7471-95f3-109617bb3581\\exec-46a44dd8-e884-4ee7-94e8-5dd4395b4319.png",
+  "output": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc079-split-workspace\\mouth\\guarded\\raw.png",
+  "dimensions": "1863x844",
+  "output_sha256": "382580424B46E90BECE041CC8886FC57CA5F745B022EE2C316E538455D26A8F1",
+  "reference": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc079-split-workspace\\mouth-reference-grid.png",
+    "sha256": "51B7D166C01001213D48E19BE135F463E41B6A9892DA5ABE9C686CF1AE53CA2A"
+  },
+  "cell_order": "3x3 row-major: A B C / D E F / G H X",
+  "prompt": "Edit the supplied image only. This is a nonsexual, ordinary, fully clothed adult fantasy-game NPC portrait in classic Daggerfall pixel-art style. Keep the same face, framing, pixel scale, palette and geometry. Create one exact 3x3 atlas of nine mouth speech shapes, ordered A B C / D E F / G H X. Change only mouth shapes. Keep the guarded, skeptical mood subtle and reserved, with firm lips and slight mouth-corner asymmetry in closed poses A and X. Do not make a smile, pout, sneer or angry frown. Speech shapes must be clear but modest and natural: small, medium, narrow-teeth, wider, rounded, open, rounded, then closed. Preserve all other features and pixels. No extra panels, text, labels or new content.",
+  "prior_rejection": "Preserved separately at provenance-rejected.json; earlier output moderation rejection was retried exactly once with narrowed prompt, per parent instruction.",
+  "visual_review": "The generated atlas contains nine distinct speech shapes with modest lip openings and retains the reference framing, palette, face and neck. Review at native size for consistency; not assembled or installed."
+}

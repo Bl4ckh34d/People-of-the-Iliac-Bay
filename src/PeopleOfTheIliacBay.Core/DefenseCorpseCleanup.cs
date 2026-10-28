@@ -32,7 +32,8 @@ namespace PeopleOfTheIliacBay.Core
         {
             var record=DefenseRecord(id);var death=record.Death;
             Require(CleanupOnlyCorpse(record) && DefenseTime(now) && now>=death.DiedAt &&
-                DefenseObserver(state,record.SettlementId,observerId,guard,true),"Invalid aggressor corpse discovery.");
+                DefenseObserver(state,record.SettlementId,observerId,guard,true),"Invalid aggressor corpse discovery: corpse="+id+
+                "; observer="+observerId+"; settlement="+record.SettlementId+"; guard="+guard+"; now="+now+"; diedAt="+(death==null?-1:death.DiedAt));
             if(death.Cleanup==null)death.Cleanup=new DefenseCorpseCleanup {FirstObserverId=observerId,GuardObserver=guard,SeenAt=now};
             if(death.Cleanup.Cleared || guard)return null;
             var existing=death.Cleanup.Reports.Find(r=>r.ObserverId==observerId);

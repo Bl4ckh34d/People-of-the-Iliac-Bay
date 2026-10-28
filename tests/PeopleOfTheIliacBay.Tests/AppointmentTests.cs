@@ -72,7 +72,7 @@ namespace PeopleOfTheIliacBay.Tests
             Check.Equal(captured, restored.AppointmentsFor(person.Id)[0].PatienceSeconds);
         }
 
-        private static void PatienceExtendsReservationAndLegacyRecordsKeepOldDeadline()
+        private static void PatienceExtendsReservation()
         {
             var store = Store(out var person);
             var longWait = Booking("long-wait", person.Id, 1000);
@@ -85,39 +85,6 @@ namespace PeopleOfTheIliacBay.Tests
             Check.True(!store.TryReserveAppointment(overlap, 500, out reason));
             Check.Equal("overlap", reason);
 
-            var oldWorld = store.Snapshot();
-            oldWorld.Appointments[0].PatienceSeconds = 0;
-            string oldJson = JsonSerializer.Serialize(oldWorld, new JsonSerializerOptions { IncludeFields = true });
-            oldJson=JsonFixture.WithoutProperty(oldJson,"PatienceSeconds");
-            var legacy = new WorldStateStore(99);
-            legacy.Restore(JsonSerializer.Deserialize<WorldState>(oldJson,
-                new JsonSerializerOptions { IncludeFields = true }));
-            var restored = legacy.FindAppointment(longWait.Id);
-            Check.Equal(0, restored.PatienceSeconds);
-            Check.Near(restored.EndsAt + restored.GraceSeconds, AppointmentTiming.ArrivalDeadline(restored));
-            Check.Near(restored.EndsAt + restored.GraceSeconds, AppointmentTiming.ReservedUntil(restored));
-            Check.Near(restored.EndsAt + restored.GraceSeconds, AppointmentTiming.PlannedLeaveAt(restored));
-
-            var resolvedLegacyWorld = store.Snapshot();
-            HistoricalNpcExperienceFixture.PrepareLegacyEnvelope(resolvedLegacyWorld, 48); // Predates projection markers.
-            var resolvedLegacy = resolvedLegacyWorld.Appointments[0];
-            resolvedLegacy.PatienceSeconds = 0;
-            resolvedLegacy.Status = "player-absent";
-            resolvedLegacy.OutcomeRecorded = true;
-            resolvedLegacy.NpcArrivedAt = 1000;
-            resolvedLegacy.NpcLastSeenAt = 1090;
-            resolvedLegacy.NpcWaitedSeconds = 30;
-            resolvedLegacy.ResolvedAt = 1091;
-            resolvedLegacy.NoShowPenalty = 5;
-            string resolvedJson = JsonSerializer.Serialize(resolvedLegacyWorld, new JsonSerializerOptions { IncludeFields = true });
-            resolvedJson=JsonFixture.WithoutProperty(resolvedJson,"PatienceSeconds");
-            var resolvedLegacyStore = new WorldStateStore(99);
-            resolvedLegacyStore.Restore(JsonSerializer.Deserialize<WorldState>(resolvedJson,
-                new JsonSerializerOptions { IncludeFields = true }));
-            var legacyOutcome = resolvedLegacyStore.FindAppointment(longWait.Id);
-            Check.Equal("player-absent", legacyOutcome.Status);
-            Check.Equal(0, legacyOutcome.PatienceSeconds);
-            Check.Near(1090, AppointmentTiming.PlannedLeaveAt(legacyOutcome));
         }
 
         private static void PatienceValidationAndNoShowResolutionUseCapturedDeadline()
@@ -370,7 +337,7 @@ namespace PeopleOfTheIliacBay.Tests
         {
             cases.Add(("Appointment ledger validates reservations, overlap and copy isolation", ReservationRejectsOverlapAndReturnsCopies));
             cases.Add(("Appointment patience is deterministic, disposition-bound and persisted once",PatienceIsStableAcrossCopiesAndUsesCapturedDisposition));
-            cases.Add(("Appointment patience extends reservations while legacy deadlines remain unchanged",PatienceExtendsReservationAndLegacyRecordsKeepOldDeadline));
+            cases.Add(("Appointment patience extends reservations",PatienceExtendsReservation));
             cases.Add(("Appointment patience validation and observed no-show timing are exact",PatienceValidationAndNoShowResolutionUseCapturedDeadline));
             cases.Add(("Appointment timing validates payloads and maps legacy and resolved leaves",PublicAppointmentTimingValidatesInputsAndMapsOutcomeLeaves));
             cases.Add(("Appointment ledger respects travel conflicts and rejects invalid data", ReservationRejectsTravelAndInvalidRecords));

@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T02:06:08.7727234Z",
+    "portraitRecord":  88,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "happy",
+    "prompt":  "Use case: stylized-concept\nAsset type: pixel-art game portrait eye atlas for DFU NPC088, native 64x35 upper-face half enlarged 8x.\nInput image: Image 1 is the only reference and edit target: eyes-reference-grid.png. It is a 2x2 atlas of the same upper portrait half, row-major open, half-closed, closed, repeated open.\nPrimary request: Create the happy eye atlas by editing only both eye and brow features inside the existing face. Return one complete 2x2 atlas with same dimensions, aspect ratio, cell boundaries, alignment, pixel scale, and repeated background/face framing as the reference. Preserve face identity and original pixel-art structure.\nSubject and expression: Warm, clearly happy smiling eyes in every phase. Convey gentle cheek lift through softly lifted lower lids and relaxed lids. Keep brows relaxed and low, with only a subtle friendly softness. Do not use alarmed, high arches or surprise. Keep emotion visible during the half-closed and closed phases.\nPhase order: top-left open; top-right half-closed; bottom-left fully closed; bottom-right repeated open. Make top-left and bottom-right open phases visually identical.\nIdentity and geometry: Keep eye spacing, eye locations, gaze direction, pupil locations, iris width, and asymmetric gray-violet irises consistent with source. Lids cover the eyes vertically only. Do not move glints down, shrink or round irises, shift gaze, or let a lower lid cross an iris. Fully closed phase conceals all iris and sclera. Keep brow shapes and stationary orbital creases aligned across phases.\nPalette and style: Preserve muted warm tan skin, olive-brown eye shadows, gray-violet irises, soft contrast, and original pixel-art colors. Use a true native pixel grid after downsampling. No smooth vector shapes, circles, extra texture, white flashes, orange skin, heavy near-black brows, or other face changes.\nConstraints: Preserve hair, nose, cheeks, face width, chin, neck, clothing, and background exactly in position and appearance. Change only eye and brow expression. Keep every cell\u0027s half-face framing unchanged. No text, borders, labels, or watermark.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1615a-8f7f-7071-8159-2329169092cb as C:\\Users\\Daniel\\.codex\\generated_images\\01a1615a-8f7f-7071-8159-2329169092cb\\exec-56ca47ca-e9e9-44da-baf3-5c2726c3b099.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1615a-8f7f-7071-8159-2329169092cb\\exec-56ca47ca-e9e9-44da-baf3-5c2726c3b099.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "f2e18bec953ffba12224397a695b2f80ddda822519be1414696b593243bc864c",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "9a64d43e6429fdae0fd71363647e7a736ebbb1d45093a1c58689582b0bb93508",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1615a-8f7f-7071-8159-2329169092cb\\exec-56ca47ca-e9e9-44da-baf3-5c2726c3b099.png",
+                      "sha256":  "28cd5b37846b89814885754651aebc6897553eaea94e667383e89072bd3a5de9",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/happy/raw.png",
+                "sha256":  "28cd5b37846b89814885754651aebc6897553eaea94e667383e89072bd3a5de9",
+                "width":  1695,
+                "height":  928
+            }
+}

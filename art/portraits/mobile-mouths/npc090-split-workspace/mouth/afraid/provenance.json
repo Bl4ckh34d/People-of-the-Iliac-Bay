@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "createdUtc": "2026-10-22T04:13:19.5363718Z",
+  "portraitRecord": 90,
+  "bank": "TFAC00I0.RCI",
+  "part": "mouth",
+  "emotion": "afraid",
+  "prompt": "Create a 3x3 pixel-art speaking-expression atlas using only the attached inspected 3x3 source grid as reference. Match exact grid canvas proportions, cell size and alignment. No borders, gutters, padding, text, or labels. Keep nine identical lower-face views in row-major order A B C / D E F / G H X. Preserve the same adult woman's face, native pixel scale, nose, jaw, chin, neck, hairstyle, background, subdued tan-brown palette and dark brown small mouth. Change only mouth pixels. Keep mouth centered and original size. Keep pixel edges crisp, no smoothing, no new content outside mouth area. Expressions are subtly worried and tense, not exaggerated. Rhubarb meanings: A closed pressed lips for P/B/M; B narrow gap with nearly touching teeth for consonants/EE; C medium unrounded EH/AE; D wide AA; E rounded AO/ER no wider than C; F puckered UW/OW/W; G upper teeth resting on lower lip for F/V; H tongue raised behind upper teeth for L, opening between C and D; X relaxed closed idle. Show restrained ivory teeth and dark inner mouth only where needed. No bright white teeth, no red or orange color shift, no large openings beyond the pose meaning, no changes to skin colors or lower-face shape.",
+  "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161cc-b55d-7751-a8f9-64715b695c0f as C:\\Users\\Daniel\\.codex\\generated_images\\01a161cc-b55d-7751-a8f9-64715b695c0f\\exec-caba07a6-7e0a-430b-807d-eee11811f4c9.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+  "generatedPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a161cc-b55d-7751-a8f9-64715b695c0f\\exec-caba07a6-7e0a-430b-807d-eee11811f4c9.png",
+  "sourceOriginal": {
+    "path": "original.png",
+    "sha256": "b8b0a0da8a68fea050774dbe95633fcb561aa0d4a4b316a787b9831b46247489",
+    "width": 64,
+    "height": 64
+  },
+  "referenceGrid": {
+    "path": "mouth-reference-grid.png",
+    "sha256": "6d0e071a4214165c5ddd1c2776549d45f2ec9da101b32701771a203ab73c1de2",
+    "width": 1536,
+    "height": 696
+  },
+  "generator": {
+    "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a161cc-b55d-7751-a8f9-64715b695c0f\\exec-caba07a6-7e0a-430b-807d-eee11811f4c9.png",
+    "sha256": "44ee4abab4288b359e553e40065bac4e4054161687226588c50c5cf0b4baee13",
+    "width": 1863,
+    "height": 844
+  },
+  "raw": {
+    "path": "mouth/afraid/raw.png",
+    "sha256": "44ee4abab4288b359e553e40065bac4e4054161687226588c50c5cf0b4baee13",
+    "width": 1863,
+    "height": 844
+  }
+}

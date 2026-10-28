@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T02:06:25.3045355Z",
+    "portraitRecord":  88,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "sad",
+    "prompt":  "Use case: stylized-concept\nAsset type: NPC talking portrait eye animation atlas for a 64x35 upper-half pixel-art face\nPrimary request: Create a 2x2 atlas of the SAME original woman\u0027s upper-face half, repeated in each cell, preserving the exact framing and identity from Image 1. Each cell is 64:35 aspect, arranged row-major: open / half closed / closed / repeated open. This atlas is for the SAD emotion. Keep a restrained sad expression in every phase: inner brows subtly raised toward the center, eyes downcast and sorrowful, with gentle upper lid tension. Do not make her surprised, angry, or crying.\nInput images: Image 1 is the sole visual/reference image and is the supplied eyes reference grid. Match its upper-face composition and original art exactly; use it only as the guide for face, identity, palette, grid and pixel scale.\nStyle/medium: faithful native-resolution 1990s pixel-art portrait, enlarged nearest-neighbor pixels, softly blended but clearly discrete pixels; no smooth vector rendering, no painterly restyling.\nColor palette: retain the original muted warm tan skin, subdued olive/brown eye shadows and brows, gray-violet irises, and quiet pale glints. Keep the same iris width, spacing, and downcast pupil position in both eyes. Preserve the original glint placement and width behind moving lids. No orange skin, heavy near-black brows, white flashes, or added colors.\nConstraints: Output only the complete repeated-face 2x2 atlas on the same 4:2.1875 canvas ratio as Image 1. Keep both eyes aligned and anatomically consistent. All four cells retain the same sad raised-inner-brow expression and stationary orbital creases. The half-closed phase is a vertical upper-lid descent over the same iris; do not move or shrink the iris, shift gaze, or cross the lower lid. The closed phase fully conceals iris and sclera with a natural closed lid. The final open cell repeats the first. Preserve eye spacing, face edges, forehead, nose bridge, hair, background, shading, and all pixels outside the eye/brow feature areas from the guide. Do not add tears, text, borders, labels, extra panels, or a full portrait.\nAvoid: full face or different crop; changing hair or background; round enlarged eyes; upward gaze; displaced or resized pupils; crossed lower lids; thick black strokes; dramatic theatrical grief; tears; photorealism; vector smoothness; text; watermark.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1615a-f92c-71b1-9fe7-20279ec5fc65 as C:\\Users\\Daniel\\.codex\\generated_images\\01a1615a-f92c-71b1-9fe7-20279ec5fc65\\exec-a3f4e5ed-822e-4565-8804-e8b3e44134b3.png by default.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1615a-f92c-71b1-9fe7-20279ec5fc65\\exec-a3f4e5ed-822e-4565-8804-e8b3e44134b3.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "f2e18bec953ffba12224397a695b2f80ddda822519be1414696b593243bc864c",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "9a64d43e6429fdae0fd71363647e7a736ebbb1d45093a1c58689582b0bb93508",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1615a-f92c-71b1-9fe7-20279ec5fc65\\exec-a3f4e5ed-822e-4565-8804-e8b3e44134b3.png",
+                      "sha256":  "f5966cbfd9cbe6240732c933c52daac0e051c446ecd465acd279189a512d8195",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/sad/raw.png",
+                "sha256":  "f5966cbfd9cbe6240732c933c52daac0e051c446ecd465acd279189a512d8195",
+                "width":  1695,
+                "height":  928
+            }
+}

@@ -41,19 +41,19 @@ namespace PeopleOfTheIliacBay.Tests
                     var copy=new WorldStateStore(1);copy.Restore(store.Snapshot());Check.Equal(5,copy.NativePeopleFor(1)[0].HomeKey);
                 }
             }));
-            cases.Add(("Replacing an ordinary inn flat releases room and remote reservation without killing anyone",()=>{
+            cases.Add(("Replacing an ordinary Inn flat releases bed and remote reservation without killing anyone",()=>{
                 var store=new WorldStateStore(42);store.GetOrCreateFamilies(1,new[]{new HomeProfile(10,1)});
                 var person=store.RegisterNativePerson(1,5,11,"Visiting Person",ResidentSex.Female,1,0,182,1);
-                store.RegisterLodging(1,5,new[]{new LodgingRoom {Id="room",Beds=new List<string>{"bed"}}});
+                store.RegisterLodgingBeds(1,5,new[]{new LodgingBed {Id="bed"}});
                 store.TryClaimLodgingBed(1,5,person.Id,"bed",100);
-                var home=store.TryReserveInnLodgerHome(person.Id,"room",2,new HomeProfile(20,1),100);
+                var home=store.TryReserveInnLodgerHome(person.Id,"bed",2,new HomeProfile(20,1),100);
                 Check.True(home!=null);
                 store.RememberConversation(person.Id,100,"6 Morning Star 405","Inn","My silver lute is missing.","I remember.","model");
                 Check.True(store.RetireOrdinaryBedroomFlat(person.Id));Check.True(person.IsAlive);
                 Check.True(store.InnLodgerHome(person.Id)==null);Check.True(store.NativeLodgingBed(person.Id)==null);
-                Check.True(store.AvailableLodgingRoom(1,5,1,101,200)!=null);
+                Check.True(store.AvailableLodgingBeds(1,5,1,101,200)!=null);
                 Check.True(!store.TryClaimLodgingBed(1,5,person.Id,"bed",101));
-                Check.True(store.TryReserveInnLodgerHome(person.Id,"room",2,new HomeProfile(20,1),101)==null);
+                Check.True(store.TryReserveInnLodgerHome(person.Id,"bed",2,new HomeProfile(20,1),101)==null);
                 var copy=new WorldStateStore(1);copy.Restore(store.Snapshot());
                 Check.True(copy.NativePeopleFor(1).Find(p=>p.Id==person.Id).RetiredBedroomFlat);
                 Check.True(copy.RecallConversation(person.Id,"lute",200,2000).Contains("silver lute"));
@@ -74,9 +74,9 @@ namespace PeopleOfTheIliacBay.Tests
             cases.Add(("Bedroom replacement preserves dead identity and corpse home evidence",()=>{
                 var store=new WorldStateStore(42);store.GetOrCreateFamilies(1,new[]{new HomeProfile(10,1)});
                 var person=store.RegisterNativePerson(1,5,11,"Dead Visitor",ResidentSex.Male,1,0,182,1);
-                store.RegisterLodging(1,5,new[]{new LodgingRoom {Id="room",Beds=new List<string>{"bed"}}});
+                store.RegisterLodgingBeds(1,5,new[]{new LodgingBed {Id="bed"}});
                 store.TryClaimLodgingBed(1,5,person.Id,"bed",100);
-                store.TryReserveInnLodgerHome(person.Id,"room",2,new HomeProfile(20,1),100);
+                store.TryReserveInnLodgerHome(person.Id,"bed",2,new HomeProfile(20,1),100);
                 person.IsAlive=false;Check.True(!store.RetireOrdinaryBedroomFlat(person.Id));
                 Check.True(store.InnLodgerHome(person.Id)!=null);Check.True(!person.RetiredBedroomFlat);
                 var copy=new WorldStateStore(1);copy.Restore(store.Snapshot());Check.True(!copy.NativePeopleFor(1)[0].IsAlive);

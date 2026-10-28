@@ -118,6 +118,21 @@ namespace PeopleOfTheIliacBay.Core
                 GenerationSerial=state.NextIncidentSerial++ };
             state.AlarmIncidents.Add(incident); return incident;
         }
+        public AlarmPerson RecordPlayerAssaultResponse(int settlementId,string residentId,double now,
+            int buildingKey,double x,double y,double z)
+        {
+            var resident=AlarmResident(settlementId,residentId);
+            if(!resident.IsAlive)return null;
+            // A living victim knows the actual attack, not a death. Use the
+            // existing threat lifecycle without creating a corpse/murder fact.
+            var incident=RecordHostileThreat(settlementId,NpcDirectedRelationship.PlayerTargetId,now);
+            if(!incident.HasLocation)LocateViolence(incident.Id,buildingKey,x,y,z);
+            var person=Witness(incident.Id,residentId,now);
+            if(person==null)return null;
+            person.Reaction=CivilianAlarms.ChooseReaction(resident);
+            person.HasPosition=true;person.BuildingKey=buildingKey;person.X=x;person.Y=y;person.Z=z;
+            return person;
+        }
         public void LocateViolence(string incidentId, int buildingKey, double x, double y, double z)
         {
             Require(buildingKey >= -1 && ValidCoordinate(x) && ValidCoordinate(y) && ValidCoordinate(z), "Invalid crime location.");
@@ -296,7 +311,7 @@ namespace PeopleOfTheIliacBay.Core
             }
             var traveler=state.Travelers.Find(p=>p.Id==id);
             if(traveler!=null && state.TravelerVisits.Exists(v=>v.PersonId==id && v.SettlementId==townId))
-                return TravelerAlarmResident(traveler);
+                return OriginResident(state,traveler) ?? TravelerAlarmResident(traveler);
             throw new ArgumentException("Incident resident does not belong to this settlement.");
         }
         private static Resident TravelerAlarmResident(TravelerPerson person)
@@ -330,9 +345,8 @@ namespace PeopleOfTheIliacBay.Core
             foreach (var alarm in source.AlarmIncidents)
             {
                 bool threat=alarm!=null && alarm.ThreatId!=null;
-                if (source.Version >= 47)
-                    Require(alarm != null && alarm.GenerationSerial > 0 && serials.Add(alarm.GenerationSerial),
-                        "Invalid or duplicate incident generation serial.");
+                Require(alarm != null && alarm.GenerationSerial > 0 && serials.Add(alarm.GenerationSerial),
+                    "Invalid or duplicate incident generation serial.");
                 Require(alarm != null && incidentIds.Add(alarm.Id) && (threat ?
                     !string.IsNullOrWhiteSpace(alarm.ThreatId) && alarm.ThreatId.Length<=256 && alarm.Id=="threat:"+alarm.SettlementId+":"+alarm.ThreatId :
                     alarm.Id == "murder:" + alarm.VictimId && victims.Add(alarm.VictimId)), "Invalid or duplicate incident.");
@@ -355,7 +369,6 @@ namespace PeopleOfTheIliacBay.Core
                 // Native staff without a generated household are also persistent victims and witnesses.
                 if (source.NativePeople != null) foreach (var native in source.NativePeople)
                     if (native.SettlementId == alarm.SettlementId && !residents.ContainsKey(native.Id)) residents.Add(native.Id, NativeAlarmResident(native));
-                if(source.Version>=9)
                 {
                     Require(source.Travelers!=null && source.TravelerVisits!=null,"Missing traveler crime identities.");
                     foreach(var traveler in source.Travelers)
@@ -366,24 +379,25 @@ namespace PeopleOfTheIliacBay.Core
                                 "Traveler death conflicts with incident chronology.");
                         if(source.TravelerVisits.Exists(v=>v!=null && v.PersonId==validated.Id && v.SettlementId==alarm.SettlementId))
                         {
-                            Require(!residents.ContainsKey(validated.Id),"Traveler duplicates civilian crime identity.");
-                            residents.Add(validated.Id,TravelerAlarmResident(validated));
+                            if(residents.ContainsKey(validated.Id))
+                                Require(MatchingOrigin(source,validated),"Traveler duplicates civilian crime identity.");
+                            else residents.Add(validated.Id,OriginResident(source,validated) ?? TravelerAlarmResident(validated));
                         }
                     }
                 }
                 Require((threat ? alarm.VictimId==null && alarm.Scene==null && alarm.Corpse==null && alarm.NoiseChecks!=null && alarm.NoiseChecks.Count==0 :
                     alarm.VictimId != null && residents.ContainsKey(alarm.VictimId)) && ValidTime(alarm.StartedAt) &&
                     ValidTime(alarm.ExpiresAt) && alarm.ExpiresAt == alarm.StartedAt + 900 && alarm.People != null, "Invalid incident data.");
-                bool playerAttributed = source.Version >= 19 && alarm.PlayerAttributed;
-                bool accusationIssued = source.Version >= 19 && alarm.AccusationIssued;
-                bool crimeResolved = source.Version >= 19 && alarm.CrimeResolved;
+                bool playerAttributed = alarm.PlayerAttributed;
+                bool accusationIssued = alarm.AccusationIssued;
+                bool crimeResolved = alarm.CrimeResolved;
                 Require(alarm.KillerThreatId==null || !threat && !playerAttributed && !string.IsNullOrWhiteSpace(alarm.KillerThreatId) && alarm.KillerThreatId.Length<=256,"Invalid murderer identity.");
                 Require(!threat || (!playerAttributed && !accusationIssued && !crimeResolved), "Hostile threat cannot be attributed as a player murder.");
                 Require(!accusationIssued || playerAttributed, "Murder accusation lacks player attribution.");
                 Require(!crimeResolved || accusationIssued || alarm.KillerThreatId!=null, "Resolved murder lacks an accusation.");
                 var copied = new CivilianIncident { Id = alarm.Id, VictimId = alarm.VictimId, ThreatId=alarm.ThreatId,SettlementId = alarm.SettlementId,
                     KillerThreatId=alarm.KillerThreatId,
-                    GenerationSerial=source.Version >= 47 ? alarm.GenerationSerial : 0,
+                    GenerationSerial=alarm.GenerationSerial,
                     PlayerAttributed = playerAttributed, AccusationIssued = accusationIssued, CrimeResolved = crimeResolved,
                     StartedAt = alarm.StartedAt, ExpiresAt = alarm.ExpiresAt, HasLocation = alarm.HasLocation,
                     BuildingKey = alarm.BuildingKey, X = alarm.X, Y = alarm.Y, Z = alarm.Z };
@@ -402,7 +416,8 @@ namespace PeopleOfTheIliacBay.Core
                     Require(person != null && person.ResidentId != null && person.ResidentId != alarm.VictimId &&
                         residents.ContainsKey(person.ResidentId) && people.Add(person.ResidentId), "Invalid alarm recipient.");
                     Require(person.Reaction == CivilianReaction.Flee || person.Reaction == CivilianReaction.Fight, "Invalid reaction.");
-                    Require(!threat || person.Reaction==CivilianReaction.Flee,"Hostile threat recipient must flee.");
+                    Require(!threat || person.Reaction==CivilianReaction.Flee || alarm.ThreatId==NpcDirectedRelationship.PlayerTargetId,
+                        "Hostile threat recipient must flee.");
                     Require(person.Warned != null && person.Warned.Count <= (person.DirectWitness ? 2 : 0), "Invalid warning budget.");
                     Require(!person.HeardViolence || (copied.NoiseChecks.Exists(n => n.ResidentId == person.ResidentId &&
                         (!n.Sleeping || n.Woke)) && (person.DirectWitness || person.Reaction == CivilianReaction.Flee)), "Invalid hearing response.");
@@ -442,7 +457,7 @@ namespace PeopleOfTheIliacBay.Core
                     Require(!copy.StaticWitness || source.NativePeople.Exists(p=>p.Id==copy.ResidentId),"Static witness lacks native identity.");
                     Require(copy.InterviewGuardId==null || copy.StaticWitness && source.Garrisons.Exists(g=>g.SettlementId==alarm.SettlementId && g.Guards.Exists(p=>p.Id==copy.InterviewGuardId)),"Unknown interviewing guard.");
                     Require(copy.OutdoorReport==null || copied.Corpse!=null && alarm.BuildingKey==-1 && copy.OutdoorReport.SeenAt>=copied.Corpse.DiedAt,"Invalid outdoor report owner.");
-                    Require(copy.OutdoorReport==null || copy.OutdoorReport.DeliveredAt<0 || source.Version>=77 &&
+                    Require(copy.OutdoorReport==null || copy.OutdoorReport.DeliveredAt<0 ||
                         copy.DirectWitness && copy.StatementDelivered && source.Garrisons.Exists(g=>g.SettlementId==alarm.SettlementId &&
                             g.Guards.Exists(p=>p.Id==copy.OutdoorReport.GuardId &&
                                 (p.IsAlive || p.DiedAt>=copy.OutdoorReport.DeliveredAt))),"Invalid physical murder statement.");

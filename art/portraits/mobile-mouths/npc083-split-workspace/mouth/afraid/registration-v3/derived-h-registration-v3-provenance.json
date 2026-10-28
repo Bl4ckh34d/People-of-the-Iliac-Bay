@@ -1,0 +1,11 @@
+﻿{
+    "source":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait083-afraid-mouth-repair-v1\\generation\\mouth\\afraid\\raw.png",
+    "kind":  "isolated-native-cell-registration-experiment",
+    "method":  "Normalize all complete v1 raw cells to64x29 with standard System.Drawing nearest-neighbor PixelOffsetMode.Half. Only H shifts rigidly +1 native y before the standard mouth mask and original feather. Top vacated row copies original lower-half row0, outside mouth mask. No mouth-pixel painting, resizing, stretching, or tooth-only shift.",
+    "outputSha256":  "070070d97c96c15aae64f7081f5677f2746cd1f3a8ae7a39ec9f987203ab77f8",
+    "selectedCell":  7,
+    "offsetX":  0,
+    "status":  "assembly-diagnostic-not-accepted-method",
+    "sourceSha256":  "f34f20e83dcc6c0ca194173c9dfc167d6ffa5a029830112932855d080216a02e",
+    "offsetY":  1
+}

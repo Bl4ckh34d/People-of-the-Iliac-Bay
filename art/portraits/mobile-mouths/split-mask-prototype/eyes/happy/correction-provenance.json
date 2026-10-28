@@ -1,0 +1,28 @@
+{
+  "emotion": "happy",
+  "phase": "closed",
+  "cell_index": 2,
+  "generator": "built-in image_gen",
+  "generation_count": 1,
+  "status": "correction-prototype-user-review-pending-not-composited",
+  "source": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\eyes\\happy\\raw.png",
+    "dimensions": "1695x928",
+    "sha256": "094801E08239EFCEF5EB5C1D1F5F7275C4E0BF1FBAD57AED793299ADA3BAF0A2"
+  },
+  "generated_path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-8b98-7181-a1df-84e7b766303c\\exec-f6f1de9a-3b74-4384-ae7a-3366e5a200f8.png",
+  "output": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\eyes\\happy\\correction-raw.png",
+    "dimensions": "1694x929",
+    "sha256": "7409765C82E4DBF9A4B06E4C99483B5DDE5996865CB9B3EFA86629C4F592BDAF",
+    "copied_unaltered": true
+  },
+  "grid_order": [
+    "open",
+    "half",
+    "closed",
+    "open-reference"
+  ],
+  "visible_deviations": "Fully closed lids remain; no iris or sclera visible. Brows look closer to open cell at sheet scale; exact pixel equality is not verified. Generated full sheet differs in dimensions from base (1694x929 vs 1695x928), and other cells may drift. Parent should use only cell index 2.",
+  "prompt": "Use case: stylized-concept\nAsset type: targeted correction of one cell in a 2×2 NPC eye sheet\nInput image: Image 1 is the existing happy eye sheet and exact edit target.\nPrimary request: correct ONLY bottom-left cell, row-major cell index 2, which is the fully closed-eye phase. Match both eyebrow shapes and vertical positions to the open happy brows in top-left cell index 0.\nComposition/framing: preserve the full 2×2 sheet and exact aspect ratio. Cell order remains open / half / closed / open-reference.\nConstraints: In cell index 2, change only the two eyebrow forms inside their brow zones: left brow x18..27/y18..23, right brow x37..50/y17..22 in native portrait coordinates. Copy the same gentle happy brow shape and height seen in open cell index 0, adapted only to this cell's same coordinates. Keep both lids fully closed; no iris or sclera remnants. Preserve face geometry, hairline, original muted soft pixel palette, shadows, closed eyelid lines, and all pixels outside those two brow zones. Keep other three cells unchanged.\nAvoid: changing any eyelids, reopening eyes, adding iris or sclera, altering other cells, shifting or scaling face parts, harsh black brows, thick eyeliner, contrast increase, blur, labels, gutters, crop, resize."
+}

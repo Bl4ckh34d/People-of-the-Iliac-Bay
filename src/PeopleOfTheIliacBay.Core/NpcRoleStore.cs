@@ -162,7 +162,6 @@ namespace PeopleOfTheIliacBay.Core
         private static List<NpcRoleState> CopyNpcRoles(WorldState source, WorldState validated)
         {
             var result = new List<NpcRoleState>();
-            if (source.Version < 43) return result;
             Require(source.NpcRoles != null, "Missing NPC role state list.");
             var identities = new HashSet<string>(StringComparer.Ordinal);
             foreach (var saved in source.NpcRoles)

@@ -463,10 +463,11 @@ namespace PeopleOfTheIliacBay.DFU
         }
         private bool Floor(Vector3 point, float up, float depth, out Vector3 floor)
         {
-            RaycastHit hit;
-            if (Physics.Raycast(point + Vector3.up * up, Vector3.down, out hit, depth, ~0, QueryTriggerInteraction.Ignore) &&
-                hit.collider.transform.IsChildOf(interior.transform) && hit.normal.y > 0.65f)
-            { floor = hit.point; return true; }
+            var hits=Physics.RaycastAll(point+Vector3.up*up,Vector3.down,depth,~0,QueryTriggerInteraction.Ignore);
+            System.Array.Sort(hits,(a,b)=>a.distance.CompareTo(b.distance));
+            foreach(var hit in hits)
+                if(hit.collider.transform.IsChildOf(interior.transform) && hit.normal.y>0.65f)
+                {floor=hit.point;return true;}
             floor = Vector3.zero; return false;
         }
         private bool Clear(Vector3 ground)
@@ -479,7 +480,11 @@ namespace PeopleOfTheIliacBay.DFU
             return true;
         }
         private bool SurveyBlocker(Collider collider)
-        { return boundary!=null && collider.GetComponentInParent<DaggerfallActionDoor>() ? false : Blocker(collider); }
+        {
+            var other=collider.GetComponentInParent<DaggerfallInterior>();
+            if(other && other!=interior)return false;
+            return boundary!=null && collider.GetComponentInParent<DaggerfallActionDoor>() ? false : Blocker(collider);
+        }
         private static bool Blocker(Collider collider)
         {
             var door = collider.GetComponentInParent<DaggerfallActionDoor>();

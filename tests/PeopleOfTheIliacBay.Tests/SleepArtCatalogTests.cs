@@ -50,7 +50,12 @@ namespace PeopleOfTheIliacBay.Tests
                 foreach (var entry in SleepArtCatalog.Entries)
                     if (entry.Provider.Length == 0) vanillaCount++; else providerCount++;
                 Check.Equal(223,vanillaCount);
-                Check.Equal(103,providerCount);
+                Check.Equal(171,providerCount);
+                const string det="00272292-acc6-4e51-ba4c-3a3e89199609";
+                Check.True(SleepArtCatalog.Find(10015,1,det)!=null);
+                Check.True(SleepArtCatalog.Find(10015,1)==null&&SleepArtCatalog.Find(10015,1,lively)==null);
+                Check.True(SleepArtCatalog.Find(10015,0,det)==null&&SleepArtCatalog.Find(10012,2,det)==null,
+                    "Identity-limited sleep candidates stay excluded");
                 for (int record = 0; record < 3; record++)
                     Check.True(SleepArtCatalog.Find(1306,record,"e508f8c4-f153-4725-98d4-9dfc2a1fcf9d") == null);
             }));

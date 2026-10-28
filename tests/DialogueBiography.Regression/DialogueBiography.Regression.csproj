@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><TreatWarningsAsErrors>true</TreatWarningsAsErrors></PropertyGroup>
+  <ItemGroup><ProjectReference Include="../../src/PeopleOfTheIliacBay.Core/PeopleOfTheIliacBay.Core.csproj" /></ItemGroup>
+  <ItemGroup><Compile Include="../PeopleOfTheIliacBay.Tests/ClassifiedAdmissionFixture.cs" Link="ClassifiedAdmissionFixture.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="../PeopleOfTheIliacBay.Tests/NpcDailyPaymentFixture.cs" Link="NpcDailyPaymentFixture.cs" /></ItemGroup>
+  <ItemGroup>
+    <Compile Include="../PeopleOfTheIliacBay.Tests/NpcTaskTests.cs" Link="NpcTaskTests.cs" />
+    <Compile Include="../PeopleOfTheIliacBay.Tests/NpcTaskFailureFeedbackTests.cs" Link="NpcTaskFailureFeedbackTests.cs" />
+    <Compile Include="../PeopleOfTheIliacBay.Tests/NpcTaskDependencyAcceptanceTests.cs" Link="NpcTaskDependencyAcceptanceTests.cs" />
+    <Compile Include="../PeopleOfTheIliacBay.Tests/NpcTaskIndexTests.cs" Link="NpcTaskIndexTests.cs" />
+    <Compile Include="../PeopleOfTheIliacBay.Tests/ConversationTests.cs" Link="ConversationTests.cs" />
+  </ItemGroup>
+</Project>

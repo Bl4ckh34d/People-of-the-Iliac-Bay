@@ -1,6 +1,78 @@
 # Testing and verification status
 
-## Current installed checkpoint — 26 October 2026
+## Native acceptance — 27 October 2026
+
+Installed bundle `9227BBCCD619C92829FBE18F21D70B991A26F2E05486E89DACAC3003D1D0226C` matches the distribution. Unity package checks and
+2149 Core tests pass. Fresh Hakon saves prove visual pursuit recruitment, actual
+200 m Halt hearing (14 listeners, seven occluded; 17 outside unaffected),
+non-depleting NPC shelf purchase through native handover and serialization,
+and ordinary home rest beside the assigned bed with sleeping art disabled.
+Two NPC-killer cases pass physical witness reporting, cleanup, suspect handling
+and return to post. The new 2–5 second report conversation passes with 4.64
+seconds of mutual facing and no movement before departure. All 19 Daggerfall
+Inn routes, four physical gate crossings and closed-gate exclusion pass.
+Real Gemma parses/binds five free-text steps but declines
+consent; this is not an accepted execution pass. No blanket release clearance.
+[Detailed evidence and remaining native limits](audits/2026-10-27-game-acceptance.md).
+
+## Integrated immersion simplification — 26 October 2026
+
+Current source uses strict schema85, one LLM plus TTS, direct companion payment,
+non-depleting NPC shelf purchases, bounded traveler origin households and simpler
+family/routine planning. Sleeping art no longer gates rest. Actual player-directed
+Halt shouts alert guards within200m without LOS; visible pursuits recruit directly.
+Core2147/2147 and RuntimeCompile0 warnings/errors pass. Same-model consent16/16,
+goal/dispatch56/56, mocked launcher15 cases and guard adapter14/14 pass.
+[Integrated report and native limits](audits/2026-10-26-immersion-simplification-results.md).
+That source-only evidence is historical; the dated native acceptance above adds current package/model results within its stated limits.
+
+## Exact-bed lodging replacement — 26 October 2026
+
+Inn capacity, booking, native occupancy, player rental, traveler admission,
+family lodging and paid health rest now share one exact-bed ledger. Each physical
+bed contributes one place. A party of N receives N distinct free bed IDs. Native
+rental markers and permanent occupants map directly to exact beds; door state and
+floor connectivity do not alter capacity. The later integrated schema85 requires
+fresh mod data and rejects all obsolete saves without lodging migration.
+
+Verified after the replacement:
+
+- `PeopleOfTheIliacBay.Tests`: **2147/2147** current-schema checks, including the exterior catch-up materialization policy.
+- `NpcRestTreatment.Regression`: **6/6**.
+- `NpcHealthLodgingRetention.Regression`: **6/6**.
+- `ActorCensusProbe`: pass.
+- `RuntimeCompile`: **0 warnings, 0 errors**.
+
+Native exact-bed inventory audits pass all 5 Gothway and all 19 Daggerfall City
+Inns. Inn263174 passes ordinary admission with five admitted travelers, zero due
+pending admissions, zero blocked admitted bodies and five active interior bodies.
+After that run, exterior catch-up materialization was tightened: after loading,
+loitering or another time jump, no exterior body remains after scheduled arrival;
+only a continuously visible approach without catch-up finishes its physical door walk;
+an unobserved admitted traveler first materializes inside. The updated native
+assertion and package still need a fresh run.
+
+## Subsequent development verification — 26 October 2026
+
+The Inn263174 crowd is reproduced with actual pending travelers at the door.
+The earlier implementation grouped native rental markers and admitted guests during
+other building surveys. `work/inn-admission-native-02-player.log` passed ordinary demand,
+five admitted travelers, zero pending due admissions, zero admitted bodies blocked
+outdoors and five actual active traveler bodies in the interior. No guest,
+inventory or booking is injected by that acceptance probe. The partition is6 rooms,
+11 beds and7 native markers; focused Core run2178/2178 and runtime compilation pass.
+That evidence is retained only as historical diagnosis; the exact-bed replacement
+requires a new native run. [Detailed earlier scope](audits/2026-10-26-inn-pending-door-crowd.md).
+
+Traveler/gate route checks subsequently pass all19 tested Inns, physical crossings,
+closed-gate refusal and morning reopening on their documented snapshots; see the
+[gate audit](audits/2026-10-26-traveler-native-gates.md). Full ordinary onward travel
+and overnight stays are separate checks. Guard shifts and the five newly authorized
+Sol6.1/high slices are undergoing integration; their CPU checks do not establish
+native completion. A later diagnostic bundle is not a fully accepted replacement
+for the integrated checkpoint below.
+
+## Earlier integrated checkpoint — 26 October 2026
 
 Distribution and Player SHA256 both equal **`D3CA68C3D919FC9845B2769661BEB5064318EF46E8BD856B3874C09D5F71741E`**.
 The normal full build exits0 (`work/pre-pause-build.log`); Unity package verification

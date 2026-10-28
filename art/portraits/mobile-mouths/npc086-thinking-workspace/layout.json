@@ -1,0 +1,68 @@
+{
+  "portraitRecord": 86,
+  "bank": "TFAC00I0.RCI",
+  "width": 64,
+  "height": 64,
+  "splitY": 35,
+  "browLockEndY": 20,
+  "eyeRegions": [
+    {
+      "x": 13,
+      "y": 13,
+      "width": 18,
+      "height": 18
+    },
+    {
+      "x": 33,
+      "y": 13,
+      "width": 19,
+      "height": 18
+    }
+  ],
+  "mouthRegion": {
+    "x": 22,
+    "y": 38,
+    "width": 21,
+    "height": 15
+  },
+  "eyeFeatureLocks": [
+    {
+      "emotion": "neutral",
+      "phase": "half",
+      "x": 22,
+      "y": 24,
+      "width": 1,
+      "height": 1,
+      "sourceFile": "source-upper.png"
+    },
+    {
+      "emotion": "neutral",
+      "phase": "half",
+      "x": 43,
+      "y": 24,
+      "width": 1,
+      "height": 1,
+      "sourceFile": "source-upper.png"
+    },
+    {
+      "emotion": "afraid",
+      "phase": "half",
+      "x": 22,
+      "y": 24,
+      "width": 1,
+      "height": 1,
+      "sourceFile": "eyes/afraid/open.png"
+    },
+    {
+      "emotion": "afraid",
+      "phase": "half",
+      "x": 43,
+      "y": 24,
+      "width": 1,
+      "height": 1,
+      "sourceFile": "eyes/afraid/open.png"
+    }
+  ],
+  "blinkRepairRationale": "Parent inspected original86 glints22,23 and43,23. Neutral/afraid half lids occlude those glints but generation redraws them one row lower at22,24 and43,24. Restore the actual underlying pixels from source-upper for neutral and that emotion's open frame for afraid. Four subtests fail before these86-specific one-pixel repairs; preserve exact changed-pixel set and do not copy coordinates to another face.",
+  "maskBoundsRationale": "Parent inspected original086 and numbered16x native grid. Brows occupy17..20, upper lid22, irises23..25. Eye envelopes start13 for raised-brow headroom and end30; stationary brow band ends20 before lids. Mouth lips around41..46 need room through52 for wide-AA opening, without changing chin/hair. No other face's locks or palette mapping inherited."
+}

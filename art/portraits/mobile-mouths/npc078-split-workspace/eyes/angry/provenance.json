@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 78,
+  "emotion": "angry",
+  "assetType": "eye 2x2 raw atlas",
+  "imageTool": "built-in image_gen",
+  "sourceReference": "eyes-reference-grid.png",
+  "sourceReferenceSha256": "770bcaf228993a243e7af873727e0ea24ee1788439afa29e5dfb66bed0581340",
+  "originalSha256": "4cfab5dce8d40ff0246728c2c28922d9b5627cec9549f9b5252f2f601e4978ce",
+  "rawFile": "raw.png",
+  "rawSha256": "6a6f7f3985350f8cc615dd9525042e7a7ac05192caa83d8b205e726734811335",
+  "imagegenOutputName": "exec-cca985cc-05ec-448f-8f86-2627ce30b206.png",
+  "prompt": "Use case: stylized-concept\nAsset type: pixel-art emotional eye atlas for one Daggerfall Unity 64x64 NPC portrait\nInput image: Image 1 is the inspected NPC 78 eye reference grid. Use it as the exact face identity, native pixel-art style, palette, original eye size, spacing, skin/hair colors and straight-ahead gaze reference. It is not a target to repaint.\nPrimary request: create one clean 2-by-2 atlas of the same NPC 78 upper-face crop. Exact row-major cells: OPEN angry eyes, HALF-CLOSED angry eyes, CLOSED angry eyes, repeated OPEN angry reference. No labels or gutters.\nComposition/framing: four equal cells in a strict 2x2 grid; each cell contains only the same upper-face crop aligned at identical scale and position. Preserve crisp native pixel clusters. High contrast enough that eyes, lids, irises and brows remain sharply readable when each cell is reduced to 64x35.\nSubject and emotion: restrained, clearly angry expression. Use subtly lowered and inward-tensed brows and tense eyelids, not theatrical rage. Open and half-open eyes remain directed straight ahead. Make the anger legible through brow tension and eye shape.\nMotion continuity: keep the original iris widths, pupil positions, eye spacing and gaze stable in all four cells. Half-closed is a continuous natural upper-lid descent over the same eyes, with no sudden bright sclera/white flash, no lateral iris shift, no shrinking iris, and no newly exposed white strip. Closed is a clean lid closure. Repeated open must match the first open cell's eye and brow master.\nStyle and palette: retain the reference's softly shaded, low-resolution fantasy portrait palette, medium warm skin, muted brown hair and original golden-hazel irises. Crisp pixel art; clear pixel edges, no blur, smudged shadow, glow, antialiasing, or gradient repaint.\nConstraints: change only brows, eyelids and minimal eye-area expression; do not alter face identity, nose, hairline, skin palette, crop or proportions. Keep anger readable but modest. No thick black eyebrows, hard eyeliner, giant eyes, red skin, cartoon rage, clenched face, text, borders, watermark, artifacts, or extra cells."
+}

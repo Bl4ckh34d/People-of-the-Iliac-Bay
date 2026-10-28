@@ -74,25 +74,6 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.True(restored.Snapshot().AlarmIncidents[0].CrimeResolved);
             }));
 
-            cases.Add(("Schema eighteen ignores absent persistent witness state", () => {
-                var store = World();
-                var people = People(store);
-                var incident = store.RecordViolence(1, people[0].Id, 100);
-                store.LocateViolence(incident.Id, -1, 0, 0, 0);
-                store.Witness(incident.Id, people[1].Id, 100);
-                Population.MarkDead(store.GetOrCreate(1, new[] { 1, 2, 3, 4, 5 }), people[0].Id);
-                store.ConfirmCorpse(incident.Id, 101);
-                store.MarkPlayerMurder(incident.Id);
-                store.MarkMurderAccusationIssued(incident.Id);
-                var legacy = store.Snapshot();
-                legacy.Version = 18;
-                var restored = new WorldStateStore(0);
-                restored.Restore(legacy);
-                Check.True(!restored.HasPersistentMurderFear(people[1].Id));
-                var copied = restored.Snapshot().AlarmIncidents[0];
-                Check.True(!copied.PlayerAttributed && !copied.AccusationIssued && !copied.CrimeResolved);
-            }));
-
             cases.Add(("Resolved native murder witnesses clear response before ordinary alarm expiry", () => {
                 var store = new WorldStateStore(41);
                 var town = store.GetOrCreate(1, new[] { 1, 2 }, 2);

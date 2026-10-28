@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T04:31:39.8862424Z",
+    "portraitRecord":  90,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Use case: precise-object-edit. Asset: Daggerfall Unity common090 THOUGHTFUL GAZE sprite atlas. Edit target is the SINGLE supplied image: a 3 by 3 grid of nine identical UPPER portrait halves (64x35 original pixels, enlarged8x). Keep the grid\u0027s exact 64:35 overall aspect, equal cells, framing, pixel sizes and source identity. Return ONLY that same 3x3 upper-half atlas, no text, no borders, no padding, no full faces. Edit only the eyes and modest thoughtful eyebrows. Same restrained contemplative, serious but relaxed brow in ALL nine cells, not angry or sad. Keep both eye sockets and eyelids open at source positions. Within each eye move the olive-green iris+pupil cluster together, conserving its width and native square pixel structure, at most 1–2 source pixels horizontally and 1 vertically, always behind eyelids, never crossing the lower eyelid. Both eyes look in the SAME screen direction, never crossed. REQUIRED ROW-MAJOR GAZES: TOP ROW screen-UP-LEFT, straight-UP, screen-UP-RIGHT; MIDDLE ROW screen-LEFT, straight-at-viewer/CENTER, screen-RIGHT; BOTTOM ROW screen-DOWN-LEFT, straight-DOWN, screen-DOWN-RIGHT. These are nine distinct subtle glances. Head, hair, nose bridge, skin, shadows and background stay FIXED exactly as reference; no head turns or zoom. Use the original muted olive-green irises, dark brown brows and eye shadows and subdued tan/brown skin with soft low contrast. No blue eyes, red/orange skin shift, bright white sclera flash, stronger makeup, near-black brow strokes, glossy eyes, new highlights, smooth rounded pupils, blur or antialiasing. Use source-sized chunky pixel clusters matching original lattice. Do not repaint the whole face. Leave blue-gray temple flecks already present in the reference as-is; do not add any marks. Final cells must align exactly because source-preserving masks will sample each complete cell at native64x35. Preserve serious thoughtful brows across every direction, and preserve original iris size, only shift the gaze.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb as C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-8b27c224-ffd1-42f0-826f-686acad0421e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-8b27c224-ffd1-42f0-826f-686acad0421e.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "b8b0a0da8a68fea050774dbe95633fcb561aa0d4a4b316a787b9831b46247489",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "308f7ad417ecf1b3ca5049b1b5f8ecf0c28811e4c693b219010ad527ffdf1a3a",
+                          "width":  1536,
+                          "height":  840
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-8b27c224-ffd1-42f0-826f-686acad0421e.png",
+                      "sha256":  "37b1fc70c1adda1101b87eee022a8f33825a3b45c0e1a5452146e433c67812b1",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "37b1fc70c1adda1101b87eee022a8f33825a3b45c0e1a5452146e433c67812b1",
+                "width":  1695,
+                "height":  928
+            }
+}

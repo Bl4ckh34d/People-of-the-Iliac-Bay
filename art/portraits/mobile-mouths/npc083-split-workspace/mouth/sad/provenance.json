@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-21T23:24:50.2988230Z",
+    "portraitRecord":  83,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "sad",
+    "prompt":  "Edit the supplied 3x3 reference grid into a clean 3x3 pixel-art speech-mouth atlas for the same Daggerfall Unity portrait. Preserve the exact 3x3 cell layout, complete lower-face cell framing, original pixel scale, identity, nose, jaw, chin, neck, hair/background boundaries and muted brown skin palette. Row-major cells must be A B C / D E F / G H X: A and X closed; B/C/D/E/F/G/H are distinct, readable articulating speech poses with varied opening shapes and visible inner-mouth detail only where needed. Keep the emotion understated sad and tender: gently downturned corners and relaxed jaw, no exaggerated pout or grimace. Closed poses have softly downturned lips. Match the original natural brown lip colors and soft low-contrast pixel shading. Keep teeth and mouth cavity subtle and limited to poses that require them; no red lipstick, orange halo, black outlines, white flashes, or unrelated repaint. Do not alter the jaw, nose, neck, hair, framing, or background. Do not add labels, borders or text.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-f89c-7311-8494-3e110d1dc05c as C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-f89c-7311-8494-3e110d1dc05c\\exec-2e2f3fc2-5719-43e3-8a01-ef79bb87fc6d.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-f89c-7311-8494-3e110d1dc05c\\exec-2e2f3fc2-5719-43e3-8a01-ef79bb87fc6d.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "e46c900779f687610af7b821b988300b998aea48632c829537f88cb829b5acfb",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "02c785ad86feeb9c87f4744c9fc735459dac0b08b4971913b01cbe5709c292cd",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-f89c-7311-8494-3e110d1dc05c\\exec-2e2f3fc2-5719-43e3-8a01-ef79bb87fc6d.png",
+                      "sha256":  "8b1cc0cb8dee0635f72633e5ae9cd4398550c3a0355ff7af2ead9a0597b99533",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/sad/raw.png",
+                "sha256":  "8b1cc0cb8dee0635f72633e5ae9cd4398550c3a0355ff7af2ead9a0597b99533",
+                "width":  1863,
+                "height":  844
+            }
+}

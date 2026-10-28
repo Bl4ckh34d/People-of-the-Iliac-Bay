@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T01:16:42.6537860Z",
+    "portraitRecord":  86,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "neutral",
+    "prompt":  "Use case: illustration-story\nAsset type: Daggerfall Unity retro pixel-art NPC speech-mouth atlas, portrait record 86.\nInput image: the supplied mouth-reference-grid.png is the identity and geometry authority. It is a 3x3 grid of repeated original lower portrait halves, each enlarged 8x.\nPrimary request: Edit the reference into one NEUTRAL speech-mouth atlas. Keep the same woman and exact identity. Create nine equal cells in row-major order A B C / D E F / G H X. Each cell depicts the same lower half at native 64x29 proportions. Keep original mouth position and lip scale. Change mouth pose only; preserve nose, cheeks, chin, face width, skin, hair, neck and background.\nRequired Rhubarb mouth meanings:\nA closed, lightly pressured lips for P/B/M.\nB narrow horizontal opening with teeth nearly together for consonants/EE.\nC medium relaxed, unrounded opening for EH/AE.\nD wide vertical AA opening, larger than C.\nE slightly rounded AO/ER opening, no wider than C.\nF small forward pucker for UW/OW/W; not tooth biting.\nG upper teeth touching lower lip for F/V; not a wide vowel or pucker.\nH tongue raised behind upper teeth for L, opening between C and D; tiny tongue may be invisible at 64px.\nX relaxed closed idle.\nEmotion and color: neutral relaxed articulation, consistent pose families. Preserve muted warm tan skin, softly blended pixel-art contrast and original soft brown lips. Teeth, where needed, are small and subdued warm ivory, never bright white blocks. Use true native pixel clusters after downsampling; avoid smooth vector shapes, exaggerated jaw opening or enlarged mouth.\nConstraints: no lipstick-red lips, orange skin, halo, hard dark outline, white flashes, new facial details, text, borders, extra panels, watermark, face resizing or crop changes. A and X should stay visually closed and close to the reference; final assembly restores them exactly to source.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-646d-7e21-af9d-7c6ab08874be as C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-646d-7e21-af9d-7c6ab08874be\\exec-9ad365d8-e0c5-45c5-a875-33acd814229c.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-646d-7e21-af9d-7c6ab08874be\\exec-9ad365d8-e0c5-45c5-a875-33acd814229c.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "685cd0cb922554bb245a0431ee5f141aadbb8c740df7fb81d5a9cb03c888e99d",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "67207d201c495e1ff342be6fafe55a20b846284c25cbd2914db1b685218c37b0",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-646d-7e21-af9d-7c6ab08874be\\exec-9ad365d8-e0c5-45c5-a875-33acd814229c.png",
+                      "sha256":  "f6bc9342c67bab2a2e69c7534bf8037c91dc14d65934f9edcbe7e98ffcc58924",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/neutral/raw.png",
+                "sha256":  "f6bc9342c67bab2a2e69c7534bf8037c91dc14d65934f9edcbe7e98ffcc58924",
+                "width":  1863,
+                "height":  844
+            }
+}

@@ -6,6 +6,33 @@ namespace PeopleOfTheIliacBay.Core
     // This stage adds realistic night durations and one continuous room hold.
     public static class ResidentOvernightPlan
     {
+        // Both segments have already been walked/planned for this visit. A
+        // second path search for the eventual return adds no feasibility fact.
+        public static ResidentTrip ReturnViaInn(ResidentTrip trip,ResidentTrip initial,IReadOnlyList<RoutePoint> firstToInn,
+            IReadOnlyList<RoutePoint> innToLast,double secondsPerMetre)
+        {
+            if(trip==null || initial==null || trip.Destination==null || initial.Destination==null || firstToInn==null || innToLast==null ||
+                firstToInn.Count<2 || innToLast.Count<2 || double.IsNaN(secondsPerMetre) || double.IsInfinity(secondsPerMetre) || secondsPerMetre<=0)
+                throw new ArgumentException("Known outward routes required for return.");
+            var route=new List<SavedRoutePoint>();double added=0;
+            foreach(var path in new[]{innToLast,firstToInn})
+                for(int index=path.Count-1;index>=0;index--)
+                {
+                    if(index>0) {double x=path[index].X-path[index-1].X,z=path[index].Z-path[index-1].Z;added+=Math.Sqrt(x*x+z*z)*secondsPerMetre;}
+                    if(route.Count>0 && index==path.Count-1 &&
+                        (Math.Abs(route[route.Count-1].X-path[index].X)>0.000001 || Math.Abs(route[route.Count-1].Z-path[index].Z)>0.000001))
+                        throw new ArgumentException("Known return routes do not meet at inn.");
+                    route.Add(new SavedRoutePoint {X=path[index].X,Z=path[index].Z});
+                }
+            var exit=initial.Destination.ExitRoute;
+            if(exit==null || exit.Count<2 || Math.Abs(route[route.Count-1].X-exit[0].X)>0.000001 || Math.Abs(route[route.Count-1].Z-exit[0].Z)>0.000001)
+                throw new ArgumentException("Known return does not meet original road exit.");
+            foreach(var point in exit) route.Add(new SavedRoutePoint {X=point.X,Z=point.Z});
+            trip.Destination.ExitRoute=route;
+            trip.Destination.ExitWalkSeconds=initial.Destination.ExitWalkSeconds+added;
+            trip.Destination.ExitGateSeconds=initial.Destination.ExitGateSeconds+(initial.Destination.Walled ? added : 0);
+            return ResidentTrip.CopyValidated(trip);
+        }
         public static int RequiredVisitDays(ResidentTrip source,int requestedDays)
         {
             if(requestedDays<1 || requestedDays>4) throw new ArgumentException("Visit duration must be one to four days.");

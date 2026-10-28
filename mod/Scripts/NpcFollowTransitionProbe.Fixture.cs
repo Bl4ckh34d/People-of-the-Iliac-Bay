@@ -38,7 +38,7 @@ namespace PeopleOfTheIliacBay.DFU
         {
             var game=GameManager.Instance;
             if(Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-follow-transition-probe")<0 || !host || !streets ||
-                string.IsNullOrEmpty(character) || !character.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal) ||
+                string.IsNullOrEmpty(character) || !NativeProbeText.IsTestCharacter(character) ||
                 game.PlayerEntity.Name!=character || game.PlayerEnterExit.IsPlayerInside)
                 throw new InvalidOperationException("Follow fixture requires the loaded disposable Daggerfall exterior save and explicit flag.");
             if(Math.Abs(DaggerfallUnity.Instance.WorldTime.TimeScale-2)>0.001)
@@ -160,7 +160,7 @@ namespace PeopleOfTheIliacBay.DFU
             if(Vector3.Distance(point,new Vector3(10,13,17.6f))>0.001f)
                 throw new InvalidOperationException("Native doorway route used door centre instead of its transformed lower edge.");
         }
-        private static IEnumerator WaitForScene(StreetPopulation streets,bool inside)
+        internal static IEnumerator WaitForScene(StreetPopulation streets,bool inside)
         {
             var game=GameManager.Instance;float deadline=Time.realtimeSinceStartup+30;
             do
@@ -219,6 +219,20 @@ namespace PeopleOfTheIliacBay.DFU
             var result=new List<Vector3>();
             foreach(var point in route)result.Add(room.transform.TransformPoint(new Vector3((float)point.X,(float)point.Y,(float)point.Z)));
             return result;
+        }
+        internal static void PositionObserverAtExit(StreetPopulation streets)
+        {
+            var game=GameManager.Instance;var room=game.PlayerEnterExit.Interior;var geometry=RoomGeometry(streets);
+            if(!room || geometry==null || !geometry.EntryGround.HasValue)
+                throw new InvalidOperationException("Observer exit requires the actual surveyed interior floor.");
+            // Controlled observer setup only. The actual follower must still
+            // traverse its production route and retain the existing contract.
+            game.PlayerMotor.transform.position=geometry.EntryGround.Value+Vector3.up;
+            Physics.SyncTransforms();
+            StaticDoor chosen;
+            var exit=DaggerfallStaticDoors.FindClosestDoor(game.PlayerMotor.transform.position,game.PlayerEnterExit.ExteriorDoors,out chosen);
+            if(Vector3.Distance(exit,DaggerfallStaticDoors.GetDoorPosition(room.EntryDoor))>1)
+                throw new InvalidOperationException("Surveyed observer floor does not select the expected native exit.");
         }
         private static IEnumerator ExitFixture(StreetPopulation streets)
         {

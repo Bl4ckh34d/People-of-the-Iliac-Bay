@@ -1,0 +1,29 @@
+{
+  "portraitRecord": 78,
+  "emotion": "guarded / skeptical",
+  "generator": "built-in image_gen",
+  "status": "prototype; user-review-pending; not installed",
+  "basePortrait": {
+    "dimensions": "64x64",
+    "sha256": "4CFAB5DCE8D40FF0246728C2C28922D9B5627CEC9549F9B5252F2F601E4978CE",
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\tfac-078-original.png"
+  },
+  "generationInput": {
+    "role": "edit-target",
+    "dimensions": "1024x560",
+    "sha256": "770BCAF228993A243E7AF873727E0EA24EE1788439AFA29E5DFB66BED0581340",
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc078-split-workspace\\eyes-reference-grid.png"
+  },
+  "generatedOriginal": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-626e-7471-95f3-109617bb3581\\exec-df49de11-0afb-4a72-84fb-6e010a84ca7a.png",
+  "output": {
+    "dimensions": "1695x928",
+    "aspectRatio": "1.82651",
+    "sha256": "2D579BF05B01AD89D3BDF5B557B0ED6CC521D991C3AAA9C2DC5D8C488499A130",
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc078-split-workspace\\eyes\\guarded\\raw.png"
+  },
+  "prompt": "Edit this exact 2x2 eye-reference grid into a GUARDED / SKEPTICAL expression for this same portrait. Preserve native eye and brow size, eye spacing, full upper-half crop, face geometry, hair, skin, soft original palette, shading and contrast. Keep head forward and both pupils centered, looking straight ahead in the same direction and position across both open-eye cells; half blink must not shrink or shift either pupil horizontally. Do not add side gaze, eyeroll or crossed eyes. Make emotion clearly skeptical but moderate: viewer-left brow raised mildly with its full outer tail complete and visible, viewer-right brow gently lower or flatter; asymmetric questioning expression, not angry. Both eyebrows remain whole and visible in every cell; do not fade, taper away, chop, cover or crop the viewer-left brow's outer tail. No inward V, scowl, high cartoon arches, enlarged eyes, harsh eyeliner, blur or extra shadow. Preserve soft low-contrast native pixel palette. Row-major cells: open guarded eyes / half blink / fully closed blink / repeat of open guarded eyes. Keep brow shape and position identical in all four cells; only eyelid phase changes. Half cell: lids cover about half the irises, with pupils same size and horizontal positions as open cell. Closed cell: lids fully hide iris and sclera. No change to face, eye geometry, hair, background or crop. No text or labels. Return complete 2x2 sheet matching target aspect and cell alignment.",
+  "gridOrder": "open / half blink / closed blink / duplicate open (row-major)",
+  "generationCount": 1,
+  "visibleDeviations": "Both brows and viewer-left brow outer tail remain visible. Open eyes look forward. Half-blink iris appears slightly narrower than open at full-sheet view; parent should verify native pupil stability and lock brow shape across phases.",
+  "nativeQualityLimits": "Native 64x35 downsample may make the one-pixel brow asymmetry and half-blink pupil-width difference more pronounced; verify at native size before use."
+}

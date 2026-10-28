@@ -1,0 +1,44 @@
+{
+  "emotion": "sad",
+  "phase": "half",
+  "cell_index": 1,
+  "generator": "built-in image_gen",
+  "generation_count": 1,
+  "status": "targeted-correction-prototype-user-review-pending",
+  "source": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\eyes\\sad\\half-correction-v3.png",
+    "dimensions": "1695x928",
+    "sha256": "2FE4903DD7F2E2D25E5C853725DDC2529F5E12920FB7F958B2C7A76C218F2042"
+  },
+  "generated_path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-8b98-7181-a1df-84e7b766303c\\exec-fd9b228e-b54e-4f22-9b6f-e6e3145e92a7.png",
+  "output": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\eyes\\sad\\half-correction-v4.png",
+    "dimensions": "1695x928",
+    "sha256": "CF6FCE56DBEF881701F366815F7759C64C74033F9F0682BFD303857206CC9EF1",
+    "copied_unaltered": true
+  },
+  "grid_order": [
+    "open",
+    "half",
+    "closed",
+    "open-repeat"
+  ],
+  "readonly_native_iris_scan": {
+    "method": "Read-only color scan of purple pixels in image; approximate output scale 13.25 raster px per native px; no image modified.",
+    "open_cell_0": {
+      "left_eye_width_output_px": 27,
+      "left_eye_width_estimated_native_px": 2.04,
+      "right_eye_width_output_px": 39,
+      "right_eye_width_estimated_native_px": 2.94
+    },
+    "half_cell_1": {
+      "left_eye_width_output_px": 22,
+      "left_eye_width_estimated_native_px": 1.66,
+      "right_eye_width_output_px": 21,
+      "right_eye_width_estimated_native_px": 1.58
+    },
+    "finding": "Generated half cell still narrows purple iris pixels relative to open reference and does not meet requested 3-native-pixel width lock. Estimates are heuristic and differ between eyes in open reference."
+  },
+  "visible_deviations": "Bright sclera beside pupils is reduced. Read-only purple-pixel scan indicates irises in half cell remain narrower than open reference; horizontal position also shifts slightly. Parent compositor should freeze underlying open iris/pupil pixels while applying lid shape. No visual acceptance claimed.",
+  "prompt": "Use case: stylized-concept\nAsset type: one targeted half-blink correction in a 2×2 pixel-art NPC eye sheet\nInput image: Image 1 is the current sad sheet. Top-left cell index 0 is exact iris, pupil and eyebrow reference; top-right cell index 1 is the only edit target; bottom-left cell index 2 is closed-eye reference.\nPrimary request: correct only half-blink cell index 1.\nComposition/framing: preserve the full 2×2 sheet, exact framing, aspect ratio and order: open / half / closed / open-repeat.\nConstraints: In top-right cell index 1, keep both eyeballs, purple irises and dark pupils at exactly the same horizontal positions, shapes and widths as top-left cell index 0. Each iris+pupil assembly is three native pixels wide; do not narrow it. Create half blink by lowering upper lids from above over the same eyes. Never squeeze iris or pupil from the sides. Keep pupils level, with same sad downcast gaze; no rolling, crossing or shifting. Show no new bright white pixels beside either iris. Any tiny original sclera highlight must remain only in same place and muted tan brightness as top-left open reference; add no cream-white flashes or crescents. Preserve brow shape, height and position exactly. Keep other cells, closed cell, hairline, skin palette, shading and geometry unchanged.\nAvoid: iris or pupil shrinkage, lateral movement, new white sclera, eye-roll, cross-gaze, brow movement, changing cells 0/2/3, contrast increase, harsh lines, blur, crop, resize, labels, grid changes."
+}

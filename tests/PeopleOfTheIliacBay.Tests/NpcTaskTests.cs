@@ -184,13 +184,12 @@ namespace PeopleOfTheIliacBay.Tests
                 var restored=new WorldStateStore(1);restored.Restore(store.Snapshot());
                 Check.Equal(NpcTaskPhase.Cancelled,restored.ReadNpcTask(task.Id).Phase);
             }));
-            cases.Add(("NPC task failure deadline and legacy migration cannot invent completed effects",()=>{
+            cases.Add(("NPC task failure deadline cannot invent completed effects",()=>{
                 NpcTaskPlan task;var store=Store(out task);string reason;
                 Check.True(ClassifiedAdmissionFixture.TryAcceptTask(store, task,true,out reason));
                 Check.True(store.ReconcileNpcTask(task.Id,1,500));Check.Equal(NpcTaskPhase.Failed,store.ReadNpcTask(task.Id).Phase);
-                var saved=store.Snapshot();saved.Version=28;saved.NpcTasks=null;
-                var restored=new WorldStateStore(1);restored.Restore(saved);Check.Equal(new WorldState().Version,restored.Snapshot().Version);Check.Equal(0,restored.PendingNpcTasks().Count);
-                saved=store.Snapshot();saved.NpcTasks[0].Steps[0].CompletedEffectId="invented";
+                var restored=new WorldStateStore(1);
+                var saved=store.Snapshot();saved.NpcTasks[0].Steps[0].CompletedEffectId="invented";
                 Check.Throws<ArgumentException>(()=>restored.Restore(saved));
                 saved=store.Snapshot();saved.NpcTasks[0].Steps[0].Kind=NpcActionKind.Attack;
                 Check.Throws<ArgumentException>(()=>restored.Restore(saved));

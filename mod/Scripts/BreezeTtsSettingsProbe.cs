@@ -20,7 +20,7 @@ namespace PeopleOfTheIliacBay.DFU
     internal static class BreezeTtsSettingsProbe
     {
         private const string RunFlag = "-peopleoftheiliacbay-breeze-tts-settings-probe";
-        private const string OwnedCharacter = "PeopleOfTheIliacBayTest-9a5f197b";
+        private const string OwnedCharacter = "Hakon Ironhand";
         private const string BaselineSave = "People - Gothway Garden";
         private const string CancelText = "This controlled line checks that turning NPC voice off stops active playback.";
         private const BindingFlags PrivateInstance = BindingFlags.Instance | BindingFlags.NonPublic;

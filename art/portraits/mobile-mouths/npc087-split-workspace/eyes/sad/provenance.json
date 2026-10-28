@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T01:33:28.4332480Z",
+    "portraitRecord":  87,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "sad",
+    "prompt":  "Use case: illustration-story\nAsset type: DFU retro-game NPC eye animation atlas, portrait record 87\nInput images: Image 1 is the immutable original full portrait for identity and palette. Image 2 is the exact 2×2 repeated upper-half atlas template, eye asymmetry, native pixel scale and framing reference.\nPrimary request: Edit the supplied reference atlas into one SAD eyes atlas for this same woman. Convey quiet sadness with gently downcast lids and only a subtle lift/tension at the inner brows. Keep the expression restrained, not afraid, angry, surprised, or melodramatic. Preserve the source\u0027s individual left/right eye shapes and asymmetry; do not force symmetry.\nComposition/framing: Keep exactly four equal cells in a 2×2 sheet, row-major open / half-closed / fully closed / repeated open. Each cell shows the complete upper 64×35 portrait half at the reference scale; total atlas aspect ratio 128:70. Match the reference cell boundaries, scale and alignment. Keep nose bridge, forehead, face edge, hair and background stationary.\nAnimation: Keep each eye\u0027s spacing and shape, each iris and pupil\u0027s width, location, direction and highlights stable through all four cells. Lids cover vertically across the same eyeballs; do not move the glints, shift gaze, shrink or round irises, change their width, cross the lower lids or expose new sclera. Fully closed lids conceal iris and sclera. Repeated open should match first open. Brows and stationary orbital creases retain fixed positions and soft brown shapes across phases, with only a very mild sad inner-brow tension.\nPalette/style: Preserve the original muted warm tan skin, olive/brown eye shadows, brown irises and softly blended retro pixel-art contrast. Keep original brow thickness and native-resolution pixel clusters.\nConstraints: Change only the sad eye expression within the atlas. Keep nose, cheek, face width, chin, hair, clothing, neck and background aligned and unchanged. No orange skin halo, lipstick-red colors, heavy near-black brows, white eye flashes, tears, anime eyes, high worried arches, text, labels, borders, extra panels, smoothing or watermark.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-f89c-7311-8494-3e110d1dc05c as C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-f89c-7311-8494-3e110d1dc05c\\exec-6ec86667-579f-40f7-ba55-8e6b8b3c166e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-f89c-7311-8494-3e110d1dc05c\\exec-6ec86667-579f-40f7-ba55-8e6b8b3c166e.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "b8851f9df69ee15e297ab3aa7e70025710d27bd2e84dd0ed46d7ff7e94ab7717",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "e5eced47ef4d478fbdb37db34c991b62c22a3fe4a06d13ec0545bf27e0b32e7c",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-f89c-7311-8494-3e110d1dc05c\\exec-6ec86667-579f-40f7-ba55-8e6b8b3c166e.png",
+                      "sha256":  "8467cd10b798a2becdaab5150c2c6f62f314d6f09ffef7e713a2fdae41c3d31a",
+                      "width":  1696,
+                      "height":  927
+                  },
+    "raw":  {
+                "path":  "eyes/sad/raw.png",
+                "sha256":  "8467cd10b798a2becdaab5150c2c6f62f314d6f09ffef7e713a2fdae41c3d31a",
+                "width":  1696,
+                "height":  927
+            }
+}

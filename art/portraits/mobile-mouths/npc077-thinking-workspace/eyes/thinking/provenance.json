@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T05:07:21.3567435Z",
+    "portraitRecord":  77,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Use case: precise-object-edit. ONE edit target: supplied3x3 atlas of nine identical Daggerfall common077 upper portrait halves. Keep this exact3x3 equal-cell layout and64:35 atlas aspect, original head/framing/colors/pixel grid. Return only the atlas, no borders/text/full faces. CRITICAL: her original eyes are narrow half-lidded slits, NOT wide-open eyes. Preserve the ORIGINAL eye-opening outlines and upper/lower lid heights EXACTLY in every cell. Do NOT lift upper lids, enlarge sockets, expose more whites or enlarge irises. At native64x35 the original iris+pupil occupies roughly THREE pixel columns and the existing narrow eyeball height; retain that size, square pixel shape and muted violet-gray colors. Keep original pale highlight tiny. Nine glances require only1–2 native horizontal pixels of iris movement, at most ONE vertical pixel behind the ORIGINAL stationary lids. Iris remains occluded by lids: no iris crosses the lower lid, no white under-eye stripe, no big circular eyes, no new sclera. Move both eyes coherently in same SCREEN direction. Row-major order: top UP-LEFT / UP / UP-RIGHT; middle LEFT / CENTER at viewer / RIGHT; bottom DOWN-LEFT / DOWN / DOWN-RIGHT. A modest relaxed contemplative brow may differ from original but must be identical across all nine cells, not angry. Preserve everything else exactly, especially forehead/hair/nose/skin/background and original muted warm brown/copper palette, soft low contrast, original chunky pixel lattice. Do not sharpen, smooth, recolor, increase contrast or invent broad white crescents. No enlarged or rounded iris. Match ORIGINAL SMALL EYES closely; subtle gaze changes, never a startled upward stare. Each entire cell will be downsampled to64x35 with original fixed framing.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb as C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-336f9888-f58b-4d2e-8c80-f89121b67293.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-336f9888-f58b-4d2e-8c80-f89121b67293.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "e797d4129c06130dd9a87c7b3a60ca36518adfe7128a4fc84b9626280e228bb6",
+                          "width":  1536,
+                          "height":  840
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-336f9888-f58b-4d2e-8c80-f89121b67293.png",
+                      "sha256":  "99a64f80abecbb272b7a3537a15ebdb970f61c79b2d2a145c95b5484db189e56",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "99a64f80abecbb272b7a3537a15ebdb970f61c79b2d2a145c95b5484db189e56",
+                "width":  1695,
+                "height":  928
+            }
+}

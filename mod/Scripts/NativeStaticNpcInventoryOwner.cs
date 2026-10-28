@@ -26,6 +26,13 @@ namespace PeopleOfTheIliacBay.DFU
             owner = null;
             reason = "The observed static person has no valid personal inventory.";
             if (store == null || !Matches(npc, person) || !IsRole(role)) return false;
+            var actorOwner=npc.GetComponent<NativeNpcInventoryOwner>();
+            if(actorOwner && actorOwner.Binding!=null)
+            {
+                if(actorOwner.Binding.PersonId!=person.Id)return false;
+                owner=new NativeStaticNpcInventoryOwner(actorOwner.Binding,person,role);
+                reason=null;return true;
+            }
             ItemCollection initial = null;
             if (!store.HasNpcInventory(person.Id))
                 initial = NativeStaticNpcStartingBelongings.Create(store, person.Id, role, npc.Data.gender, npc.Data.race);
@@ -39,6 +46,9 @@ namespace PeopleOfTheIliacBay.DFU
 
         public static bool Matches(StaticNPC npc, NativePerson person)
         {
+            var life=npc?npc.GetComponent<NativeStationaryLife>():null;
+            if(life && life.Person!=null && person!=null && life.Person.Id==person.Id)
+                return npc.gameObject.activeInHierarchy && person.IsAlive && !person.RetiredBedroomFlat;
             if (!npc || person == null || npc.IsChildNPC ||
                 npc.GetComponent<QuestResourceBehaviour>() != null || npc.GetComponent<DaggerfallAction>() != null ||
                 !npc.gameObject.activeInHierarchy || !person.IsAlive || person.RetiredBedroomFlat) return false;
@@ -69,47 +79,19 @@ namespace PeopleOfTheIliacBay.DFU
             Genders sex, Races race)
         {
             if (store == null || string.IsNullOrWhiteSpace(personId)) throw new ArgumentException("Static owner is invalid.");
-            var items = new ItemCollection();
-            var initialStock=role==NpcArchetype.Merchant?NpcMerchantStock.Generate(store.WorldSeed,personId):
-                NpcStartingBelongings.Generate(store.WorldSeed, personId, role);
-            foreach (var entry in initialStock)
-            {
-                ItemGroups group;
-                switch (entry.Group)
+            var items = NativeNpcStartingBelongings.CreateInitialItems(store, personId,
+                resident: store.ResolveResident(personId), explicitArchetype: role, explicitGender: sex, explicitRace: race);
+            if (role == NpcArchetype.Merchant)
+                foreach (var entry in NpcMerchantStock.Generate(store.WorldSeed, personId))
                 {
-                    case NpcStartingItemGroup.UselessItems1: group = ItemGroups.UselessItems1; break;
-                    case NpcStartingItemGroup.UselessItems2: group = ItemGroups.UselessItems2; break;
-                    case NpcStartingItemGroup.MiscItems: group = ItemGroups.MiscItems; break;
-                    case NpcStartingItemGroup.Jewellery: group = ItemGroups.Jewellery; break;
-                    default: throw new InvalidOperationException("Static starting-item group is unsupported.");
+                    var group = entry.Group == NpcStartingItemGroup.UselessItems1 ? ItemGroups.UselessItems1 :
+                        entry.Group == NpcStartingItemGroup.UselessItems2 ? ItemGroups.UselessItems2 : ItemGroups.Jewellery;
+                    var item = ItemBuilder.CreateItem(group, entry.TemplateIndex);
+                    item.stackCount = entry.Count; items.AddItem(item, noStack: true);
                 }
-                var item = ItemBuilder.CreateItem(group, entry.TemplateIndex);
-                item.stackCount = entry.Count;
-                items.AddItem(item, noStack: true);
-            }
             if (role == NpcArchetype.Healer)
                 items.AddItem(ItemBuilder.CreateItem(ItemGroups.ReligiousItems,
                     NpcStartingBelongings.TempleReligiousTemplate(store.WorldSeed, personId)), noStack: true);
-            if (role == NpcArchetype.Mage &&
-                NpcStartingBelongings.ShouldStartWithMagicItem(store.WorldSeed, personId, role))
-            {
-                var magic = NativeNpcStartingBelongings.CreateDeterministicMageMagicItem(store, personId, sex, race);
-                if (magic != null && !magic.IsArtifact && !magic.IsQuestItem) items.AddItem(magic, noStack: true);
-            }
-            if (sex == Genders.Male)
-            {
-                MensClothing clothing = role == NpcArchetype.Mage || role == NpcArchetype.Healer ?
-                    MensClothing.Plain_robes : role == NpcArchetype.Merchant || role == NpcArchetype.Innkeeper ?
-                    MensClothing.Formal_tunic : MensClothing.Short_tunic;
-                items.AddItem(ItemBuilder.CreateMensClothing(clothing, race, 0, DyeColors.Blue), noStack: true);
-            }
-            else
-            {
-                WomensClothing clothing = role == NpcArchetype.Mage || role == NpcArchetype.Healer ?
-                    WomensClothing.Plain_robes : role == NpcArchetype.Merchant || role == NpcArchetype.Innkeeper ?
-                    WomensClothing.Day_gown : WomensClothing.Casual_dress;
-                items.AddItem(ItemBuilder.CreateWomensClothing(clothing, race, 0, DyeColors.Blue), noStack: true);
-            }
             return items;
         }
     }

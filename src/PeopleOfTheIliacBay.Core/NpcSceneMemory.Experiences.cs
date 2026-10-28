@@ -8,9 +8,36 @@ namespace PeopleOfTheIliacBay.Core
         {
             if(evidence.Origin!=NpcExperienceEventOrigin.NativeOutcome)return null;
             int index=state.SceneMemories.FindIndex(x=>x.ObserverId==evidence.ObserverId && x.EventId==evidence.OutcomeId);
-            if(index<0)return null;
-            var copy=NpcSceneMemory.Copy(state.SceneMemories[index]);copy.Valence=Math.Max(-5,Math.Min(5,moodDelta));
-            var result=new System.Collections.Generic.List<NpcSceneMemory>(state.SceneMemories);result[index]=copy;return result;
+            NpcSceneMemory original=index<0?null:state.SceneMemories[index];
+            if(original==null)
+            {
+                var summaries=SceneSummariesFor(evidence.ObserverId,false);
+                if(summaries!=null)foreach(var summary in summaries)
+                {
+                    var source=summary.Sources.Find(x=>x.EventId==evidence.OutcomeId);
+                    if(source!=null){original=summary.Fact(source);break;}
+                }
+            }
+            if(original==null)return null;
+            var copy=NpcSceneMemory.Copy(original);copy.Valence=Math.Max(-5,Math.Min(5,moodDelta));
+            var result=new System.Collections.Generic.List<NpcSceneMemory>(state.SceneMemories);
+            if(index>=0)result[index]=copy;
+            else
+            {
+                // A retained summary may outlive its redundant raw copy. Return
+                // that exact source for the next recall's reprojection, as part
+                // of the existing atomic appraisal candidate, never a side write.
+                int count=0;NpcSceneMemory least=null,redundant=null;
+                foreach(var row in result)if(row.ObserverId==evidence.ObserverId)
+                {
+                    count++;
+                    if(least==null || row.Salience<least.Salience || row.Salience==least.Salience && row.At<least.At)least=row;
+                    if(SceneFactHasSummary(row) && (redundant==null || row.At<redundant.At))redundant=row;
+                }
+                if(count>=32)result.Remove(redundant??least);
+                result.Add(copy);
+            }
+            return result;
         }
         // Only called after the existing native-source admission has succeeded.
         // The appraisal inbox remains the sole owner of mood/relationship effects.

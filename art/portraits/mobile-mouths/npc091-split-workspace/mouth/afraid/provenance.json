@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T15:33:22.7908924Z",
+    "portraitRecord":  91,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "afraid",
+    "prompt":  "Create a native pixel-art 3x3 viseme atlas for NPC 091 from the exact supplied local reference grid. Preserve each complete original 64x29 lower-face crop, same face identity, nose, hair, jaw, framing, original pixel scale, and muted tan/terracotta skin and lip palette. Cell layout exactly A B C / D E F / G H X, with equal 64x29 cells, no labels, gutters, extra rows, zoom, or rescaling. The emotion is AFRAID and should read as subtle nervous tension, not a smile or a shout: keep the lips softly tense, with restrained corners and source-like muted brown-rose/terracotta hue. Do not make lipstick red or pink, do not add shine, and keep lip contrast modest. Teeth must be subdued neutral gray-ivory, darker than bright white, and distinct from skin. Rhubarb viseme meanings: A = pressured closed lips for P/B/M; B = narrow opening with teeth nearly together for consonants and EE; C = medium unrounded opening for EH/AE; D = wide AA; E = slightly rounded AO/ER, no wider than C; F = puckered UW/OW/W; G = upper teeth touching lower lip for F/V; H = tongue behind upper teeth for L with an opening between C and D; X = relaxed closed idle. Match each pose to its phoneme clearly while preserving natural lip and tooth anatomy. Keep mouth small and centered at the source mouth location. Preserve nose tip, skin shading, hair edges, chin, jaw and neck pixels outside the mouth feature; no face redesign, added detail, bright dental strip, or new colors.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-e95731c4-0088-4947-aa43-5e46e1591b33.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-e95731c4-0088-4947-aa43-5e46e1591b33.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "428f65da65c68b7c50b7cefcf4fde03aa83505c54de6ccbb2ac3ab018f8a5c51",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "9aa1575cc6695b619b5736d6e8bcb9e4cc5c32cf340443e5c40e38cddbff383e",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-e95731c4-0088-4947-aa43-5e46e1591b33.png",
+                      "sha256":  "0e38a13cc7d679a686619548bbafecc5c98dcdcedae0ffa9dc93d5a65cd59045",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/afraid/raw.png",
+                "sha256":  "0e38a13cc7d679a686619548bbafecc5c98dcdcedae0ffa9dc93d5a65cd59045",
+                "width":  1863,
+                "height":  844
+            }
+}

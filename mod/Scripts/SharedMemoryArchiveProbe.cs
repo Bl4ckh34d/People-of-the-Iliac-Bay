@@ -45,7 +45,7 @@ namespace PeopleOfTheIliacBay.DFU
         }
         public static IEnumerator Run(PeopleOfTheIliacBayMod host,string character,bool readOnly)
         {
-            if(!character.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal)) throw new InvalidOperationException("Archive probe requires disposable character.");
+            if(!NativeProbeText.IsTestCharacter(character)) throw new InvalidOperationException("Archive probe requires disposable character.");
             if(!readOnly)
             {
                 yield return Load(character,"People - Gothway Garden");

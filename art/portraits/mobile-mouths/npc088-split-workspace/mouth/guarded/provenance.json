@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T02:09:18.8204704Z",
+    "portraitRecord":  88,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "guarded",
+    "prompt":  "Create a pixel-art speech-mouth atlas for the SAME woman shown in this reference. The input is a 3-column by 3-row grid of repeated enlarged original lower-face halves. Return one full atlas in the exact same aspect ratio and layout, with nine equal cells and no margins, labels, borders, dividers, or extra canvas. Each cell is a complete lower half at the same framing and scale. Row-major poses: A / B / C, then D / E / F, then G / H / X. Keep a restrained guarded/skeptical emotional quality in the corners and lip tension while preserving each pose\u0027s distinct speech meaning.\n\nUse these Rhubarb mouth-shape meanings exactly:\nA: closed, lightly pressured P/B/M lips.\nB: narrow horizontal opening, teeth nearly together, for consonants/EE.\nC: medium relaxed unrounded opening for EH/AE.\nD: wide vertical AA opening, clearly larger than C.\nE: slightly rounded AO/ER opening, no wider than C.\nF: small forward pucker for UW/OW/W; not teeth biting.\nG: upper teeth touching the lower lip for F/V; not a wide vowel and not a pucker.\nH: tongue raised behind the upper teeth for L, opening between C and D; a tiny tongue may be subtle at native scale.\nX: relaxed closed idle lips.\n\nPreserve the source\u0027s original lip scale, muted soft brown lip color, surrounding warm tan skin, softly blended pixel-art shading and exact nose, chin, face width, hair, neck and background placement. Restrained warm ivory teeth and dark warm-brown mouth interior only where the phoneme needs them; avoid bright white blocks. A and X should be softly pressed/guarded and gently asymmetric without looking angry. Do not enlarge the mouth or change skin hue. No orange skin, lipstick red, heavy contrast, smooth vector forms, circles, text, labels, or added features. At native 64x29 scale this must resolve as the same clean pixel grid and retain the source\u0027s muted palette.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1615d-01eb-7400-8e7e-6d862dfa97d8 as C:\\Users\\Daniel\\.codex\\generated_images\\01a1615d-01eb-7400-8e7e-6d862dfa97d8\\exec-70515038-5a0e-4822-8f63-ac42bc8e092b.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1615d-01eb-7400-8e7e-6d862dfa97d8\\exec-70515038-5a0e-4822-8f63-ac42bc8e092b.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "f2e18bec953ffba12224397a695b2f80ddda822519be1414696b593243bc864c",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "530927adf4a79396a3c9bc650a907262d3da5938423cd2f891d9b6296ae66997",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1615d-01eb-7400-8e7e-6d862dfa97d8\\exec-70515038-5a0e-4822-8f63-ac42bc8e092b.png",
+                      "sha256":  "5b29d8370e4dffb5862428ed73f4017a90ed257538030ea914b9a2f99683e480",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/guarded/raw.png",
+                "sha256":  "5b29d8370e4dffb5862428ed73f4017a90ed257538030ea914b9a2f99683e480",
+                "width":  1863,
+                "height":  844
+            }
+}

@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T08:07:18.3475724Z",
+    "portraitRecord":  81,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Use case: stylized-concept\nAsset type: Daggerfall Unity NPC eye-animation atlas in native pixel-art style.\nInput image: Image 1 is the inspected 2×2 neutral source grid for NPC 081. Use it as the exact face identity, palette, shape and pixel-grid reference.\nPrimary request: Create one exact 2×2 atlas, 1024×560 pixels total. Each cell is 512×280 pixels and represents a 64×35 native sprite enlarged 8×. Row-major cells: top-left image-left gaze, eyes open; top-right image-right gaze, eyes open; bottom-left image-left gaze, half blink; bottom-right image-right gaze, half blink.\nSubject and consistency: same NPC 081 face in every cell. Preserve original neutral expression, neutral brows through the full source brow band, brow shape and position, eye spacing, face framing, hair, background, muted brown and gray-blue palette, pixel clusters, and all anatomy outside the eye regions. Both eyes must look horizontally in the named image direction together. Keep pupils fully inside each eye. Use small muted gray-blue iris clusters with irregular stepped pixel shading and tiny subdued glints. Keep visible sclera narrow and similar to source. Draw continuous natural lids; half-blink cells must show coherent upper-lid coverage while retaining readable iris anatomy.\nConstraints: Keep exact 2×2 layout and 64:35 cell aspect. Preserve native hard pixel edges with no antialiasing or blur. Make only horizontal left/right gaze differences and half-lid coverage. No vertical or diagonal gaze, no extra phases, no manual one-sided iris shift, no broad sclera, no large or round flat iris disks, no exaggerated highlights, no facial expression or brow changes, no labels, borders, gutters, text, or watermark.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54 as C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-ded1d661-d82f-43ed-8582-0366b199d590.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-ded1d661-d82f-43ed-8582-0366b199d590.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "eb0f7dcd1d390a6ff58d1bc0bba7a3855b5930ee824aa54e2f749211721e8ba0",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "d25d10f4875a2917cdd5f76fda883f4fe0a2407b58e515d0908db942493eafd9",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-ded1d661-d82f-43ed-8582-0366b199d590.png",
+                      "sha256":  "8b961e9a543e98fae0e34dd560aa2baa68f3d7e37bd49f64408a609aa0570f5e",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "8b961e9a543e98fae0e34dd560aa2baa68f3d7e37bd49f64408a609aa0570f5e",
+                "width":  1695,
+                "height":  928
+            }
+}

@@ -75,6 +75,12 @@ namespace PeopleOfTheIliacBay.DFU
             ResidentActor actor=null;
             if(failure==null)
             {
+                // The disposable dawn save precedes ordinary outdoor routines.
+                // Observe normal noon materialization; never create or relabel a resident.
+                DaggerfallUI.Instance.PopToHUD();game.PauseGame(false);
+                var clock=DaggerfallUnity.Instance.WorldTime.Now;
+                clock.RaiseTime((float)((43200-clock.ToSeconds()%86400+86400)%86400));
+                yield return null;
                 float until=Time.realtimeSinceStartup+120f;
                 while(Time.realtimeSinceStartup<until)
                 {
@@ -120,6 +126,15 @@ namespace PeopleOfTheIliacBay.DFU
                             failure="Could not return the reloaded owned fixture to its exterior.";
                     }
                     actor=null;
+                    if(failure==null)
+                    {
+                        // The exact baseline reload also restores dawn. Repeat the
+                        // same normal routine observation before autonomous care.
+                        DaggerfallUI.Instance.PopToHUD();game.PauseGame(false);
+                        var clock=DaggerfallUnity.Instance.WorldTime.Now;
+                        clock.RaiseTime((float)((43200-clock.ToSeconds()%86400+86400)%86400));
+                        yield return null;
+                    }
                     float until=Time.realtimeSinceStartup+120f;
                     while(failure==null && Time.realtimeSinceStartup<until)
                     {
@@ -1169,7 +1184,7 @@ namespace PeopleOfTheIliacBay.DFU
                 "Actual player funding of care resident failed: "+failure);
             Require(funding!=null && funding.Amount==PaidServiceRate && funding.GameTime==fundingAt &&
                 funding.FromOwnerId==NpcDirectedRelationship.PlayerTargetId &&
-                funding.ToOwnerId=="contract:"+PaidServiceContractId+":escrow",
+                funding.ToOwnerId==terms.NpcId,
                 "Paid-care fixture lacks its actual native player funding receipt.");
             var ticket=store.CaptureNpcServiceContractWriteTicket();
             var reserved=ticket.SourceLedger.Read(PaidServiceContractId);

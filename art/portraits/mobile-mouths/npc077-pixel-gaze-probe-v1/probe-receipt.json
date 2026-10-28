@@ -1,0 +1,1100 @@
+{
+  "method": "copied-native-iris-clipped-to-original-aperture",
+  "status": "isolated-probe-not-published",
+  "portraitRecord": 77,
+  "emotionId": "neutral",
+  "newColors": 0,
+  "resampling": "none; preview nearest-neighbor only",
+  "sources": {
+    "open": {
+      "file": "eyes/neutral/open.png",
+      "sha256": "1ac0547d22fdefb5dda5874acd21aef2069bc8d55d05513b7724211ff9187db4"
+    },
+    "half": {
+      "file": "eyes/neutral/half.png",
+      "sha256": "e49b275b8f19968a4e10c722c2250ec8784d884895647ef44d94f2167fb9963a"
+    },
+    "closed": {
+      "file": "eyes/neutral/closed.png",
+      "sha256": "ccc7a938e0e8bcdeb69dc7f88a4659933dd842aca7b1fee0e1cb5e95ba663068"
+    }
+  },
+  "calibration": [
+    {
+      "opening": [
+        [
+          21,
+          27
+        ],
+        [
+          22,
+          27
+        ],
+        [
+          23,
+          27
+        ],
+        [
+          24,
+          27
+        ],
+        [
+          25,
+          27
+        ],
+        [
+          21,
+          28
+        ],
+        [
+          22,
+          28
+        ],
+        [
+          23,
+          28
+        ],
+        [
+          24,
+          28
+        ],
+        [
+          25,
+          28
+        ]
+      ],
+      "iris": [
+        [
+          22,
+          27
+        ],
+        [
+          23,
+          27
+        ],
+        [
+          24,
+          27
+        ],
+        [
+          22,
+          28
+        ],
+        [
+          23,
+          28
+        ],
+        [
+          24,
+          28
+        ]
+      ],
+      "donors": [
+        {
+          "pixel": [
+            22,
+            27
+          ],
+          "from": [
+            21,
+            27
+          ]
+        },
+        {
+          "pixel": [
+            23,
+            27
+          ],
+          "from": [
+            21,
+            27
+          ]
+        },
+        {
+          "pixel": [
+            24,
+            27
+          ],
+          "from": [
+            25,
+            27
+          ]
+        },
+        {
+          "pixel": [
+            22,
+            28
+          ],
+          "from": [
+            21,
+            28
+          ]
+        },
+        {
+          "pixel": [
+            23,
+            28
+          ],
+          "from": [
+            21,
+            28
+          ]
+        },
+        {
+          "pixel": [
+            24,
+            28
+          ],
+          "from": [
+            25,
+            28
+          ]
+        }
+      ]
+    },
+    {
+      "opening": [
+        [
+          39,
+          27
+        ],
+        [
+          40,
+          27
+        ],
+        [
+          41,
+          27
+        ],
+        [
+          42,
+          27
+        ],
+        [
+          43,
+          27
+        ],
+        [
+          39,
+          28
+        ],
+        [
+          40,
+          28
+        ],
+        [
+          41,
+          28
+        ],
+        [
+          42,
+          28
+        ],
+        [
+          43,
+          28
+        ]
+      ],
+      "iris": [
+        [
+          40,
+          27
+        ],
+        [
+          41,
+          27
+        ],
+        [
+          42,
+          27
+        ],
+        [
+          40,
+          28
+        ],
+        [
+          41,
+          28
+        ],
+        [
+          42,
+          28
+        ]
+      ],
+      "donors": [
+        {
+          "pixel": [
+            40,
+            27
+          ],
+          "from": [
+            39,
+            27
+          ]
+        },
+        {
+          "pixel": [
+            41,
+            27
+          ],
+          "from": [
+            39,
+            27
+          ]
+        },
+        {
+          "pixel": [
+            42,
+            27
+          ],
+          "from": [
+            43,
+            27
+          ]
+        },
+        {
+          "pixel": [
+            40,
+            28
+          ],
+          "from": [
+            39,
+            28
+          ]
+        },
+        {
+          "pixel": [
+            41,
+            28
+          ],
+          "from": [
+            39,
+            28
+          ]
+        },
+        {
+          "pixel": [
+            42,
+            28
+          ],
+          "from": [
+            43,
+            28
+          ]
+        }
+      ]
+    }
+  ],
+  "thinkingEyeSets": [
+    {
+      "id": "up-left",
+      "label": "up-left",
+      "phases": {
+        "open": {
+          "file": "eyes/neutral/up-left/open.png"
+        },
+        "half": {
+          "file": "eyes/neutral/up-left/half.png"
+        },
+        "closed": {
+          "file": "eyes/neutral/up-left/closed.png"
+        }
+      }
+    },
+    {
+      "id": "up",
+      "label": "up",
+      "phases": {
+        "open": {
+          "file": "eyes/neutral/up/open.png"
+        },
+        "half": {
+          "file": "eyes/neutral/up/half.png"
+        },
+        "closed": {
+          "file": "eyes/neutral/up/closed.png"
+        }
+      }
+    },
+    {
+      "id": "up-right",
+      "label": "up-right",
+      "phases": {
+        "open": {
+          "file": "eyes/neutral/up-right/open.png"
+        },
+        "half": {
+          "file": "eyes/neutral/up-right/half.png"
+        },
+        "closed": {
+          "file": "eyes/neutral/up-right/closed.png"
+        }
+      }
+    },
+    {
+      "id": "left",
+      "label": "left",
+      "phases": {
+        "open": {
+          "file": "eyes/neutral/left/open.png"
+        },
+        "half": {
+          "file": "eyes/neutral/left/half.png"
+        },
+        "closed": {
+          "file": "eyes/neutral/left/closed.png"
+        }
+      }
+    },
+    {
+      "id": "center",
+      "label": "center",
+      "phases": {
+        "open": {
+          "file": "eyes/neutral/center/open.png"
+        },
+        "half": {
+          "file": "eyes/neutral/center/half.png"
+        },
+        "closed": {
+          "file": "eyes/neutral/center/closed.png"
+        }
+      }
+    },
+    {
+      "id": "right",
+      "label": "right",
+      "phases": {
+        "open": {
+          "file": "eyes/neutral/right/open.png"
+        },
+        "half": {
+          "file": "eyes/neutral/right/half.png"
+        },
+        "closed": {
+          "file": "eyes/neutral/right/closed.png"
+        }
+      }
+    },
+    {
+      "id": "down-left",
+      "label": "down-left",
+      "phases": {
+        "open": {
+          "file": "eyes/neutral/down-left/open.png"
+        },
+        "half": {
+          "file": "eyes/neutral/down-left/half.png"
+        },
+        "closed": {
+          "file": "eyes/neutral/down-left/closed.png"
+        }
+      }
+    },
+    {
+      "id": "down",
+      "label": "down",
+      "phases": {
+        "open": {
+          "file": "eyes/neutral/down/open.png"
+        },
+        "half": {
+          "file": "eyes/neutral/down/half.png"
+        },
+        "closed": {
+          "file": "eyes/neutral/down/closed.png"
+        }
+      }
+    },
+    {
+      "id": "down-right",
+      "label": "down-right",
+      "phases": {
+        "open": {
+          "file": "eyes/neutral/down-right/open.png"
+        },
+        "half": {
+          "file": "eyes/neutral/down-right/half.png"
+        },
+        "closed": {
+          "file": "eyes/neutral/down-right/closed.png"
+        }
+      }
+    }
+  ],
+  "frames": [
+    {
+      "direction": "up-left",
+      "phase": "open",
+      "changedPixels": [
+        [
+          21,
+          27
+        ],
+        [
+          22,
+          27
+        ],
+        [
+          23,
+          27
+        ],
+        [
+          24,
+          27
+        ],
+        [
+          39,
+          27
+        ],
+        [
+          40,
+          27
+        ],
+        [
+          41,
+          27
+        ],
+        [
+          42,
+          27
+        ],
+        [
+          22,
+          28
+        ],
+        [
+          23,
+          28
+        ],
+        [
+          24,
+          28
+        ],
+        [
+          40,
+          28
+        ],
+        [
+          41,
+          28
+        ],
+        [
+          42,
+          28
+        ]
+      ],
+      "sha256": "5a04d06fa7190d91254fe21cc5a88ba9dfe2fd8370c11bde2e0601b8415fb072",
+      "newColors": 0,
+      "outsideOpeningChanges": 0
+    },
+    {
+      "direction": "up-left",
+      "phase": "half",
+      "changedPixels": [],
+      "sha256": "084002cbbcce8c506356dd05f1838606e54909a871d1a68752bc1bcaebe02495",
+      "newColors": 0,
+      "outsideOpeningChanges": 0
+    },
+    {
+      "direction": "up-left",
+      "phase": "closed",
+      "changedPixels": [],
+      "sha256": "9cc43c74215fd1ff1c3db3b208758919e6f2e5110d9fa376ac184e1c2a70a405",
+      "newColors": 0,
+      "outsideOpeningChanges": 0
+    },
+    {
+      "direction": "up",
+      "phase": "open",
+      "changedPixels": [
+        [
+          22,
+          27
+        ],
+        [
+          23,
+          27
+        ],
+        [
+          24,
+          27
+        ],
+        [
+          40,
+          27
+        ],
+        [
+          41,
+          27
+        ],
+        [
+          42,
+          27
+        ],
+        [
+          22,
+          28
+        ],
+        [
+          23,
+          28
+        ],
+        [
+          24,
+          28
+        ],
+        [
+          40,
+          28
+        ],
+        [
+          41,
+          28
+        ],
+        [
+          42,
+          28
+        ]
+      ],
+      "sha256": "c2412897cf3fa49b01db2c639384bf6a81f706313e0a6fd168a4ab6efa072579",
+      "newColors": 0,
+      "outsideOpeningChanges": 0
+    },
+    {
+      "direction": "up",
+      "phase": "half",
+      "changedPixels": [],
+      "sha256": "084002cbbcce8c506356dd05f1838606e54909a871d1a68752bc1bcaebe02495",
+      "newColors": 0,
+      "outsideOpeningChanges": 0
+    },
+    {
+      "direction": "up",
+      "phase": "closed",
+      "changedPixels": [],
+      "sha256": "9cc43c74215fd1ff1c3db3b208758919e6f2e5110d9fa376ac184e1c2a70a405",
+      "newColors": 0,
+      "outsideOpeningChanges": 0
+    },
+    {
+      "direction": "up-right",
+      "phase": "open",
+      "changedPixels": [
+        [
+          22,
+          27
+        ],
+        [
+          23,
+          27
+        ],
+        [
+          24,
+          27
+        ],
+        [
+          25,
+          27
+        ],
+        [
+          40,
+          27
+        ],
+        [
+          41,
+          27
+        ],
+        [
+          42,
+          27
+        ],
+        [
+          43,
+          27
+        ],
+        [
+          22,
+          28
+        ],
+        [
+          23,
+          28
+        ],
+        [
+          24,
+          28
+        ],
+        [
+          40,
+          28
+        ],
+        [
+          41,
+          28
+        ],
+        [
+          42,
+          28
+        ]
+      ],
+      "sha256": "ee13ad3d41a98f4a9a3dc2373721c24b178d2fbc66853d27df90e34a6af61576",
+      "newColors": 0,
+      "outsideOpeningChanges": 0
+    },
+    {
+      "direction": "up-right",
+      "phase": "half",
+      "changedPixels": [],
+      "sha256": "084002cbbcce8c506356dd05f1838606e54909a871d1a68752bc1bcaebe02495",
+      "newColors": 0,
+      "outsideOpeningChanges": 0
+    },
+    {
+      "direction": "up-right",
+      "phase": "closed",
+      "changedPixels": [],
+      "sha256": "9cc43c74215fd1ff1c3db3b208758919e6f2e5110d9fa376ac184e1c2a70a405",
+      "newColors": 0,
+      "outsideOpeningChanges": 0
+    },
+    {
+      "direction": "left",
+      "phase": "open",
+      "changedPixels": [
+        [
+          21,
+          27
+        ],
+        [
+          22,
+          27
+        ],
+        [
+          23,
+          27
+        ],
+        [
+          24,
+          27
+        ],
+        [
+          39,
+          27
+        ],
+        [
+          40,
+          27
+        ],
+        [
+          41,
+          27
+        ],
+        [
+          42,
+          27
+        ],
+        [
+          21,
+          28
+        ],
+        [
+          22,
+          28
+        ],
+        [
+          23,
+          28
+        ],
+        [
+          24,
+          28
+        ],
+        [
+          39,
+          28
+        ],
+        [
+          40,
+          28
+        ],
+        [
+          41,
+          28
+        ],
+        [
+          42,
+          28
+        ]
+      ],
+      "sha256": "917469fe3f32bad8cd2231409521af8223b4c8fdd6ab8070410c014d42b67ddc",
+      "newColors": 0,
+      "outsideOpeningChanges": 0
+    },
+    {
+      "direction": "left",
+      "phase": "half",
+      "changedPixels": [],
+      "sha256": "084002cbbcce8c506356dd05f1838606e54909a871d1a68752bc1bcaebe02495",
+      "newColors": 0,
+      "outsideOpeningChanges": 0
+    },
+    {
+      "direction": "left",
+      "phase": "closed",
+      "changedPixels": [],
+      "sha256": "9cc43c74215fd1ff1c3db3b208758919e6f2e5110d9fa376ac184e1c2a70a405",
+      "newColors": 0,
+      "outsideOpeningChanges": 0
+    },
+    {
+      "direction": "center",
+      "phase": "open",
+      "changedPixels": [],
+      "sha256": "1adcf06db4cc9cbdab3f1392423c0d2a4e6585cd489e143f1724350c4a555f51",
+      "newColors": 0,
+      "outsideOpeningChanges": 0
+    },
+    {
+      "direction": "center",
+      "phase": "half",
+      "changedPixels": [],
+      "sha256": "084002cbbcce8c506356dd05f1838606e54909a871d1a68752bc1bcaebe02495",
+      "newColors": 0,
+      "outsideOpeningChanges": 0
+    },
+    {
+      "direction": "center",
+      "phase": "closed",
+      "changedPixels": [],
+      "sha256": "9cc43c74215fd1ff1c3db3b208758919e6f2e5110d9fa376ac184e1c2a70a405",
+      "newColors": 0,
+      "outsideOpeningChanges": 0
+    },
+    {
+      "direction": "right",
+      "phase": "open",
+      "changedPixels": [
+        [
+          22,
+          27
+        ],
+        [
+          23,
+          27
+        ],
+        [
+          24,
+          27
+        ],
+        [
+          25,
+          27
+        ],
+        [
+          40,
+          27
+        ],
+        [
+          41,
+          27
+        ],
+        [
+          42,
+          27
+        ],
+        [
+          43,
+          27
+        ],
+        [
+          22,
+          28
+        ],
+        [
+          23,
+          28
+        ],
+        [
+          24,
+          28
+        ],
+        [
+          25,
+          28
+        ],
+        [
+          40,
+          28
+        ],
+        [
+          41,
+          28
+        ],
+        [
+          42,
+          28
+        ],
+        [
+          43,
+          28
+        ]
+      ],
+      "sha256": "c8f8758e9602ee3ff9455d1506c5f7b6234287e9d445918b6366c6f955b7b8f2",
+      "newColors": 0,
+      "outsideOpeningChanges": 0
+    },
+    {
+      "direction": "right",
+      "phase": "half",
+      "changedPixels": [],
+      "sha256": "084002cbbcce8c506356dd05f1838606e54909a871d1a68752bc1bcaebe02495",
+      "newColors": 0,
+      "outsideOpeningChanges": 0
+    },
+    {
+      "direction": "right",
+      "phase": "closed",
+      "changedPixels": [],
+      "sha256": "9cc43c74215fd1ff1c3db3b208758919e6f2e5110d9fa376ac184e1c2a70a405",
+      "newColors": 0,
+      "outsideOpeningChanges": 0
+    },
+    {
+      "direction": "down-left",
+      "phase": "open",
+      "changedPixels": [
+        [
+          22,
+          27
+        ],
+        [
+          23,
+          27
+        ],
+        [
+          24,
+          27
+        ],
+        [
+          40,
+          27
+        ],
+        [
+          41,
+          27
+        ],
+        [
+          42,
+          27
+        ],
+        [
+          21,
+          28
+        ],
+        [
+          22,
+          28
+        ],
+        [
+          23,
+          28
+        ],
+        [
+          24,
+          28
+        ],
+        [
+          39,
+          28
+        ],
+        [
+          40,
+          28
+        ],
+        [
+          41,
+          28
+        ],
+        [
+          42,
+          28
+        ]
+      ],
+      "sha256": "ff93242d37c19a6dab7aff21e63eba84bededfb2059c6f61861abd33a7d15a5e",
+      "newColors": 0,
+      "outsideOpeningChanges": 0
+    },
+    {
+      "direction": "down-left",
+      "phase": "half",
+      "changedPixels": [],
+      "sha256": "084002cbbcce8c506356dd05f1838606e54909a871d1a68752bc1bcaebe02495",
+      "newColors": 0,
+      "outsideOpeningChanges": 0
+    },
+    {
+      "direction": "down-left",
+      "phase": "closed",
+      "changedPixels": [],
+      "sha256": "9cc43c74215fd1ff1c3db3b208758919e6f2e5110d9fa376ac184e1c2a70a405",
+      "newColors": 0,
+      "outsideOpeningChanges": 0
+    },
+    {
+      "direction": "down",
+      "phase": "open",
+      "changedPixels": [
+        [
+          22,
+          27
+        ],
+        [
+          23,
+          27
+        ],
+        [
+          24,
+          27
+        ],
+        [
+          40,
+          27
+        ],
+        [
+          41,
+          27
+        ],
+        [
+          42,
+          27
+        ],
+        [
+          22,
+          28
+        ],
+        [
+          23,
+          28
+        ],
+        [
+          24,
+          28
+        ],
+        [
+          40,
+          28
+        ],
+        [
+          41,
+          28
+        ],
+        [
+          42,
+          28
+        ]
+      ],
+      "sha256": "360d33d661adbc929757d842dceae41abd42617904394a840965e0141034df6a",
+      "newColors": 0,
+      "outsideOpeningChanges": 0
+    },
+    {
+      "direction": "down",
+      "phase": "half",
+      "changedPixels": [],
+      "sha256": "084002cbbcce8c506356dd05f1838606e54909a871d1a68752bc1bcaebe02495",
+      "newColors": 0,
+      "outsideOpeningChanges": 0
+    },
+    {
+      "direction": "down",
+      "phase": "closed",
+      "changedPixels": [],
+      "sha256": "9cc43c74215fd1ff1c3db3b208758919e6f2e5110d9fa376ac184e1c2a70a405",
+      "newColors": 0,
+      "outsideOpeningChanges": 0
+    },
+    {
+      "direction": "down-right",
+      "phase": "open",
+      "changedPixels": [
+        [
+          22,
+          27
+        ],
+        [
+          23,
+          27
+        ],
+        [
+          24,
+          27
+        ],
+        [
+          40,
+          27
+        ],
+        [
+          41,
+          27
+        ],
+        [
+          42,
+          27
+        ],
+        [
+          22,
+          28
+        ],
+        [
+          23,
+          28
+        ],
+        [
+          24,
+          28
+        ],
+        [
+          25,
+          28
+        ],
+        [
+          40,
+          28
+        ],
+        [
+          41,
+          28
+        ],
+        [
+          42,
+          28
+        ],
+        [
+          43,
+          28
+        ]
+      ],
+      "sha256": "261da07b0ab45fb7d9b9f6f04c396c3da6429c1d377f789f47c0e733771f9424",
+      "newColors": 0,
+      "outsideOpeningChanges": 0
+    },
+    {
+      "direction": "down-right",
+      "phase": "half",
+      "changedPixels": [],
+      "sha256": "084002cbbcce8c506356dd05f1838606e54909a871d1a68752bc1bcaebe02495",
+      "newColors": 0,
+      "outsideOpeningChanges": 0
+    },
+    {
+      "direction": "down-right",
+      "phase": "closed",
+      "changedPixels": [],
+      "sha256": "9cc43c74215fd1ff1c3db3b208758919e6f2e5110d9fa376ac184e1c2a70a405",
+      "newColors": 0,
+      "outsideOpeningChanges": 0
+    }
+  ],
+  "limitation": "The two-row eye opening clips the pupil on upward translations. No false claim of nine usable gazes."
+}

@@ -15,6 +15,7 @@ namespace PeopleOfTheIliacBay.DFU
         private bool active,originalForceHidden;
         public int Orientation {get;private set;}
         public int Frame {get;private set;}
+        public bool Active {get{return active;}}
         public Vector3 Heading {get {return heading;}}
         internal void Face(Vector3 direction)
         {direction.y=0;if(direction.sqrMagnitude>0.01f)heading=direction.normalized;}

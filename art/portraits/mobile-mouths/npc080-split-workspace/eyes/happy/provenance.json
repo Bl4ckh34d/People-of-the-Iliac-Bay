@@ -1,0 +1,51 @@
+{
+  "portraitRecord": 80,
+  "bank": "TFAC00I0.RCI",
+  "tool": "built-in image_gen",
+  "generatedUtc": "2026-10-21T22:02:05Z",
+  "sourceOriginal": {
+    "path": "original.png",
+    "sha256": "4EA9B975047475AE696146FBD02A9B005B16C4BAAB7E1C1E1C3651EE287F4B0B",
+    "dimensions": [
+      64,
+      64
+    ]
+  },
+  "asset": "happy eyes",
+  "output": {
+    "path": "eyes/happy/raw.png",
+    "sha256": "3CA69B3F1006C468157A62FA050CB5250355FCC5FF739730A07D495906DA6ACE",
+    "dimensions": [
+      1695,
+      928
+    ],
+    "copiedByteIdentically": true
+  },
+  "references": [
+    {
+      "path": "eyes-reference-grid.png",
+      "role": "edit target and geometry/style reference",
+      "sha256": "68275F3A970329CD449C3A75313210237AE84FE4ADE1B0A18E6BE6B93E7EE842",
+      "dimensions": [
+        1024,
+        560
+      ]
+    },
+    {
+      "path": "original.png",
+      "role": "identity and palette reference",
+      "sha256": "4EA9B975047475AE696146FBD02A9B005B16C4BAAB7E1C1E1C3651EE287F4B0B",
+      "dimensions": [
+        64,
+        64
+      ]
+    }
+  ],
+  "nativeLayout": "2x2 open, half-closed, closed, repeated-open; intended native cells 64x35; generated file keeps the 2x2 aspect and is not resampled.",
+  "prompt": "Use case: stylized-concept\nAsset type: native pixel-art NPC portrait eye animation atlas for Daggerfall Unity\nPrimary request: Edit the supplied 2x2 reference grid into one HAPPY eye sheet for NPC portrait 080. Keep the exact 2x2 grid, same framing and cell boundaries. Row-major phases: top-left open, top-right half closed, bottom-left closed, bottom-right exact repeat of open.\nInput images: Image 1 is the edit target and immutable layout/style reference: 2x2 grid of the original upper-half portrait cells, each 64x35 native pixels enlarged 8x. Image 2 is the original complete 64x64 portrait and palette reference.\nSubject: same front-facing woman, same eyes, brows, face, hair and pixels as the supplied source.\nStyle/medium: crisp native-resolution pixel art, same soft muted source palette and discrete pixel clusters. Keep edges crisp; no blur, smoothing, sharpening, gradients or texture changes.\nComposition/framing: preserve the 2x2 8x enlarged atlas exactly; each cell remains one 64x35 upper half; no extra margins, labels, seams or cropping. Keep all original face and hair geometry.\nLighting/mood: visibly warm, friendly, genuinely happy eyes; gentle relaxed smiling-eye shape and a small natural brow lift, subtle but easy to distinguish from neutral. Keep warmth in the expression, not by changing skin hue or adding orange color.\nColor palette: match the original pixels, soft muted browns and warm tan. Preserve existing skin, hair and eye colors. Brows remain the original brown, not black or near-black.\nConstraints: keep iris and pupil small, blocky, identical in width and horizontal position in open, half, and closed phases. In the half and closed phases, upper lids cover the same stationary eyeballs vertically; do not shift, shrink, roll, cross or redraw the irises. Both eyes look in the same direction. Brow shape/height stays consistent across blink phases; open, half, closed, repeated-open cells share the same happy brow expression. Bottom-right repeats top-left. Preserve original head silhouette and every non-eye source pixel.\nAvoid: black brow bars, eyeliner, orange skin patches, red lips, teeth, exaggerated squint, giant eyes, moving or shrinking irises, extra whites, blur, antialiasing, face redesign, palette shifts, cell resizing, or new content.",
+  "visualQa": "One built-in generation, no reroll. Face and broad cell layout are recognizable. Happy brow/smiling-eye cue is mild and may not separate strongly enough from neutral. Several bright eye-white pixels are visible; stationary iris width needs native sampling during assembly. Skin stays warm but may be slightly smoother/warmer than the reference. No black brow bars or major face redesign seen at atlas scale.",
+  "limitations": [
+    "Generated dimensions 1695x928 differ from reference 1024x560; raw file is preserved without resizing.",
+    "Native 64x35 phase sampling, iris stationarity, and palette match are not certified by this raw-atlas review."
+  ]
+}

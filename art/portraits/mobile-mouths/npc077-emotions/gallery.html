@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="de">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Portrait 77 – Emotionen und Mundanimation</title>
+<link rel="stylesheet" href="gallery.css">
+<main>
+<h1>Ein NPC · sechs Emotionen · Nachdenkblicke</h1>
+<p>Vollständige Portraitframes für Portrait 77. Vorschau vor der Übertragung auf weitere NPCs; noch nicht im Mod installiert.</p>
+<div id="emotions" class="emotions" aria-label="Emotion auswählen"></div>
+<section class="comparison">
+  <figure><canvas id="original" width="64" height="64"></canvas><figcaption>Original</figcaption></figure>
+  <figure><canvas id="live" width="64" height="64"></canvas><figcaption id="live-label">Neutral · animiert</figcaption></figure>
+  <div class="controls">
+    <label>Augen <select id="eyes"><option value="auto">Unregelmäßiges Blinzeln</option><option value="open">Offen</option><option value="half">Halb geschlossen</option><option value="closed">Geschlossen</option></select></label>
+    <label>Mund <select id="mouth"><option value="X">X – Ruhepose</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option></select></label>
+    <button id="blink">Jetzt blinzeln</button>
+    <button id="cycle">Alle Mundformen durchgehen</button>
+    <button id="rest">Ruhepose</button>
+    <output id="live-state" aria-live="off">Lade Bilder …</output>
+  </div>
+</section>
+<section>
+  <h2>Emotionen nebeneinander</h2>
+  <div id="overview" class="overview"></div>
+</section>
+<section class="thinking">
+  <h2>Nachdenken ohne Sprache</h2>
+  <p>Geschlossener Mund, Blick in acht Richtungen und geradeaus. Blinzeln läuft unabhängig weiter.</p>
+  <label>Blickrichtung <select id="gaze"><option value="auto">Unregelmäßig wechseln</option><option value="0">Oben links</option><option value="1">Oben</option><option value="2">Oben rechts</option><option value="3">Links</option><option value="4">Geradeaus</option><option value="5">Rechts</option><option value="6">Unten links</option><option value="7">Unten</option><option value="8">Unten rechts</option></select></label>
+  <button id="think">Nachdenkblicke abspielen</button>
+</section>
+<section class="audio">
+  <h2>Mit Sprache ansehen</h2>
+  <p>Für alle Emotionen läuft derselbe vorhandene, neutral gesprochene Testclip. Hier vergleichen wir die Gesichtsbilder; die Stimme ändert ihre Emotion nicht.</p>
+  <audio id="speech" controls preload="auto" src="../sample.wav"></audio>
+  <p class="quote">“Good day. I have been in this town for many years. What brings you here today?”</p>
+  <button id="tour">Alle Emotionen nacheinander mit Audio</button>
+  <button id="stop">Wiedergabe stoppen</button>
+</section>
+<section>
+  <h2>Alle Einzelbilder prüfen</h2>
+  <p>Pro Emotion: neun Lautformen mit drei Augenphasen. Zusätzlich neun Nachdenkblicke mit drei Augenphasen.</p>
+  <button id="expand">Alle 189 Frames anzeigen</button><span id="count"></span>
+  <div id="sheets"></div>
+</section>
+<p id="status" role="status">Lade Galerie …</p>
+</main>
+<script type="module" src="gallery.js"></script>
+</html>

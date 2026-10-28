@@ -101,15 +101,27 @@ namespace PeopleOfTheIliacBay.DFU
         }
         public void ObserveGuardAttack(GuardActor victim,DaggerfallEntityBehaviour attacker)
         {
-            if(!EnemyDefense || !OwnsTown() || interior || !attacker || attacker.Entity.CurrentHealth<=0 ||
-                attacker.GetComponent<GuardActor>() || attacker.Entity.Team==MobileTeams.PlayerAlly) return;
+            if(!OwnsTown() || !victim || !attacker || attacker.Entity==null || attacker.Entity.CurrentHealth<=0 ||
+                attacker.GetComponent<GuardActor>()) return;
             GuardActor owned;
             if(!actors.TryGetValue(victim.GuardId,out owned) || owned!=victim) return;
             double now=Now();
+            var guard=Roster.Guards.Find(g=>g.Id==victim.GuardId);
+            if(guard==null || !guard.IsAlive)return;
+            bool player=attacker==GameManager.Instance.PlayerEntityBehaviour;
+            if(player && GameManager.Instance.PlayerEntity.CrimeCommitted==PlayerEntity.Crimes.None)
+                GameManager.Instance.PlayerEntity.CrimeCommitted=PlayerEntity.Crimes.Assault;
+            if(!player && (!EnemyDefense || attacker.Entity.Team==MobileTeams.PlayerAlly))return;
+            if(guard.Refuge!=null)
+            {
+                if(guard.Refuge.WallRoute!=null && guard.Refuge.Evaluate(now).Phase==RefugePhase.WallPosted)
+                    victim.RememberWallAttacker(attacker);
+                return;
+            }
+            if(player || interior)return; // Ordinary native player combat remains authoritative.
             var evidence=attacker.GetComponent<GuardAttackEvidence>() ?? attacker.gameObject.AddComponent<GuardAttackEvidence>();
             evidence.Until=now+300;
             string key=ThreatKey(attacker);defenseEnemies[key]=attacker;
-            var guard=Roster.Guards.Find(g=>g.Id==victim.GuardId);
             if(guard==null || !guard.IsAlive || guard.Interior!=null || guard.Refuge!=null || guard.BowSupportGuardId!=null) return;
             // A hit identifies aggression, but a hidden shooter is not a known location.
             if(!CivilianResponses.Sees(victim.transform.position,attacker.transform.position,EnemyAttack.maxRangedDistance)) return;

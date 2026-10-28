@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 81,
+  "emotion": "sad",
+  "asset": "eyes/sad/raw.png",
+  "tool": "built-in image_gen",
+  "prompt": "Generate one SAD eye-expression atlas for Daggerfall Unity portrait record 81, using the provided native upper-half reference grid and original portrait. Output exactly a 2-column × 2-row sheet, row-major OPEN / HALF-CLOSED / CLOSED / repeated OPEN. Each tile must retain the same complete 64×35 upper portrait half and identity, hair, forehead, nose bridge, background, scale, framing, muted pixel-art shading, soft palette and contrast. Make sadness unmistakable but restrained: tired low-energy expression, slightly downcast gaze, softly raised inner brow ends, gently drooping upper lids. Avoid fear or surprise: no enlarged eyes, no high arched alarm brows, no strong frown. Keep both blue irises/pupils horizontally the exact same width and position through all phases; lids cover them vertically in half/closed phases without shrinking, shifting or redrawing them. Closed phase fully covers the eyes with a natural lid surface, no exposed white or white flash pixels. Brow thickness, color and stationary crease brightness must stay close to source and consistent. Open and repeated-open should match. Preserve the original hair/face pixels beyond the eye/brow feature area. No tears, objects, text, labels, borders, glow, lipstick-like contrast, face drift, new markings, or extra tiles. Return only the complete atlas.",
+  "promptSha256": "a0b63295000062f4d1159a9c4dc8b2d4a7a41b9c6b37645ab094a9e870a816fa",
+  "references": [
+    {
+      "path": "original.png",
+      "sha256": "eb0f7dcd1d390a6ff58d1bc0bba7a3855b5930ee824aa54e2f749211721e8ba0"
+    },
+    {
+      "path": "eyes-reference-grid.png",
+      "sha256": "ec8e562898b5c269e5484294666940fd3d06392155fc32134d53d585209636f5"
+    }
+  ],
+  "resultSha256": "5649d22d6ec879ca2118f77d67d3b8dfe0aeb080b4b3077359be814240f6e72a",
+  "dimensions": {
+    "height": 928,
+    "width": 1695
+  },
+  "rawCopiedUnchanged": true,
+  "visibleDefects": [
+    "The 2×2 layout is readable, but repeated-open differs from the first open in iris/highlight detail.",
+    "Both open phases retain pale sclera highlights; compare to source before accepting the no-new-white-flash constraint.",
+    "Brow and eye lines look slightly heavy at enlarged size; sadness is clearest in the half-closed phase rather than the open phase."
+  ],
+  "recoveredOutputCandidatePath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-fb9b-7322-8190-74bf6fb54c9d\\exec-d3cdd182-ee9c-4c59-bb7d-551fb8ad4949.png",
+  "toolOutputHintRetained": false,
+  "recoveryFolderPngCount": 21,
+  "recoveryNote": "Exact image_gen output_hint was not retained. This candidate was recovered from the saved output folder by timestamp and visual content; the folder contains 21 PNGs, so dimensions alone do not uniquely identify a pair. Parent review pending. This records a recovered candidate, not exact tool-result attribution."
+}

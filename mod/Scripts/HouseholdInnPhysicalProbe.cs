@@ -18,7 +18,13 @@ namespace PeopleOfTheIliacBay.DFU
         private const BindingFlags Private=BindingFlags.Instance|BindingFlags.NonPublic;
         internal static IEnumerator Run(PeopleOfTheIliacBayMod host,StreetPopulation streets)
         {
-            var game=GameManager.Instance;var directory=game.StreamingWorld.GetCurrentBuildingDirectory();
+            var game=GameManager.Instance;
+            DaggerfallUI.Instance.PopToHUD();game.PauseGame(false);
+            float readyDeadline=Time.realtimeSinceStartup+90;
+            while((!streets.Ready || !streets.EntranceSurveyReady) && Time.realtimeSinceStartup<readyDeadline)yield return null;
+            if(!streets.Ready || !streets.EntranceSurveyReady)
+                throw new InvalidOperationException("Family Inn fixture has no ready native town geometry.");
+            var directory=game.StreamingWorld.GetCurrentBuildingDirectory();
             var townGeometry=(TownGeometry)typeof(StreetPopulation).GetField("geometry",Private).GetValue(streets);
             var initialSnapshot=(WorldState)host.GetSaveData();
             HouseholdDayPlan plan;
@@ -191,11 +197,16 @@ namespace PeopleOfTheIliacBay.DFU
                     throw new InvalidOperationException("Shared Inn physical flow incomplete: complete="+visit.Complete+"; seated="+seated+"; reload="+reloaded+
                         "; egressReload="+egressReloaded+"; sequentialDoor="+sequentialDoor+"; first="+visit.FirstVisit.Snapshot.Phase+"/"+visit.FirstVisit.LastFailure+"; second="+visit.SecondVisit.Snapshot.Phase+"/"+visit.SecondVisit.LastFailure);
                 var firstPaid=store.ReadNpcInnConsumption(first.Resident.Id);var secondPaid=store.ReadNpcInnConsumption(second.Resident.Id);
-                if(firstPaid==null || secondPaid==null || firstPaid.VisitId==secondPaid.VisitId ||
-                    store.ReadNpcInventory(first.Resident.Id).WalletGold!=firstGold-firstPaid.ChargedGold ||
-                    store.ReadNpcInventory(second.Resident.Id).WalletGold!=secondGold-secondPaid.ChargedGold ||
+                if(firstPaid==null || secondPaid==null)throw new InvalidOperationException("Family purchase receipts missing.");
+                string payer=firstPaid.PayerId??firstPaid.BuyerId;
+                int total=firstPaid.ChargedGold+secondPaid.ChargedGold;
+                if(firstPaid.VisitId==secondPaid.VisitId || payer!=(secondPaid.PayerId??secondPaid.BuyerId) ||
+                    payer!=first.Resident.Id && payer!=second.Resident.Id ||
+                    store.ReadNpcInventory(first.Resident.Id).WalletGold!=firstGold-(payer==first.Resident.Id?total:0) ||
+                    store.ReadNpcInventory(second.Resident.Id).WalletGold!=secondGold-(payer==second.Resident.Id?total:0) ||
                     game.PlayerEntity.GoldPieces!=playerGold || store.ReadHouseholdJointProgress(plan.SettlementId,plan.HomeKey).Phase!=HouseholdJointPhase.Returning)
-                    throw new InvalidOperationException("Native shared purchases did not conserve exact NPC wallets or preserve the player.");
+                    throw new InvalidOperationException("Native shared purchases did not charge the exact payer wallet or preserve the nonpayer and player.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FAMILY_PAYER_NATIVE_PASS: onePayer=true; total="+total+"; nativeServiceGoldSink=true; playerUnchanged=true");
                 if(Vector3.Distance(first.transform.position-Vector3.up,geometry.EntryGround.Value)>0.65f ||
                     Vector3.Distance(second.transform.position-Vector3.up,geometry.EntryGround.Value)>0.65f)
                     throw new InvalidOperationException("Both actual parents did not reach the Inn's interior doorway endpoint.");
@@ -279,15 +290,13 @@ namespace PeopleOfTheIliacBay.DFU
         }
         private static IEnumerator VerifyUnloadedNativeCatalog(WorldState snapshot,Transform owner,StaticDoor door,DFLocation location,double now)
         {
-            var method=typeof(TavernRoomSurvey).GetMethod("ReadServiceSteps",BindingFlags.Static|BindingFlags.Public);
-            if(method==null)throw new InvalidOperationException("Missing unloaded native Inn service survey API.");
             var store=new WorldStateStore(0,PeopleOfTheIliacBayMod.ConversationArchiveRoot());store.Restore(snapshot);
             var game=GameManager.Instance;var player=game.PlayerMotor.transform.position;
             int people=UnityEngine.Object.FindObjectsOfType<StaticNPC>().Length;
             string wallets=SaveLoadManager.Serialize(typeof(List<NpcInventoryState>),store.Snapshot().NpcInventories);
             string observations=SaveLoadManager.Serialize(typeof(List<ObservedVisit>),store.Snapshot().ObservedVisits);
-            var result=new TavernRoomSurvey.Result();
-            var steps=(IEnumerator)method.Invoke(null,new object[]{owner,door,location.Climate.ClimateType,result,(Func<bool>)(()=>true)});
+            var result=new TavernBedSurvey.Result();
+            var steps=TavernBedSurvey.ReadServiceSteps(owner,door,location.Climate.ClimateType,result,()=>true);
             int frames=0;double maxSliceMs=0;
             try
             {
@@ -331,11 +340,11 @@ namespace PeopleOfTheIliacBay.DFU
             roundtrip.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),SaveLoadManager.Serialize(typeof(WorldState),store.Snapshot())));
             if(roundtrip.ReadNpcInnServiceCatalog(source.SettlementId,source.BuildingKey).Fingerprint!=source.Fingerprint)
                 throw new InvalidOperationException("Unloaded native Inn catalog failed actual serializer/store restoration.");
-            var cancelled=new TavernRoomSurvey.Result();bool valid=true;
-            steps=(IEnumerator)method.Invoke(null,new object[]{owner,door,location.Climate.ClimateType,cancelled,(Func<bool>)(()=>valid)});
+            var cancelled=new TavernBedSurvey.Result();bool valid=true;
+            steps=TavernBedSurvey.ReadServiceSteps(owner,door,location.Climate.ClimateType,cancelled,()=>valid);
             try{if(!steps.MoveNext())throw new InvalidOperationException("Unloaded cancellation fixture never began.");valid=false;while(steps.MoveNext())yield return steps.Current;}
             finally{(steps as IDisposable)?.Dispose();}
-            if(cancelled.Rooms!=null || typeof(TavernRoomSurvey.Result).GetField("ServiceCatalog").GetValue(cancelled)!=null)
+            if(cancelled.Beds!=null || typeof(TavernBedSurvey.Result).GetField("ServiceCatalog").GetValue(cancelled)!=null)
                 throw new InvalidOperationException("Cancelled unloaded Inn service survey published partial data.");
             Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_UNLOADED_INN_CATALOG_PASS: actualRecords=true; nativeKeeper=true; nativeMenu=true; pairs="+
                 source.Pairs.Count+"; noSurveyNpc=true; registrationNoNpcSpawn=true; noLiveFurniture=true; walletsUnchanged=true; cancelled=true; nativeReload=true; purchase=false");
@@ -352,8 +361,6 @@ namespace PeopleOfTheIliacBay.DFU
         private static IEnumerator VerifyNativeCatalog(WorldStateStore store,DaggerfallInterior room,
             ShopVisitGeometry activities,NativePerson keeper,double now)
         {
-            var capture=typeof(StreetPopulation).GetMethod("CaptureInnServiceCatalog",BindingFlags.Static|BindingFlags.NonPublic);
-            if(capture==null)throw new InvalidOperationException("Missing native Inn service catalog capture API.");
             string wallets=SaveLoadManager.Serialize(typeof(List<NpcInventoryState>),store.Snapshot().NpcInventories);
             string observations=SaveLoadManager.Serialize(typeof(List<ObservedVisit>),store.Snapshot().ObservedVisits);
             string CatalogContents()
@@ -363,16 +370,19 @@ namespace PeopleOfTheIliacBay.DFU
             }
             string priorCatalog=CatalogContents();
             bool current=true;
-            var cancelled=(IEnumerator)capture.Invoke(null,new object[]{store,room,activities,keeper,now,(Func<bool>)(()=>current)});
+            var cancelled=StreetPopulation.CaptureInnServiceCatalog(store,room,activities,keeper,now,()=>current);
             try
             {
                 if(!cancelled.MoveNext())throw new InvalidOperationException("Native catalog capture must yield before publication.");
+                // Menu/keeper facts publish immediately. Cancellation only
+                // prevents the subsequent scene-dependent seating survey.
+                priorCatalog=CatalogContents();
                 current=false;while(cancelled.MoveNext())yield return cancelled.Current;
             }
             finally{(cancelled as IDisposable)?.Dispose();}
             if(CatalogContents()!=priorCatalog)
                 throw new InvalidOperationException("Cancelled native catalog capture published into a stale scene.");
-            var stale=(IEnumerator)capture.Invoke(null,new object[]{store,room,activities,keeper,now,(Func<bool>)(()=>true)});
+            var stale=StreetPopulation.CaptureInnServiceCatalog(store,room,activities,keeper,now,()=>true);
             try
             {
                 if(!stale.MoveNext())throw new InvalidOperationException("Native catalog capture did not start before restore.");
@@ -382,7 +392,7 @@ namespace PeopleOfTheIliacBay.DFU
             finally{(stale as IDisposable)?.Dispose();}
             if(CatalogContents()!=priorCatalog)
                 throw new InvalidOperationException("Native catalog capture survived a same-store restore epoch change.");
-            var steps=(IEnumerator)capture.Invoke(null,new object[]{store,room,activities,keeper,now,(Func<bool>)(()=>true)});
+            var steps=StreetPopulation.CaptureInnServiceCatalog(store,room,activities,keeper,now,()=>true);
             int frames=0;
             try{while(steps.MoveNext()){frames++;yield return steps.Current;}}
             finally{(steps as IDisposable)?.Dispose();}

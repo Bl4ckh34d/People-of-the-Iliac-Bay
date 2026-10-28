@@ -36,6 +36,49 @@ namespace PeopleOfTheIliacBay.DFU
         private bool IsTravelerActionPlan(Plan plan)
         {return plan!=null && plan.Resident!=null && travelerPlans.ContainsKey(plan.Resident.Id);}
 
+        private string ObservedTravelerActionVisit(Plan actionPlan,ResidentActor actor,NpcActionJob job)
+        {
+            TravelerPlan visit;
+            if(population==null || !directory || actionPlan?.Resident==null || job==null ||
+                job.ResidentId!=actionPlan.Resident.Id || !travelerPlans.TryGetValue(job.ResidentId,out visit) ||
+                !visit.Person.IsAlive || !visit.Resident.IsAlive || visit.Visit.PersonId!=job.ResidentId ||
+                visit.Visit.SettlementId!=population.SettlementId || !ReferenceEquals(visit.ActionPlan,actionPlan) ||
+                !ReferenceEquals(visit.Resident,actionPlan.Resident) || !ReferenceEquals(visit.Routine,actionPlan.Routine) ||
+                !ReferenceEquals(worldStore.Traveler(job.ResidentId),visit.Person))return null;
+            bool present=actor && actor.gameObject.activeInHierarchy && ReferenceEquals(actor.Resident,visit.Resident) &&
+                ReferenceEquals(FindActor(job.ResidentId),actor) &&
+                actor.transform.parent==(interior?interior.transform:directory.transform);
+            // The existing physical crossing receipt owns the short interval
+            // between destroying the source body and observing its exact landing.
+            var crossing=job.BuildingTransitionReceipt;
+            bool crossingHere=crossing!=null && !crossing.DestinationObserved && job.ReturningToRoutine &&
+                (BuildingActionCurrentSpace==crossing.SourceSpaceId || BuildingActionCurrentSpace==crossing.DestinationSpaceId);
+            // Follow owns its measured doorway route while the source body is
+            // absent. Validate the current scene against that existing receipt.
+            bool followingHere=job.FollowTransition!=null &&
+                (ActionSpaceMatches(job.LastPosition) || ActionSpaceMatches(job.FollowTransition.Destination));
+            // A real saved paid Follow restores from its persisted physical
+            // position before this owner has recreated its native body. DFU's
+            // whole-second save clock can precede that last captured position.
+            bool restoredPaidHere=(!actor || !actor.gameObject.activeInHierarchy && ReferenceEquals(actor.Resident,visit.Resident)) &&
+                ActionSpaceMatches(job.LastPosition) && !NpcActionExecutor.IsTerminal(job) &&
+                NpcPaidCompanionTravel.TryReadActiveTravel(worldStore,job,Math.Max(ActionNow(),job.UpdatedAt),out _);
+            return present || crossingHere || followingHere || restoredPaidHere ? visit.Visit.Id : null;
+        }
+
+        private string TravelerActionVisitDiagnostic(Plan actionPlan,NpcActionJob job)
+        {
+            TravelerPlan visit;bool bound=job!=null && travelerPlans.TryGetValue(job.ResidentId,out visit);
+            if(!bound)return "travelerPlan=false";
+            visit=travelerPlans[job.ResidentId];
+            return "travelerPlan=true; visit="+visit.Visit.Id+"; visitTown="+visit.Visit.SettlementId+
+                "; sceneTown="+(population==null?-1:population.SettlementId)+"; samePlan="+ReferenceEquals(visit.ActionPlan,actionPlan)+
+                "; sameResident="+ReferenceEquals(visit.Resident,actionPlan.Resident)+"; sameRoutine="+ReferenceEquals(visit.Routine,actionPlan.Routine)+
+                "; samePerson="+ReferenceEquals(worldStore.Traveler(job.ResidentId),visit.Person)+
+                "; sourceHere="+ActionSpaceMatches(job.LastPosition)+
+                "; destinationHere="+(job.FollowTransition!=null && ActionSpaceMatches(job.FollowTransition.Destination));
+        }
+
         private bool TryTravelerScheduled(Plan plan,double now,out ActivitySnapshot state)
         {
             TravelerPlan traveler;

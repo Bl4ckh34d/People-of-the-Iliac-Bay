@@ -262,13 +262,11 @@ namespace PeopleOfTheIliacBay.Core
         }
         private static List<HouseholdJointSimulation> CopyHouseholdJointSimulations(WorldState source,WorldState copied)
         {
-            var result=new List<HouseholdJointSimulation>();if(source.Version<72)return result;
+            var result=new List<HouseholdJointSimulation>();
             Require(source.HouseholdJointSimulations!=null && source.HouseholdJointSimulations.Count<=100000,"Missing or unbounded household simulations.");
             var homes=new HashSet<string>(StringComparer.Ordinal);var parents=new HashSet<string>(StringComparer.Ordinal);
             foreach(var entry in source.HouseholdJointSimulations)
             {
-                Require(source.Version>=74 || entry.ModelVersion==1 && entry.ServiceAdmissionId==null && entry.ServiceReturnReason==null && entry.HomeArrival==null && !entry.ReleasedHomeAt.HasValue && !entry.CancelledAt.HasValue && entry.InnClockOffset==0,
-                    "Old schema contains future household service continuation.");
                 var sim=HouseholdJointSimulation.Copy(entry);var anchor=sim.Base;
                 Require(homes.Add(anchor.SettlementId+":"+anchor.HomeKey),"Duplicate household simulation owner.");
                 var actual=copied.HouseholdJointProgress.Find(p=>p.HouseholdDayId==anchor.HouseholdDayId);

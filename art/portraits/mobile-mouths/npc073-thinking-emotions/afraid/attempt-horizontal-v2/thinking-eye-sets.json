@@ -1,0 +1,712 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 73,
+  "bank": "TFAC00I0.RCI",
+  "thinkingEyeSets": [
+    {
+      "id": "left",
+      "label": "Left",
+      "phases": {
+        "open": {
+          "file": "eyes/thinking/left/open.png",
+          "sha256": "c24c9d6e08988ac030d7b1fe2985d6082da87fedf1f6cd63305724b2c4430997",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "8505d9e9fde3c536cf08958e97076aba44aa5d60e2e76ba6fc3fdb1384b8d643"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "fc4049169be4cb93babd0f7df530cb34680699980120b35cfc729869d7057a41"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "54885be79dd6d41c8ef5eb23c423bb3b895a825187587a16b73a683a5681ed4b"
+            }
+          ],
+          "sourceSha256": "8505d9e9fde3c536cf08958e97076aba44aa5d60e2e76ba6fc3fdb1384b8d643",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 0,
+            "cellColumn": 0,
+            "cellIndex": 0,
+            "eyeRegions": [
+              {
+                "x": 15,
+                "y": 18,
+                "width": 18,
+                "height": 14
+              },
+              {
+                "x": 37,
+                "y": 18,
+                "width": 18,
+                "height": 14
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 23,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 216,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          },
+          "browPostprocess": {
+            "method": "generated brow crop composited identically across blink phases",
+            "regions": [
+              {
+                "x": 15,
+                "y": 16,
+                "width": 18,
+                "height": 7
+              },
+              {
+                "x": 37,
+                "y": 16,
+                "width": 18,
+                "height": 7
+              }
+            ],
+            "selectedGalleryFrameSha256": "68c9605ed1e472026c681c7f7cb8d704b7e8a326487c6482be0ba308c7629c5f",
+            "outsideBrowChanges": 0
+          },
+          "changedPixels": 480,
+          "reviewedRepair20261023": {
+            "candidateSha256": "c24c9d6e08988ac030d7b1fe2985d6082da87fedf1f6cd63305724b2c4430997",
+            "previousSha256": "cd506fcfb34cf4ad874259bdd758db31f420d8d3fafee7bdbc6ad3c8a749153d",
+            "masterSha256": "8df58509e54af3488b55f4130afff2ff33182caa51360893a843419fe24d79c3",
+            "allowedSourceChangeRegions": [
+              [
+                15,
+                16,
+                33,
+                24
+              ],
+              [
+                37,
+                16,
+                55,
+                24
+              ]
+            ],
+            "method": "parent-reviewed generated brow master, consistent gaze/blink copies; explicitly recorded isolated glint repair where present"
+          }
+        },
+        "half": {
+          "file": "eyes/thinking/left/half.png",
+          "sha256": "ec846eb551209d9bb77d46de3a27636d2c453aa6f46446917b04c498fe4dd41a",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "8505d9e9fde3c536cf08958e97076aba44aa5d60e2e76ba6fc3fdb1384b8d643"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "fc4049169be4cb93babd0f7df530cb34680699980120b35cfc729869d7057a41"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "54885be79dd6d41c8ef5eb23c423bb3b895a825187587a16b73a683a5681ed4b"
+            }
+          ],
+          "sourceSha256": "8505d9e9fde3c536cf08958e97076aba44aa5d60e2e76ba6fc3fdb1384b8d643",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 1,
+            "cellColumn": 0,
+            "cellIndex": 2,
+            "eyeRegions": [
+              {
+                "x": 15,
+                "y": 18,
+                "width": 18,
+                "height": 14
+              },
+              {
+                "x": 37,
+                "y": 18,
+                "width": 18,
+                "height": 14
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 23,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 216,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          },
+          "browPostprocess": {
+            "method": "generated brow crop composited identically across blink phases",
+            "regions": [
+              {
+                "x": 15,
+                "y": 16,
+                "width": 18,
+                "height": 7
+              },
+              {
+                "x": 37,
+                "y": 16,
+                "width": 18,
+                "height": 7
+              }
+            ],
+            "selectedGalleryFrameSha256": "b550bcce853a8e7815c812583416b3c40fd9249de176ca727a545798bc414f30",
+            "outsideBrowChanges": 0
+          },
+          "changedPixels": 482,
+          "reviewedRepair20261023": {
+            "candidateSha256": "ec846eb551209d9bb77d46de3a27636d2c453aa6f46446917b04c498fe4dd41a",
+            "previousSha256": "96d7d61df7cd35a5c01381e953292969c17f4eecd9dbfd4c5071c0252262ce5c",
+            "masterSha256": "8df58509e54af3488b55f4130afff2ff33182caa51360893a843419fe24d79c3",
+            "allowedSourceChangeRegions": [
+              [
+                15,
+                16,
+                33,
+                24
+              ],
+              [
+                37,
+                16,
+                55,
+                24
+              ]
+            ],
+            "method": "parent-reviewed generated brow master, consistent gaze/blink copies; explicitly recorded isolated glint repair where present"
+          }
+        },
+        "closed": {
+          "file": "eyes/thinking/left/closed.png",
+          "sha256": "ff0e2d6f68143cd1dda272e5dcbcda2a3a685aaa419bcfce70100cfd633d42d7",
+          "sourceFiles": [
+            "eyes/afraid/closed.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "8505d9e9fde3c536cf08958e97076aba44aa5d60e2e76ba6fc3fdb1384b8d643"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "54885be79dd6d41c8ef5eb23c423bb3b895a825187587a16b73a683a5681ed4b"
+            },
+            {
+              "file": "eyes/afraid/closed.png",
+              "sha256": "3e8e4553648f31520063cb264f479e23f00749e8177096e7f8c1ce4209ec07ac"
+            }
+          ],
+          "sourceSha256": "8505d9e9fde3c536cf08958e97076aba44aa5d60e2e76ba6fc3fdb1384b8d643",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": null,
+            "cellColumn": null,
+            "cellIndex": -1,
+            "eyeRegions": [
+              {
+                "x": 15,
+                "y": 18,
+                "width": 18,
+                "height": 14
+              },
+              {
+                "x": 37,
+                "y": 18,
+                "width": 18,
+                "height": 14
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 23,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 216,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 288,
+            "halfLidOffset": 0
+          },
+          "browPostprocess": {
+            "method": "generated brow crop composited identically across blink phases",
+            "regions": [
+              {
+                "x": 15,
+                "y": 16,
+                "width": 18,
+                "height": 7
+              },
+              {
+                "x": 37,
+                "y": 16,
+                "width": 18,
+                "height": 7
+              }
+            ],
+            "selectedGalleryFrameSha256": "3e8e4553648f31520063cb264f479e23f00749e8177096e7f8c1ce4209ec07ac",
+            "outsideBrowChanges": 0
+          },
+          "changedPixels": 482,
+          "reviewedRepair20261023": {
+            "candidateSha256": "ff0e2d6f68143cd1dda272e5dcbcda2a3a685aaa419bcfce70100cfd633d42d7",
+            "previousSha256": "aa017fa3beccf5334fef80fdb2e1997b1e3e81798d458082056f503a6717789a",
+            "masterSha256": "8df58509e54af3488b55f4130afff2ff33182caa51360893a843419fe24d79c3",
+            "allowedSourceChangeRegions": [
+              [
+                15,
+                16,
+                33,
+                24
+              ],
+              [
+                37,
+                16,
+                55,
+                24
+              ]
+            ],
+            "method": "parent-reviewed generated brow master, consistent gaze/blink copies; explicitly recorded isolated glint repair where present"
+          }
+        }
+      }
+    },
+    {
+      "id": "right",
+      "label": "Right",
+      "phases": {
+        "open": {
+          "file": "eyes/thinking/right/open.png",
+          "sha256": "d4ca09875a6f83af77c5129ba7203755353b938a70a2fac9f5479ab2a00b5a75",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "8505d9e9fde3c536cf08958e97076aba44aa5d60e2e76ba6fc3fdb1384b8d643"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "fc4049169be4cb93babd0f7df530cb34680699980120b35cfc729869d7057a41"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "54885be79dd6d41c8ef5eb23c423bb3b895a825187587a16b73a683a5681ed4b"
+            }
+          ],
+          "sourceSha256": "8505d9e9fde3c536cf08958e97076aba44aa5d60e2e76ba6fc3fdb1384b8d643",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 0,
+            "cellColumn": 1,
+            "cellIndex": 1,
+            "eyeRegions": [
+              {
+                "x": 15,
+                "y": 18,
+                "width": 18,
+                "height": 14
+              },
+              {
+                "x": 37,
+                "y": 18,
+                "width": 18,
+                "height": 14
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 23,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 216,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          },
+          "browPostprocess": {
+            "method": "generated brow crop composited identically across blink phases",
+            "regions": [
+              {
+                "x": 15,
+                "y": 16,
+                "width": 18,
+                "height": 7
+              },
+              {
+                "x": 37,
+                "y": 16,
+                "width": 18,
+                "height": 7
+              }
+            ],
+            "selectedGalleryFrameSha256": "19f182ac1d203b765f0ec41412b247d97745c229d9bf70812cc0f3fad56409d6",
+            "outsideBrowChanges": 0
+          },
+          "changedPixels": 481,
+          "reviewedRepair20261023": {
+            "candidateSha256": "d4ca09875a6f83af77c5129ba7203755353b938a70a2fac9f5479ab2a00b5a75",
+            "previousSha256": "42194cd9b099c30b1547c2d8e82610c6ec2ef2a538c9487f7ec266536d7051d9",
+            "masterSha256": "8df58509e54af3488b55f4130afff2ff33182caa51360893a843419fe24d79c3",
+            "allowedSourceChangeRegions": [
+              [
+                15,
+                16,
+                33,
+                24
+              ],
+              [
+                37,
+                16,
+                55,
+                24
+              ]
+            ],
+            "method": "parent-reviewed generated brow master, consistent gaze/blink copies; explicitly recorded isolated glint repair where present"
+          }
+        },
+        "half": {
+          "file": "eyes/thinking/right/half.png",
+          "sha256": "991d354325155788d66dd92193e41f4d5fce6496b6c23cc92099bc19b4d1a02e",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "8505d9e9fde3c536cf08958e97076aba44aa5d60e2e76ba6fc3fdb1384b8d643"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "fc4049169be4cb93babd0f7df530cb34680699980120b35cfc729869d7057a41"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "54885be79dd6d41c8ef5eb23c423bb3b895a825187587a16b73a683a5681ed4b"
+            }
+          ],
+          "sourceSha256": "8505d9e9fde3c536cf08958e97076aba44aa5d60e2e76ba6fc3fdb1384b8d643",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 1,
+            "cellColumn": 1,
+            "cellIndex": 3,
+            "eyeRegions": [
+              {
+                "x": 15,
+                "y": 18,
+                "width": 18,
+                "height": 14
+              },
+              {
+                "x": 37,
+                "y": 18,
+                "width": 18,
+                "height": 14
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 23,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 216,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          },
+          "browPostprocess": {
+            "method": "generated brow crop composited identically across blink phases",
+            "regions": [
+              {
+                "x": 15,
+                "y": 16,
+                "width": 18,
+                "height": 7
+              },
+              {
+                "x": 37,
+                "y": 16,
+                "width": 18,
+                "height": 7
+              }
+            ],
+            "selectedGalleryFrameSha256": "b91a795f738378cc9fff2e67c045d47cea7769dd2a8b2a2309dde37ede4e82cf",
+            "outsideBrowChanges": 0
+          },
+          "changedPixels": 480,
+          "reviewedRepair20261023": {
+            "candidateSha256": "991d354325155788d66dd92193e41f4d5fce6496b6c23cc92099bc19b4d1a02e",
+            "previousSha256": "f0d4a53fbc7175c6422eff513d5e62cc63ba5521477486e84b6c26a7a21703d8",
+            "masterSha256": "8df58509e54af3488b55f4130afff2ff33182caa51360893a843419fe24d79c3",
+            "allowedSourceChangeRegions": [
+              [
+                15,
+                16,
+                33,
+                24
+              ],
+              [
+                37,
+                16,
+                55,
+                24
+              ]
+            ],
+            "method": "parent-reviewed generated brow master, consistent gaze/blink copies; explicitly recorded isolated glint repair where present"
+          }
+        },
+        "closed": {
+          "file": "eyes/thinking/right/closed.png",
+          "sha256": "ff0e2d6f68143cd1dda272e5dcbcda2a3a685aaa419bcfce70100cfd633d42d7",
+          "sourceFiles": [
+            "eyes/afraid/closed.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "8505d9e9fde3c536cf08958e97076aba44aa5d60e2e76ba6fc3fdb1384b8d643"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "54885be79dd6d41c8ef5eb23c423bb3b895a825187587a16b73a683a5681ed4b"
+            },
+            {
+              "file": "eyes/afraid/closed.png",
+              "sha256": "3e8e4553648f31520063cb264f479e23f00749e8177096e7f8c1ce4209ec07ac"
+            }
+          ],
+          "sourceSha256": "8505d9e9fde3c536cf08958e97076aba44aa5d60e2e76ba6fc3fdb1384b8d643",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": null,
+            "cellColumn": null,
+            "cellIndex": -1,
+            "eyeRegions": [
+              {
+                "x": 15,
+                "y": 18,
+                "width": 18,
+                "height": 14
+              },
+              {
+                "x": 37,
+                "y": 18,
+                "width": 18,
+                "height": 14
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 23,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 216,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 288,
+            "halfLidOffset": 0
+          },
+          "browPostprocess": {
+            "method": "generated brow crop composited identically across blink phases",
+            "regions": [
+              {
+                "x": 15,
+                "y": 16,
+                "width": 18,
+                "height": 7
+              },
+              {
+                "x": 37,
+                "y": 16,
+                "width": 18,
+                "height": 7
+              }
+            ],
+            "selectedGalleryFrameSha256": "3e8e4553648f31520063cb264f479e23f00749e8177096e7f8c1ce4209ec07ac",
+            "outsideBrowChanges": 0
+          },
+          "changedPixels": 482,
+          "reviewedRepair20261023": {
+            "candidateSha256": "ff0e2d6f68143cd1dda272e5dcbcda2a3a685aaa419bcfce70100cfd633d42d7",
+            "previousSha256": "aa017fa3beccf5334fef80fdb2e1997b1e3e81798d458082056f503a6717789a",
+            "masterSha256": "8df58509e54af3488b55f4130afff2ff33182caa51360893a843419fe24d79c3",
+            "allowedSourceChangeRegions": [
+              [
+                15,
+                16,
+                33,
+                24
+              ],
+              [
+                37,
+                16,
+                55,
+                24
+              ]
+            ],
+            "method": "parent-reviewed generated brow master, consistent gaze/blink copies; explicitly recorded isolated glint repair where present"
+          }
+        }
+      }
+    }
+  ],
+  "source": {
+    "original": "original.png",
+    "sha256": "8505d9e9fde3c536cf08958e97076aba44aa5d60e2e76ba6fc3fdb1384b8d643",
+    "referenceGrid": "thinking-reference-grid.png",
+    "referenceSha256": "2902041cacad5f8a77c7c6afbb131293454dca10ab310b55e333d88ee95fdca9",
+    "rawAtlas": "eyes/thinking/raw.png",
+    "rawAtlasSha256": "fc4049169be4cb93babd0f7df530cb34680699980120b35cfc729869d7057a41",
+    "referenceUpper": {
+      "file": "eyes/afraid/open.png",
+      "sha256": "54885be79dd6d41c8ef5eb23c423bb3b895a825187587a16b73a683a5681ed4b"
+    },
+    "browMaster": {
+      "file": "eyes/afraid/open.png",
+      "sha256": "54885be79dd6d41c8ef5eb23c423bb3b895a825187587a16b73a683a5681ed4b"
+    },
+    "halfLid": {
+      "file": "eyes/afraid/half.png",
+      "sha256": "2e1a5c6c6a2307bcbdf6b18399a51c3f791c79f31f124204a9eb51febabb4193"
+    },
+    "closedEye": {
+      "file": "eyes/afraid/closed.png",
+      "sha256": "3e8e4553648f31520063cb264f479e23f00749e8177096e7f8c1ce4209ec07ac"
+    }
+  },
+  "geometry": {
+    "width": 64,
+    "height": 64,
+    "splitY": 35,
+    "frameWidth": 64,
+    "frameHeight": 35,
+    "eyeRegions": [
+      {
+        "x": 15,
+        "y": 18,
+        "width": 18,
+        "height": 14
+      },
+      {
+        "x": 37,
+        "y": 18,
+        "width": 18,
+        "height": 14
+      }
+    ],
+    "halfLidRegions": [],
+    "halfLidOffsetsByGaze": {},
+    "browLockEndY": 23,
+    "reference": {
+      "width": 1024,
+      "height": 560,
+      "scale": 8,
+      "cells": 4,
+      "exactSourceCells": true,
+      "columns": 2,
+      "rows": 2
+    },
+    "rawAspect": 1.8265086206896552,
+    "rawAspectTolerance": 0.01,
+    "cellOrder": [
+      "left",
+      "right"
+    ],
+    "atlasColumns": 2,
+    "atlasRows": 2
+  },
+  "inputHashes": [
+    {
+      "file": "layout.json",
+      "sha256": "bbedfe8b2384f92c907bd78012daf5e1fa2015a083c84288b316dcc772aa7309"
+    },
+    {
+      "file": "thinking-layout.json",
+      "sha256": "e832f992d0248dadad4e155db5fe70910d44b2b69add30a5bb6224dcc83288c9"
+    },
+    {
+      "file": "setup-provenance.json",
+      "sha256": "5bfe2ef8c305ed3e275825bff0f873a4c9c108be30b0c0cfd71d3401d35c7bb8"
+    },
+    {
+      "file": "original.png",
+      "sha256": "8505d9e9fde3c536cf08958e97076aba44aa5d60e2e76ba6fc3fdb1384b8d643"
+    },
+    {
+      "file": "thinking-reference-grid.png",
+      "sha256": "2902041cacad5f8a77c7c6afbb131293454dca10ab310b55e333d88ee95fdca9"
+    },
+    {
+      "file": "eyes/thinking/raw.png",
+      "sha256": "fc4049169be4cb93babd0f7df530cb34680699980120b35cfc729869d7057a41"
+    },
+    {
+      "file": "eyes/afraid/open.png",
+      "sha256": "54885be79dd6d41c8ef5eb23c423bb3b895a825187587a16b73a683a5681ed4b"
+    },
+    {
+      "file": "eyes/afraid/half.png",
+      "sha256": "2e1a5c6c6a2307bcbdf6b18399a51c3f791c79f31f124204a9eb51febabb4193"
+    },
+    {
+      "file": "eyes/afraid/closed.png",
+      "sha256": "3e8e4553648f31520063cb264f479e23f00749e8177096e7f8c1ce4209ec07ac"
+    }
+  ],
+  "verification": {
+    "result": "pixel-invariants-pass-not-visual-acceptance",
+    "phaseCount": 6,
+    "expectedPhaseCount": 6,
+    "gazeSetCount": 2,
+    "expectedGazeSetCount": 2,
+    "sourceHashesUnchanged": true,
+    "referenceExact": true,
+    "outsideMaskChangedPixels": 0,
+    "noExistingOutputsOverwritten": true,
+    "pixelComparisons": 13440
+  },
+  "emotionId": "afraid",
+  "gazeLayout": "horizontal-pair"
+}

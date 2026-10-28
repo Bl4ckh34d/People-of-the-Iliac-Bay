@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T10:29:27.3277389Z",
+    "portraitRecord":  74,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "afraid",
+    "prompt":  "Use case: stylized-concept\nAsset type: native pixel-art NPC speech-mouth atlas\nInput image: the single attached exact local `mouth-reference-grid.png` for NPC074, showing the source\u0027s mouth, surrounding skin, blue ornament and hair edge.\n\nCreate one clean 3×3 atlas with nine complete mouth-region crops in the same framing and native pixel scale. No labels, borders, gutters, margins, text, or extra panels. Required row-major cells are A, B, C / D, E, F / G, H, X:\nA: pressured P/B/M closure, lips together.\nB: narrow EE/consonant opening.\nC: medium unrounded EH/AE opening.\nD: wide AA opening.\nE: rounded AO/ER opening, no wider than C.\nF: puckered UW/OW/W opening.\nG: upper teeth touching the lower lip for F/V.\nH: raised tongue for L, with an opening between C and D in size.\nX: relaxed closure.\n\nPreserve NPC074\u0027s original small muted lips, warm subdued skin, face shape and pixel-cluster style. Keep all poses anatomically plausible and clearly differentiated. Use only subdued gray-ivory teeth where the pose requires them and a natural dark mouth interior; avoid bright white teeth, lipstick-red lips, excessive contrast, or oversized openings. Keep the mouth centered and at the source\u0027s scale. Preserve the surrounding nose, chin, hair and blue ornament pixels and the same framing in every cell. Crisp native pixel clusters only; no blur, smoothing, gradients or vector-like shapes.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-13b5be3e-c971-492e-a1ab-472d4057ad2f.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-13b5be3e-c971-492e-a1ab-472d4057ad2f.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "fb9c8ade231ed63083cb2e8913d0227f84681dca1515de3e03a14898c767e061",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-13b5be3e-c971-492e-a1ab-472d4057ad2f.png",
+                      "sha256":  "e006b5fbe0a028ccd7e1ee52fedd78f2ad3a0319579b58df3fc1a9e4816f2cb6",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/afraid/raw.png",
+                "sha256":  "e006b5fbe0a028ccd7e1ee52fedd78f2ad3a0319579b58df3fc1a9e4816f2cb6",
+                "width":  1863,
+                "height":  844
+            }
+}

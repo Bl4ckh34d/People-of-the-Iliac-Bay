@@ -734,7 +734,7 @@ namespace PeopleOfTheIliacBay.DFU
         {
             NpcServiceContract contract = store.ReadNpcServiceContracts().Read(contractId);
             Require(contract != null && contract.Status == NpcServiceContractStatus.Reserved &&
-                contract.FundedGold == 120 && contract.EscrowGold == 120 && contract.EarnedGold == 0 &&
+                contract.FundedGold == 120 && contract.ReleasedGold == 120 && contract.EarnedGold == 0 &&
                 contract.TransferReceipts.Count == 1 && contract.TransferReceipts[0].ReceiptId == receiptId,
                 "Restored funded/reserved service ledger differs.");
             NpcServiceContractWriteTicket ticket = store.CaptureNpcServiceContractWriteTicket();
@@ -767,6 +767,9 @@ namespace PeopleOfTheIliacBay.DFU
                 if (item.ItemGroup == ItemGroups.MiscItems && item.GroupIndex == creditGroup)
                     originalCredits.Add(new CreditSnapshot { Item = item, Uid = item.UID, Value = item.value });
             }
+
+            Require(store.InitializeNpcInventory(personId,0,new NpcInventoryItem[0]),
+                "Controlled service wallet could not be opened.");
 
             DaggerfallUnityItem fixtureCredit = ItemBuilder.CreateItem(ItemGroups.MiscItems, (int)MiscItems.Letter_of_credit);
             fixtureCredit.value = 200;
@@ -827,7 +830,7 @@ namespace PeopleOfTheIliacBay.DFU
                     "Controlled native service funding failed: " + (fundingError == null ? "unknown" : fundingError.ToString()));
                 Require(committedReceipt != null && committedCandidate != null &&
                     committedReceipt.Amount == terms.RatePer24GameHours && committedReceipt.FromOwnerId == NpcDirectedRelationship.PlayerTargetId &&
-                    committedReceipt.ToOwnerId == "contract:" + terms.ContractId + ":escrow" &&
+                    committedReceipt.ToOwnerId == personId &&
                     player.GoldPieces == 10 && fixtureCredit.UID == fixtureUid && fixtureCredit.value == 80 &&
                     player.GetGoldAmount() == 90,
                     "Native funding did not debit exact mixed gold/LOC amount and preserve remaining LOC identity.");
@@ -876,7 +879,7 @@ namespace PeopleOfTheIliacBay.DFU
             }
             NpcServiceContract funded = store.ReadNpcServiceContracts().Read(terms.ContractId);
             Require(funded != null && funded.Status == NpcServiceContractStatus.Reserved &&
-                funded.FundedGold == terms.RatePer24GameHours && funded.EscrowGold == terms.RatePer24GameHours &&
+                funded.FundedGold == terms.RatePer24GameHours && funded.ReleasedGold == terms.RatePer24GameHours &&
                 funded.TransferReceipts.Count == 1 && funded.TransferReceipts[0].ReceiptId == receiptId,
                 "Actual controlled player debit did not persist exact reserved escrow evidence.");
         }

@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "portrait": "npc081",
+  "emotion": "happy",
+  "artifact": "mouth-3x3",
+  "generatedDate": "2026-10-22",
+  "tool": "built-in image_gen",
+  "toolCallCountForThisArtifact": 1,
+  "prompt": "Edit Image 1, the NPC081 mouth reference grid. Return exactly one 3×3 atlas with the same canvas aspect, nine equal cells, and same alignment; no labels or text. Each cell is one complete original lower portrait half, not a mouth-only crop. Preserve identity, nose, cheeks, jaw, chin, hair at both sides, neck, background, framing, and all geometry. Change only the modest original mouth area. Row-major speech shapes: A closed friendly smile; B lightly parted with a restrained hint of upper teeth; C small open; D wide open but anatomically modest; E rounded vowel; F gently puckered; G upper teeth lightly catching the lower lip; H brief small tongue glimpse; X relaxed closed smile. Keep natural, subtly raised smile corners across this happy set. Preserve the original soft muted pixel-art palette and pixel structure: no lipstick-red lips, orange skin patches, pure-white teeth, harsh contrast, black outlines, blur, oversized mouth, or grotesque grin. Teeth and mouth interior should use soft restrained colors; keep cavity small and dark brown where needed. Keep mouth position and native size fixed in every cell. Preserve hair and head geometry exactly. Do not add objects, labels, or borders.",
+  "sourceOriginal": {
+    "path": "art/portraits/mobile-mouths/npc081-split-workspace/original.png",
+    "sha256": "eb0f7dcd1d390a6ff58d1bc0bba7a3855b5930ee824aa54e2f749211721e8ba0",
+    "dimensions": [
+      64,
+      64
+    ]
+  },
+  "referenceGrid": {
+    "path": "art/portraits/mobile-mouths/npc081-split-workspace/mouth-reference-grid.png",
+    "sha256": "195f9a431b7a6509ca0c701eb5057672431e11ab58037bef41cc61402bbe851f",
+    "dimensions": [
+      1536,
+      696
+    ],
+    "expectedLayout": "3x3 A B C / D E F / G H X"
+  },
+  "generatedCandidates": [
+    {
+      "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-8b98-7181-a1df-84e7b766303c\\exec-cda1c502-18be-4a8b-9854-b8e6b14ac443.png",
+      "sha256": "74a0d31fab9153ecebae034737660517f0c41e32c9a138302b5911aba453b106",
+      "dimensions": [
+        1863,
+        844
+      ],
+      "mode": "RGB"
+    }
+  ],
+  "selectedCandidateSha256": "74a0d31fab9153ecebae034737660517f0c41e32c9a138302b5911aba453b106",
+  "savedRaw": {
+    "path": "art/portraits/mobile-mouths/npc081-split-workspace/mouth/happy/raw.png",
+    "sha256": "74a0d31fab9153ecebae034737660517f0c41e32c9a138302b5911aba453b106",
+    "dimensions": [
+      1863,
+      844
+    ],
+    "mode": "RGB",
+    "copiedByteForByteFromSelectedCandidate": true,
+    "resizedOrPostProcessed": false
+  },
+  "geometryNotes": {
+    "referenceAspectRatio": 2.206897,
+    "selectedAspectRatio": 2.207346,
+    "canvasDimensionsMatchReferenceExactly": false,
+    "aspectRatioMatchesWithin0_2Percent": true
+  },
+  "reviewNotes": "Nine clear mouth poses are present in expected order. A/X smile subtly; B/D/G show pale teeth, D is largest, E rounded, F puckered, H tongue visible. Teeth are visible but somewhat bright; no large red/orange shift obvious at raw atlas scale. Output is larger than reference grid, so parent must sample whole cells.",
+  "limitations": [
+    "No native compositing or pixel-position verification performed.",
+    "ImageGen changed pixel resolution; aspect ratio is close, exact grid geometry and feature coordinates still require parent inspection.",
+    "Generated appearance is a draft; no user visual acceptance claimed."
+  ]
+}

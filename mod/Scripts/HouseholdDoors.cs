@@ -102,7 +102,8 @@ namespace PeopleOfTheIliacBay.DFU
             double now = DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
             return HouseholdAccess.RoutineLocked(home, resident =>
                 worldStore.LocalResidentState(resident.Id,now,
-                    HouseholdAccess.EffectiveState(GetState(resident.Id, now), Reaction(resident.Id, now), now)));
+                    HouseholdAccess.EffectiveState(GetState(resident.Id, now), Reaction(resident.Id, now), now)),
+                DaggerfallUnity.Instance.WorldTime.Now.IsNight);
         }
     }
 }

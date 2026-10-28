@@ -1,0 +1,68 @@
+{
+  "portraitRecord": 85,
+  "bank": "TFAC00I0.RCI",
+  "width": 64,
+  "height": 64,
+  "splitY": 35,
+  "eyeRegions": [
+    {
+      "x": 14,
+      "y": 11,
+      "width": 17,
+      "height": 19
+    },
+    {
+      "x": 33,
+      "y": 11,
+      "width": 18,
+      "height": 19
+    }
+  ],
+  "mouthRegion": {
+    "x": 22,
+    "y": 35,
+    "width": 21,
+    "height": 14
+  },
+  "sourceSelections": {
+    "eyes": {
+      "happy": {
+        "raw": "eyes/happy/raw-recovered-circumstantial.png",
+        "recovery": "eyes/happy/recovery-v1-circumstantial.json",
+        "exactToolResultLink": false
+      }
+    }
+  },
+  "eyeFeatureLocks": [
+    {
+      "emotion": "neutral",
+      "phase": "half",
+      "x": 22,
+      "y": 23,
+      "width": 1,
+      "height": 1,
+      "sourceFile": "source-upper.png"
+    },
+    {
+      "emotion": "neutral",
+      "phase": "half",
+      "x": 43,
+      "y": 23,
+      "width": 1,
+      "height": 1,
+      "sourceFile": "source-upper.png"
+    },
+    {
+      "emotion": "sad",
+      "phase": "half",
+      "x": 43,
+      "y": 23,
+      "width": 1,
+      "height": 1,
+      "sourceFile": "source-upper.png"
+    }
+  ],
+  "blinkRepairRationale": "Neutral and sad half lids cover the original glints at row22; generation incorrectly redraws them at row23. Preserve two original dark source pixels for neutral and one right-eye source pixel for sad below those occluded glints. Parent regressions fail before each repair and pass after rebuilding. Sad43,23 changes from RGBA176,130,94,255 to source75,47,23,255. Do not copy these85-specific coordinates elsewhere.",
+  "maskBoundsRationale": "Parent inspected the actual85 native source and numbered coordinate grid. Brows occupy roughly rows13..16; irises/highlights are at22..24 and upper lids around20..21. Eye envelopes start11 for raised-brow headroom and end29; stationary brow band ends17 before the upper lids. This replaces the too-tight preflight guesses, not another face's coordinates. The21x14 mouth envelope starts at split35 and ends48, allowing wide-vowel room below the original closed lips. Its source pixels match common020 exactly but derivative reuse requires final animation review. No feature locks or palette policy inherited.",
+  "browLockEndY": 17
+}

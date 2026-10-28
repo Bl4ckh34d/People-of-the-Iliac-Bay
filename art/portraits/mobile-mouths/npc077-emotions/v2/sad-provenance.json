@@ -1,0 +1,49 @@
+{
+  "emotion": "sad",
+  "phase_order": [
+    "sad-open",
+    "sad-half",
+    "sad-closed"
+  ],
+  "source": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\tfac-077-full-frame-v5.png",
+    "sha256": "D2BD017E7773336DE704BF3E4C935AB1EF7D0FC84DD4BBC551A61E22AF322223"
+  },
+  "contrast_references": [
+    "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\sad-open.png",
+    "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\afraid-open.png"
+  ],
+  "generator": "built-in image_gen",
+  "generation_count": 3,
+  "visible_deviations": "Sad gaze and lids read lower-energy and downcast than revision 1; irises and mouth poses remain legible. Half blink keeps about half iris visible. No obvious grid/framing issue.",
+  "status": "revision2-prototype-user-review-pending-not-installed",
+  "outputs": [
+    {
+      "phase": "sad-open",
+      "source_generated_path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-fb9b-7322-8190-74bf6fb54c9d\\exec-ab71793c-5209-4262-9bce-10f8cadb3c6e.png",
+      "output_path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\sad-open.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "959DB0EBA7EBF9EAED444B0FE0F32C8513F23243B66D3F2A1996E8AF310EEE1D",
+      "prompt": "Edit reference image 1, the approved NPC 077 full-frame 3×3 portrait atlas. References 2 and 3 are revision-1 rejected emotion examples for contrast only; do not copy either. Create one fresh SAD OPEN-EYE atlas from reference 1.\n\nEmotion: quiet, low-energy sadness. In every cell, shift gaze slightly downcast by lowering the visible irises within the eye openings. Let upper lids droop gently, while keeping eyes clearly open and pupils crisp. Inner brows rise only mildly; avoid a strong pleading arch. Mouth corners turn down softly, with relaxed lips. Face feels tired and deflated, not alarmed, frightened, surprised, or crying. No tears.\n\nPreserve the source's exact portrait identity, coarse muted pixel-art style, hair, skin color, lighting, head size, framing, background, square canvas, 3×3 grid, cell scale and alignment. Keep sharp deliberate pixel clusters in both eyes: clear iris and pupil, small restrained sclera highlights, crisp lid and brow edges. No soft shadow or blur over irises. Keep same emotion and eye direction across all nine cells. Preserve all nine mouth poses and their scale/order, only adjust relaxed mouth-corner tension. Row-major A B C / D E F / G H X: closed M/B/P; narrow consonant with slight teeth; medium EH; moderately open AH; rounded OH; small OO/W; F/V upper teeth on lower lip; L tongue subtly behind upper teeth; X relaxed closed mouth. Keep each speech pose recognizable and useful. No crop, resizing, pasted facial parts, painted smoothing, labels, borders, gutters, text, watermark, or added object. Output one complete atlas."
+    },
+    {
+      "phase": "sad-half",
+      "source_generated_path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-fb9b-7322-8190-74bf6fb54c9d\\exec-6397d5bd-e746-4e04-857f-b5ebcb84a4ee.png",
+      "output_path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\sad-half.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "7528F8C72F1773A1197C02FF5991EC519AE4C079B9FD36AE962748963E47AA54",
+      "prompt": "Edit the visible completed SAD OPEN-EYE atlas for NPC 077. Create HALF-blink atlas, full square image with exact same 3×3 grid.\n\nChange upper eyelids only. In all nine cells, lower upper lids so they cover about half of each iris. Keep iris and pupil still partly visible and sharp. Do not change the sad downcast gaze, drooping lids beyond blink amount, brows, mouth or expression. Preserve all nine matching viseme mouths exactly, plus face identity, hair, colors, pixel clusters, framing, alignment, background and canvas. Crisp eyes: no smudging or soft shadow. No tears, new objects, crops, overlays, mouth edits, labels, border, gutter, text or watermark."
+    },
+    {
+      "phase": "sad-closed",
+      "source_generated_path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-fb9b-7322-8190-74bf6fb54c9d\\exec-235cb21e-3f75-48f9-a9ea-dc4bea732d3b.png",
+      "output_path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\sad-closed.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "44DC010EB253D582F7FCE582CF18400B70B1E348156692CA22139F18F5D68684",
+      "prompt": "Create the CLOSED-blink atlas by editing the completed SAD OPEN-EYE atlas shown first among the two images. Use that open atlas as the source; use the half-blink image only to match the sad expression and alignment. Output one complete square 3×3 atlas.\n\nChange eyelids only. Fully close both eyes in every face across all nine cells; eyelids must hide all iris and sclera. Preserve the same subtle downcast gaze implied by the closed lids, drooping eyelids, sad brow shape and low-energy expression. Preserve all nine speech mouth poses exactly and their cell alignment. Keep identity, hair, muted palette, pixel-art clusters, framing, background and grid unchanged. Keep eyelid edges crisp, without smudging or soft shadow. No tears, new objects, crop, overlays, mouth edits, labels, border, gutter, text or watermark."
+    }
+  ]
+}

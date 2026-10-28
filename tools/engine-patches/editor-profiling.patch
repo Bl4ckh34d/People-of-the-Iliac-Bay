@@ -1,0 +1,47 @@
+diff --git a/Assets/Scripts/Game/MagicAndEffects/EntityEffectBroker.cs b/Assets/Scripts/Game/MagicAndEffects/EntityEffectBroker.cs
+index f7c0d0e..41857ef 100644
+--- a/Assets/Scripts/Game/MagicAndEffects/EntityEffectBroker.cs
++++ b/Assets/Scripts/Game/MagicAndEffects/EntityEffectBroker.cs
+@@ -1126,7 +1126,7 @@ namespace DaggerfallWorkshop.Game.MagicAndEffects
+             List<T> objects = new List<T>();
+             foreach (Type type in
+                 Assembly.GetAssembly(typeof(T)).GetTypes()
+-                .Where(myType => myType.IsClass && !myType.IsAbstract && myType.IsSubclassOf(typeof(T))))
++                .Where(myType => myType.IsClass && !myType.IsAbstract && !myType.ContainsGenericParameters && myType.IsSubclassOf(typeof(T))))
+             {
+                 objects.Add((T)Activator.CreateInstance(type, constructorArgs));
+             }
+diff --git a/Assets/Scripts/Utility/RMBLayout.cs b/Assets/Scripts/Utility/RMBLayout.cs
+index d5a2191..a3e8d9a 100644
+--- a/Assets/Scripts/Utility/RMBLayout.cs
++++ b/Assets/Scripts/Utility/RMBLayout.cs
+@@ -41,9 +41,7 @@ namespace DaggerfallWorkshop.Utility
+         public const uint CityGateClosedModelID = 447;
+         public const uint BulletinBoardModelID = 41739;
+ 
+-#if !UNITY_EDITOR
+         private static int maxLocationCacheSize = 12;
+-#endif
+         private static List<KeyValuePair<int, DFBlock[]>> locationCache = new List<KeyValuePair<int, DFBlock[]>>();
+ 
+         /// <summary>Clear the location cache. Use if block data is changed dynamically.</summary>
+@@ -691,11 +689,15 @@ namespace DaggerfallWorkshop.Utility
+ 
+             blocksArray = blocks.ToArray();
+ 
+-#if !UNITY_EDITOR // Cache blocks for this location if not in editor
+-            if (locationCache.Count == maxLocationCacheSize)
+-                locationCache.RemoveAt(0);
+-            locationCache.Add(new KeyValuePair<int, DFBlock[]>(mapId, blocksArray));
++#if UNITY_EDITOR
++            // Owned profiling fixtures reproduce the release player's cache.
++            if (Array.IndexOf(Environment.GetCommandLineArgs(), "-peopleoftheiliacbay-editor-profile") >= 0)
+ #endif
++            {
++                if (locationCache.Count == maxLocationCacheSize)
++                    locationCache.RemoveAt(0);
++                locationCache.Add(new KeyValuePair<int, DFBlock[]>(mapId, blocksArray));
++            }
+ 
+             return blocksArray;
+         }

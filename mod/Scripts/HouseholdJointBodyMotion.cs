@@ -87,11 +87,14 @@ namespace PeopleOfTheIliacBay.DFU
         {
             var destination=geometry.ScenePoint(new RoutePoint(target.X,target.Z));
             var currentGround=actor.transform.position-Vector3.up;
-            bool native=NativeNavigationWorld.Current && NativeNavigationWorld.Current.Ready &&
-                Vector3.Distance(currentGround,destination)>1.25f;
-            actor.ResumeFromSocialPause();actor.Place(native?currentGround:destination,destination-currentGround,comfortWalking:false,
+            // This pair already owns a validated route and shared progress.
+            // Replanning each segment with a separate agent can choose a detour
+            // outside that corridor and then reject every physical step.
+            // Use the same bounded, floor/collider-checked waypoint movement
+            // used at its corners; retain the paired observation predicate.
+            actor.ResumeFromSocialPause();actor.Place(destination,destination-currentGround,comfortWalking:false,
                 placementAllowed:candidate=>{var local=origin.InverseTransformPoint(candidate);return allowed(new SavedRoutePoint{X=local.x,Z=local.z});},
-                navigationDestination:native?(Vector3?)destination:null,preferNative:native);
+                preferNative:false);
         }
         internal static void Hold(ResidentActor actor)
         {

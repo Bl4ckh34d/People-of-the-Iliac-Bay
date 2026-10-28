@@ -9,8 +9,8 @@ using PeopleOfTheIliacBay.Core;
 namespace PeopleOfTheIliacBay.DFU
 {
     /// <summary>
-    /// Synchronous native payout of a living NPC's saved service escrow. The player's refund
-    /// precedes the atomic Core ledger/evidence/wallet commit and is rolled back on refusal.
+    /// Ends service without another wage transfer. A failed start reverses the original
+    /// direct payment; the player's credit rolls back if the NPC wallet/ledger commit refuses.
     /// Separate DFU and mod save files do not have crash-atomic persistence.
     /// </summary>
     internal static class NativeNpcServiceContractSettlement
@@ -19,7 +19,7 @@ namespace PeopleOfTheIliacBay.DFU
             NpcServiceContractLedger candidate, NpcInventoryUpdate earningsCredit,
             IList<NpcServiceTransferReceipt> receipts, out string error);
 
-        // Production callers cannot know the exact rounded dues until native time is captured here.
+        // Native time determines expiry and the failed-start reversal timestamp.
         internal static bool TrySettle(WorldStateStore store, NpcServiceContractWriteTicket ticket,
             PlayerEntity payer, string contractId, long expectedContractRevision, NpcServiceEndReason reason,
             out NpcServiceContractLedger committedLedger, out NpcServiceTransferReceipt earningsReceipt,
@@ -58,27 +58,30 @@ namespace PeopleOfTheIliacBay.DFU
             bool committed = false;
             try
             {
-                if (commitSettlement == null || reason == NpcServiceEndReason.Death)
-                    throw new InvalidOperationException("Death settlement requires a verified persistent estate owner and is unsupported.");
+                if (commitSettlement == null || earningsReceiptId != null)
+                    throw new InvalidOperationException("Service termination requires no additional earnings transfer.");
                 double now;
                 NpcServiceContract contract = Preflight(store, ticket, payer, contractId,
-                    expectedContractRevision, out now);
-                int earningsDue;
-                int refundDue;
-                CalculateDues(contract, now, out earningsDue, out refundDue);
-                var wage = MakeReceipt(ticket, contract, NpcServiceTransferKind.Earnings,
-                    earningsReceiptId, contract.NpcId, earningsDue, now);
-                var refund = MakeReceipt(ticket, contract, NpcServiceTransferKind.Refund,
-                    refundReceiptId, contract.PayerId, refundDue, now);
+                    expectedContractRevision, reason==NpcServiceEndReason.Death, out now);
+                int refundDue=contract.Status==NpcServiceContractStatus.Reserved ? contract.FundedGold : 0;
+                var refund=refundDue==0 ? null : NpcServiceTransferReceipt.Create(
+                    refundReceiptId ?? contract.ContractId+":rollback",contract.ContractId,NpcServiceTransferKind.Refund,
+                    contract.NpcId,contract.PayerId,refundDue,now);
                 NpcServiceContract updated;
-                if (!contract.TrySettle(expectedContractRevision, now, reason, contract.NpcId,
-                    wage, refund, out updated) || updated == null)
-                    throw new InvalidOperationException("Service contract rejected the requested settlement.");
-                NpcServiceContractLedger candidate = Replace(ticket, updated);
-                NpcInventoryUpdate earningsCredit = PrepareEarningsCredit(store, contract, earningsDue);
-                var receipts = new List<NpcServiceTransferReceipt>(2);
-                if (wage != null) receipts.Add(wage);
-                if (refund != null) receipts.Add(refund);
+                if(!contract.TrySettle(expectedContractRevision,now,reason,contract.NpcId,null,refund,out updated))
+                    throw new InvalidOperationException("Service contract rejected termination.");
+                NpcServiceContractLedger candidate=Replace(ticket,updated);
+                NpcInventoryUpdate earningsCredit=null;
+                if(refundDue>0)
+                {
+                    var inventory=store.ReadNpcInventory(contract.NpcId);
+                    if(inventory==null || inventory.WalletGold<refundDue)
+                        throw new InvalidOperationException("Companion wallet cannot reverse the failed-start payment.");
+                    earningsCredit=new NpcInventoryUpdate {PersonId=contract.NpcId,ExpectedRevision=inventory.Revision,
+                        WalletGold=inventory.WalletGold-refundDue,Items=inventory.Items};
+                }
+                var receipts=new List<NpcServiceTransferReceipt>(1);
+                if(refund!=null)receipts.Add(refund);
 
                 if (refundDue > 0)
                 {
@@ -97,7 +100,7 @@ namespace PeopleOfTheIliacBay.DFU
                     throw new InvalidOperationException("Service settlement commit rejected after native refund: " + error);
                 committed = true;
                 committedLedger = candidate;
-                earningsReceipt = wage;
+                earningsReceipt = null;
                 refundReceipt = refund;
                 failure = null;
                 return true;
@@ -122,53 +125,8 @@ namespace PeopleOfTheIliacBay.DFU
             }
         }
 
-        internal static bool TryReleaseEarnings(WorldStateStore store, NpcServiceContractWriteTicket ticket,
-            PlayerEntity payer, string contractId, long expectedContractRevision, string earningsReceiptId,
-            out NpcServiceContractLedger committedLedger, out NpcServiceTransferReceipt earningsReceipt,
-            out Exception failure)
-        {
-            committedLedger = null;
-            earningsReceipt = null;
-            if (!NativeNpcServiceContractFunding.TryEnterTransfer(out failure)) return false;
-            try
-            {
-                double now;
-                NpcServiceContract contract = Preflight(store, ticket, payer, contractId,
-                    expectedContractRevision, out now);
-                int earningsDue;
-                int ignoredRefund;
-                CalculateDues(contract, now, out earningsDue, out ignoredRefund);
-                if (earningsDue <= 0)
-                    throw new InvalidOperationException("No earned service gold is available for release.");
-                var wage = MakeReceipt(ticket, contract, NpcServiceTransferKind.Earnings,
-                    earningsReceiptId, contract.NpcId, earningsDue, now);
-                NpcServiceContract updated;
-                if (!contract.TryReleaseEarnings(expectedContractRevision, now, wage, out updated) || updated == null)
-                    throw new InvalidOperationException("Service contract rejected earned-gold release.");
-                NpcServiceContractLedger candidate = Replace(ticket, updated);
-                NpcInventoryUpdate earningsCredit = PrepareEarningsCredit(store, contract, earningsDue);
-                string error;
-                if (!CommitToStore(store, ticket, candidate, earningsCredit,
-                    new[] { wage }, out error))
-                    throw new InvalidOperationException("Service earnings commit rejected: " + error);
-                committedLedger = candidate;
-                earningsReceipt = wage;
-                failure = null;
-                return true;
-            }
-            catch (Exception error)
-            {
-                failure = error;
-                return false;
-            }
-            finally
-            {
-                NativeNpcServiceContractFunding.ExitTransfer();
-            }
-        }
-
         private static NpcServiceContract Preflight(WorldStateStore store, NpcServiceContractWriteTicket ticket,
-            PlayerEntity payer, string contractId, long expectedContractRevision, out double now)
+            PlayerEntity payer, string contractId, long expectedContractRevision, bool allowDead, out double now)
         {
             now = -1;
             if (store == null || ticket == null || payer == null ||
@@ -186,64 +144,17 @@ namespace PeopleOfTheIliacBay.DFU
             if (contract == null || contract.Revision != expectedContractRevision ||
                 contract.Status == NpcServiceContractStatus.Terminated ||
                 contract.PayerId != NpcDirectedRelationship.PlayerTargetId ||
-                !NativeNpcServiceContractFunding.IsKnownLivingNpc(store.Snapshot(), contract.NpcId))
+                !allowDead && !NativeNpcServiceContractFunding.IsKnownLivingNpc(store.Snapshot(), contract.NpcId))
                 throw new InvalidOperationException("Service settlement requires the current living NPC contract and payer.");
             return contract;
         }
 
-        private static void CalculateDues(NpcServiceContract contract, double now,
-            out int earningsDue, out int refundDue)
-        {
-            NpcServiceContract preview = contract;
-            if (contract.Status == NpcServiceContractStatus.Active &&
-                !contract.TryAccrue(contract.Revision, Math.Min(now, contract.BlockEndAt), out preview))
-                throw new InvalidOperationException("Service time cannot be accrued for settlement.");
-            earningsDue = checked(preview.EarnedGold - preview.ReleasedGold);
-            refundDue = checked(preview.EscrowGold - earningsDue);
-            if (earningsDue < 0 || refundDue < 0)
-                throw new InvalidOperationException("Saved service escrow accounting is invalid.");
-        }
-
-        private static NpcServiceTransferReceipt MakeReceipt(NpcServiceContractWriteTicket ticket,
-            NpcServiceContract contract, NpcServiceTransferKind kind, string receiptId,
-            string recipient, int amount, double now)
-        {
-            if (amount == 0)
-            {
-                if (receiptId != null)
-                    throw new InvalidOperationException("Zero-gold service transfer must not have a receipt ID.");
-                return null;
-            }
-            if (receiptId == null)
-                receiptId = (kind == NpcServiceTransferKind.Earnings ? "service-earnings:" : "service-refund:") +
-                    contract.ContractId + ":" + contract.Revision.ToString(CultureInfo.InvariantCulture);
-            if (string.IsNullOrWhiteSpace(receiptId) || ticket.SourceLedger.HasReceiptId(receiptId))
-                throw new InvalidOperationException("Service transfer receipt ID is missing or already used.");
-            return NpcServiceTransferReceipt.Create(receiptId, contract.ContractId, kind,
-                "contract:" + contract.ContractId + ":escrow", recipient, amount, now);
-        }
-
-        private static NpcServiceContractLedger Replace(NpcServiceContractWriteTicket ticket,
-            NpcServiceContract updated)
+        private static NpcServiceContractLedger Replace(NpcServiceContractWriteTicket ticket,NpcServiceContract updated)
         {
             NpcServiceContractLedger candidate;
-            if (!NpcServiceContractLedger.TryReplace(ticket.SourceLedger, ticket.ExpectedLedgerRevision,
-                updated, out candidate) || candidate == null)
-                throw new InvalidOperationException("Service ledger rejected the settlement candidate.");
+            if(!NpcServiceContractLedger.TryReplace(ticket.SourceLedger,ticket.ExpectedLedgerRevision,updated,out candidate))
+                throw new InvalidOperationException("Service ledger rejected termination.");
             return candidate;
-        }
-
-        private static NpcInventoryUpdate PrepareEarningsCredit(WorldStateStore store,
-            NpcServiceContract contract, int earningsDue)
-        {
-            if (earningsDue == 0) return null;
-            NpcInventoryState inventory = store.ReadNpcInventory(contract.NpcId);
-            if (inventory == null || inventory.Revision >= NpcInventoryLimits.MaximumRevision ||
-                (long)inventory.WalletGold + earningsDue > NpcInventoryLimits.MaximumWalletGold)
-                throw new InvalidOperationException("NPC wallet is missing, stale, or cannot receive earned gold.");
-            return new NpcInventoryUpdate { PersonId = contract.NpcId,
-                ExpectedRevision = inventory.Revision, WalletGold = checked(inventory.WalletGold + earningsDue),
-                Items = inventory.Items };
         }
 
         private static bool CommitToStore(WorldStateStore store, NpcServiceContractWriteTicket ticket,

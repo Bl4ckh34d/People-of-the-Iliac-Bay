@@ -22,6 +22,38 @@ namespace PeopleOfTheIliacBay.Core
             return visit!=null && visit.HouseholdDayId==sim.Base.HouseholdDayId && visit.HouseholdSourceFingerprint==sim.Base.SourceFingerprint &&
                 visit.ObservedAt<=sim.StartedAt?visit:null;
         }
+        // Called only by an observer/scene-entry adapter. Unloaded service never leases seats.
+        public bool PrepareHouseholdInnObservation(string dayId,double now,
+            Func<NpcInnServiceCatalog,NpcInnServiceSeatPair,bool> canReservePair)
+        {
+            if(!ValidTime(now) || canReservePair==null)return false;
+            var service=state.HouseholdInnServices.Find(s=>s.HouseholdDayId==dayId && !s.Materialized);
+            var sim=state.HouseholdJointSimulations.Find(s=>s.Active && s.Base.HouseholdDayId==dayId);
+            if(sim!=null)now=HouseholdInnVisitProvenance.CanonicalInstant(now,sim.AdvancedThrough);
+            if(sim!=null && CapturedHouseholdInnVisit(sim,sim.Base.FirstResidentId)!=null &&
+                CapturedHouseholdInnVisit(sim,sim.Base.SecondResidentId)!=null)return true;
+            if(service==null || sim==null || sim.RequiresRecovery || sim.PauseReason!=null || now<sim.AdvancedThrough ||
+                sim.Phase!=HouseholdJointPhase.AtInn && sim.Phase!=HouseholdJointPhase.Visiting ||
+                now-sim.InnClockOffset<service.ArrivalAt || now-sim.InnClockOffset>=service.ReturnAt)return false;
+            if(service.Outcome=="refused")return true;
+            var catalog=ReadNpcInnServiceCatalog(service.Catalog.SettlementId,service.Catalog.BuildingKey);
+            if(catalog==null || !SameHouseholdServiceMenu(catalog,service.Catalog))return false;
+            foreach(var pair in catalog.Pairs)
+            {
+                if(service.FirstSeatId!=null && (service.FirstSeatId!=pair.First.Id || service.SecondSeatId!=pair.Second.Id))continue;
+                if(!canReservePair(catalog,pair))continue;
+                if(state.ObservedVisits.Exists(v=>v.SettlementId==catalog.SettlementId && v.BuildingKey==catalog.BuildingKey &&
+                    v.ResidentId!=service.FirstIdentity.BuyerId && v.ResidentId!=service.SecondIdentity.BuyerId && v.EndsAt>now &&
+                    v.Legs.Exists(l=>l.SeatId==pair.First.Id || l.SeatId==pair.Second.Id)))continue;
+                if(state.HouseholdInnServices.Exists(s=>s.HouseholdDayId!=dayId && s.Catalog.SettlementId==catalog.SettlementId &&
+                    s.Catalog.BuildingKey==catalog.BuildingKey && !s.ReleasedAt.HasValue &&
+                    (s.FirstSeatId==pair.First.Id || s.FirstSeatId==pair.Second.Id || s.SecondSeatId==pair.First.Id || s.SecondSeatId==pair.Second.Id)))continue;
+                var assigned=HouseholdInnServiceAdmission.Copy(service);assigned.Catalog=catalog;
+                assigned.FirstSeatId=pair.First.Id;assigned.SecondSeatId=pair.Second.Id;assigned.Revision++;
+                state.HouseholdInnServices[state.HouseholdInnServices.IndexOf(service)]=HouseholdInnServiceAdmission.Copy(assigned);return true;
+            }
+            return false;
+        }
         public HouseholdInnProjection ProjectHouseholdInnMember(string dayId,string resident,double now)
         {
             var service=state.HouseholdInnServices.Find(s=>s.HouseholdDayId==dayId && !s.Materialized);
@@ -52,11 +84,20 @@ namespace PeopleOfTheIliacBay.Core
             else
             {
                 if(pair==null)return null;seat=first?pair.First.Id:pair.Second.Id;
-                start=service.Outcome=="pending"?service.ArrivalAt:service.CounterAt;
-                if(service.Outcome=="pending")legs.Add(new ObservedVisitLeg{Route=service.Catalog.EntryToCounter,AfterPhase=ShopVisitPhase.Haggling});
                 var toSeat=first?pair.FirstCounterToSeat:pair.SecondCounterToSeat;
-                legs.Add(new ObservedVisitLeg{Route=toSeat,AfterPhase=ShopVisitPhase.Browsing,SeatId=seat,
-                    DwellSeconds=Math.Max(0,service.EndsAt-service.CounterAt-RouteLength(toSeat)*pace)});
+                if(service.Outcome=="pending")
+                {
+                    start=service.ArrivalAt;
+                    legs.Add(new ObservedVisitLeg{Route=service.Catalog.EntryToCounter,AfterPhase=ShopVisitPhase.Haggling});
+                    legs.Add(new ObservedVisitLeg{Route=toSeat,AfterPhase=ShopVisitPhase.Browsing,SeatId=seat,
+                        DwellSeconds=Math.Max(0,service.EndsAt-service.CounterAt-RouteLength(toSeat)*pace)});
+                }
+                else
+                {
+                    start=Math.Min(serviceClock,service.EndsAt);
+                    legs.Add(new ObservedVisitLeg{Route=new List<GuardPoint3>{ClonePoint(toSeat[toSeat.Count-1])},
+                        AfterPhase=ShopVisitPhase.Browsing,SeatId=seat,DwellSeconds=Math.Max(0,service.EndsAt-start)});
+                }
                 legs.Add(new ObservedVisitLeg{Route=first?pair.FirstSeatToEntry:pair.SecondSeatToEntry,AfterPhase=ShopVisitPhase.Complete});
             }
             var remaining=SliceHouseholdInnLegs(legs,start,service.Outcome=="pending"?Math.Min(serviceClock,service.CounterAt-0.000001):serviceClock,pace);

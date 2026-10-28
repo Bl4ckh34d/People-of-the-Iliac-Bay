@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T15:40:53.2718662Z",
+    "portraitRecord":  91,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Create one 2×2 pixel-art atlas from the sole supplied reference grid. Each cell is a complete 64×35 upper-face crop, uniformly scaled to 512×280; total image 1024×560. No borders, labels, gutters, extra rows, or padding. Cell order: top-left LEFT OPEN, top-right RIGHT OPEN, bottom-left LEFT HALF, bottom-right RIGHT HALF. Preserve this NPC091 angry face, its lowered tense inner brows, hair, eye outlines, iris size/color, muted pixel palette, crop and alignment. Change gaze horizontally only: in each LEFT/RIGHT pair, shift BOTH pupils/irises together about one native pixel toward the corresponding image edge; no vertical movement, no single-eye stationary gaze, no crossed convergence. Keep the irises compact and warm brown/olive with tiny subdued glints and the dark source-like eye interior; do not add pale white/cream bands or widen the aperture. For each HALF cell, use the same iris/pupil x and y as its matching OPEN cell; only the upper eyelid descends to cover part of the existing iris. Do not shrink or move the eyeballs. Keep both lower lids, cheeks, bridge, brows, hair, and all pixels outside the eye areas stationary. Preserve discrete source pixel clusters. Avoid brow changes, vertical eye jumps, cheek motion, broadened sclera, enlarged or round irises, shiny highlights, and new details.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-41378346-2bed-437c-8e28-6ab1e533d59d.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-41378346-2bed-437c-8e28-6ab1e533d59d.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "428f65da65c68b7c50b7cefcf4fde03aa83505c54de6ccbb2ac3ab018f8a5c51",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "5843e88ba02507a278d2e14cd3cc60d509f7bbbcdd0358b7f95c1b45cae9b029",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-41378346-2bed-437c-8e28-6ab1e533d59d.png",
+                      "sha256":  "180225a2d58177797d35afc28388f9fdb57c797fbbe398d9242ddc32febfdd7c",
+                      "width":  1696,
+                      "height":  927
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "180225a2d58177797d35afc28388f9fdb57c797fbbe398d9242ddc32febfdd7c",
+                "width":  1696,
+                "height":  927
+            }
+}

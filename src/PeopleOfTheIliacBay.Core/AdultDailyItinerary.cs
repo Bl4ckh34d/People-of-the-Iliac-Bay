@@ -17,13 +17,12 @@ namespace PeopleOfTheIliacBay.Core
     public sealed class AdultDailyItineraryRequest
     {
         public int HomeBuildingKey;
-        public double DepartureAt, LatestHomeAt, MinimumAwaySeconds;
-        public int MinimumStops, MaximumStops;
+        public double DepartureAt, LatestHomeAt;
         public uint Seed;
         public List<AdultDailyItineraryOption> Options = new List<AdultDailyItineraryOption>();
         public List<AdultDailyItineraryLeg> Routes = new List<AdultDailyItineraryLeg>();
     }
-    // Builds one deterministic daily outing from runtime-surveyed stops and legs.
+    // Chooses the next deterministic destination from runtime-surveyed routes.
     // ResidentVisitJourney remains the only timing and phase evaluator.
     public static class AdultDailyItineraryPlanner
     {
@@ -70,44 +69,17 @@ namespace PeopleOfTheIliacBay.Core
             {
                 int j = random.Range(0, i + 1); var swap = choices[i]; choices[i] = choices[j]; choices[j] = swap;
             }
-            for (int count = request.MaximumStops; count >= request.MinimumStops; count--)
+            // Admit the next useful destination. Later day slots can add another
+            // outing; no stop count or minimum absence needs to be filled first.
+            foreach (var option in choices)
             {
-                var selected = new List<AdultDailyItineraryOption>();
-                // An impossible long outing must not consume every attempt before
-                // the shorter alternatives get a turn. Keep the same total bound.
-                int countBudget = Math.Max(1, searchBudget / (count - request.MinimumStops + 1));
-                int allocated = countBudget;
-                bool found = Search(request, routes, choices, selected, request.HomeBuildingKey, count, ref random, ref countBudget, out destination);
-                searchBudget -= allocated - countBudget;
-                if (found) return true;
                 if (searchBudget == 0) break;
-            }
-            return false;
-        }
-        private static bool Search(AdultDailyItineraryRequest request, Dictionary<LegKey, AdultDailyItineraryLeg> routes,
-            List<AdultDailyItineraryOption> choices, List<AdultDailyItineraryOption> selected, int current, int target,
-            ref RandomSource random, ref int budget, out ResidentDestination result)
-        {
-            result = null;
-            if (budget <= 0) return false;
-            if (selected.Count == target)
-            {
-                budget--;
-                if (!routes.ContainsKey(new LegKey { From = current, To = request.HomeBuildingKey })) return false;
-                var candidate = Build(request, routes, selected, ref random);
-                if (candidate == null) return false;
-                result = candidate; return true;
-            }
-            for (int i = 0; i < choices.Count; i++)
-            {
-                if (budget <= 0) return false;
-                var option = choices[i];
-                if (selected.Exists(item => item.BuildingKey == option.BuildingKey) ||
-                    !routes.ContainsKey(new LegKey { From = current, To = option.BuildingKey })) continue;
-                budget--;
-                selected.Add(option);
-                if (Search(request, routes, choices, selected, option.BuildingKey, target, ref random, ref budget, out result)) return true;
-                selected.RemoveAt(selected.Count - 1);
+                searchBudget--;
+                if (!routes.ContainsKey(new LegKey { From = request.HomeBuildingKey, To = option.BuildingKey }) ||
+                    !routes.ContainsKey(new LegKey { From = option.BuildingKey, To = request.HomeBuildingKey })) continue;
+                var candidate = Build(request, routes, new List<AdultDailyItineraryOption> { option }, ref random);
+                if (candidate == null) continue;
+                destination = candidate; return true;
             }
             return false;
         }
@@ -143,19 +115,12 @@ namespace PeopleOfTheIliacBay.Core
                     at+=stop.DwellSeconds;
                     if(at+destination.ExitWalkSeconds>request.LatestHomeAt)return null;
                 }
-                if(ActiveOutingSeconds(destination)<request.MinimumAwaySeconds)return null;
                 var journey = ResidentVisitJourney.Create(request.DepartureAt, destination);
-                if (journey.EndsAt <= request.LatestHomeAt && ActiveOutingSeconds(destination) >= request.MinimumAwaySeconds &&
+                if (journey.EndsAt <= request.LatestHomeAt &&
                     VisitsMeetDwellBounds(journey, selected, destination)) return destination;
             }
             catch (ArgumentException) { return null; }
             return null;
-        }
-        private static double ActiveOutingSeconds(ResidentDestination destination)
-        {
-            double total = destination.ExitWalkSeconds;
-            foreach (var stop in destination.Stops) total += stop.WalkSeconds + stop.DwellSeconds;
-            return total;
         }
         private static bool VisitsMeetDwellBounds(ResidentVisitJourney journey,
             List<AdultDailyItineraryOption> options, ResidentDestination destination)
@@ -206,10 +171,7 @@ namespace PeopleOfTheIliacBay.Core
             if (request == null || request.HomeBuildingKey < 0 || !Finite(request.DepartureAt) || request.DepartureAt < 0 ||
                 !Finite(request.LatestHomeAt) || request.LatestHomeAt <= request.DepartureAt ||
                 Math.Floor(request.DepartureAt / 86400) != Math.Floor(request.LatestHomeAt / 86400) ||
-                !Finite(request.MinimumAwaySeconds) || request.MinimumAwaySeconds <= 0 ||
-                request.MinimumAwaySeconds > request.LatestHomeAt - request.DepartureAt ||
-                request.MinimumStops < 1 || request.MaximumStops < request.MinimumStops || request.MaximumStops > 6 ||
-                request.Options == null || request.Options.Count < request.MinimumStops || request.Options.Count > 32 ||
+                request.Options == null || request.Options.Count == 0 || request.Options.Count > 32 ||
                 request.Routes == null || request.Routes.Count > 2048)
                 throw new ArgumentException("Invalid adult daily itinerary request.");
             var buildings = new HashSet<int>();

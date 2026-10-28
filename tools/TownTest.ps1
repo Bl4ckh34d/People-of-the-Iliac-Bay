@@ -1,6 +1,6 @@
 param([string]$DfuRoot = (Split-Path $PSScriptRoot -Parent | Split-Path -Parent),
     [switch]$Headless,
-    [ValidateScript({ $prefix='PeopleOfTheIliacBayTest-'; $_.Length -eq ($prefix.Length+8) -and $_.StartsWith($prefix,[StringComparison]::Ordinal) -and @($_.Substring($prefix.Length).ToCharArray() | Where-Object { '0123456789abcdef'.IndexOf($_) -lt 0 }).Count -eq 0 })][string]$FixtureCharacter,
+    [ValidateScript({ $prefix='PeopleOfTheIliacBayTest-'; $_ -eq 'Hakon Ironhand' -or ($_.Length -eq ($prefix.Length+8) -and $_.StartsWith($prefix,[StringComparison]::Ordinal) -and @($_.Substring($prefix.Length).ToCharArray() | Where-Object { '0123456789abcdef'.IndexOf($_) -lt 0 }).Count -eq 0) })][string]$FixtureCharacter,
     [ValidateScript({ $_.Length -gt 0 -and @($_.ToCharArray() | Where-Object { 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 _-'.IndexOf($_) -lt 0 }).Count -eq 0 })][string]$FixtureSaveName,
     [switch]$QuestProbe,
     [switch]$FreshPreviews,
@@ -151,21 +151,32 @@ $GoalChainLengthProbe = $GoalChainLength -gt 0
 if ($NamedOtherHandoverProbe) { $ShopLootSaleProbe = $true }
 if ($ShopLootSaleProbe) { $ShopCommerceProbe = $true }
 . (Join-Path $PSScriptRoot 'LogProtocol.ps1')
-if ($TempleTrainingProbe -and ($FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw 'TempleTrainingProbe requires the owned PeopleOfTheIliacBayTest-9a5f197b / People - Gothway Garden fixture.' }
+function Test-OwnedFixtureCharacter([string]$Name) {
+    if ($Name -eq 'Hakon Ironhand') { return $true }
+    $prefix = 'PeopleOfTheIliacBayTest-'
+    return $Name -and $Name.StartsWith($prefix,[StringComparison]::Ordinal) -and
+        $Name.Length -eq $prefix.Length + 8 -and
+        (Test-HexValue $Name.Substring($prefix.Length) 8 -Lowercase)
+}
+if ($TempleTrainingProbe -and ($FixtureCharacter -ne 'Hakon Ironhand' -or $FixtureSaveName -ne 'People - Daggerfall acceptance ready')) { throw 'TempleTrainingProbe requires the owned Hakon Ironhand / People - Daggerfall acceptance ready fixture.' }
 if ($EnterWaitProbe) { $MoveToWaitProbe = $true }
 $ErrorActionPreference = 'Stop'
+if ($DecisionShadowProbe -or $DecisionRoutingProbe -or $DecisionRoutingAppraisalReopenProbe -or $DecisionRoutingSafeDowngradeProbe -or $DecisionWillingnessProbe) {
+    throw 'Second-model probes are retired. Use GoalSequenceProbe, GoalTwoPass, or GoalQwenWillingnessProbe with the normal dialogue model.'
+}
+
 if ($NpcHomeMealProbe -or $NpcHomeReturnProbe) { throw 'Home meal and hunger-driven home-return probes are retired with the removed hunger system.' }
 if ($TavernSurveyProbe -and $DailyItineraryProbe) { throw 'TavernSurveyProbe and DailyItineraryProbe require separate owned test runs.' }
 if ($NpcResentmentRecoveryProbe -and
-    ($FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b' -or $FixtureSaveName -ne 'People - Gothway Garden')) {
-    throw 'NpcResentmentRecoveryProbe requires the owned PeopleOfTheIliacBayTest-9a5f197b / People - Gothway Garden fixture.'
+    ($FixtureCharacter -ne 'Hakon Ironhand' -or $FixtureSaveName -ne 'People - Gothway Garden')) {
+    throw 'NpcResentmentRecoveryProbe requires the owned Hakon Ironhand / People - Gothway Garden fixture.'
 }
 if ($BreezeTtsMixerReceiptProbe) {
     $allowedMixerReceiptOptions = @('BreezeTtsMixerReceiptProbe', 'DfuRoot', 'FixtureCharacter', 'FixtureSaveName')
     $unexpectedMixerReceiptOptions = @($PSBoundParameters.Keys | Where-Object { $_ -notin $allowedMixerReceiptOptions })
     if ($unexpectedMixerReceiptOptions.Count -gt 0) { throw 'BreezeTtsMixerReceiptProbe runs alone with only the exact owned character/save and optional DfuRoot.' }
-    if ($FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b' -or $FixtureSaveName -ne 'People - Gothway Garden') {
-        throw 'BreezeTtsMixerReceiptProbe requires the owned PeopleOfTheIliacBayTest-9a5f197b / People - Gothway Garden fixture.'
+    if ($FixtureCharacter -ne 'Hakon Ironhand' -or $FixtureSaveName -ne 'People - Gothway Garden') {
+        throw 'BreezeTtsMixerReceiptProbe requires the owned Hakon Ironhand / People - Gothway Garden fixture.'
     }
 }
 $ownedProbeModes = @(
@@ -196,9 +207,9 @@ if ($selectedOwnedProbeModes.Count -eq 1) {
     if ($unexpectedOwnedProbeOptions.Count -gt 0) {
         throw ($selectedOwnedProbeModes[0] + ' runs alone with only the exact owned character/save and optional DfuRoot.')
     }
-    $expectedOwnedSave = if ($VerbalCourtProbe) { 'People - Daggerfall day 2' } else { 'People - Gothway Garden' }
-    if ($FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b' -or $FixtureSaveName -ne $expectedOwnedSave) {
-        throw ($selectedOwnedProbeModes[0] + ' requires the owned PeopleOfTheIliacBayTest-9a5f197b / ' + $expectedOwnedSave + ' fixture.')
+    $expectedOwnedSave = if ($TempleTrainingProbe) { 'People - Daggerfall acceptance ready' } elseif ($VerbalCourtProbe) { 'People - Daggerfall day 2' } else { 'People - Gothway Garden' }
+    if ($FixtureCharacter -ne 'Hakon Ironhand' -or $FixtureSaveName -ne $expectedOwnedSave) {
+        throw ($selectedOwnedProbeModes[0] + ' requires the owned Hakon Ironhand / ' + $expectedOwnedSave + ' fixture.')
     }
 }
 if ($GoalQwenBoundGoal -and -not $GoalQwenWillingnessProbe) { throw 'GoalQwenBoundGoal is a controlled downstream arm of GoalQwenWillingnessProbe.' }
@@ -214,10 +225,10 @@ if ($NpcActionChatQwenWillingnessProbe -and
     throw 'NpcActionChatQwenWillingnessProbe requires the physical daily fixture, NpcActionProbe, and NpcActionChatProbe without beer.'
 }
 if ($NpcActionChatQwenWillingnessProbe -and
-    ($FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b' -or $FixtureSaveName -ne 'People - Gothway Garden')) {
+    ($FixtureCharacter -ne 'Hakon Ironhand' -or $FixtureSaveName -ne 'People - Gothway Garden')) {
     throw 'NpcActionChatQwenWillingnessProbe requires the owned Gothway Garden fixture.'
 }
-if ($LocationBlockProbe -and ($FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw 'LocationBlockProbe requires the owned PeopleOfTheIliacBayTest-9a5f197b / People - Gothway Garden fixture.' }
+if ($LocationBlockProbe -and ($FixtureCharacter -ne 'Hakon Ironhand' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw 'LocationBlockProbe requires the owned Hakon Ironhand / People - Gothway Garden fixture.' }
 if ($LocationBlockProbe -and $PerformanceProbe) { throw 'Location block parity and cold performance must run in separate processes.' }
 
 function Find-LogMarkerIndex([string[]]$Lines, [string]$Marker, [int]$StartIndex = 0) {
@@ -252,7 +263,7 @@ if ($CommerceRestartPrepare -and $CommerceRestartRead) { throw 'Choose prepare o
 if ($AppointmentNoShowProbe -and $AppointmentProbe) { throw 'Choose attendance or no-show appointment acceptance, not both.' }
 if ($TaskFailureFeedbackProbe -and $ShopCommerceChatProbe) { throw 'Choose native task-failure feedback or shop-commerce chat, not both.' }
 if ($SemanticConversationProbe -and ($ShopCommerceChatProbe -or $NpcActionChatProbe)) { throw 'Run the semantic conversation capture separately so its request/response JSONL contains only the five owned probe turns.' }
-if (($CommerceRestartPrepare -or $CommerceRestartRead) -and $FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b') { throw 'Commerce restart requires the explicitly owned PeopleOfTheIliacBayTest-9a5f197b fixture.' }
+if (($CommerceRestartPrepare -or $CommerceRestartRead) -and $FixtureCharacter -ne 'Hakon Ironhand') { throw 'Commerce restart requires the explicitly owned Hakon Ironhand fixture.' }
 if ($CommerceRestartPrepare) { $ShopCommerceProbe = $true }
 if ($ShopCommerceChatProbe) { $ShopCommerceProbe = $true }
 if ($TaskReplyFallbackProbe) { throw 'TaskReplyFallbackProbe is retired: accepted-task replies now bypass the second model call. Use -ConversationReplyOutcomeProbe for native acknowledgment checks.' }
@@ -261,17 +272,20 @@ if ($TaskFailureFeedbackProbe) { $ShopCommerceProbe = $true }
 if ($RoutineRecoveryPhysicalProbe) { $ShopCommerceProbe = $true }
 if ($RoutineRecoveryDayProbe) { $RoutineRecoveryPhysicalProbe = $true; $ShopCommerceProbe = $true }
 if ($NpcStartingBelongingsSceneProbe -and -not $FixtureCharacter) { throw 'Starting-belongings scene probe requires an owned disposable fixture character.' }
-if ($DialogueRefusalProbe -and (-not $FixtureCharacter -or (-not (([string]$FixtureCharacter).StartsWith('PeopleOfTheIliacBayTest-',[StringComparison]::OrdinalIgnoreCase))))) { throw 'Dialogue refusal probe requires an owned disposable fixture character.' }
-if ($SemanticConversationProbe -and ($FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw "Semantic conversation probe requires the owned PeopleOfTheIliacBayTest-9a5f197b / 'People - Gothway Garden' fixture." }
-if ($ConversationContextSnapshotProbe -and ($FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw "Context snapshot probe requires the owned PeopleOfTheIliacBayTest-9a5f197b / 'People - Gothway Garden' fixture." }
-if ($DecisionShadowProbe -and ($FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw "Decision shadow probe requires the owned PeopleOfTheIliacBayTest-9a5f197b / 'People - Gothway Garden' fixture." }
-if ($DecisionRoutingProbe -and ($FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw "Decision routing probe requires the owned PeopleOfTheIliacBayTest-9a5f197b / 'People - Gothway Garden' fixture." }
-if ($DecisionRoutingAppraisalReopenProbe -and ($FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw "Decision routing appraisal/reopen probe requires the owned PeopleOfTheIliacBayTest-9a5f197b / 'People - Gothway Garden' fixture." }
-if ($DecisionRoutingSafeDowngradeProbe -and ($FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw "Decision routing safe-downgrade probe requires the owned PeopleOfTheIliacBayTest-9a5f197b / 'People - Gothway Garden' fixture." }
-if ($DecisionWillingnessProbe -and ($FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw "Decision willingness probe requires the owned PeopleOfTheIliacBayTest-9a5f197b / 'People - Gothway Garden' fixture." }
-if (($GoalBindingProbe -or $GoalQwenWillingnessProbe) -and ($FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw 'Goal binding/Qwen willingness probes require the owned Gothway Garden fixture.' }
+if ($DialogueRefusalProbe -and -not (Test-OwnedFixtureCharacter $FixtureCharacter)) { throw 'Dialogue refusal probe requires an owned disposable fixture character.' }
+if ($SemanticConversationProbe -and ($FixtureCharacter -ne 'Hakon Ironhand' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw "Semantic conversation probe requires the owned Hakon Ironhand / 'People - Gothway Garden' fixture." }
+if ($ConversationContextSnapshotProbe -and ($FixtureCharacter -ne 'Hakon Ironhand' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw "Context snapshot probe requires the owned Hakon Ironhand / 'People - Gothway Garden' fixture." }
+if ($DecisionShadowProbe -and ($FixtureCharacter -ne 'Hakon Ironhand' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw "Decision shadow probe requires the owned Hakon Ironhand / 'People - Gothway Garden' fixture." }
+if ($DecisionRoutingProbe -and ($FixtureCharacter -ne 'Hakon Ironhand' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw "Decision routing probe requires the owned Hakon Ironhand / 'People - Gothway Garden' fixture." }
+if ($DecisionRoutingAppraisalReopenProbe -and ($FixtureCharacter -ne 'Hakon Ironhand' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw "Decision routing appraisal/reopen probe requires the owned Hakon Ironhand / 'People - Gothway Garden' fixture." }
+if ($DecisionRoutingSafeDowngradeProbe -and ($FixtureCharacter -ne 'Hakon Ironhand' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw "Decision routing safe-downgrade probe requires the owned Hakon Ironhand / 'People - Gothway Garden' fixture." }
+if ($DecisionWillingnessProbe -and ($FixtureCharacter -ne 'Hakon Ironhand' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw "Decision willingness probe requires the owned Hakon Ironhand / 'People - Gothway Garden' fixture." }
+if (($GoalBindingProbe -or $GoalQwenWillingnessProbe) -and ($FixtureCharacter -ne 'Hakon Ironhand' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw 'Goal binding/Qwen willingness probes require the owned Gothway Garden fixture.' }
 if ($GoalBindingProbe -and ($DecisionShadowProbe -or $DecisionRoutingProbe -or $DecisionWillingnessProbe)) { throw 'Goal binding probe must run separately.' }
-if (($GoalSequenceProbe -or $GoalCancellationProbe -or $GoalChainLengthProbe -or $GoalTwoPass) -and ($FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw 'Goal sequence/cancellation/chain-length probes require the owned Gothway Garden fixture.' }
+if ($GoalSequenceProbe -or $GoalCancellationProbe -or $GoalChainLengthProbe -or $GoalTwoPass) {
+    $goalFixture = if ($env:POTIB_GOAL_PAID_TRAVEL -eq '1') { if ($env:POTIB_GOAL_RESUME_HIRED -eq '1') { 'People - Daggerfall hired Allan ready' } else { 'People - Daggerfall acceptance ready' } } else { 'People - Gothway Garden' }
+    if ($FixtureCharacter -ne 'Hakon Ironhand' -or $FixtureSaveName -ne $goalFixture) { throw ('Goal probes require the owned Hakon Ironhand / ' + $goalFixture + ' fixture.') }
+}
 if (@(@($DecisionShadowProbe, $DecisionRoutingProbe, $DecisionRoutingAppraisalReopenProbe, $DecisionRoutingSafeDowngradeProbe, $DecisionWillingnessProbe, $GoalBindingProbe, $GoalQwenWillingnessProbe, $GoalSequenceProbe, $GoalCancellationProbe, ($GoalChainLengthProbe -and -not $GoalTwoPass), $GoalTwoPass) | Where-Object { $_ }).Count -gt 1) { throw 'Run decision and goal probe modes separately.' }
 if ($DecisionShadowCaptureDirectory -and -not $DecisionShadowProbe) { throw 'DecisionShadowCaptureDirectory requires DecisionShadowProbe.' }
 if ($DecisionShadowWaitCandidateCapture -and -not $DecisionShadowProbe) { throw 'DecisionShadowWaitCandidateCapture requires DecisionShadowProbe.' }
@@ -284,40 +298,40 @@ if ($DecisionShadowCaptureDirectory) {
     }
     $DecisionShadowCaptureDirectory = [System.IO.Path]::GetFullPath($DecisionShadowCaptureDirectory)
 }
-if (($ConversationContextLifecycleProbe -or $ConversationContextSpeakerProbe) -and ($FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw "Context lifecycle/speaker probes require the owned PeopleOfTheIliacBayTest-9a5f197b / 'People - Gothway Garden' fixture." }
-if ($KeeperWorkDutyProbe -and ($FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw "KeeperWorkDutyProbe requires the exact owned PeopleOfTheIliacBayTest-9a5f197b / 'People - Gothway Garden' baseline." }
+if (($ConversationContextLifecycleProbe -or $ConversationContextSpeakerProbe) -and ($FixtureCharacter -ne 'Hakon Ironhand' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw "Context lifecycle/speaker probes require the owned Hakon Ironhand / 'People - Gothway Garden' fixture." }
+if ($KeeperWorkDutyProbe -and ($FixtureCharacter -ne 'Hakon Ironhand' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw "KeeperWorkDutyProbe requires the exact owned Hakon Ironhand / 'People - Gothway Garden' baseline." }
 if ($ConversationContextLifecycleProbe) { $ConversationContextSnapshotProbe = $true }
-if ($ConversationReplyOutcomeProbe -and ($FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw "Reply outcome probe requires the owned PeopleOfTheIliacBayTest-9a5f197b / 'People - Gothway Garden' fixture." }
-if ($FriendshipProgressionProbe -and ($FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw "Friendship progression probe requires the owned PeopleOfTheIliacBayTest-9a5f197b / 'People - Gothway Garden' fixture." }
+if ($ConversationReplyOutcomeProbe -and ($FixtureCharacter -ne 'Hakon Ironhand' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw "Reply outcome probe requires the owned Hakon Ironhand / 'People - Gothway Garden' fixture." }
+if ($FriendshipProgressionProbe -and ($FixtureCharacter -ne 'Hakon Ironhand' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw "Friendship progression probe requires the owned Hakon Ironhand / 'People - Gothway Garden' fixture." }
 if ($FriendshipProgressionProbe) {
     $unexpectedFriendshipOptions = @($PSBoundParameters.Keys | Where-Object { $_ -notin @('FriendshipProgressionProbe','FixtureCharacter','FixtureSaveName','DfuRoot') })
     if ($unexpectedFriendshipOptions.Count -gt 0) { throw 'FriendshipProgressionProbe runs alone with only the owned fixture character/save and optional DfuRoot.' }
 }
-if ($SocialDuplicateReplyProbe -and ($FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw "Social duplicate reply probe requires the owned PeopleOfTheIliacBayTest-9a5f197b / 'People - Gothway Garden' fixture." }
-if ($ConversationMoodProbe -and ($FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw "Conversation mood probe requires the owned PeopleOfTheIliacBayTest-9a5f197b / 'People - Gothway Garden' fixture." }
+if ($SocialDuplicateReplyProbe -and ($FixtureCharacter -ne 'Hakon Ironhand' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw "Social duplicate reply probe requires the owned Hakon Ironhand / 'People - Gothway Garden' fixture." }
+if ($ConversationMoodProbe -and ($FixtureCharacter -ne 'Hakon Ironhand' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw "Conversation mood probe requires the owned Hakon Ironhand / 'People - Gothway Garden' fixture." }
 if ($ConversationMoodProbe) {
     $unexpectedMoodOptions = @($PSBoundParameters.Keys | Where-Object { $_ -notin @('ConversationMoodProbe','FixtureCharacter','FixtureSaveName','DfuRoot') })
     if ($unexpectedMoodOptions.Count -gt 0) { throw 'ConversationMoodProbe runs alone with only the owned fixture character/save and optional DfuRoot.' }
 }
-if ($ConversationActionMoodProbe -and ($FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw "Conversation action mood probe requires the owned PeopleOfTheIliacBayTest-9a5f197b / 'People - Gothway Garden' fixture." }
+if ($ConversationActionMoodProbe -and ($FixtureCharacter -ne 'Hakon Ironhand' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw "Conversation action mood probe requires the owned Hakon Ironhand / 'People - Gothway Garden' fixture." }
 if ($ConversationActionMoodProbe) {
     $unexpectedActionMoodOptions = @($PSBoundParameters.Keys | Where-Object { $_ -notin @('ConversationActionMoodProbe','FixtureCharacter','FixtureSaveName','DfuRoot') })
     if ($unexpectedActionMoodOptions.Count -gt 0) { throw 'ConversationActionMoodProbe runs alone with only the owned fixture character/save and optional DfuRoot.' }
 }
-if ($ActionWordingProbe -and ($FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw "Action wording probe requires the owned PeopleOfTheIliacBayTest-9a5f197b / 'People - Gothway Garden' fixture." }
+if ($ActionWordingProbe -and ($FixtureCharacter -ne 'Hakon Ironhand' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw "Action wording probe requires the owned Hakon Ironhand / 'People - Gothway Garden' fixture." }
 if ($ActionWordingProbe) {
     $unexpectedActionWordingOptions = @($PSBoundParameters.Keys | Where-Object { $_ -notin @('ActionWordingProbe','FixtureCharacter','FixtureSaveName','DfuRoot') })
     if ($unexpectedActionWordingOptions.Count -gt 0) { throw 'ActionWordingProbe runs alone with only the owned fixture character/save and optional DfuRoot.' }
 }
-if ($DialogueAvailabilityProbe -and (-not $FixtureCharacter -or (-not (([string]$FixtureCharacter).StartsWith('PeopleOfTheIliacBayTest-',[StringComparison]::Ordinal) -and ([string]$FixtureCharacter).Length -eq ('PeopleOfTheIliacBayTest-'.Length+8) -and (Test-HexValue ([string]$FixtureCharacter).Substring('PeopleOfTheIliacBayTest-'.Length) 8 -Lowercase))) -or -not $FixtureSaveName)) { throw 'Dialogue availability probe requires an owned disposable fixture character and an explicit city save.' }
-if ($MoveToWaitProbe -and (-not $FixtureCharacter -or (-not (([string]$FixtureCharacter).StartsWith('PeopleOfTheIliacBayTest-',[StringComparison]::OrdinalIgnoreCase))))) { throw 'MoveTo/Wait probe requires an owned disposable fixture character.' }
-if (($NpcInteractionProbe -or $NpcVitalsProbe) -and (-not $FixtureCharacter -or (-not (([string]$FixtureCharacter).StartsWith('PeopleOfTheIliacBayTest-',[StringComparison]::OrdinalIgnoreCase))))) { throw 'NPC interaction and vitals probes require an owned disposable fixture character.' }
+if ($DialogueAvailabilityProbe -and (-not (Test-OwnedFixtureCharacter $FixtureCharacter) -or -not $FixtureSaveName)) { throw 'Dialogue availability probe requires an owned disposable fixture character and an explicit city save.' }
+if ($MoveToWaitProbe -and -not (Test-OwnedFixtureCharacter $FixtureCharacter)) { throw 'MoveTo/Wait probe requires an owned disposable fixture character.' }
+if (($NpcInteractionProbe -or $NpcVitalsProbe) -and -not (Test-OwnedFixtureCharacter $FixtureCharacter)) { throw 'NPC interaction and vitals probes require an owned disposable fixture character.' }
 if ($RoutineRecoverySceneChangeProbe -and -not $FixtureCharacter) { throw 'Routine recovery scene-change probe requires an owned disposable fixture character.' }
 if ($AppointmentNoShowProbe -and -not $FixtureCharacter) { throw 'Appointment no-show probe requires an owned disposable fixture character.' }
-if ($AppointmentPointProbe -and (-not $FixtureCharacter -or (-not (([string]$FixtureCharacter).StartsWith('PeopleOfTheIliacBayTest-',[StringComparison]::OrdinalIgnoreCase))))) { throw 'Appointment point probe requires an owned disposable fixture character.' }
+if ($AppointmentPointProbe -and -not (Test-OwnedFixtureCharacter $FixtureCharacter)) { throw 'Appointment point probe requires an owned disposable fixture character.' }
 if ($PhysicalDailyRoutine -and -not $DailyItineraryProbe) { throw 'PhysicalDailyRoutine requires DailyItineraryProbe.' }
-if ($HouseholdJointBodyProbe -and (-not $DailyItineraryProbe -or $DailyInteriorOnly -or $PhysicalDailyRoutine -or $FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b' -or $FixtureSaveName -notin @('People - Gothway Garden family dawn','People - Morning daily routines'))) { throw 'HouseholdJointBodyProbe requires an owned family dawn or prepared morning daily fixture alone.' }
-if ($HouseholdInnPhysicalProbe -and (-not $DailyItineraryProbe -or $DailyInteriorOnly -or $PhysicalDailyRoutine -or $HouseholdJointBodyProbe -or $FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b' -or $FixtureSaveName -ne 'People - Gothway Garden family dawn')) { throw 'HouseholdInnPhysicalProbe requires the owned Gothway Garden family dawn daily fixture alone.' }
+if ($HouseholdJointBodyProbe -and (-not $DailyItineraryProbe -or $DailyInteriorOnly -or $PhysicalDailyRoutine -or $FixtureCharacter -ne 'Hakon Ironhand' -or $FixtureSaveName -notin @('People - Gothway Garden family dawn','People - Morning daily routines'))) { throw 'HouseholdJointBodyProbe requires an owned family dawn or prepared morning daily fixture alone.' }
+if ($HouseholdInnPhysicalProbe -and (-not $DailyItineraryProbe -or $DailyInteriorOnly -or $PhysicalDailyRoutine -or $HouseholdJointBodyProbe -or $FixtureCharacter -ne 'Hakon Ironhand' -or $FixtureSaveName -ne 'People - Gothway Garden family dawn')) { throw 'HouseholdInnPhysicalProbe requires the owned Gothway Garden family dawn daily fixture alone.' }
 if ($HouseholdInnPhysicalProbe) {
     $familyInnAllowedParameters=@('HouseholdInnPhysicalProbe','DailyItineraryProbe','FixtureCharacter','FixtureSaveName','DfuRoot')
     foreach($boundName in $PSBoundParameters.Keys) { if($boundName -notin $familyInnAllowedParameters) { throw "HouseholdInnPhysicalProbe cannot combine with parameter $boundName." } }
@@ -328,7 +342,7 @@ if ($DailyInteriorOnly -and -not $PhysicalDailyRoutine) { throw 'DailyInteriorOn
 if ($InnSeatOnly -and -not $DailyInteriorOnly) { throw 'InnSeatOnly requires DailyInteriorOnly.' }
 if ($PrepareOutdoorFixture -and (-not $DailyItineraryProbe -or -not $FixtureCharacter -or -not $FixtureSaveName)) { throw 'PrepareOutdoorFixture requires DailyItineraryProbe and an explicit fixture character/save.' }
 if ($NpcActionProbe -and -not $DailyInteriorOnly) { throw 'NpcActionProbe requires DailyInteriorOnly.' }
-if ($NpcConversationCommandProbe -and (-not $NpcActionProbe -or -not $DailyItineraryProbe -or -not $PhysicalDailyRoutine -or $NpcBeerProbe -or $NpcActionChatProbe -or $FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw 'NpcConversationCommandProbe requires the owned Gothway Garden physical daily interior action fixture without beer or model chat.' }
+if ($NpcConversationCommandProbe -and (-not $NpcActionProbe -or -not $DailyItineraryProbe -or -not $PhysicalDailyRoutine -or $NpcBeerProbe -or $NpcActionChatProbe -or $FixtureCharacter -ne 'Hakon Ironhand' -or $FixtureSaveName -ne 'People - Gothway Garden')) { throw 'NpcConversationCommandProbe requires the owned Gothway Garden physical daily interior action fixture without beer or model chat.' }
 if ($NpcBeerProbe -and -not $NpcActionProbe) { throw 'NpcBeerProbe requires NpcActionProbe.' }
 if ($NpcActionChatProbe -and -not $NpcActionProbe) { throw 'NpcActionChatProbe requires NpcActionProbe.' }
 if ($NpcActionDiskProbe -and (-not $NpcActionProbe -or $NpcBeerProbe -or -not $FixtureCharacter)) { throw 'NpcActionDiskProbe requires an owned fixture and NpcActionProbe without NpcBeerProbe.' }
@@ -338,18 +352,14 @@ if ($NpcActionChatProbe -or $ShopCommerceChatProbe -or $SemanticConversationProb
     try { $health = Invoke-RestMethod 'http://127.0.0.1:8080/health' -TimeoutSec 5 }
     catch { throw 'Semantic chat acceptance requires the local model server. Run tools/StartLocalDialogue.ps1 first.' }
     if ($health.status -ne 'ok') { throw 'Local model server is not ready for semantic chat acceptance.' }
-    if ($DecisionWillingnessProbe -or $DecisionRoutingAppraisalReopenProbe -or $GoalBindingProbe -or $GoalChainLengthProbe -or $GoalTwoPass) {
-        try { $d3Health = Invoke-RestMethod 'http://127.0.0.1:8093/health' -TimeoutSec 5 }
-        catch { throw 'Decision willingness, appraisal/reopen, and goal chain acceptance require the owned D3 service on port 8093.' }
-        if ($d3Health.status -ne 'ok') { throw 'Owned D3 service is not ready for decision willingness acceptance.' }
-    }
+
 }
 if ($KnowledgeBrowseOnly -and -not $DialogueProbe) { throw 'KnowledgeBrowseOnly requires DialogueProbe.' }
 if ($DialogueClockOnly -and (-not $DialogueProbe -or $KnowledgeBrowseOnly -or
-    $FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b' -or $FixtureSaveName -ne 'People - Gothway Garden')) {
+    $FixtureCharacter -ne 'Hakon Ironhand' -or $FixtureSaveName -ne 'People - Gothway Garden')) {
     throw 'DialogueClockOnly requires the exact owned dialogue fixture and cannot combine with KnowledgeBrowseOnly.'
 }
-if ($DialogueRefusalProbe -and ($FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b' -or $FixtureSaveName -ne 'People - Gothway Garden')) {
+if ($DialogueRefusalProbe -and ($FixtureCharacter -ne 'Hakon Ironhand' -or $FixtureSaveName -ne 'People - Gothway Garden')) {
     throw 'DialogueRefusalProbe requires the exact owned character and baseline save.'
 }
 if ($DialogueClockOnly -or $KnowledgeBrowseOnly -or $DialogueRefusalProbe) {
@@ -363,7 +373,6 @@ if ($GuardQuotaOnly -and -not $GateGuardProbe) { throw 'GuardQuotaOnly requires 
 if ($RunningPilotProbe -and -not $FixtureCharacter) { throw 'Running pilot probe requires a disposable fixture character.' }
 if ($InnAlarmProbe -and -not $FixtureCharacter) { throw 'Inn alarm probe requires a disposable fixture character.' }
 $repo = Split-Path $PSScriptRoot -Parent
-. (Join-Path $PSScriptRoot 'ResolveLocalDecisionModel.ps1')
 . (Join-Path $PSScriptRoot 'ResolveLocalDialogueModel.ps1')
 $player = Join-Path $DfuRoot 'Player/DaggerfallUnity.exe'
 $playerDir = Split-Path $player -Parent
@@ -391,8 +400,24 @@ function Read-InstalledDialogueSettings {
     $settingsPath = Join-Path $DfuRoot ('Player/PortableAppdata/Mods/GameData/' + [string]$manifest.GUID + '/modsettings.json')
     if (-not (Test-Path -LiteralPath $settingsPath -PathType Leaf)) { throw "Installed mod settings are missing: $settingsPath" }
     $document = Get-Content -LiteralPath $settingsPath -Raw | ConvertFrom-Json -ErrorAction Stop
-    if ($null -eq $document.Values -or $null -eq $document.Values.Dialogue) { throw "Installed mod settings have no Dialogue section: $settingsPath" }
-    return $document.Values.Dialogue
+    # DFU starts from the packaged schema and applies only saved overrides for
+    # current keys. A sparse saved document does not remove schema defaults.
+    $schemaPath = Join-Path $repo 'mod/modsettings.json'
+    $schema = Get-Content -LiteralPath $schemaPath -Raw | ConvertFrom-Json -ErrorAction Stop
+    $sections = @($schema.Sections | Where-Object { $_.Name -eq 'Dialogue' })
+    if ($sections.Count -ne 1) { throw "Current mod settings schema must contain one Dialogue section: $schemaPath" }
+    $effective = [ordered]@{}
+    foreach ($key in $sections[0].Keys) {
+        if ([string]::IsNullOrWhiteSpace([string]$key.Name) -or $effective.Contains($key.Name)) {
+            throw "Current Dialogue schema contains an invalid or duplicate key: $schemaPath"
+        }
+        $effective[$key.Name] = $key.Value
+        if ($null -ne $document.Values -and $null -ne $document.Values.Dialogue) {
+            $saved = $document.Values.Dialogue.PSObject.Properties[$key.Name]
+            if ($null -ne $saved) { $effective[$key.Name] = $saved.Value }
+        }
+    }
+    return [pscustomobject]$effective
 }
 
 function Assert-LocalDialogueReady {
@@ -431,8 +456,7 @@ if ($selectedOwnedProbeModes.Count -eq 1 -and -not $OutdoorSceneProbe -and -not 
     if ($needsVoice) { Assert-LocalVoiceReady }
     switch ($selectedOwnedProbeModes[0]) {
         'LiveDialoguePresentationProbe' {
-            if (-not $freeTextEnabled -or -not $voiceEnabled -or $socialStreamingEnabled -or $prewarmEnabled -or
-                (Read-StrictDialogueSetting $dialogueSettings 'EnableDecisionPlanner')) {
+            if (-not $freeTextEnabled -or -not $voiceEnabled -or $socialStreamingEnabled -or $prewarmEnabled) {
                 throw 'LiveDialoguePresentationProbe requires free text and voice enabled, sentence streaming, prewarm and decision planner disabled.'
             }
             Assert-LocalDialogueReady
@@ -466,40 +490,6 @@ if ($selectedOwnedProbeModes.Count -eq 1 -and -not $OutdoorSceneProbe -and -not 
             }
             if (-not $freeTextEnabled -or $voiceEnabled -or $prewarmEnabled) {
                 throw 'NativeNpcPoisonAppraisalProbe requires EnableFreeText=true, EnableNpcVoice=false, and PrewarmModel=false.'
-            }
-        }
-        'DecisionRoutingAppraisalReopenProbe' {
-            $timeoutMilliseconds = 0
-            $timeoutRaw = $dialogueSettings.PSObject.Properties['TimeoutMilliseconds'].Value
-            if (-not [int]::TryParse([string]$timeoutRaw, [ref]$timeoutMilliseconds) -or $timeoutMilliseconds -ne 300000 -or
-                -not $freeTextEnabled -or $prewarmEnabled -or
-                (-not $DecisionRoutingAppraisalReopenSpeech -and $voiceEnabled) -or
-                ($DecisionRoutingAppraisalReopenSpeech -and (-not $voiceEnabled -or $socialStreamingEnabled))) {
-                if ($DecisionRoutingAppraisalReopenSpeech) {
-                    throw 'DecisionRoutingAppraisalReopenSpeech requires EnableFreeText=true, EnableNpcVoice=true, EnableSocialSentenceStreaming=false, PrewarmModel=false, and TimeoutMilliseconds=300000.'
-                }
-                throw 'DecisionRoutingAppraisalReopenProbe requires EnableFreeText=true, EnableNpcVoice=false, PrewarmModel=false, and TimeoutMilliseconds=300000.'
-            }
-            $decisionModel = Resolve-LocalDecisionModel -RuntimeRoot (Join-Path $DfuRoot 'local-llm')
-            $d3Model = $decisionModel.ModelPath
-            if ($DecisionRoutingAppraisalReopenSpeech -and $decisionModel.Profile -ne 'nano') {
-                throw 'Appraisal/reopen speech acceptance requires selected D3-Nano.'
-            }
-            if (-not (Test-Path -LiteralPath $d3Model -PathType Leaf)) { throw 'Decision routing appraisal/reopen probe requires the selected D3 model file.' }
-            try { $d3Props = Invoke-RestMethod -Uri 'http://127.0.0.1:8093/props' -TimeoutSec 10 -ErrorAction Stop }
-            catch { throw 'Decision routing appraisal/reopen probe requires the ready owned D3 service on port 8093.' }
-            if ($d3Props.model_path -ne $d3Model) { throw 'Decision routing appraisal/reopen probe found another model loaded in the D3 service.' }
-            if ($DecisionRoutingAppraisalReopenSpeech) {
-                $dialogueRuntimeRoot = Join-Path $DfuRoot 'local-llm'
-                $qwenSelectionPath = Join-Path $dialogueRuntimeRoot 'active-model.json'
-                if (-not (Test-Path -LiteralPath $qwenSelectionPath -PathType Leaf)) { throw 'Appraisal/reopen speech acceptance requires an explicit selected Qwen GPU model.' }
-                $qwenSelection = Get-Content -LiteralPath $qwenSelectionPath -Raw -ErrorAction Stop | ConvertFrom-Json -ErrorAction Stop
-                $qwenModel = Resolve-LocalDialogueModel -RuntimeRoot $dialogueRuntimeRoot
-                $expectedQwen3B = [IO.Path]::GetFullPath((Join-Path $dialogueRuntimeRoot 'models/qwen2.5-3b/qwen2.5-3b-instruct-q4_k_m.gguf'))
-                if (-not [string]::Equals([string]$qwenSelection.executionDevice, 'GPU', [StringComparison]::OrdinalIgnoreCase) -or
-                    -not [string]::Equals($qwenModel, $expectedQwen3B, [StringComparison]::OrdinalIgnoreCase)) {
-                    throw 'Appraisal/reopen speech acceptance requires the selected Qwen2.5-3B model on GPU.'
-                }
             }
         }
         'DecisionRoutingSafeDowngradeProbe' {
@@ -553,8 +543,8 @@ if ($OutdoorNavigationProbe -and $env:POTIB_NAVMESH_TRIAL -eq '1' -and $env:POTI
     $arguments += ' -peopleoftheiliacbay-paid-companion-probe'
 }
 if ($ShopCommerceChatProbe -or $NpcActionChatProbe -or $SemanticConversationProbe -or $KnowledgeBrowseOnly -or $DialogueClockOnly) {
-    if ($SemanticConversationProbe -and ($FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b' -or $FixtureSaveName -ne 'People - Gothway Garden')) {
-        throw 'Semantic classifier capture requires the owned PeopleOfTheIliacBayTest-9a5f197b / People - Gothway Garden fixture.'
+    if ($SemanticConversationProbe -and ($FixtureCharacter -ne 'Hakon Ironhand' -or $FixtureSaveName -ne 'People - Gothway Garden')) {
+        throw 'Semantic classifier capture requires the owned Hakon Ironhand / People - Gothway Garden fixture.'
     }
     $semanticCapturePath = Join-Path "$repo/work" 'semantic-action-model-capture.jsonl'
     if (($KnowledgeBrowseOnly -or $DialogueClockOnly) -and (Test-Path -LiteralPath $semanticCapturePath)) {
@@ -577,18 +567,18 @@ if ($BreezeTtsCapacityProbe) {
     if ($FixtureCharacter -or $FixtureSaveName) { throw 'Breeze TTS capacity fixture owns isolated temporary roots and does not load or alter a saved character.' }
     $arguments += ' -peopleoftheiliacbay-breeze-tts-capacity-probe'
 }
-if ($FixtureCharacter) { $arguments += ' -peopleoftheiliacbay-fixture-character ' + $FixtureCharacter }
+if ($FixtureCharacter) { $arguments += ' -peopleoftheiliacbay-fixture-character "' + $FixtureCharacter + '"' }
 if ($PortraitVisemePreview -and -not ($BreezeTtsTrialProbe -or $TtsContrastManifest)) { throw 'PortraitVisemePreview requires the owned Breeze trial or contrast probe.' }
-$questPersonLocationFixture = $QuestBindingProbe -and $env:POTIB_QUEST_PERSON_LOCATION_PROBE -eq '1' -and $FixtureCharacter -eq 'PeopleOfTheIliacBayTest-9a5f197b' -and $FixtureSaveName -eq 'People - Gothway Garden'
+$questPersonLocationFixture = $QuestBindingProbe -and $env:POTIB_QUEST_PERSON_LOCATION_PROBE -eq '1' -and $FixtureCharacter -eq 'Hakon Ironhand' -and $FixtureSaveName -eq 'People - Gothway Garden'
 if ($FixtureSaveName -and -not $BreezeTtsTrialProbe -and -not $TtsContrastManifest) {
-if (-not $FixtureCharacter -or -not ($questPersonLocationFixture -or $OutdoorSceneProbe -or $LocationBlockProbe -or $PerformanceProbe -or $TavernSurveyProbe -or $DailyItineraryProbe -or $OutdoorArrivalProbe -or $OutdoorNavigationProbe -or $ResidentTripProbe -or $CrossRegionTripProbe -or $GateGuardProbe -or $DialogueProbe -or $DialogueRefusalProbe -or $SemanticConversationProbe -or $ConversationContextSnapshotProbe -or $DecisionShadowProbe -or $DecisionRoutingProbe -or $DecisionRoutingAppraisalReopenProbe -or $DecisionRoutingSafeDowngradeProbe -or $DecisionWillingnessProbe -or $GoalBindingProbe -or $GoalQwenWillingnessProbe -or $GoalSequenceProbe -or $GoalCancellationProbe -or $GoalChainLengthProbe -or $GoalTwoPass -or $ConversationContextSpeakerProbe -or $KeeperWorkDutyProbe -or $NativeNpcPoisonExperienceProbe -or $NativeNpcPoisonAppraisalProbe -or $ConversationReplyOutcomeProbe -or $FriendshipProgressionProbe -or $SocialDuplicateReplyProbe -or $ConversationActionMoodProbe -or $ActionWordingProbe -or $DialogueAvailabilityProbe -or $MoveToWaitProbe -or $NpcInteractionProbe -or $NpcVitalsProbe -or $NpcHealthCareProbe -or $VerbalCourtProbe -or $NpcHomeMealProbe -or $NpcHomeReturnProbe -or $AppointmentProbe -or $AppointmentPointProbe -or $NpcLeadProbe -or $FollowTransitionProbe -or $ShopCommerceProbe -or $TempleTrainingProbe -or $NpcIdentityIntegrationProbe -or $SocialDialogueStreamingProbe -or $BreezeTtsSettingsProbe -or $NativeTopicTtsProbe -or $NpcExperienceAppraisalTransportProbe -or $ExperienceDeferredInboxSerializationProbe -or $TtsStreamingAcceptanceProbe -or $BreezeTtsMixerReceiptProbe -or $SpeechRevealPresentationProbe -or $SplitPortraitRuntimeProbe -or $LiveDialoguePresentationProbe -or $NpcAcuteFearProbe -or $NpcResentmentRecoveryProbe)) { throw 'FixtureSaveName requires FixtureCharacter and a city probe.' }
+if (-not $FixtureCharacter -or -not ($questPersonLocationFixture -or $StationaryNpcProbe -or $HauntingDawnProbe -or $OutdoorSceneProbe -or $LocationBlockProbe -or $PerformanceProbe -or $TavernSurveyProbe -or $DailyItineraryProbe -or $OutdoorArrivalProbe -or $OutdoorNavigationProbe -or $ResidentTripProbe -or $CrossRegionTripProbe -or $GateGuardProbe -or $DialogueProbe -or $DialogueRefusalProbe -or $SemanticConversationProbe -or $ConversationContextSnapshotProbe -or $DecisionShadowProbe -or $DecisionRoutingProbe -or $DecisionRoutingAppraisalReopenProbe -or $DecisionRoutingSafeDowngradeProbe -or $DecisionWillingnessProbe -or $GoalBindingProbe -or $GoalQwenWillingnessProbe -or $GoalSequenceProbe -or $GoalCancellationProbe -or $GoalChainLengthProbe -or $GoalTwoPass -or $ConversationContextSpeakerProbe -or $KeeperWorkDutyProbe -or $NativeNpcPoisonExperienceProbe -or $NativeNpcPoisonAppraisalProbe -or $ConversationReplyOutcomeProbe -or $FriendshipProgressionProbe -or $SocialDuplicateReplyProbe -or $ConversationActionMoodProbe -or $ActionWordingProbe -or $DialogueAvailabilityProbe -or $MoveToWaitProbe -or $NpcInteractionProbe -or $NpcVitalsProbe -or $NpcHealthCareProbe -or $VerbalCourtProbe -or $NpcHomeMealProbe -or $NpcHomeReturnProbe -or $AppointmentProbe -or $AppointmentPointProbe -or $NpcLeadProbe -or $FollowTransitionProbe -or $ShopCommerceProbe -or $TempleTrainingProbe -or $NpcIdentityIntegrationProbe -or $SocialDialogueStreamingProbe -or $BreezeTtsSettingsProbe -or $NativeTopicTtsProbe -or $NpcExperienceAppraisalTransportProbe -or $ExperienceDeferredInboxSerializationProbe -or $TtsStreamingAcceptanceProbe -or $BreezeTtsMixerReceiptProbe -or $SpeechRevealPresentationProbe -or $SplitPortraitRuntimeProbe -or $LiveDialoguePresentationProbe -or $NpcAcuteFearProbe -or $NpcResentmentRecoveryProbe)) { throw 'FixtureSaveName requires FixtureCharacter and a city probe.' }
     $arguments += ' -peopleoftheiliacbay-fixture-save "' + $FixtureSaveName + '"'
 }
 if ($QuestProbe) { $arguments += ' -peopleoftheiliacbay-quest-probe' }
 if ($LocationBlockProbe) { $arguments += ' -peopleoftheiliacbay-location-block-probe' }
 if ($PerformanceProbe) {
     if (-not $FixtureCharacter) { throw 'Performance probe requires a disposable fixture character.' }
-    $arguments += ' -peopleoftheiliacbay-performance-probe'
+    $arguments += ' -peopleoftheiliacbay-performance-probe -peopleoftheiliacbay-profile-climate'
 }
 if ($NavigationTiming -and -not $PerformanceProbe) { $arguments += ' -peopleoftheiliacbay-performance-probe' }
 if ($HauntingDawnProbe) {
@@ -627,22 +617,12 @@ if ($DialogueRefusalProbe) {
 }
 if ($SemanticConversationProbe) { $arguments += ' -peopleoftheiliacbay-semantic-conversation-probe' }
 if ($ConversationContextSnapshotProbe) { $arguments += ' -peopleoftheiliacbay-context-snapshot-probe' }
-if ($DecisionShadowProbe) { $arguments += ' -peopleoftheiliacbay-decision-shadow-probe' }
-if ($DecisionRoutingAppraisalReopenProbe) {
-    $arguments += ' -peopleoftheiliacbay-decision-routing-appraisal-reopen-probe -peopleoftheiliacbay-decision-routing-probe -peopleoftheiliacbay-decision-routing -peopleoftheiliacbay-decision-model "' + $d3Model + '" -peopleoftheiliacbay-decision-endpoint http://127.0.0.1:8093/v1/systemone'
-}
-if ($DecisionRoutingAppraisalReopenSpeech) { $arguments += ' -peopleoftheiliacbay-appraisal-reopen-speech-probe' }
-if ($DecisionRoutingSafeDowngradeProbe) {
-    $arguments += ' -peopleoftheiliacbay-decision-routing-appraisal-reopen-probe -peopleoftheiliacbay-decision-routing-safe-downgrade-probe'
-}
-if ($DecisionRoutingProbe) { $arguments += ' -peopleoftheiliacbay-decision-routing-probe' }
-if ($DecisionWillingnessProbe) { $arguments += ' -peopleoftheiliacbay-decision-willingness-probe' }
 if ($GoalBindingProbe) { $arguments += ' -peopleoftheiliacbay-goal-binding-probe -peopleoftheiliacbay-goal-extraction' }
 if ($GoalQwenWillingnessProbe) { $arguments += ' -peopleoftheiliacbay-goal-qwen-willingness-probe -peopleoftheiliacbay-goal-binding-probe -peopleoftheiliacbay-goal-extraction -peopleoftheiliacbay-qwen-willingness' }
 if ($NpcActionChatQwenWillingnessProbe) { $arguments += ' -peopleoftheiliacbay-qwen-willingness' }
 if ($GoalQwenBoundGoal) { $arguments += ' -peopleoftheiliacbay-goal-qwen-bound-probe' }
 if ($GoalSequenceProbe) { $arguments += ' -peopleoftheiliacbay-goal-sequence-probe -peopleoftheiliacbay-goal-extraction' }
-if ($GoalCancellationProbe) { $arguments += ' -peopleoftheiliacbay-goal-cancellation-probe -peopleoftheiliacbay-goal-extraction' }
+if ($GoalCancellationProbe) { $arguments += ' -peopleoftheiliacbay-goal-cancellation-probe -peopleoftheiliacbay-goal-binding-probe' }
 if ($GoalChainLengthProbe) { $arguments += ' -peopleoftheiliacbay-goal-chain-length-probe -peopleoftheiliacbay-goal-chain-steps ' + $GoalChainLength + ' -peopleoftheiliacbay-goal-extraction' }
 if ($GoalTwoPass) { $arguments += ' -peopleoftheiliacbay-goal-two-pass -peopleoftheiliacbay-goal-two-pass-probe' }
 if ($DecisionShadowCaptureDirectory) {
@@ -670,8 +650,8 @@ if ($SocialDialogueStreamingProbe -or $TtsStreamingAcceptanceProbe) {
 }
 if ($BreezeTtsMixerReceiptProbe) { $arguments += ' -peopleoftheiliacbay-breeze-tts-mixer-receipt-probe' }
 if ($SpeechRevealPresentationProbe) {
-    if ($FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b' -or $FixtureSaveName -ne 'People - Gothway Garden') {
-        throw 'SpeechRevealPresentationProbe requires the owned PeopleOfTheIliacBayTest-9a5f197b / People - Gothway Garden fixture.'
+    if ($FixtureCharacter -ne 'Hakon Ironhand' -or $FixtureSaveName -ne 'People - Gothway Garden') {
+        throw 'SpeechRevealPresentationProbe requires the owned Hakon Ironhand / People - Gothway Garden fixture.'
     }
     $retainedSpeechWav = Join-Path $repo 'work/breeze-tts-20261021/race-accents-02/accent-breton-female-v2.wav'
     if (-not (Test-Path -LiteralPath $retainedSpeechWav) -or
@@ -681,7 +661,7 @@ if ($SpeechRevealPresentationProbe) {
     $arguments += ' -peopleoftheiliacbay-speech-reveal-presentation-probe -peopleoftheiliacbay-speech-reveal-retained-wav "' + $retainedSpeechWav + '"'
 }
 if ($BreezeTtsTrialProbe -or $TtsContrastManifest) {
-    if ($FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b' -or $FixtureSaveName -ne 'People - Gothway Garden') { throw 'Breeze trial requires the owned Gothway Garden fixture.' }
+    if ($FixtureCharacter -ne 'Hakon Ironhand' -or $FixtureSaveName -ne 'People - Gothway Garden') { throw 'Breeze trial requires the owned Gothway Garden fixture.' }
     if (-not [IO.Path]::IsPathRooted($TtsTrialDirectory) -or $TtsTrialDirectory.Contains('"')) { throw 'Breeze trial requires an absolute directory without quotes.' }
     $trialRoot = [IO.Path]::GetFullPath($TtsTrialDirectory)
     $workRoot = [IO.Path]::GetFullPath((Join-Path $repo 'work')) + [IO.Path]::DirectorySeparatorChar
@@ -689,15 +669,12 @@ if ($BreezeTtsTrialProbe -or $TtsContrastManifest) {
     if ((Test-Path -LiteralPath $trialRoot) -and @(Get-ChildItem -LiteralPath $trialRoot -Force).Count -ne 0) { throw 'Breeze trial needs a fresh empty directory.' }
     $ttsHealth = Invoke-RestMethod 'http://127.0.0.1:8080/health' -TimeoutSec 5
     if ($ttsHealth.status -ne 'ok') { throw 'Qwen is not ready for Breeze trial.' }
-    $ttsD3 = & (Join-Path $PSScriptRoot 'StartLocalDecision.ps1')
-    $ttsD3Model = (Resolve-LocalDecisionModel -RuntimeRoot (Join-Path $DfuRoot 'local-llm')).ModelPath
     $arguments += ' -peopleoftheiliacbay-fixture-save "' + $FixtureSaveName + '" -peopleoftheiliacbay-tts-trial "' + $trialRoot + '"'
     if ($PortraitVisemePreview) { $arguments += ' -peopleoftheiliacbay-portrait-visemes' }
     if ($TtsContrastManifest) {
         if ($BreezeTtsTrialProbe -or -not [IO.Path]::IsPathRooted($TtsContrastManifest) -or $TtsContrastManifest.Contains('"') -or -not (Test-Path -LiteralPath $TtsContrastManifest -PathType Leaf)) { throw 'Contrast requires its own existing absolute manifest and cannot combine with conversation pilot.' }
         $arguments += ' -peopleoftheiliacbay-tts-contrast-manifest "' + [IO.Path]::GetFullPath($TtsContrastManifest) + '"'
     } else { $arguments += ' -peopleoftheiliacbay-breeze-tts-probe' }
-    $arguments += ' -peopleoftheiliacbay-decision-routing -peopleoftheiliacbay-decision-model "' + $ttsD3Model + '" -peopleoftheiliacbay-decision-endpoint http://127.0.0.1:8093/v1/systemone'
 }
 if ($ConversationActionMoodProbe) { $arguments += ' -peopleoftheiliacbay-action-wording -peopleoftheiliacbay-conversation-action-mood-probe' }
 if ($ActionWordingProbe) { $arguments += ' -peopleoftheiliacbay-action-wording -peopleoftheiliacbay-action-wording-probe' }
@@ -746,15 +723,15 @@ if ($TaskFailureFeedbackProbe) { $arguments += ' -peopleoftheiliacbay-task-failu
 if ($RoutineRecoverySceneChangeProbe) { $arguments += ' -peopleoftheiliacbay-routine-recovery-scenechange-probe' }
 if ($AppointmentNoShowProbe) { $arguments += ' -peopleoftheiliacbay-appointment-no-show-probe' }
 if ($RoutineRecoveryPhysicalProbe) {
-    if (-not $FixtureCharacter -or $FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b') { throw 'Physical routine recovery requires the owned PeopleOfTheIliacBayTest-9a5f197b fixture.' }
+    if (-not $FixtureCharacter -or $FixtureCharacter -ne 'Hakon Ironhand') { throw 'Physical routine recovery requires the owned Hakon Ironhand fixture.' }
     $arguments += ' -peopleoftheiliacbay-routine-recovery-physical-probe'
 }
 if ($HomeContainerDepositProbe) {
-    if (-not $FixtureCharacter -or (-not (([string]$FixtureCharacter).StartsWith('PeopleOfTheIliacBayTest-',[StringComparison]::OrdinalIgnoreCase)))) { throw 'Home container deposit probe requires an owned disposable fixture character.' }
+    if (-not (Test-OwnedFixtureCharacter $FixtureCharacter)) { throw 'Home container deposit probe requires an owned disposable fixture character.' }
     $arguments += ' -peopleoftheiliacbay-container-deposit-probe'
 }
 if ($RoutineRecoveryDayProbe) {
-    if (-not $FixtureCharacter -or $FixtureCharacter -ne 'PeopleOfTheIliacBayTest-9a5f197b') { throw 'Recovery day probe requires the owned PeopleOfTheIliacBayTest-9a5f197b fixture.' }
+    if (-not $FixtureCharacter -or $FixtureCharacter -ne 'Hakon Ironhand') { throw 'Recovery day probe requires the owned Hakon Ironhand fixture.' }
     $arguments += ' -peopleoftheiliacbay-routine-recovery-day-probe'
 }
 if ($NpcStartingBelongingsSceneProbe) { $arguments += ' -peopleoftheiliacbay-npc-starting-belongings-scene-probe' }
@@ -863,6 +840,27 @@ try {
     # Includes bounded natural traveler readiness, real dungeon entry/return,
     # and a second entry for Stop. Each inner phase retains its own deadline.
     if ($OutdoorNavigationProbe -and $env:POTIB_ROADMAP_PROBE -eq 'dungeon-follow') { $testTimeout = 600 }
+    if ($OutdoorNavigationProbe -and $env:POTIB_ROADMAP_PROBE -in @('natural-fallback','natural-checkout','natural-home')) { $testTimeout = 360 }
+    if ($OutdoorNavigationProbe -and $env:POTIB_ROADMAP_PROBE -eq 'dialogue-biography') { $testTimeout = 1500 }
+    if ($OutdoorNavigationProbe -and $env:POTIB_ROADMAP_PROBE -eq 'dialogue-cancel') { $testTimeout = 600 }
+    if ($OutdoorNavigationProbe -and $env:POTIB_ROADMAP_PROBE -eq 'family-bank-inn') { $testTimeout = 1800 }
+    # SAVE16: 254.132 m at measured 1.217 m/s (~209 s), 11 s indoor
+    # exit, 30 s restore and 30 s startup/scene margin; no bank/outward setup.
+    if ($OutdoorNavigationProbe -and $env:POTIB_ROADMAP_PROBE -eq 'family-inn-return') { $testTimeout = 300 }
+    if ($OutdoorNavigationProbe -and $env:POTIB_ROADMAP_PROBE -in @('wall-law','guard-sleep','guard-shift-change','stationary-loot','family-childcare-home')) { $testTimeout = 600 }
+    if ($OutdoorNavigationProbe -and $env:POTIB_ROADMAP_PROBE -eq 'wall-law-night') { $testTimeout = 300 }
+    if ($OutdoorNavigationProbe -and $env:POTIB_ROADMAP_PROBE -eq 'companion-fast-travel') { $testTimeout = 180 }
+    if ($OutdoorNavigationProbe -and $env:POTIB_ROADMAP_PROBE -eq 'companion-fast-travel' -and $env:POTIB_FAST_TRAVEL_MULTIPLE -eq '1') { $testTimeout = 600 }
+    if ($OutdoorNavigationProbe -and $env:POTIB_ROADMAP_PROBE -in @('companion-dungeon-fast-travel','companion-dungeon-entry')) { $testTimeout = 360 }
+    if ($OutdoorNavigationProbe -and $env:POTIB_ROADMAP_PROBE -in @('native-vendor-trade','inn-capacity','dialogue-complaint')) { $testTimeout = 360 }
+    if ($OutdoorNavigationProbe -and $env:POTIB_ROADMAP_PROBE -eq 'door-crowds') { $testTimeout = 360 }
+    if ($OutdoorNavigationProbe -and $env:POTIB_ROADMAP_PROBE -eq 'market-visit') { $testTimeout = 360 }
+    if ($OutdoorNavigationProbe -and $env:POTIB_ROADMAP_PROBE -eq 'market-commute') { $testTimeout = 900 }
+    if ($OutdoorNavigationProbe -and $env:POTIB_ROADMAP_PROBE -in @('controlled-guild-arrival','controlled-camp-arrival')) { $testTimeout = 900 }
+    if ($OutdoorNavigationProbe -and $env:POTIB_ROADMAP_PROBE -in @('corpse-witness-report', 'corpse-static-inquiry')) { $testTimeout = 360 }
+    if ($OutdoorNavigationProbe -and $env:POTIB_ROADMAP_PROBE -eq 'inn-assignments') { $testTimeout = 900 }
+    if ($OutdoorNavigationProbe -and $env:POTIB_ROADMAP_PROBE -in @('guard-shifts', 'guard-locations')) { $testTimeout = 900 }
+    if ($OutdoorNavigationProbe -and $env:POTIB_ROADMAP_PROBE -eq 'guard-shifts') { $testTimeout = 1800 }
     if ($NpcHealthCareProbe) { $testTimeout = 900 }
     if ($OutdoorSceneProbe) { $testTimeout = 900 }
     if ($VerbalCourtProbe) { $testTimeout = 600 }
@@ -895,6 +893,7 @@ try {
                     if ($body.Contains($restoredMarker) -and ($body.Contains($redMarker) -or $body.Contains($greenMarker))) { $passed = $true; break }
                 }
                 $requiredModeMarker = switch ($selectedOwnedProbeModes[0]) {
+                    'TempleTrainingProbe' { 'PEOPLE_OF_THE_ILIAC_BAY_TEMPLE_TRAINING_NATIVE_PASS:'; break }
                     'NpcHealthCareProbe' { 'PEOPLE_OF_THE_ILIAC_BAY_NPC_HEALTHCARE_NATIVE_PASS:'; break }
                     'OutdoorSceneProbe' { 'PEOPLE_OF_THE_ILIAC_BAY_TOWN_TEST_PASS: targeted city probe.'; break }
                     'NpcHomeMealProbe' { 'PEOPLE_OF_THE_ILIAC_BAY_HOME_MEAL_NATIVE_PASS:'; break }
@@ -1099,7 +1098,8 @@ try {
         if ((Get-LiteralCount $body $baselineMarker) -ne 1) {
             throw 'Native goal sequence acceptance requires exactly one exact-fixture baseline restoration marker.'
         }
-        if ((-not ((([string]$body).IndexOf('PEOPLE_OF_THE_ILIAC_BAY_GOAL_SEQUENCE_BASELINE_RESTORED: character=PeopleOfTheIliacBayTest-9a5f197b; save=People - Gothway Garden; actionTaskFingerprintExact=true; playerPositionExact=true; hostFlagsRestored=true; sessionOwnershipRestored=true.',[StringComparison]::OrdinalIgnoreCase) -ge 0)))) {
+        $exactBaselineMarker = 'PEOPLE_OF_THE_ILIAC_BAY_GOAL_SEQUENCE_BASELINE_RESTORED: character=Hakon Ironhand; save=' + $goalFixture + '; actionTaskFingerprintExact=true; playerPositionExact=true; hostFlagsRestored=true; sessionOwnershipRestored=true.'
+        if ((-not ((([string]$body).IndexOf($exactBaselineMarker,[StringComparison]::OrdinalIgnoreCase) -ge 0)))) {
             throw 'Native goal sequence baseline marker lacks exact owned-save, player-position, host-state, and fingerprint restoration evidence.'
         }
         $baselineAt = $body.IndexOf($baselineMarker, [StringComparison]::Ordinal)
@@ -1217,7 +1217,7 @@ try {
     if (($InnLodgerHomeProbe -or $BedroomReplacementProbe) -and (-not ((([string]$body).IndexOf('PEOPLE_OF_THE_ILIAC_BAY_BEDROOM_REPLACEMENT_PASS:',[StringComparison]::OrdinalIgnoreCase) -ge 0)))) { throw 'Bedroom replacement checks did not finish.' }
     if ($MovementClockProbe -and (-not ((([string]$body).IndexOf('PEOPLE_OF_THE_ILIAC_BAY_MOVEMENT_CLOCK_PASS:',[StringComparison]::OrdinalIgnoreCase) -ge 0)))) { throw 'Physical NPC speed and 2x clock checks did not complete.' }
     if ($PerformanceProbe -and (-not ((([string]$body).IndexOf('PEOPLE_OF_THE_ILIAC_BAY_PERFORMANCE_PASS:',[StringComparison]::OrdinalIgnoreCase) -ge 0)))) { throw 'Performance samples did not complete.' }
-    if ($PerformanceProbe -and (-not ((([string]$body).IndexOf('PEOPLE_OF_THE_ILIAC_BAY_MURDER_WITNESS_PASS:',[StringComparison]::OrdinalIgnoreCase) -ge 0)))) { throw 'Murder witness persistence probe did not complete.' }
+    if ($HauntingDawnProbe -and -not ([string]$body).Contains('PEOPLE_OF_THE_ILIAC_BAY_HAUNTING_TARGETS_PASS:')) { throw 'Haunting native damage and target controls did not complete.' }
     if ($HauntingDawnProbe -and (-not ((([string]$body).IndexOf('PEOPLE_OF_THE_ILIAC_BAY_HAUNTING_DAWN_PASS:',[StringComparison]::OrdinalIgnoreCase) -ge 0)))) { throw 'Haunting dawn lifetime check did not complete.' }
     if ($CrossRegionTripProbe -and (-not ((([string]$body).IndexOf('PEOPLE_OF_THE_ILIAC_BAY_CROSS_REGION_TRIP_PASS:',[StringComparison]::OrdinalIgnoreCase) -ge 0)))) { throw 'Cross-region journey check did not pass.' }
     if ($CrossRegionTripProbe -and (-not ((([string]$body).IndexOf('PEOPLE_OF_THE_ILIAC_BAY_ROAD_STOP_SAVE_PASS:',[StringComparison]::OrdinalIgnoreCase) -ge 0)))) { throw 'Intermediate road-stop serialization check did not pass.' }
@@ -1269,7 +1269,7 @@ try {
     if ($ShopVisitProbe -and (-not ((([string]$body).IndexOf('PEOPLE_OF_THE_ILIAC_BAY_FOREIGN_GUARDED_EXIT_PASS:',[StringComparison]::OrdinalIgnoreCase) -ge 0)))) { throw 'Foreign guarded-shop exit check did not complete.' }
     if ($CrowdProbe -and (-not ((([string]$body).IndexOf('PEOPLE_OF_THE_ILIAC_BAY_CROWD_PASS:',[StringComparison]::OrdinalIgnoreCase) -ge 0)))) { throw 'Crowd movement probe did not complete.' }
     if ($CrowdProbe -and (-not ((([string]$body).IndexOf('PEOPLE_OF_THE_ILIAC_BAY_COMFORT_AVOIDANCE_PASS:',[StringComparison]::OrdinalIgnoreCase) -ge 0)))) { throw 'Early comfort avoidance did not complete.' }
-    if ($DailyItineraryProbe -and -not $HouseholdJointBodyProbe -and -not $DailyInteriorOnly -and -not $PrepareOutdoorFixture -and -not $IndoorCatchupProbe -and (-not ((([string]$body).IndexOf('PEOPLE_OF_THE_ILIAC_BAY_DAILY_ITINERARY_PASS:',[StringComparison]::OrdinalIgnoreCase) -ge 0)))) { throw 'Generated daily itinerary probe did not complete.' }
+    if ($DailyItineraryProbe -and -not $HouseholdJointBodyProbe -and -not $HouseholdInnPhysicalProbe -and -not $DailyInteriorOnly -and -not $PrepareOutdoorFixture -and -not $IndoorCatchupProbe -and (-not ((([string]$body).IndexOf('PEOPLE_OF_THE_ILIAC_BAY_DAILY_ITINERARY_PASS:',[StringComparison]::OrdinalIgnoreCase) -ge 0)))) { throw 'Generated daily itinerary probe did not complete.' }
     if ($IndoorCatchupProbe -and (-not ((([string]$body).IndexOf('PEOPLE_OF_THE_ILIAC_BAY_INDOOR_CATCHUP_PASS:',[StringComparison]::OrdinalIgnoreCase) -ge 0)))) { throw 'Indoor time-skip catch-up probe did not complete.' }
     if ($PrepareOutdoorFixture -and (-not ((([string]$body).IndexOf('PEOPLE_OF_THE_ILIAC_BAY_FIXTURE_PREPARED_PASS:',[StringComparison]::OrdinalIgnoreCase) -ge 0)))) { throw 'Prepared outdoor fixture did not save and reload successfully.' }
     if ($OutdoorArrivalProbe -and (-not ((([string]$body).IndexOf('PEOPLE_OF_THE_ILIAC_BAY_OUTDOOR_ARRIVAL_CONTINUITY_PASS:',[StringComparison]::OrdinalIgnoreCase) -ge 0)))) { throw 'Physical outdoor arrival probe did not complete.' }

@@ -14,6 +14,10 @@ namespace PeopleOfTheIliacBay.Core
         // 300-second adapter default; this is not a dwell or service duration.
         public int ExecutionBudgetSeconds;
         public string CompletedEffectId;
+        // Set only from the accepted semantic request. Default preserves ordered stop-on-failure.
+        public bool ContinueAfterFailure;
+        public string FailureReason;
+        public bool Blocked;
         // One-based earlier acquired-item step; zero means an ordinary exact item target.
         public int ItemSourceStep;
         public NpcMagicHealingSpec MagicHealing;
@@ -25,6 +29,7 @@ namespace PeopleOfTheIliacBay.Core
         public NpcOperationAdmission Admission;
         // Optional immutable admission provenance. Zero means an unbound legacy or dialogue task.
         public string GoalId;
+        public string PaidFollowActionId;
         public long GoalStartRevision;
         public List<NpcTaskStep> Steps = new List<NpcTaskStep>();
         public int CurrentStepIndex;
@@ -85,7 +90,10 @@ namespace PeopleOfTheIliacBay.Core
         public static NpcTaskFailureReceipt Create(NpcTaskPlan task,double now,Func<int,bool> acquiredItemRemains)
         {
             if(task==null || task.Phase!=NpcTaskPhase.Failed || string.IsNullOrWhiteSpace(task.FailureReason) ||
-                task.CurrentStepIndex<0 || task.CurrentStepIndex>=task.Steps.Count)return null;
+                task.CurrentStepIndex<0 || task.CurrentStepIndex>task.Steps.Count)return null;
+            int confirmed=0;foreach(var step in task.Steps)if(step.CompletedEffectId!=null)confirmed++;
+            if(task.Steps.Exists(step=>step.Blocked) || task.CurrentStepIndex==task.Steps.Count || confirmed!=task.CurrentStepIndex)
+                return CreatePartial(task,now,acquiredItemRemains);
             var lines=new List<string>();
             lines.Add(task.CurrentStepIndex==0?"No steps were completed.":"Completed "+task.CurrentStepIndex+" of "+task.Steps.Count+" agreed task steps.");
             for(int i=0;i<task.CurrentStepIndex;i++)lines.Add(CompletedStep(task.Steps[i],
@@ -97,6 +105,23 @@ namespace PeopleOfTheIliacBay.Core
             return new NpcTaskFailureReceipt {Id=task.Id+":failure",TaskId=task.Id,CreatedAt=now,
                 Message=Clip("The agreed task did not finish. "+details,540),
                 Observation=Clip("Observed task failure. "+details,580)};
+        }
+        private static NpcTaskFailureReceipt CreatePartial(NpcTaskPlan task,double now,Func<int,bool> acquiredItemRemains)
+        {
+            int completed=0;foreach(var step in task.Steps)if(step.CompletedEffectId!=null)completed++;
+            var lines=new List<string> {"Completed "+completed+" of "+task.Steps.Count+" agreed task steps.",
+                "Recorded failure: "+Sentence(Clip(task.FailureReason,120))};
+            for(int i=0;i<task.Steps.Count;i++)
+            {
+                var step=task.Steps[i];
+                if(step.CompletedEffectId!=null)lines.Add(CompletedStep(step,step.Kind==NpcActionKind.Purchase && acquiredItemRemains!=null && acquiredItemRemains(i)));
+                else if(step.FailureReason!=null)lines.Add("Step "+(i+1)+" ("+StepName(step.Kind).ToLowerInvariant()+") "+
+                    (step.Blocked?"was not attempted because its required earlier work failed.":"failed: "+Sentence(Clip(step.FailureReason,100))));
+                else lines.Add("Step "+(i+1)+" was not attempted.");
+            }
+            return new NpcTaskFailureReceipt {Id=task.Id+":failure",TaskId=task.Id,CreatedAt=now,
+                Message=Clip("The agreed task did not finish. "+string.Join(" ",lines.ToArray()),540),
+                Observation=Clip("Observed partial task failure. "+string.Join(" ",lines.ToArray()),580)};
         }
     }
 
@@ -130,6 +155,7 @@ namespace PeopleOfTheIliacBay.Core
         public static void Validate(NpcTaskPlan task)
         {
             if(task==null || !Id(task.Id,190) || !Id(task.ProposalId) || !Id(task.ResidentId) || task.Revision<1 ||
+                task.PaidFollowActionId!=null && !Id(task.PaidFollowActionId) ||
                 (task.GoalId == null ? task.GoalStartRevision != 0 : !Id(task.GoalId,128) || task.GoalStartRevision < 1) ||
                 task.Steps==null || task.Steps.Count<1 || task.Steps.Count>MaximumSteps || (int)task.Phase<0 || (int)task.Phase>4 ||
                 task.CurrentStepIndex<0 || task.CurrentStepIndex>task.Steps.Count || !Number(task.AcceptedAt) || task.AcceptedAt<0 ||
@@ -137,11 +163,13 @@ namespace PeopleOfTheIliacBay.Core
                 task.DeadlineAt<=task.AcceptedAt || task.DeadlineAt-task.AcceptedAt>86400)
                 throw new ArgumentException("Invalid NPC task.");
             if(task.Admission!=null) NpcOperationAdmission.CopyValidated(task.Admission);
-            if((task.Phase==NpcTaskPhase.Completed)!=(task.CurrentStepIndex==task.Steps.Count) ||
+            bool partialFailure=task.Steps.Exists(step=>step!=null && step.FailureReason!=null);
+            if(task.Phase==NpcTaskPhase.Completed && (task.CurrentStepIndex!=task.Steps.Count || partialFailure) ||
+                task.CurrentStepIndex==task.Steps.Count && task.Phase!=NpcTaskPhase.Completed && task.Phase!=NpcTaskPhase.Failed ||
                 task.Phase==NpcTaskPhase.Running && task.ActiveActionId!=ActionId(task) ||
                 (task.Phase==NpcTaskPhase.Ready || task.Phase==NpcTaskPhase.Completed) && task.ActiveActionId!=null ||
                 task.ActiveActionId!=null && task.ActiveActionId!=ActionId(task) ||
-                (task.Phase==NpcTaskPhase.Failed || task.Phase==NpcTaskPhase.Cancelled ? !Id(task.FailureReason,1000) : task.FailureReason!=null))
+                (task.Phase==NpcTaskPhase.Failed || task.Phase==NpcTaskPhase.Cancelled || partialFailure ? !Id(task.FailureReason,1000) : task.FailureReason!=null))
                 throw new ArgumentException("Invalid NPC task progress.");
             if(task.FailureReceipt!=null && (task.Phase!=NpcTaskPhase.Failed || task.FailureReceipt.Id!=task.Id+":failure" ||
                 task.FailureReceipt.TaskId!=task.Id ||
@@ -157,7 +185,11 @@ namespace PeopleOfTheIliacBay.Core
                         step.ExecutionBudgetSeconds<10 || step.ExecutionBudgetSeconds>900) ||
                     step.DurationSeconds>=task.DeadlineAt-task.AcceptedAt ||
                     ((step.Kind==NpcActionKind.Wait || step.Kind==NpcActionKind.Follow || step.Kind==NpcActionKind.TakeSeat || step.Kind==NpcActionKind.RestToHeal) ? step.DurationSeconds<=0 : step.DurationSeconds!=0) ||
-                    (i<task.CurrentStepIndex ? !Id(step.CompletedEffectId) : step.CompletedEffectId!=null))
+                    (i<task.CurrentStepIndex ? step.FailureReason==null && !Id(step.CompletedEffectId) : step.CompletedEffectId!=null) ||
+                    step.FailureReason!=null && (!Id(step.FailureReason,1000) || step.CompletedEffectId!=null ||
+                        i>task.CurrentStepIndex || i==task.CurrentStepIndex && !IsTerminal(task)) ||
+                    step.Blocked && step.FailureReason==null ||
+                    step.ContinueAfterFailure && (i==0 || step.ItemSourceStep>0 || step.Kind==NpcActionKind.Wait))
                     throw new ArgumentException("Invalid NPC task step.");
                 // Reuse the authoritative typed action checks, including transfer quantity and direction.
                 if(step.ItemSourceStep<0 || step.ItemSourceStep>i)
@@ -197,6 +229,7 @@ namespace PeopleOfTheIliacBay.Core
             var copy=new NpcTaskPlan {Id=value.Id,ProposalId=value.ProposalId,ResidentId=value.ResidentId,
                 Admission=value.Admission==null?null:NpcOperationAdmission.CopyValidated(value.Admission),
                 GoalId=value.GoalId,GoalStartRevision=value.GoalStartRevision,
+                PaidFollowActionId=value.PaidFollowActionId,
                 CurrentStepIndex=value.CurrentStepIndex,ActiveActionId=value.ActiveActionId,FailureReason=value.FailureReason,
                 Phase=value.Phase,Revision=value.Revision,AcceptedAt=value.AcceptedAt,UpdatedAt=value.UpdatedAt,DeadlineAt=value.DeadlineAt};
             if(value.FailureReceipt!=null)copy.FailureReceipt=new NpcTaskFailureReceipt {Id=value.FailureReceipt.Id,TaskId=value.FailureReceipt.TaskId,
@@ -205,6 +238,7 @@ namespace PeopleOfTheIliacBay.Core
             foreach(var step in value.Steps) copy.Steps.Add(new NpcTaskStep {Kind=step.Kind,Target=NpcActionExecutor.CopyTarget(step.Target),
                 DurationSeconds=step.DurationSeconds,ExecutionBudgetSeconds=step.ExecutionBudgetSeconds,
                 CompletedEffectId=step.CompletedEffectId,ItemSourceStep=step.ItemSourceStep,
+                ContinueAfterFailure=step.ContinueAfterFailure,FailureReason=step.FailureReason,Blocked=step.Blocked,
                 MagicHealing=step.MagicHealing==null?null:NpcMagicHealingSpec.CopyValidated(step.MagicHealing)});
             return copy;
         }

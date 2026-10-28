@@ -158,7 +158,7 @@ namespace PeopleOfTheIliacBay.Tests
             cases.Add(("All outing searches consume one shared day budget",()=>{
                 var request=Request();request.SearchBudget=4;
                 Check.True(AdultDailyRoutinePlanner.TryCreate(request,out var planned));
-                Check.Equal(2,ResidentRoutineDay.CopyOutings(planned).Count);
+                Check.Equal(4,ResidentRoutineDay.CopyOutings(planned).Count);
             }));
             cases.Add(("Existing outing remains unchanged while nonconflicting later activities are added",()=>{
                 var initial=Request();initial.Slots.RemoveRange(1,4);

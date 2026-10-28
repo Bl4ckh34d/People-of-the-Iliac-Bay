@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 80,
+  "emotion": "angry",
+  "assetType": "2x2 eye atlas",
+  "imageTool": "built-in image_gen",
+  "sourceReferences": [
+    {
+      "sha256": "68275f3a970329cd449c3a75313210237ae84fe4ade1b0a18e6be6b93e7ee842",
+      "file": "../../eyes-reference-grid.png"
+    },
+    {
+      "sha256": "4ea9b975047475ae696146fbd02a9b005b16c4baab7e1c1e1c3651ee287f4b0b",
+      "file": "../../original.png"
+    }
+  ],
+  "prompt": "Use case: pixel-art emotion sprite atlas for Daggerfall Unity NPC 080.\nInput image 1 is the exact 2x2 source eye atlas. Keep its four equal complete upper-half cells and their cell framing, in row-major order: angry OPEN, angry HALF-CLOSED, angry CLOSED, repeated angry OPEN. Image 2 is the complete original portrait for identity, palette and proportions.\nCreate restrained, clearly readable anger in all four phases. Shape the same slim, soft warm-brown brows into a subtle focused V: inner ends slightly lower and drawn inward, outer ends slightly lifted. Keep brows natural-width and softened in the original palette. Expression comes from brow angle and focused gaze, not thick black brows, hard eyeliner, heavy shadows or exaggerated rage.\nKeep iris width, shape, color, pupil position and horizontal gaze exactly consistent in OPEN and HALF-CLOSED. HALF-CLOSED uses the upper lids covering the stationary compact irises; CLOSED lids shut naturally. Use one consistent brow shape across all cells. Repeated OPEN matches first OPEN.\nPreserve original muted brown-gold skin and hair palette, exact head/forehead/hair geometry, native pixel scale, crop, alignment, backgrounds and low-resolution pixel clusters. No orange skin, extra contrast, red skin, palette shifts, blur, smudged shadows, white eye flashes, oversized eyes, text, labels, borders, gutters or watermark.",
+  "rawFile": "raw.png",
+  "rawSha256": "7bbe649fbebc616cd696f8cffe7d2cff50e0390e44193e8d970eb827e3f8e29a",
+  "dimensions": {
+    "width": 1695,
+    "height": 928
+  },
+  "visibleIssues": [
+    "Angry brow V is readable but restrained; verify emotion at native size. Brows remain soft and not bar-like. Skin appears slightly warmer/brighter than source at enlarged view; parent should verify palette."
+  ],
+  "imagegenOutput": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-bfa3-7821-8c10-1973507e5744\\exec-9e1e83d0-f678-4b5b-9e03-0bb50bd6a8a7.png"
+}

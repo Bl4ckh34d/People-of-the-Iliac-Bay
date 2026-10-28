@@ -1,0 +1,25 @@
+{
+  "emotionId": "angry",
+  "referenceUpperFile": "eyes/angry/open.png",
+  "browSourceFile": "eyes/angry/open.png",
+  "halfSourceFile": "eyes/angry/half.png",
+  "closedSourceFile": "eyes/angry/closed.png",
+  "halfLidRegions": [
+    {
+      "x": 18,
+      "y": 25,
+      "width": 11,
+      "height": 2
+    },
+    {
+      "x": 36,
+      "y": 25,
+      "width": 11,
+      "height": 2
+    }
+  ],
+  "sourceSha256": "c3a6864435906b99aac22f58bd30c06218030656df6346648a8db72579459503",
+  "referenceSha256": "cb38bded0fd5bc8223dd909dc288e20784e0f669e4ebea61504ea5f539b0d812",
+  "candidateOnly": true,
+  "rationale": "Provisional from npc078 portrait-specific neutral candidate, narrowed to y25..26 after viewing all six source emotion open/half/closed eye crops at native nearest-neighbor scale. Sclera/iris remain below this band in the inspected crops. Parent must verify mood-specific brow adjacency, especially angry/sad/afraid. Applies to angry only after inspecting its source phase RGB; not an approval to build or publish."
+}

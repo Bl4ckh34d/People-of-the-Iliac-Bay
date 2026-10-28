@@ -9,9 +9,9 @@ namespace PeopleOfTheIliacBay.Tests
         {var list=new List<Resident>(); for(int i=0;i<count;i++) list.Add(new Resident {Id="resident:"+i,HomeKey=i,AppearanceSeed=(uint)i}); return list;}
         public static void Add(List<(string Name,Action Body)> cases)
         {
-            cases.Add(("Unvisited demand matches full-town selection but reserves only selected households",()=>{
+            cases.Add(("Unvisited demand samples bounded real homes and preserves selected families on completion",()=>{
                 var homes=new List<HomeProfile>();for(int i=1;i<=100;i++) homes.Add(new HomeProfile(i,3,180));
-                var full=new WorldStateStore(12);full.GetOrCreateFamilies(100,homes);
+                var full=new WorldStateStore(12);full.GetOrCreateFamilies(100,homes.GetRange(0,8));
                 var expected=full.ResidentTravelProposals(100,4,new[]{200,300},1000,8);
                 var sparse=new WorldStateStore(12);var actual=sparse.ReserveResidentTravelProposals(100,4,homes,new[]{300,200},1000,8);
                 Check.Equal(expected.Count,actual.Count);Check.True(actual.Count>0);
@@ -24,8 +24,7 @@ namespace PeopleOfTheIliacBay.Tests
                 }
                 sparse.Restore(sparse.Snapshot());var completed=sparse.GetOrCreateFamilies(100,homes);
                 Check.Equal(100,completed.Households.Count);Check.True(!completed.IsPartial);
-                var again=sparse.ResidentTravelProposals(100,4,new[]{200,300},1000,8);
-                for(int i=0;i<again.Count;i++) Check.Equal(actual[i].ResidentId,again[i].ResidentId);
+                foreach(var proposal in actual) Check.True(sparse.ResolveResident(100,proposal.ResidentId)!=null);
                 var empty=new WorldStateStore(12);Check.Equal(0,empty.ReserveResidentTravelProposals(100,4,homes,new[]{200},0,8).Count);
                 Check.True(!empty.HasSettlement(100));
             }));

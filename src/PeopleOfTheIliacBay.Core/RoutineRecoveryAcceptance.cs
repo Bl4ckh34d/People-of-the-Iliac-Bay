@@ -20,8 +20,6 @@ namespace PeopleOfTheIliacBay.Core
             if(!RoutineRecoveryPlan.Finite(actionDeadline) || !RoutineRecoveryPlan.Finite(returnSeconds) || returnSeconds<0 ||
                 !RoutineRecoveryPlan.Finite(actionDeadline+returnSeconds)) return false;
             double resumeAt=actionDeadline+returnSeconds;
-            if(day>=0 && sleep>=0 && sleep<1440 && resumeAt>=day*86400d+sleep*60d)
-            {reason="The measured physical return starts after protected sleep.";failure=RoutineRecoveryFailure.ProtectedSleep;return false;}
             return RoutineRecoveryPlanner.TryCreate(settlementId,resident,routine,ordinary,bookings,day,resumeAt,
                 origin,resumeAt,wake,sleep,secondsPerMetre,out plan,out reason,out failure,originOutside);
         }

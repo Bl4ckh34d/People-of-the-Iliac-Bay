@@ -19,7 +19,7 @@ namespace PeopleOfTheIliacBay.DFU
     internal static class SpeechRevealPresentationProbe
     {
         internal const string RunFlag = "-peopleoftheiliacbay-speech-reveal-presentation-probe";
-        private const string OwnedCharacter = "PeopleOfTheIliacBayTest-9a5f197b";
+        private const string OwnedCharacter = "Hakon Ironhand";
         private const string BaselineSave = "People - Gothway Garden";
         private const string ReplyText = "Good day, traveller. The road ahead is long, but you are welcome to rest here for a while.";
         private const string ReplySha256 = "1a52a457dc298d1ad0c3f594d373f5dd0c45a021051838b17540709fbdbf9a06";

@@ -39,7 +39,7 @@ namespace PeopleOfTheIliacBay.Core
             if(departure>=latestHome)return false;
             var outbound=CopyRoute(source.Route);var inbound=CopyRoute(source.Route);inbound.Reverse();
             var request=new AdultDailyItineraryRequest{HomeBuildingKey=home,DepartureAt=departure,LatestHomeAt=latestHome,
-                MinimumAwaySeconds=1,MinimumStops=1,MaximumStops=1,Seed=seed,
+                Seed=seed,
                 Options=new List<AdultDailyItineraryOption>{new AdultDailyItineraryOption{BuildingKey=source.DestinationKey,
                     Purpose=purpose,OpenMinute=source.OpenMinute,CloseMinute=source.CloseMinute,
                     MinimumDwellSeconds=dwellSeconds,MaximumDwellSeconds=dwellSeconds}},
@@ -98,11 +98,12 @@ namespace PeopleOfTheIliacBay.Core
                     if(buildings.Contains(leg.FromBuildingKey) && buildings.Contains(leg.ToBuildingKey))slotRoutes.Add(leg);
                 }
                 ResidentDestination itinerary=null;
-                for(int maximum=Math.Min(5,options.Count);maximum>=1 && remaining>0;maximum--)
+                foreach(var option in options)
                 {
+                    if(remaining==0)break;
                     var childRequest=new AdultDailyItineraryRequest{HomeBuildingKey=request.HomeBuildingKey,
-                        DepartureAt=slot.DepartureAt,LatestHomeAt=slot.LatestHomeAt,MinimumAwaySeconds=1,
-                        MinimumStops=1,MaximumStops=maximum,Options=options,Routes=slotRoutes,
+                        DepartureAt=slot.DepartureAt,LatestHomeAt=slot.LatestHomeAt,
+                        Options=new List<AdultDailyItineraryOption>{option},Routes=slotRoutes,
                         Seed=StableSeed.Combine(request.Seed,(uint)added,(uint)slot.DepartureAt,0x646179u)};
                     ResidentDestination proposed;
                     if(!AdultDailyItineraryPlanner.TryCreate(childRequest,ref remaining,out proposed))continue;

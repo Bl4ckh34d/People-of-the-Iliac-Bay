@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T12:29:59.3484495Z",
+    "portraitRecord":  76,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Make one horizontal thinking-gaze pixel-art atlas for this exact NPC076 neutral portrait. Use the attached local reference grid as the sole visual source. Output a 1024x560 canvas: four equal 512x280 cells, each a full native 64x35 upper portrait crop enlarged 8x. Required order: top-left LEFT OPEN, top-right RIGHT OPEN, bottom-left LEFT HALF, bottom-right RIGHT HALF. Preserve the original woman, dark-brown hair and framing, neutral brow and eyelid contours, compact muted olive-brown/amber irises and dark pupils. Keep the source\u0027s shaded eye whites dark and subdued; do not replace them with cream or bright white bands. Preserve the original aperture in open frames. In half frames, let both upper lids cover a visible part of each iris, retaining a clearly half-closed slit. Only move gaze horizontally, about one native pixel: move BOTH complete iris/pupil clusters together toward image-left in both left-gaze cells and image-right in both right-gaze cells. Both eyes must track the same canvas side naturally; no stationary pupil, crossing, vertical or diagonal movement. Keep pupils inside lids, iris size compact, highlights tiny and warm, clusters crisp and irregularly stepped. Preserve all brow, hair, skin and exterior detail. No eye enlargement, wider aperture, pale horizontal sclera bands, bright glints, round/vector irises, smoothing, blur, labels, borders, text, or redesign.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54 as C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-c877cdae-5fdf-487a-a19d-5a54d0416678.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-c877cdae-5fdf-487a-a19d-5a54d0416678.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "732830dbc9a0f5d46622b8b74db022f97b141cea462c81fcd0604b1a206590ae",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "2cfb2edfdc2e9aaa544208e9b25088c02a11ca7148d8efef2a8be6bffef6e68b",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-c877cdae-5fdf-487a-a19d-5a54d0416678.png",
+                      "sha256":  "3759e2ecc878c2b53bc17d2c3bb24973c638cadbed4b77709985808d2e13d09b",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "3759e2ecc878c2b53bc17d2c3bb24973c638cadbed4b77709985808d2e13d09b",
+                "width":  1695,
+                "height":  928
+            }
+}

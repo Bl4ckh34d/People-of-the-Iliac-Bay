@@ -1,0 +1,25 @@
+{
+  "emotionId": "sad",
+  "referenceUpperFile": "eyes/sad/open.png",
+  "browSourceFile": "eyes/sad/open.png",
+  "halfSourceFile": "eyes/sad/half.png",
+  "closedSourceFile": "eyes/sad/closed.png",
+  "halfLidRegions": [
+    {
+      "x": 18,
+      "y": 24,
+      "width": 11,
+      "height": 2
+    },
+    {
+      "x": 36,
+      "y": 24,
+      "width": 11,
+      "height": 2
+    }
+  ],
+  "sourceSha256": "56e245ef622dfa895f1f53ea6b1639aa6bdc91835faa90d41e5613a1be6b77ec",
+  "referenceSha256": "d443b71ad560da21c79cdbbfc1f6305682fced29b0e266d7c3dfa4781b05fe2f",
+  "candidateOnly": true,
+  "rationale": "Provisional from npc080 portrait-specific candidate y24..25. Inspected all six mood phase crops; selected band is the narrow skin/lid strip above retained eye colors. Parent must check composed atlas before use. Applies to sad only after inspecting its source phase RGB; not an approval to build or publish."
+}

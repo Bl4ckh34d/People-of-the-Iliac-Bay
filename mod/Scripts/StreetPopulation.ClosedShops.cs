@@ -144,7 +144,7 @@ namespace PeopleOfTheIliacBay.DFU
             var actor=FindActor(plan.Resident.Id);bool occupied=false;
             if(actor && actor.gameObject.activeInHierarchy)
             {
-                occupied=actor.IsConversing || wait.HasTarget && !actor.IsStandingStill &&
+                occupied=actor.IsConversing || HasMarketActivity(plan.Resident.Id,now) || wait.HasTarget && !actor.IsStandingStill &&
                     Vector3.Distance(actor.transform.position-Vector3.up,directory.transform.TransformPoint(wait.LocalTarget))>0.6f;
                 bool arrived=wait.HasTarget && Vector3.Distance(actor.transform.position-Vector3.up,
                     directory.transform.TransformPoint(wait.LocalTarget))<=0.6f;

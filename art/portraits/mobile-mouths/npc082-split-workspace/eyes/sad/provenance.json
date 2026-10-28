@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 82,
+  "bank": "TFAC00I0.RCI",
+  "emotion": "sad",
+  "asset": "eyes/sad/raw.png",
+  "tool": "built-in image_gen",
+  "prompt": "Edit the supplied eye reference atlas into one restrained SAD eye-expression sheet for Daggerfall Unity native portrait record 82. Preserve the existing pixel-art style, exact soft muted palette, texture, crop and cell geometry. Output exactly a 2-column by 2-row atlas, same full upper portrait half in each cell, row-major: OPEN, HALF-CLOSED, CLOSED, repeated OPEN. Make sadness clearly downcast and low-energy: gently raised inner brow ends, softened worried brow shape, heavy drooping upper lids, gaze angled modestly downward. Keep expression subtle, not alarmed, angry or theatrical. Keep both irises and pupils same width, horizontal position, color and detail in all phases; lids cover them vertically in half and closed phases without shrinking or shifting. Closed phase is a true soft lid closure, no bright sclera flash. Keep stationary eyelid crease brightness and brow color consistent. Both OPEN cells should match. Preserve hair, forehead, nose bridge, skin, shadows and background exactly outside small eye/brow area. No tears, new objects, text, labels, borders or extra tiles. Return only complete atlas.",
+  "promptSha256": "70ff0dd59866c03edca150fb7de45615aa576aa871bd18c807cca0d02cf7ce74",
+  "references": [
+    {
+      "path": "eyes-reference-grid.png",
+      "sha256": "8bae461f66a90aa6765a4ab9879e23172d11eb901b6551fe0f910224c970d5a7"
+    }
+  ],
+  "generationOutputPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-fb9b-7322-8190-74bf6fb54c9d\\exec-8aa87957-4106-4378-9ca1-fa7f34c370c4.png",
+  "resultSha256": "90a46a7db7fab92c4b61f12c2e6c850fb70afd5c33007efc8ba4fe3ced8f0ce7",
+  "dimensions": {
+    "height": 928,
+    "width": 1695
+  },
+  "rawCopiedUnchanged": true,
+  "visibleDefects": [
+    "The OPEN phases are not identical in eyebrow/iris highlight details; review consistency at native scale.",
+    "There are small pale sclera highlights in open eyes; verify against source before acceptance.",
+    "The generated atlas has broad soft upscaling texture; native downsampling and mask review remain necessary."
+  ]
+}

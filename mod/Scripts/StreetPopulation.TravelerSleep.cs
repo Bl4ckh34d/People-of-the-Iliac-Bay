@@ -33,7 +33,7 @@ namespace PeopleOfTheIliacBay.DFU
                 plan.Bed!=null && plan.RoomFollower!=null && plan.RoomFollower.Arrived && !plan.RoomFollower.Leaving &&
                 plan.Visit.Admission==TravelerAdmission.Admitted && now>=plan.Journey.CheckInAt && now<plan.Journey.CheckOutAt &&
                 worldStore.TravelerBed(plan.Visit.Id,now)=="bed:"+plan.Bed.RecordIndex &&
-                state.Phase==TravelerPhase.Sleeping && actor.IsSleeping && !actor.IsConversing &&
+                state.Phase==TravelerPhase.Sleeping && !actor.IsConversing &&
                 reaction==null && !IsAlarmed(id) && !QuestOwned(plan.Resident) &&
                 !GameManager.Instance.PlayerEnterExit.IsPlayerInsideDungeon && effects &&
                 effects.PoisonCount==0 && effects.DiseaseCount==0 && worldStore.ActiveNpcTask(id)==null &&

@@ -7,6 +7,7 @@ namespace PeopleOfTheIliacBay.Core
     public sealed class TravelerOrigin
     {
         public int SettlementId,Race;
+        public double NativeReturnSeconds;
     }
     public sealed class TravelerProposal
     {
@@ -28,10 +29,11 @@ namespace PeopleOfTheIliacBay.Core
                 {
                     int arrivalDay=day-offset;
                     string key=IdentityKey(town,tavern,arrivalDay,slot);
-                    if(store.Traveler("traveler:"+key)!=null)continue;
+                    if(store.TravelerVisitsFor(town).Exists(v=>v.Id=="visit:"+key))continue;
                     var proposal=create(arrivalDay,slot);
-                    if(proposal==null || proposal.Person==null || proposal.Visit==null ||
-                        proposal.Person.Id!="traveler:"+key || proposal.Visit.Id!="visit:"+key ||
+                    if(proposal==null) continue; // No available real origin household.
+                    if(proposal.Person==null || proposal.Visit==null ||
+                        (proposal.Person.HomeKey<0 && proposal.Person.Id!="traveler:"+key) || proposal.Visit.Id!="visit:"+key ||
                         proposal.Visit.PersonId!=proposal.Person.Id || proposal.Visit.SettlementId!=town || proposal.Visit.TavernKey!=tavern)
                         throw new ArgumentException("Inn demand returned a different traveler identity.");
                     store.RegisterTraveler(proposal.Person);store.RegisterTravelerVisit(proposal.Visit);added++;
@@ -42,6 +44,18 @@ namespace PeopleOfTheIliacBay.Core
         private static string IdentityKey(int town,int tavern,int day,int slot)
         {return town.ToString(CultureInfo.InvariantCulture)+":"+tavern.ToString(CultureInfo.InvariantCulture)+":"+
             day.ToString(CultureInfo.InvariantCulture)+":"+slot.ToString(CultureInfo.InvariantCulture);}
+
+        public static void BindOrigin(WorldStateStore store,TravelerProposal proposal,Resident resident)
+        {
+            if(store==null || proposal==null || proposal.Person==null || proposal.Visit==null || resident==null ||
+                !resident.IsAlive || resident.IsQuestProtected || resident.NativeIdentity!=null || resident.AgeGroup!=ResidentAgeGroup.Adult ||
+                store.ResolveResident(proposal.Person.HomeSettlement,resident.Id)!=resident || string.IsNullOrWhiteSpace(resident.FullName) || resident.Race<0)
+                throw new ArgumentException("Traveler requires an available named origin resident.");
+            var person=proposal.Person;
+            person.Id=resident.Id;person.Name=resident.FullName;person.HomeKey=resident.HomeKey;
+            person.AppearanceSeed=resident.AppearanceSeed;person.Race=resident.Race;person.Sex=resident.Sex;
+            proposal.Visit.PersonId=person.Id;
+        }
 
         public static TravelerProposal Create(uint worldSeed,int town,int tavern,int day,int slot,
             IEnumerable<TravelerOrigin> origins,int minimumNights,int maximumNights,bool walled,
@@ -54,9 +68,10 @@ namespace PeopleOfTheIliacBay.Core
             var pool=new SortedDictionary<int,TravelerOrigin>();
             foreach(var origin in origins)
             {
-                if(origin==null || origin.SettlementId<0 || origin.Race<0 || pool.ContainsKey(origin.SettlementId))
+                if(origin==null || origin.SettlementId<0 || origin.Race<0 || double.IsNaN(origin.NativeReturnSeconds) ||
+                    double.IsInfinity(origin.NativeReturnSeconds) || origin.NativeReturnSeconds<0 || pool.ContainsKey(origin.SettlementId))
                     throw new ArgumentException("Invalid or duplicate traveler origin.");
-                if(origin.SettlementId!=town) pool.Add(origin.SettlementId,new TravelerOrigin { SettlementId=origin.SettlementId,Race=origin.Race });
+                if(origin.SettlementId!=town) pool.Add(origin.SettlementId,new TravelerOrigin { SettlementId=origin.SettlementId,Race=origin.Race,NativeReturnSeconds=origin.NativeReturnSeconds });
             }
             if(pool.Count==0) throw new ArgumentException("No nonlocal traveler origins.");
             uint seed=StableSeed.Combine(StableSeed.Combine(worldSeed,(uint)town,(uint)tavern,(uint)day),(uint)slot,0x76697369,0);
@@ -79,7 +94,9 @@ namespace PeopleOfTheIliacBay.Core
             var person=new TravelerPerson { Id="traveler:"+key,Name=fullName,HomeSettlement=selected.SettlementId,
                 AppearanceSeed=seed,Sex=sex,Race=selected.Race };
             var visit=new TravelerVisit { Id="visit:"+key,PersonId=person.Id,SettlementId=town,TavernKey=tavern,
-                Nights=nights,Walled=walled,DesiredArrival=arrival,CommuteSeconds=commute };
+                Nights=nights,Walled=walled,DesiredArrival=arrival,CommuteSeconds=commute,
+                NativeReturnSeconds=selected.NativeReturnSeconds,
+                Purpose=(ResidentVisitPurpose)(StableSeed.Combine(seed,0x70757270,0,0)%5) };
             foreach(var point in points) visit.Route.Add(new SavedRoutePoint { X=point.X,Z=point.Z });
             return new TravelerProposal { Person=person,Visit=visit };
         }

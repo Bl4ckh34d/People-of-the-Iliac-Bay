@@ -1,0 +1,28 @@
+{
+  "emotion": "sad",
+  "phase": "half",
+  "cell_index": 1,
+  "generator": "built-in image_gen",
+  "generation_count": 1,
+  "status": "targeted-correction-prototype-user-review-pending",
+  "source": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\eyes\\sad\\raw-corrected.png",
+    "dimensions": "1695x928",
+    "sha256": "3E61923122080E5DE8EC9F1F4DAD9F00DE6C684E8E65153BF3C71C3B73B89E53"
+  },
+  "generated_path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-8b98-7181-a1df-84e7b766303c\\exec-4dc823a7-b937-494a-8fd0-e9f74e3f6c6e.png",
+  "output": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\eyes\\sad\\half-correction-v3.png",
+    "dimensions": "1695x928",
+    "sha256": "2FE4903DD7F2E2D25E5C853725DDC2529F5E12920FB7F958B2C7A76C218F2042",
+    "copied_unaltered": true
+  },
+  "grid_order": [
+    "open",
+    "half",
+    "closed",
+    "open-repeat"
+  ],
+  "visible_deviations": "Corrected half cell retains purple irises with reduced bright sclera beside pupils; pupils look horizontally aligned to open cell at sheet scale. Brow position appears stable. Full generated sheet may contain unrelated cell drift; parent should consume only cell index 1. No visual acceptance claimed.",
+  "prompt": "Use case: stylized-concept\nAsset type: one targeted half-blink correction in a 2×2 pixel-art NPC eye sheet\nInput image: Image 1 is the current corrected sad eye sheet and exact edit target.\nPrimary request: replace only top-right cell, row-major cell index 1, the HALF blink.\nComposition/framing: preserve full 2×2 sheet, same aspect ratio, exact cell boundaries, and order open / half / closed / open-repeat. Top-left cell 0 is open-eye position reference. Bottom-left cell 2 is closed-eye reference.\nConstraints: In cell 1 only, lower the upper lids smoothly to cover roughly half the same irises shown in open cell 0. Keep each purple iris and pupil at the exact same horizontal position as cell 0. No eye roll, cross-gaze, pupil shuffling, or new bright white sclera beside either pupil. Keep only the small original sclera areas visible in open cell 0; do not create extra white crescents or side flashes. Preserve both brows exactly in shape, height, and position; no brow movement. Keep the sad downcast direction. Preserve original soft muted palette, face geometry, hairline, lighting, and pixel structure. Keep cell 0, cell 2, and cell 3 unchanged.\nAvoid: changing open or closed reference cells, added whites, iris movement, crossed eyes, looking upward, brow movement, eyelid blur, contrast increase, hard black eyeliner, crop, resize, extra grid lines, labels, missing cells."
+}

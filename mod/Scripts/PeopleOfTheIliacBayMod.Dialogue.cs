@@ -61,6 +61,7 @@ namespace PeopleOfTheIliacBay.DFU
 
         private void UpdateEmbeddedDialogue()
         {
+            if(TryRedirectNativeMarketTalk())return;
             QueueDialoguePrewarm();
             DaggerfallTalkWindow talk = DaggerfallUI.UIManager.TopWindow as DaggerfallTalkWindow;
             UpdateNativeTopicTtsSession(talk);
@@ -390,6 +391,8 @@ namespace PeopleOfTheIliacBay.DFU
                 CurrentNativeSocialSkillContext() +
                 CurrentConversationBoundaryContext() +
                 CurrentConversationMemory(playerText) +
+                " " + ConversationBiographyContext(conversationPersonId) +
+                " " + ConversationEnterpriseContext(conversationPersonId,ConversationActionTime()) +
                 " " + CurrentConversationClockContext() +
                 " Current time and weather supersede earlier conversation descriptions. Do not infer visible sky conditions while indoors.", history, knowledgeResult);
             }
@@ -406,6 +409,8 @@ namespace PeopleOfTheIliacBay.DFU
                     capturedContext += "\n" + npcKnowledgeContext;
                 capturedContext += CurrentNativeSocialSkillContext(snapshot);
                 capturedContext += CurrentConversationBoundaryContext();
+                capturedContext += " "+ConversationBiographyContext(snapshot.Binding.PersonId);
+                capturedContext += " "+ConversationEnterpriseContext(snapshot.Binding.PersonId,snapshot.CapturedGameTime);
                 request=FreeTextDialogue.Create(returningGreeting?"The player is present and has said nothing new.":playerText,
                     name,race,gender,role,snapshot.EffectiveDisposition,
                     (returningGreeting?playerText+" ":"")+conversationResponseCue+" "+capturedContext+
@@ -715,7 +720,7 @@ namespace PeopleOfTheIliacBay.DFU
                     return "residential tenant above the shop, not its keeper or owner";
                 if(summary.BuildingType==DFLocation.BuildingTypes.Tavern)
                     return person!=null && store.InnLodgerHome(person.Id)!=null ? "inn bedroom lodger with a verified permanent home elsewhere; not the keeper" :
-                        person!=null && store.NativeGuestBedroom(person.Id)!=null ? "inn bedroom lodger; permanent origin not yet verified; not the keeper" :
+                        person!=null && store.NativeGuestBed(person.Id)!=null ? "Inn lodger; permanent origin not yet verified; not the keeper" :
                         "inn occupant; local staff, local patron or visiting status not yet verified; not the keeper";
                 if(RMBLayout.IsShop(summary.BuildingType)) return "shop visitor, not its keeper or owner";
             }

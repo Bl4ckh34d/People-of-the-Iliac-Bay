@@ -1,0 +1,24 @@
+{
+  "portrait": 79,
+  "emotion": "guarded / skeptical",
+  "status": "generated; visual review pending; not installed",
+  "generator": "built-in image_gen edit",
+  "generation_count": 1,
+  "generated_original": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-626e-7471-95f3-109617bb3581\\exec-e255bc14-b6b2-4285-8ea6-e7a423ee7719.png",
+  "output": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc079-split-workspace\\eyes\\guarded\\raw.png",
+  "dimensions": "1695x928",
+  "output_sha256": "A25368575D7A243EAC784FD77E14CA88FD4B2A1E1044D1F930D7800D19569AC0",
+  "references": [
+    {
+      "sha256": "81737009A51FBAFD2CA540F49ED88457428FDA5BFA128C4CEFD0B03DEBB867DA",
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc079-split-workspace\\eyes-reference-grid.png"
+    },
+    {
+      "sha256": "70B1B52DF73159543AFD5776EAE7565BFD3619FD31BC5FD90AF674E42520D460",
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc079-split-workspace\\original.png"
+    }
+  ],
+  "cell_order": "2x2 row-major: open, half blink, fully closed blink, repeat open",
+  "prompt": "Use image 1 as the exact reference atlas. Image 2 is the immutable full original portrait for identity, soft palette, and native facial geometry. Generate one complete 2x2 upper-face eye atlas, same overall framing, pixel scale, and upper-half crop as image 1. Row-major phases: open / half blink / fully closed / repeat open. Keep the same NPC, hair, skin shading, eye spacing, compact iris and pupil geometry, natural dark eye color, and muted soft palette. Create a clearly skeptical, guarded expression: viewer-left brow visibly but modestly raised; viewer-right brow gently flatter or a little lower, with both full brow ends clearly visible and not blurred or clipped. This asymmetry should read as questioning and observant, not angry. Avoid symmetrical inward V brows, scowls, high cartoon arches, and harsh contrast. Keep both pupils compact, same size, stationary in the same forward-looking position across open and half phases; no crossed eyes, eyeroll, side glance, or pupil jump. Make lids subtly watchful, with half phase covering about half of each eyeball without shrinking or shifting the pupils; closed phase fully hides irises. Keep the brows and their skeptical asymmetry identical across all four frames. Preserve face geometry and hair exactly. Change only eye/brow emotion and eyelid phase. Do not enlarge eyes, iris or pupils. No text, no labels, no extra panels. Return a faithful 2x2 atlas.",
+  "visual_review": "Expression reads skeptical and watchful through raised asymmetric brows; both brow arcs are fully visible. Visible limit: the raised brow arch is prominent and may feel slightly more surprised than restrained at native size. Eye placement and compact irises appear stable; inspect at native resolution."
+}

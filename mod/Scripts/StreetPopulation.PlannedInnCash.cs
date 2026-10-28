@@ -21,16 +21,9 @@ namespace PeopleOfTheIliacBay.DFU
                     NativeNpcStartingBelongings.CreateInitialItems(worldStore,parent.Resident.Id,resident:parent.Resident),
                     NativeNpcInventoryBridge.InitialWalletGold(worldStore,parent.Resident.Id),out binding,out reason))return false;
             }
-            double at=day*86400d+Math.Max(outing.First.DepartureSeconds,outing.Second.DepartureSeconds);
-            var tariff=NativeInnCalendar.ForServiceAt(catalog.RegionIndex,at);
-            var prices=new List<int>();
-            for(int i=0;i<11;i++)prices.Add(NpcInnServiceCatalog.Quote(catalog,i,at,tariff).PriceGold);
+            // Any native item for each parent is covered without selecting a future meal.
+            outing.ReserveGold=HouseholdInnBudget.GroupReserve(catalog);
             uint seed=StableSeed.Combine(worldStore.WorldSeed,(uint)first.Resident.HomeKey,(uint)day,0x63617368u);
-            outing.FirstMenuIndex=NpcInnConsumption.SelectMenuIndex(prices,NpcInventoryLimits.MaximumWalletGold,
-                StableSeed.Combine(seed,first.Resident.AppearanceSeed,0,0));
-            outing.SecondMenuIndex=NpcInnConsumption.SelectMenuIndex(prices,NpcInventoryLimits.MaximumWalletGold,
-                StableSeed.Combine(seed,second.Resident.AppearanceSeed,0,0));
-            outing.FirstPriceGold=prices[outing.FirstMenuIndex];outing.SecondPriceGold=prices[outing.SecondMenuIndex];
             int a=worldStore.ReadNpcInventory(first.Resident.Id).WalletGold,b=worldStore.ReadNpcInventory(second.Resident.Id).WalletGold;
             outing.PayerId=a>b || a==b && (seed&1)==0?first.Resident.Id:second.Resident.Id;
             return true;

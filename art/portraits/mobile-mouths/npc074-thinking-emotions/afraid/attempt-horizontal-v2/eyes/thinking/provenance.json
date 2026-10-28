@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T11:45:43.0580446Z",
+    "portraitRecord":  74,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Use case: stylized-concept\nAsset type: native pixel-art horizontal gaze atlas for a Daggerfall Unity NPC portrait animation\nInput image: the single provided local thinking-reference-grid.png is the exact selected NPC074 afraid open/half eye source, face, palette, framing, and pixel-art reference.\nPrimary request: Create one exact 2×2 atlas with the same aspect ratio, crop size, registration, and panel arrangement. Top row LEFT OPEN, RIGHT OPEN. Bottom row LEFT HALF, RIGHT HALF. Every cell is the complete aligned 64:35 upper portrait crop. No labels, borders, gutters, extra panels, or text.\nExpression and anatomy: Preserve the selected afraid expression, raised pinched inner brows, compact pale blue-gray iris clusters, muted pale glints, narrow source eyelids and eye spacing. The fearful brows remain coherent and identical across all four cells. OPEN cells retain the selected open aperture. HALF cells retain the selected visibly narrowed half-lid aperture; upper lids cover part of each iris and do not expose extra white.\nPaired gaze: In the LEFT cells, move BOTH irises and pupils together toward the SAME canvas-left direction within their respective openings. In the RIGHT cells, move BOTH together toward the SAME canvas-right direction. The horizontal shifts must be visible in both eyes, not one eye moving while the other stays centered. Keep both eyes coordinated and looking toward one common off-center target for each panel. No vertical gaze movement. Use a restrained approximately one-native-pixel shift if it fits the narrow source aperture.\nConstraints: Preserve the exact portrait identity, warm muted skin, light-brown/blond hair, blue ornament, crop, hairline, pixel-cluster size and registration. Keep compact irises fully inside natural lids. No widened white bands, oversized round irises, giant eyes, bright white flashes, altered brows/lid shape, blur, smoothing, gradients, face redesign, text, or decoration.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-c451cd0f-df2e-4ae6-88a1-53b5adbef213.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-c451cd0f-df2e-4ae6-88a1-53b5adbef213.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "f6c464fac465cd50e4a08f9b0d43069c927e2f65bca6575a7bcd88a7fa0d8259",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-c451cd0f-df2e-4ae6-88a1-53b5adbef213.png",
+                      "sha256":  "e84dc7f953b98f25ac2512c0bc208c9dedb961668ed1c56752060f8b9ea326d1",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "e84dc7f953b98f25ac2512c0bc208c9dedb961668ed1c56752060f8b9ea326d1",
+                "width":  1695,
+                "height":  928
+            }
+}

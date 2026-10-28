@@ -1,0 +1,67 @@
+{
+  "portraitRecord": 82,
+  "bank": "TFAC00I0.RCI",
+  "width": 64,
+  "height": 64,
+  "splitY": 35,
+  "eyeRegions": [
+    {
+      "x": 15,
+      "y": 15,
+      "width": 16,
+      "height": 17
+    },
+    {
+      "x": 34,
+      "y": 15,
+      "width": 17,
+      "height": 17
+    }
+  ],
+  "mouthRegion": {
+    "x": 22,
+    "y": 39,
+    "width": 20,
+    "height": 13
+  },
+  "useOriginalFeaturePalette": true,
+  "maskBoundsRationale": "Parent inspected uncovered frontal record82 original: brows/eyes fit initial x15..30 and x34..50, y15..31; mouth x22..41, y39..51. No exact feature family candidate in current full-mask inventory. No corrective locks inherited; inspect generated native phases.",
+  "eyeFeatureLocks": [
+    {
+      "emotion": "angry",
+      "phase": "half",
+      "x": 16,
+      "y": 23,
+      "width": 14,
+      "height": 2,
+      "reason": "Native8x contact-sheet inspection: lowered angry brow tips extend below the standard fixed y15..22 band. Preserve these two brow rows from this face angry-open master during blink."
+    },
+    {
+      "emotion": "angry",
+      "phase": "half",
+      "x": 35,
+      "y": 23,
+      "width": 14,
+      "height": 2,
+      "reason": "Native8x contact-sheet inspection: lowered angry brow tips extend below the standard fixed y15..22 band. Preserve these two brow rows from this face angry-open master during blink."
+    },
+    {
+      "emotion": "angry",
+      "phase": "closed",
+      "x": 16,
+      "y": 23,
+      "width": 14,
+      "height": 2,
+      "reason": "Native8x contact-sheet inspection: lowered angry brow tips extend below the standard fixed y15..22 band. Preserve these two brow rows from this face angry-open master during blink."
+    },
+    {
+      "emotion": "angry",
+      "phase": "closed",
+      "x": 35,
+      "y": 23,
+      "width": 14,
+      "height": 2,
+      "reason": "Native8x contact-sheet inspection: lowered angry brow tips extend below the standard fixed y15..22 band. Preserve these two brow rows from this face angry-open master during blink."
+    }
+  ]
+}

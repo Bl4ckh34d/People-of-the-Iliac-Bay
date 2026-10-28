@@ -1,0 +1,64 @@
+{
+  "emotion": "neutral",
+  "generator": "built-in image_gen",
+  "status": "revision2-prototype-user-review-pending-not-installed",
+  "source": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\tfac-077-full-frame-v5.png",
+    "sha256": "D2BD017E7773336DE704BF3E4C935AB1EF7D0FC84DD4BBC551A61E22AF322223"
+  },
+  "atlas": {
+    "dimensions": "1254×1254 square; 3×3",
+    "mouthOrder": "Row-major: A B C / D E F / G H X",
+    "visemes": [
+      "A: closed M/B/P",
+      "B: narrow consonant, slight teeth",
+      "C: medium EH",
+      "D: moderate AH",
+      "E: rounded OH",
+      "F: small OO/W",
+      "G: upper teeth on lower lip F/V",
+      "H: tongue behind teeth L",
+      "X: relaxed closed"
+    ]
+  },
+  "generationCount": 3,
+  "visibleDeviations": "None obvious at native-size review. Eye clusters stay crisp; mouths retain row-major poses.",
+  "phases": [
+    {
+      "phase": "open",
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\tfac-077-full-frame-v5.png",
+      "generatedOriginal": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-5744-7b43-9b03-e8cced819bb7\\exec-89ca69d4-170e-4cb0-abdc-eea046642b1d.png",
+      "output": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\neutral-open.png",
+        "width": 1254,
+        "height": 1254,
+        "sha256": "20F1BF609D27A94B70B92C4621EACD111886749F04E4E07A720585CFAEF9965F"
+      },
+      "prompt": "Create a fresh neutral OPEN-eye version of the referenced complete 3×3 pixel-art portrait atlas. Preserve all nine full-frame cells, exact 3×3 grid and framing, face identity, head size, hairstyle, skin tone, muted palette, lighting, and background. Keep each mouth in its existing row-major cell unchanged: A closed M/B/P; B narrow consonant with slight teeth; C medium EH; D moderate AH; E rounded OH; F small OO/W; G upper teeth on lower lip for F/V; H subtle tongue behind upper teeth for L; X relaxed closed. Neutral expression: relaxed attentive gaze, level unstrained brows, unstrained lips; not bored or worried. Redraw eyes at the existing coarse pixel-art scale as crisp deliberate pixel clusters readable when each face is displayed at 64×64: clear visible iris and pupil, restrained small sclera highlights, crisp upper and lower lid contours, natural level brows. Avoid blur, airbrushed shadows, smoky eye shading, extra painted detail, or covering the iris. Keep eye/brow expression consistent across all cells. No crop, resize, blur, sharpening filter, compositing, face or mouth edits, mouth reordering, added details, text, new border or gutter. Return one complete square atlas, ideally 1254×1254."
+    },
+    {
+      "phase": "half",
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\neutral-open.png",
+      "generatedOriginal": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-5744-7b43-9b03-e8cced819bb7\\exec-7b3f5d70-19a5-4f7a-995f-ed5cb5ec5dd1.png",
+      "output": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\neutral-half.png",
+        "width": 1254,
+        "height": 1254,
+        "sha256": "3970A0F8C987C7138BCB410B9407021DB22C48815333E7AD32173268AF773E8B"
+      },
+      "prompt": "Edit this completed neutral OPEN-eye atlas into the HALF blink atlas. Preserve the complete square 3×3 sheet, exact tile grid, face framing, identity, hair, skin tone, colors, neutral expression, level brows, crisp pixel-cluster eye style, and every mouth pose in its matching row-major cell. Change ONLY eyelids in all nine cells: lower upper lids to cover roughly half of each iris. Keep both pupils and visible iris clear and crisp. Keep brows, eye direction, all nine speech mouths, background, and tile alignment unchanged. Row-major order stays A B C / D E F / G H X. No crop, no resize, no blur, no soft shadow, no mouth edits, no rearrangement, no new details, no text, no borders or gutter changes. Return one complete atlas at same square dimensions."
+    },
+    {
+      "phase": "closed",
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\neutral-open.png",
+      "generatedOriginal": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-5744-7b43-9b03-e8cced819bb7\\exec-8afbe10f-d914-49a1-b0f3-e5a8f100cfc1.png",
+      "output": {
+        "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\neutral-closed.png",
+        "width": 1254,
+        "height": 1254,
+        "sha256": "25C22B4F5A1B5DDF08EA0485C705B3237080A9C7044F9CFF40C7BD7C0715A352"
+      },
+      "prompt": "Edit this completed neutral OPEN-eye atlas into the CLOSED blink atlas. Preserve the complete square 3×3 sheet, exact tile grid, face framing, identity, hair, skin tone, colors, neutral expression, level brows, crisp pixel-cluster eye style, and every mouth pose in its matching row-major cell. Change ONLY eyelids in all nine cells: fully shut both eyes so eyelids completely hide iris and sclera. Keep eyebrow shape and position unchanged. Preserve all nine speech mouths and their order, including open mouths while eyes are closed. Keep background and tile alignment unchanged. Row-major order stays A B C / D E F / G H X. No crop, no resize, no blur, no soft shadow, no mouth edits, no rearrangement, no new details, no text, no borders or gutter changes. Return one complete atlas at same square dimensions."
+    }
+  ]
+}

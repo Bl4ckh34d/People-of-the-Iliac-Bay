@@ -14,7 +14,7 @@ namespace PeopleOfTheIliacBay.DFU
     // admits and positions the traveler; this helper never edits an NPC.
     internal static class NativeTravelerFixtureWarmup
     {
-        private const string Character="PeopleOfTheIliacBayTest-9a5f197b";
+        private const string Character="Hakon Ironhand";
         private const string SaveName="People - Daggerfall day 2";
         private const string TravelerId="traveler:1291010263:197386:145804:0";
         private const int Town=1291010263,Inn=197386;
@@ -150,7 +150,7 @@ namespace PeopleOfTheIliacBay.DFU
         private static T Field<T>(object instance,string name)
         {return (T)instance.GetType().GetField(name,Private).GetValue(instance);}
 
-        private static void PlacePlayerNearActualActor(GameManager game,StreetPopulation streets,ResidentActor actor)
+        internal static void PlacePlayerNearActualActor(GameManager game,StreetPopulation streets,ResidentActor actor)
         {
             Vector3 actual=actor.transform.position-Vector3.up;
             if(Vector3.Distance(actual,game.PlayerMotor.transform.position-Vector3.up)<=6)return;
@@ -163,7 +163,7 @@ namespace PeopleOfTheIliacBay.DFU
                 if(Vector3.Distance(ground,actual)<1 || Physics.CheckCapsule(ground+Vector3.up*0.78f,
                     ground+Vector3.up*1.6f,CrowdMotion.BodyRadius,~0,QueryTriggerInteraction.Ignore))continue;
                 game.PlayerMotor.transform.position=ground+Vector3.up;Physics.SyncTransforms();
-                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TRAVELER_FIXTURE_PLAYER_APPROACH: actualActor="+TravelerId+
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TRAVELER_FIXTURE_PLAYER_APPROACH: actualActor="+actor.Resident.Id+
                     "; distance="+Vector3.Distance(ground,actual)+"; playerOnly=true; npcMoved=false");
                 return;
             }

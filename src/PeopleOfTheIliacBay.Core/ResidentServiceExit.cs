@@ -10,8 +10,12 @@ namespace PeopleOfTheIliacBay.Core
         public string VisitId;
         public double VisitEnterAt,VisitLeaveAt,StartedAt,SecondsPerMetre;
         public List<GuardPoint3> Route=new List<GuardPoint3>();
+        public bool SeekingLodging;
+        public SavedRoutePoint ExteriorDoor;
+        public ResidentLodgingDetour LodgingDetour;
         private double length;
-        public double ExitAt { get { return StartedAt+length*SecondsPerMetre; } }
+        public double WalkEndsAt {get{return StartedAt+length*SecondsPerMetre;}}
+        public double ExitAt { get { return SeekingLodging?VisitLeaveAt:WalkEndsAt; } }
         public GuardPoint3 Position(double now)
         {
             double remaining=Math.Max(0,(now-StartedAt)/SecondsPerMetre);
@@ -32,14 +36,18 @@ namespace PeopleOfTheIliacBay.Core
                 !Time(source.SecondsPerMetre) || source.SecondsPerMetre<=0 || source.Route==null || source.Route.Count<2 || source.Route.Count>10000)
                 throw new ArgumentException("Invalid resident service exit.");
             var copy=new ResidentServiceExit {VisitId=source.VisitId,SettlementId=source.SettlementId,BuildingKey=source.BuildingKey,VisitEnterAt=source.VisitEnterAt,
-                VisitLeaveAt=source.VisitLeaveAt,StartedAt=source.StartedAt,SecondsPerMetre=source.SecondsPerMetre};
+                VisitLeaveAt=source.VisitLeaveAt,StartedAt=source.StartedAt,SecondsPerMetre=source.SecondsPerMetre,
+                SeekingLodging=source.SeekingLodging,ExteriorDoor=source.ExteriorDoor==null?null:new SavedRoutePoint {X=source.ExteriorDoor.X,Z=source.ExteriorDoor.Z}};
             foreach(var p in source.Route)
             {
                 if(p==null || !Coordinate(p.X) || !Coordinate(p.Y) || !Coordinate(p.Z)) throw new ArgumentException("Invalid service exit point.");
                 if(copy.Route.Count>0) copy.length+=Distance(copy.Route[copy.Route.Count-1],p);
                 copy.Route.Add(new GuardPoint3 {X=p.X,Y=p.Y,Z=p.Z});
             }
-            if(copy.length<=0 || !Time(copy.ExitAt) || copy.ExitAt-copy.StartedAt>86400) throw new ArgumentException("Invalid service exit duration.");
+            if(copy.length<=0 || !Time(copy.WalkEndsAt) || copy.WalkEndsAt-copy.StartedAt>86400 ||
+                (copy.SeekingLodging?(copy.ExteriorDoor==null || !Coordinate(copy.ExteriorDoor.X) || !Coordinate(copy.ExteriorDoor.Z) || copy.WalkEndsAt>=copy.VisitLeaveAt):
+                copy.ExteriorDoor!=null || source.LodgingDetour!=null)) throw new ArgumentException("Invalid service exit duration or lodging hold.");
+            copy.LodgingDetour=ResidentLodgingDetour.Copy(source.LodgingDetour,copy);
             return copy;
         }
         private static bool Time(double value) {return Coordinate(value) && value>=0;}

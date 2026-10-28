@@ -1,6 +1,18 @@
 # Regex durch semantische Entscheidungen und echte Parser ersetzen
 
-Stand: 25. Oktober 2026. Quellcode-Audit und vorgeschlagener Umbau; keine Behauptung, dass die unten genannten Altwege bereits entfernt sind.
+Stand: 27. Oktober 2026. Der historische Audit vom 25. Oktober bleibt unten erhalten; sein damaliger Befund ist keine Beschreibung des aktuellen Runtime-Pfads.
+
+## Aktueller Quellstand und Prüfgrenze
+
+Die reine Quellsuche mit `rg -n -F -e Regex -e RegularExpressions -e WantsMap -e NormalizeRoutingSelection -e ResolveFactualGroup src mod/Scripts -g '*.cs'` findet am 27. Oktober keine Treffer. Die früheren aktiven Routing-/Kartenüberschreibungen sind bereits entfernt. Routing und Zielbindung verwenden Gemmas strukturierte Entscheidungen; technische Schlüssel, Zahlen und native Zustände werden exakt geprüft. Dieser Umfang ist keine projektweite Regexfreiheitsbehauptung für Werkzeuge und Tests.
+
+Der Dialogclient liest Completion-Inhalt und Kontextfehler jetzt mit dem vorhandenen FullSerializer-JSON-Parser. Nur das echte Root-Feld `content` ist Inhalt. Kontextfehler stammen aus dem exakten internen Fehlerwert oder dem strukturierten Servertyp `exceed_context_size_error`; Wörter in einer Antwort sind keine Metadaten. `DialogueCompletionText.Extract` bleibt noch in drei Offline-Evaluatoren referenziert; der aktive Dialogclient verwendet diesen historischen Fragmentleser nicht mehr.
+
+Neue semantische Routen `biography` und `enterprise` verwenden dasselbe Gemma. Biografie ergänzt beim ersten relevanten persönlichen Gespräch drei kurze dauerhafte persönliche Sätze und, sofern eine echte Familie existiert, drei bis vier exakt geteilte Familienfakten. Native Herkunft und Familien-IDs bleiben verankert; Narrative erzeugen keine Personen, Häuser, Quests oder Wegziele. Vorhandene Gesprächshistorie, Szenenerinnerung und Zusammenfassungen bleiben erhalten. Unternehmensbezogene Beuterechte werden an die aktuelle Follow-Aktion und exakte Unternehmens-ID gebunden. Eigene Gegnerbeute und Containerfreigabe sind getrennt; keine Beutezusage erteilt Straftatzustimmung.
+
+Bei mehrschrittigen Aufträgen markiert eine kleine semantische Entscheidung ausschließlich die bereits vorgeschlagenen, ausdrücklich unabhängig fortsetzbaren Schritte. Diese Metadaten gehen vor der normalen freiwilligen Zustimmung in deren unveränderliche Signatur ein. Standard ist Abbruch; erworbene Gegenstände und an eine vorherige Ankunft gebundenes Warten bleiben abhängig. Fehlgeschlagene und blockierte Schritte erhalten keine Erfolgsbelege. Teilfortsetzung darf weder Zähler noch Dialogquittung als Gesamterfolg darstellen.
+
+Prüfgrenze nach ausdrücklicher Wiederaufnahme: Die aktuellen isolierten Prüfungen bestehen mit 53 Biografie-/Parser-Assertions, fünf Fortsetzungsfällen, 57 vorhandenen Auftrags-/Gesprächsfällen, 56/56 Goal-Tests, 17/17 Zustimmungsadapter-Tests und dem FullSerializer-Dialogmetadaten-Suite. Ein reproduzierter Fehler beim späteren nativen Bett-/Familienaufbau ist behoben: Die bereits gespeicherten persönlichen Sätze bleiben erhalten, während nur tatsächlich bestätigte Familienfakten nachträglich zugeordnet werden. Während des vorherigen Teststopps erfolgte keine Ausführung; dessen alter 24-Assertion-Zwischenstand ist kein aktueller Gesamtbeleg. Die neuesten Runtime-Kontext-/Uhrzeitänderungen benötigen noch Hauptagent-Kompilierung. Native und freie Gemma-Abnahme bleiben ausstehend. Details: `work/core-completion-20261027/dialogue_memory/RESULT.md`.
 
 ## Entscheidung und Zuständigkeit
 

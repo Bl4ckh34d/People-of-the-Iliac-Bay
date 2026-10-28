@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 80,
+  "bank": "TFAC00I0.RCI",
+  "emotion": "neutral",
+  "assetType": "mouth atlas",
+  "imageTool": "built-in image_gen",
+  "generationMode": "exactly one edit call; generated PNG copied byte-for-byte; no resize, postprocessing, or reroll",
+  "sourceOriginal": {
+    "path": "art/portraits/mobile-mouths/npc080-split-workspace/original.png",
+    "sha256": "4ea9b975047475ae696146fbd02a9b005b16c4baab7e1c1e1c3651ee287f4b0b",
+    "dimensionsPx": [
+      64,
+      64
+    ]
+  },
+  "sourceReferences": [
+    {
+      "path": "art/portraits/mobile-mouths/npc080-split-workspace/mouth-reference-grid.png",
+      "sha256": "360fbbced7a02766a36b31374267af4e8c05702708815d7720b030712a5bd435",
+      "dimensionsPx": [
+        1536,
+        696
+      ]
+    },
+    {
+      "path": "art/portraits/mobile-mouths/npc080-split-workspace/original.png",
+      "sha256": "4ea9b975047475ae696146fbd02a9b005b16c4baab7e1c1e1c3651ee287f4b0b",
+      "dimensionsPx": [
+        64,
+        64
+      ]
+    }
+  ],
+  "prompt": "Image 1 is NPC080's complete 3x3 lower-face reference grid. Image 2 is the immutable original NPC080 portrait and the binding authority for exact skin and lip colors, native lip scale, face geometry, shading, and pixel texture. Create one 3x3 neutral speech atlas of whole lower-half cells, row-major A, B, C / D, E, F / G, H, X. Each equal cell represents the original native 64x29 lower half; preserve the exact face framing, scale, and layout. No margins, labels, gutters, borders, or extra cells.\n\nMake all nine mouth poses clearly distinct and anatomically plausible at the tiny original lip scale:\nA closed, neutral resting lips.\nB a tiny relaxed parting.\nC a small rounded opening.\nD a moderate vertical Ah opening with restrained muted interior pixels.\nE a wider horizontal opening with only the original subdued tooth color.\nF lower lip gently contacting the upper teeth for an F/V shape.\nG a medium round O shape.\nH a narrow open shape with a small tongue-tip cue.\nX closed, relaxed lips with a very slight lip-compression difference from A but no emotion.\nKeep A and X closed; the final neutral A/X will be rebuilt exactly from the original.\n\nPalette lock is critical: match the original muted lip and skin pixels exactly in hue and subdued contrast. Do not make lips redder or more saturated, do not shift skin toward orange or yellow, do not brighten skin, teeth, or mouth interiors, and do not add dark or thick outlines. Preserve all existing face colors, shading and soft pixel clusters; allow only the minimal oral-opening pixels required for each viseme. No lipstick, new highlights, new shadows, contrast boost, blur, smoothing, changes to nose, cheeks, jaw, chin, neck, hair, background, crop, or lighting.",
+  "promptSha256Utf8": "c3b3d8676b4190ac2ffaaca3c5947c58edb002311898a385cf49915cd802ba69",
+  "grid": {
+    "rows": 3,
+    "columns": 3,
+    "rowMajorOrder": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "H",
+      "X"
+    ],
+    "nativeCellDimensionsPx": [
+      64,
+      29
+    ],
+    "completeHalfCells": true,
+    "generatedCanvasDimensionsPx": [
+      1863,
+      844
+    ],
+    "equalIntegerCellDivisionPossible": false,
+    "samplingLimitation": "Generated dimensions are not exactly divisible into equal integer cells; parent must confirm boundaries before native sampling. Raw PNG remains unaltered.",
+    "cellSemantics": "Nine neutral speech poses A-X; parent uses immutable original for final A/X."
+  },
+  "generatedOutput": {
+    "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-5744-7b43-9b03-e8cced819bb7\\exec-47a92846-b372-4f01-af0d-550ff6583de7.png",
+    "sha256": "29d10cfc35236e76d51a7b266e4614b74b2c36ce461e2d82e3d02e36012d288b",
+    "dimensionsPx": [
+      1863,
+      844
+    ],
+    "mode": "RGB"
+  },
+  "savedRaw": {
+    "path": "art/portraits/mobile-mouths/npc080-split-workspace/mouth/neutral/raw.png",
+    "sha256": "29d10cfc35236e76d51a7b266e4614b74b2c36ce461e2d82e3d02e36012d288b",
+    "dimensionsPx": [
+      1863,
+      844
+    ],
+    "mode": "RGB",
+    "bytewiseSameAsGenerated": true
+  },
+  "rawReview": {
+    "status": "raw generated; parent review pending",
+    "paletteLock": "not met",
+    "notes": "Single raw generation. B-H and the two closed cells are visibly distinct at the displayed atlas scale. X curves slightly into a smile; parent will use exact original for final A/X. Clear palette/style limitation: lips are redder/more saturated and skin warmer/orangier than the original, with stronger lip contours. Palette lock is not met; parent review required. No reroll or postprocessing.",
+    "nativeScaleOrMaskAcceptance": false,
+    "generatedCellDivisionExact": false
+  }
+}

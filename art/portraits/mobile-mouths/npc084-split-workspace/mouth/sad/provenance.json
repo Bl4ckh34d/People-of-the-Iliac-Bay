@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-21T23:45:01.0198674Z",
+    "portraitRecord":  84,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "sad",
+    "prompt":  "Edit the supplied original 3x3 lower-face reference grid into a corrected pixel-art speech-mouth atlas for record084. Preserve exact 3x3 cell boundaries, whole lower-face framing and scale in every cell. Keep this face identity, nose, muted brown skin, natural muted brown lips, soft original pixel clusters, golden hair edges, jaw, chin, neck and background unchanged. The sad mood is understated: gently downturned lip corners and relaxed jaw, never a pout. Use these exact row-major Rhubarb poses, each clearly distinct in mouth geometry: A = closed lips with light pressure; B = slightly open with nearly together teeth and a narrow horizontal opening for EE; C = medium-open relaxed unrounded EH shape; D = wide vertical AA opening, visibly taller and wider than C; E = slightly rounded AO opening, no wider than C; F = small forward puckered UW/OW/W opening, clearly rounded and not a tooth bite; G = upper teeth touching lower lip for F/V, a lip-to-teeth contact pose rather than a wide vowel; H = tongue raised behind upper teeth for long L, opening between C and D (a subtle tongue may be visible); X = closed relaxed idle lips. A and X are separate closed expressions: A lightly pressed with sad tension; X relaxed. Keep articulation readable at this pixel scale. Do not substitute generic variants of the same small opening, repeated teeth lines, nine closed mouths, nine clenched grins, or exaggerated openings. No red lipstick, orange halo, black outlines, glaring white teeth or unrelated repaint. No labels, borders or text.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-f89c-7311-8494-3e110d1dc05c as C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-f89c-7311-8494-3e110d1dc05c\\exec-9820493f-4ed9-40bc-b371-3830800e5db9.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-f89c-7311-8494-3e110d1dc05c\\exec-9820493f-4ed9-40bc-b371-3830800e5db9.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "10ec019f2359c6e700ebcba2286778ad666255ba107e21849cbe885f65de2d88",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "47a9646b4ccc362eba8f1855ca36d8b0a14294103b22c6a2f9ede335c0459d47",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-f89c-7311-8494-3e110d1dc05c\\exec-9820493f-4ed9-40bc-b371-3830800e5db9.png",
+                      "sha256":  "de9bbb8767f6e8315d142f1748e07b0fa2575eedbc85aa7aad11fc66e3ed6a6d",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/sad/raw.png",
+                "sha256":  "de9bbb8767f6e8315d142f1748e07b0fa2575eedbc85aa7aad11fc66e3ed6a6d",
+                "width":  1863,
+                "height":  844
+            }
+}

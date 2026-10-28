@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T10:08:34.1267005Z",
+    "portraitRecord":  73,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "angry",
+    "prompt":  "Create one production sprite atlas for NPC073\u0027s angry speech mouths, using the supplied exact 3×3 repeated-original-lower-half grid as the only reference image.\n\nUse case: stylized-concept\nAsset type: native pixel-art portrait mouth atlas\nPrimary request: Create nine restrained angry visemes for the same NPC073 lower-face crop.\nComposition: Exactly three equal columns and three equal rows. Each cell is one complete lower 64×29 crop. Whole canvas must keep 64:29 cell aspect ratio. Row-major order A B C / D E F / G H X. No labels, gutters, borders, added panels, scaling between cells, or full-face views.\nSubject and identity: Preserve NPC073 nose, original muted skin colors, blue wand at left, hair, chin, neck, crop and register. Keep original pink lip color and lip scale. Anger uses firm, tense lips with restrained corner tension. Do not turn every pose into a frown or smile.\nStyle and palette: Crisp native pixel art, soft low-contrast brown/terracotta palette. Teeth use muted neutral gray-ivory, distinct from skin, with modest dark oral-cavity contrast. Avoid bright tooth flashes.\nExact Rhubarb pose meanings:\nA: pressured closed P/B/M.\nB: narrow opening, teeth nearly together, consonants/EE.\nC: medium unrounded EH/AE.\nD: wide AA.\nE: slightly rounded AO/ER, no wider than C.\nF: puckered UW/OW/W.\nG: upper teeth touching lower lip, F/V.\nH: tongue raised behind upper teeth for L, opening between C and D.\nX: relaxed closed idle.\nConstraints: Keep pose geometry true to each definition at native scale. Show teeth only where phoneme pose requires them. Keep G as upper-teeth-to-lower-lip contact, H as visible raised tongue behind upper teeth. A and X remain emotionally firm/closed, with angry tension subtle and different only as needed for pose.\nAvoid: lipstick red, skin-colored teeth, tooth gaps, bright shiny white teeth, oversized mouths, black outlines, extreme downturned corners, giant skin patches, changed nose/jaw/hair/neck, blur or antialias smoothing.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-5f8744d3-877c-4364-9a94-30c901d0e2e3.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-5f8744d3-877c-4364-9a94-30c901d0e2e3.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "8505d9e9fde3c536cf08958e97076aba44aa5d60e2e76ba6fc3fdb1384b8d643",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "9de10294b0248c194428d55abb5ba8cd5db8e0fc0f5225856c816e765b076f52",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-5f8744d3-877c-4364-9a94-30c901d0e2e3.png",
+                      "sha256":  "75f70ca6dee3bdb83940a54c00b65871c1044b5314ad22672e5800d394539122",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/angry/raw.png",
+                "sha256":  "75f70ca6dee3bdb83940a54c00b65871c1044b5314ad22672e5800d394539122",
+                "width":  1863,
+                "height":  844
+            }
+}

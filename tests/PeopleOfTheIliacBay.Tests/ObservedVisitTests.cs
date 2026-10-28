@@ -277,11 +277,6 @@ namespace PeopleOfTheIliacBay.Tests
 
             Check.True(restored.RemoveObservedVisit(resident.Id), "Observed visit removal missed active record.");
             Check.True(!restored.RemoveObservedVisit(resident.Id), "Observed visit removal reported duplicate success.");
-            var legacy = restored.Snapshot();
-            legacy.Version = 18;
-            legacy.ObservedVisits = null;
-            restored.Restore(legacy);
-            Check.True(restored.GetObservedVisit(resident.Id) == null, "Legacy restore retained an observed visit.");
         }
 
         private static ObservedVisit Create()

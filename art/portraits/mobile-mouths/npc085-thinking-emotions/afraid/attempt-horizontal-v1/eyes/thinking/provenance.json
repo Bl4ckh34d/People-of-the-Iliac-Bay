@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T08:45:02.9661273Z",
+    "portraitRecord":  85,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Create one clean pixel-art reference atlas for the existing NPC085 afraid/thinking eyes. Use the single attached 2x2 image as the exact portrait identity, emotion, palette, spacing, eye-opening shape, and blink-phase reference. Preserve this NPC\u0027s exact visible face and hair/head silhouette, warm skin, small warm brown/amber irises, dark pupils and outline, and distinctive fearful brow/expression. Keep the same pixel scale and low-resolution sprite rendering.\n\nCanvas: one seamless two-column by two-row sheet, without margin, gutters, labels, extra faces, text, or decoration. Preserve the reference canvas ratio 1024:560 and the cell ratio 64:35. Cell order: top-left open eyes looking LEFT; top-right open eyes looking RIGHT; bottom-left half-blink eyes looking LEFT; bottom-right half-blink eyes looking RIGHT.\n\nKeep the source\u0027s upper and lower eyelid contours, aperture width/height, eye angle, and fearful brows unchanged in every cell. The only difference between left and right is a gentle roughly one-native-pixel horizontal shift of each compact iris and pupil inside the same opening. Retain the existing warm brown/amber iris hue and dark pupil/outline; do not recolor or enlarge them. Keep the half-blink gaze aligned with the open pose above. Do not widen the eyes or expose extra sclera; keep any visible sclera muted beige and no broader than source. Highlights remain tiny and restrained, matching existing warm flecks; avoid oversized or bright white glints/bands. Avoid altered expression, reshaped lids or brows, square/bar pupils, eyes looking vertically, face/hair redesign, smoothing, antialiasing, blur, or added content.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-01af2f70-1a6a-43e4-8770-8fbf715d3fb4.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-01af2f70-1a6a-43e4-8770-8fbf715d3fb4.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "8381f07edb8751dd0dfa93e4049c5ae00563c75ba9b0bb1fb5dfa80ca2a001d4",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "085f15d25edadf3b7412a7b4a41781801684b7bbd1ea1f64b0120e3beee264ad",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-01af2f70-1a6a-43e4-8770-8fbf715d3fb4.png",
+                      "sha256":  "02eb9bb48478c16c6c217f180540396eefd6c0bd2c64ffc1218a1568537de0db",
+                      "width":  1696,
+                      "height":  927
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "02eb9bb48478c16c6c217f180540396eefd6c0bd2c64ffc1218a1568537de0db",
+                "width":  1696,
+                "height":  927
+            }
+}

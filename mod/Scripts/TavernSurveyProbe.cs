@@ -44,15 +44,15 @@ namespace PeopleOfTheIliacBay.DFU
             Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_VISIT_SETTLEMENT_SAVE_PASS: settlement="+town+"; exits="+copy.ServiceExits.Count+"; native fields and legacy inference.");
             Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_VISIT_ID_SAVE_PASS: settlement="+town+"; exits="+copy.ServiceExits.Count+"; stable IDs and legacy inference.");
         }
-        private static void VerifyRemoteClaims(BuildingDirectory directory,StaticDoor entry,TavernRoomSurvey.Result inventory)
+        private static void VerifyRemoteClaims(BuildingDirectory directory,StaticDoor entry,TavernBedSurvey.Result inventory)
         {
             var local=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); local.GetOrCreate(directory.MapID,new int[0]);
-            local.RegisterLodging(directory.MapID,entry.buildingKey,inventory.Rooms);
-            NativeInnOccupants.Claim(local,directory,entry,inventory.Rooms,inventory.Occupants,100);
+            local.RegisterLodgingBeds(directory.MapID,entry.buildingKey,inventory.Beds);
+            NativeInnOccupants.Claim(local,directory,entry,inventory.Beds,inventory.Occupants,100);
             var remote=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); remote.GetOrCreate(directory.MapID,new int[0]);
-            remote.RegisterLodging(directory.MapID,entry.buildingKey,inventory.Rooms);
+            remote.RegisterLodgingBeds(directory.MapID,entry.buildingKey,inventory.Beds);
             uint seed=DFRandom.Seed;
-            NativeInnOccupants.Claim(remote,directory.MapID,directory.LocationData,entry,inventory.Rooms,inventory.Occupants,100);
+            NativeInnOccupants.Claim(remote,directory.MapID,directory.LocationData,entry,inventory.Beds,inventory.Occupants,100);
             if(DFRandom.Seed!=seed) throw new InvalidOperationException("Remote claims changed global random state.");
             var a=local.NativePeopleFor(directory.MapID); var b=remote.NativePeopleFor(directory.MapID);
             if(a.Count!=b.Count) throw new InvalidOperationException("Remote native identity count differs.");
@@ -61,37 +61,36 @@ namespace PeopleOfTheIliacBay.DFU
                 var other=b.Find(p=>p.Id==person.Id);
                 if(other==null || other.Name!=person.Name || other.Race!=person.Race ||
                     remote.NativeLodgingBed(person.Id)!=local.NativeLodgingBed(person.Id))
-                    throw new InvalidOperationException("Remote native room claim differs.");
+                    throw new InvalidOperationException("Remote native bed claim differs.");
             }
             var foreign=directory.LocationData; foreign.LocationIndex++;
             for(int r=0;r<MapsFile.RegionRaces.Length;r++)
                 if(MapsFile.RegionRaces[r]!=MapsFile.RegionRaces[foreign.RegionIndex]) {foreign.RegionIndex=r;break;}
             var alternate=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); alternate.GetOrCreate(directory.MapID,new int[0]);
-            alternate.RegisterLodging(directory.MapID,entry.buildingKey,inventory.Rooms);
-            NativeInnOccupants.Claim(alternate,directory.MapID,foreign,entry,inventory.Rooms,inventory.Occupants,100);
+            alternate.RegisterLodgingBeds(directory.MapID,entry.buildingKey,inventory.Beds);
+            NativeInnOccupants.Claim(alternate,directory.MapID,foreign,entry,inventory.Beds,inventory.Occupants,100);
             foreach(var person in alternate.NativePeopleFor(directory.MapID))
                 if(person.FactionId==0 && person.Race!=MapsFile.RegionRaces[foreign.RegionIndex]+1)
                     throw new InvalidOperationException("Remote occupant inherited player region.");
             if(DFRandom.Seed!=seed) throw new InvalidOperationException("Foreign claims changed global random state.");
             Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_REMOTE_CLAIMS_PASS: building="+entry.buildingKey+"; people="+a.Count);
         }
-        private static void VerifyRemoteReceipt(BuildingDirectory directory,StaticDoor entry,TavernRoomSurvey.Result inventory)
+        private static void VerifyRemoteReceipt(BuildingDirectory directory,StaticDoor entry,TavernBedSurvey.Result inventory)
         {
-            int marker=-1; string room=null;
-            foreach(var pair in inventory.Markers) {marker=pair.Key;room=pair.Value;break;}
+            int marker=-1; string bed=null;
+            foreach(var pair in inventory.Markers) {marker=pair.Key;bed=pair.Value;break;}
             if(marker<0) throw new InvalidOperationException("No rental marker for receipt fixture.");
             var store=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); store.GetOrCreate(directory.MapID,new int[0]);
             var receipt=new RoomRental_v1 {mapID=directory.MapID,buildingKey=entry.buildingKey,allocatedBedIndex=marker,expiryTime=1000};
             NativeTavernRentals.RegisterInventory(store,directory.MapID,directory.LocationData,entry,inventory,receipt,100);
             NativeTavernRentals.RegisterInventory(store,directory.MapID,directory.LocationData,entry,inventory,receipt,200);
             var ledger=store.Snapshot().Lodgings[0];
-            if(ledger.Bookings.Count!=1 || !ledger.Bookings[0].Player || ledger.Bookings[0].RoomId!=room || ledger.Bookings[0].EndsAt!=1000)
+            if(ledger.Bookings.Count!=1 || !ledger.Bookings[0].Player || ledger.Bookings[0].BedIds.Count!=1 || ledger.Bookings[0].BedIds[0]!=bed || ledger.Bookings[0].EndsAt!=1000)
                 throw new InvalidOperationException("Remote registration lost or duplicated paid receipt.");
-            var paidRoom=ledger.Rooms.Find(r=>r.Id==room);
-            if(ledger.Occupants.Exists(o=>paidRoom.Beds.Contains(o.BedId)))
-                throw new InvalidOperationException("Permanent occupant displaced paid player room.");
-            if(store.TryBookLodging(directory.MapID,entry.buildingKey,"conflicting-remote-guest","visitor",777,false,1,200,500,room))
-                throw new InvalidOperationException("Remote guest double-booked player room.");
+            if(ledger.Occupants.Exists(o=>o.BedId==bed))
+                throw new InvalidOperationException("Permanent occupant displaced paid player bed.");
+            if(store.TryBookLodging(directory.MapID,entry.buildingKey,"conflicting-remote-guest","visitor",777,false,1,200,500,bed))
+                throw new InvalidOperationException("Remote guest double-booked player bed.");
             var invalid=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); invalid.GetOrCreate(directory.MapID,new int[0]);
             receipt.allocatedBedIndex=int.MaxValue; bool rejected=false;
             try {NativeTavernRentals.RegisterInventory(invalid,directory.MapID,directory.LocationData,entry,inventory,receipt,100);}
@@ -205,58 +204,58 @@ namespace PeopleOfTheIliacBay.DFU
                 int people=UnityEngine.Object.FindObjectsOfType<StaticNPC>().Length;
                 Dictionary<int,string> unloadedMarkers;
                 Dictionary<int,string> unloadedOccupants;
-                var unloadedRooms=TavernRoomSurvey.ReadUnloaded(owner.transform,entry,out unloadedMarkers,out unloadedOccupants);
+                var unloadedBeds=TavernBedSurvey.ReadUnloaded(owner.transform,entry,out unloadedMarkers,out unloadedOccupants);
                 UnloadedSettlementSurvey.Entrance remoteDoor=null;
                 foreach(var candidate in metadata.Grid.Entrances)
                     if(candidate.BuildingKey==tavern.buildingKey) {remoteDoor=candidate;break;}
                 if(remoteDoor==null) throw new InvalidOperationException("Metadata inn entrance missing.");
-                var remote=new TavernRoomSurvey.Result();
-                yield return TavernRoomSurvey.ReadRemoteSteps(remoteDoor,directory.LocationData.Climate.ClimateType,remote,()=>true);
+                var remote=new TavernBedSurvey.Result();
+                yield return TavernBedSurvey.ReadRemoteSteps(remoteDoor,directory.LocationData.Climate.ClimateType,remote,()=>true);
                 if(!remote.KeeperHash.HasValue || remote.ReceptionRoute==null || remote.ReceptionRoute.Count<2)
                     throw new InvalidOperationException("Remote inn lacks keeper approach geometry.");
-                if(remote.Rooms==null || remote.Rooms.Count!=unloadedRooms.Count || remote.Markers.Count!=unloadedMarkers.Count ||
+                if(remote.Beds==null || remote.Beds.Count!=unloadedBeds.Count || remote.Markers.Count!=unloadedMarkers.Count ||
                     remote.Occupants.Count!=unloadedOccupants.Count) throw new InvalidOperationException("Remote inn inventory differs from native entrance survey.");
-                for(int r=0;r<unloadedRooms.Count;r++)
-                    if(remote.Rooms[r].Id!=unloadedRooms[r].Id || string.Join(",",remote.Rooms[r].Beds.ToArray())!=string.Join(",",unloadedRooms[r].Beds.ToArray()))
-                        throw new InvalidOperationException("Remote inn room identity mismatch.");
+                for(int r=0;r<unloadedBeds.Count;r++)
+                    if(remote.Beds[r].Id!=unloadedBeds[r].Id)
+                        throw new InvalidOperationException("Remote inn bed identity mismatch.");
                 foreach(var marker in unloadedMarkers) if(remote.Markers[marker.Key]!=marker.Value)
                     throw new InvalidOperationException("Remote rental marker mismatch.");
                 foreach(var occupant in unloadedOccupants) if(remote.Occupants[occupant.Key]!=occupant.Value)
                     throw new InvalidOperationException("Remote permanent occupant mismatch.");
-                var cancelled=new TavernRoomSurvey.Result();
-                yield return TavernRoomSurvey.ReadRemoteSteps(remoteDoor,directory.LocationData.Climate.ClimateType,cancelled,()=>false);
-                if(cancelled.Rooms!=null) throw new InvalidOperationException("Cancelled remote inventory was published.");
+                var cancelled=new TavernBedSurvey.Result();
+                yield return TavernBedSurvey.ReadRemoteSteps(remoteDoor,directory.LocationData.Climate.ClimateType,cancelled,()=>false);
+                if(cancelled.Beds!=null) throw new InvalidOperationException("Cancelled remote inventory was published.");
                 VerifyRemoteClaims(directory,remoteDoor.NativeDoor,remote);
                 VerifyRemoteReceipt(directory,remoteDoor.NativeDoor,remote);
                 if(tavern.buildingKey==taverns[0].buildingKey)
                 {
-                    bool valid=true; var interrupted=new TavernRoomSurvey.Result();
-                    var first=TavernRoomSurvey.ReadRemoteSteps(remoteDoor,directory.LocationData.Climate.ClimateType,interrupted,()=>valid);
-                    var secondResult=new TavernRoomSurvey.Result();
-                    var second=TavernRoomSurvey.ReadRemoteSteps(remoteDoor,directory.LocationData.Climate.ClimateType,secondResult,()=>valid);
+                    bool valid=true; var interrupted=new TavernBedSurvey.Result();
+                    var first=TavernBedSurvey.ReadRemoteSteps(remoteDoor,directory.LocationData.Climate.ClimateType,interrupted,()=>valid);
+                    var secondResult=new TavernBedSurvey.Result();
+                    var second=TavernBedSurvey.ReadRemoteSteps(remoteDoor,directory.LocationData.Climate.ClimateType,secondResult,()=>valid);
                     try
                     {
                         while(first.MoveNext() && !GameObject.Find("People of the Iliac Bay remote inn owner")) yield return null;
                         if(!GameObject.Find("People of the Iliac Bay remote inn owner")) throw new InvalidOperationException("Remote cancellation fixture never started.");
-                        if(!second.MoveNext() || secondResult.Rooms!=null) throw new InvalidOperationException("Concurrent survey bypassed queue.");
+                        if(!second.MoveNext() || secondResult.Beds!=null) throw new InvalidOperationException("Concurrent survey bypassed queue.");
                         valid=false;
-                        if(first.MoveNext() || second.MoveNext() || interrupted.Rooms!=null || secondResult.Rooms!=null ||
+                        if(first.MoveNext() || second.MoveNext() || interrupted.Beds!=null || secondResult.Beds!=null ||
                             GameObject.Find("People of the Iliac Bay remote inn owner")) throw new InvalidOperationException("Cancelled remote survey retained geometry or results.");
                     }
                     finally {(first as IDisposable)?.Dispose();(second as IDisposable)?.Dispose();}
                     Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_REMOTE_CANCEL_PASS: active and queued surveys cleaned up.");
                 }
                 Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_REMOTE_INN_PASS: building="+tavern.buildingKey);
-                var sliced=new TavernRoomSurvey.Result();
-                var operation=TavernRoomSurvey.ReadUnloadedSteps(owner.transform,entry,sliced);
+                var sliced=new TavernBedSurvey.Result();
+                var operation=TavernBedSurvey.ReadUnloadedSteps(owner.transform,entry,sliced);
                 int slices=0;
                 try { while(operation.MoveNext()) { slices++; yield return null; } }
                 finally { (operation as IDisposable)?.Dispose(); }
-                if(slices<1 || sliced.Rooms.Count!=unloadedRooms.Count || sliced.Markers.Count!=unloadedMarkers.Count ||
+                if(slices<1 || sliced.Beds.Count!=unloadedBeds.Count || sliced.Markers.Count!=unloadedMarkers.Count ||
                     sliced.Occupants.Count!=unloadedOccupants.Count) throw new InvalidOperationException("Sliced tavern survey differs from synchronous survey.");
-                for(int r=0;r<unloadedRooms.Count;r++)
-                    if(sliced.Rooms[r].Id!=unloadedRooms[r].Id || string.Join(",",sliced.Rooms[r].Beds.ToArray())!=string.Join(",",unloadedRooms[r].Beds.ToArray()))
-                        throw new InvalidOperationException("Sliced survey changed bedroom partition.");
+                for(int r=0;r<unloadedBeds.Count;r++)
+                    if(sliced.Beds[r].Id!=unloadedBeds[r].Id)
+                        throw new InvalidOperationException("Sliced survey changed bed identity.");
                 foreach(var marker in unloadedMarkers) if(sliced.Markers[marker.Key]!=marker.Value)
                     throw new InvalidOperationException("Sliced survey changed rental marker.");
                 foreach(var occupant in unloadedOccupants) if(sliced.Occupants[occupant.Key]!=occupant.Value)
@@ -327,10 +326,10 @@ namespace PeopleOfTheIliacBay.DFU
                         "; position="+bed.LocalCenter.ToString("F3")+"; accessible="+route);
                 }
                 var doors=room.GetComponentsInChildren<DaggerfallActionDoor>();
-                VerifyRooms(room,beds,doors);
+                VerifyBeds(room,beds,doors);
                 Dictionary<int,string> loadedMarkers;
                 Dictionary<int,string> loadedOccupants;
-                var loadedRooms=TavernRoomSurvey.Read(room,out loadedMarkers,out loadedOccupants);
+                var loadedBeds=TavernBedSurvey.Read(room,out loadedMarkers,out loadedOccupants);
                 totalOccupants+=loadedOccupants.Count;
                 if(loadedOccupants.Count!=unloadedOccupants.Count) throw new InvalidOperationException("Loaded/unloaded inn occupants differ.");
                 foreach(var occupant in loadedOccupants)
@@ -342,28 +341,27 @@ namespace PeopleOfTheIliacBay.DFU
                         throw new InvalidOperationException("Assigned inn occupant does not exist in native layout.");
                     Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_INN_OCCUPANT_SURVEY: building="+tavern.buildingKey+"; hash="+occupant.Key+"; bed="+occupant.Value);
                 }
-                if(unloadedRooms.Count!=loadedRooms.Count || unloadedMarkers.Count!=loadedMarkers.Count)
-                    throw new InvalidOperationException("Unloaded tavern room or marker count differs from actual interior.");
-                foreach(var group in loadedRooms)
+                if(unloadedBeds.Count!=loadedBeds.Count || unloadedMarkers.Count!=loadedMarkers.Count)
+                    throw new InvalidOperationException("Unloaded tavern bed or marker count differs from actual interior.");
+                foreach(var loadedBed in loadedBeds)
                 {
-                    var other=unloadedRooms.Find(r=>r.Id==group.Id);
-                    if(other==null || other.Beds.Count!=group.Beds.Count || !other.Beds.TrueForAll(b=>group.Beds.Contains(b)))
-                        throw new InvalidOperationException("Unloaded tavern room partition differs from actual interior.");
+                    var other=unloadedBeds.Find(value=>value.Id==loadedBed.Id);
+                    if(other==null)throw new InvalidOperationException("Unloaded tavern bed identity differs from actual interior.");
                 }
                 foreach(var marker in loadedMarkers)
                     if(!unloadedMarkers.ContainsKey(marker.Key) || unloadedMarkers[marker.Key]!=marker.Value)
                         throw new InvalidOperationException("Unloaded tavern marker allocation differs from actual interior.");
-                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_UNLOADED_TAVERN_PASS: building="+tavern.buildingKey+"; rooms/markers match loaded interior; player scene and native people unchanged.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_UNLOADED_TAVERN_PASS: building="+tavern.buildingKey+"; beds/markers match loaded interior; player scene and native people unchanged.");
                 yield return VerifyUnrentedInventory(room,directory.MapID);
                 yield return new WaitForSecondsRealtime(2);
                 var live=(WorldState)UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>().GetSaveData();
                 var ledger=live.Lodgings.Find(t=>t.SettlementId==directory.MapID && t.BuildingKey==tavern.buildingKey);
                 foreach(var occupant in loadedOccupants)
                 {
-                    if(!ledger.Rooms.Exists(r=>r.Beds.Contains(occupant.Value))) continue;
+                    if(!ledger.Beds.Exists(b=>b.Id==occupant.Value)) continue;
                     var person=live.NativePeople.Find(p=>p.SettlementId==directory.MapID && p.WorkKey==tavern.buildingKey && p.NativeHash==occupant.Key);
                     if(person==null || !ledger.Occupants.Exists(o=>o.PersonId==person.Id && o.BedId==occupant.Value))
-                        throw new InvalidOperationException("Native bedroom occupant lacks automatic lodging claim.");
+                        throw new InvalidOperationException("Native bed occupant lacks automatic lodging claim.");
                 }
                 if(ledger.Occupants.Count>0)
                 {
@@ -602,10 +600,10 @@ namespace PeopleOfTheIliacBay.DFU
                         (found==null?0:found.Count)+"/"+expected+"; playerDelta="+Vector3.Distance(game.PlayerMotor.transform.position,position)+
                         "; gold="+gold+"/"+player.GetGoldAmount()+"; "+ExteriorSurveyState(host));
                 foreach(var inn in found)
-                    if(inn.Rooms.Count==0 || (inn.BuildingKey==paidBuilding ?
+                    if(inn.Beds.Count==0 || (inn.BuildingKey==paidBuilding ?
                         inn.Bookings.Count!=1 || !inn.Bookings[0].Player || inn.Bookings[0].EndsAt!=expiry : inn.Bookings.Count!=0))
-                        throw new InvalidOperationException("Exterior inventory lost paid room or invented reservations.");
-                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_EXTERIOR_INVENTORY_PASS: inns="+found.Count+"; paid room imported; no entry, movement or charge.");
+                        throw new InvalidOperationException("Exterior inventory lost paid bed or invented reservations.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_EXTERIOR_INVENTORY_PASS: inns="+found.Count+"; paid bed imported; no entry, movement or charge.");
             }
             finally
             {
@@ -620,7 +618,7 @@ namespace PeopleOfTheIliacBay.DFU
             var type=typeof(NativeTavernRentals);var operation=type.GetField("surveyOperation",flags).GetValue(rental);
             object state=operation==null?null:operation.GetType().GetField("<>1__state",flags)?.GetValue(operation);
             return "surveyKey="+type.GetField("surveyKey",flags).GetValue(rental)+"; active="+(operation!=null)+"; iteratorState="+state+
-                "; sharedSurveyActive="+typeof(TavernRoomSurvey).GetField("remoteSurveyActive",System.Reflection.BindingFlags.Static|System.Reflection.BindingFlags.NonPublic).GetValue(null);
+                "; sharedSurveyActive="+typeof(TavernBedSurvey).GetField("remoteSurveyActive",System.Reflection.BindingFlags.Static|System.Reflection.BindingFlags.NonPublic).GetValue(null);
         }
         private static IEnumerator VerifyUnrentedInventory(DaggerfallInterior interior,int town)
         {
@@ -642,11 +640,11 @@ namespace PeopleOfTheIliacBay.DFU
                     if(lodging!=null) break;
                     yield return null;
                 }
-                Dictionary<int,string> mapping; TavernRoomSurvey.Read(interior,out mapping);
-                if(lodging==null || lodging.Rooms.FindAll(r=>!r.NonRentable).Count!=new HashSet<string>(mapping.Values).Count || lodging.Bookings.Count!=0 ||
+                Dictionary<int,string> mapping; TavernBedSurvey.Read(interior,out mapping);
+                if(lodging==null || lodging.Beds.Count!=BedGeometry.Read(interior).Count || lodging.Bookings.Count!=0 ||
                     player.GetGoldAmount()!=gold || player.GetRentedRoom(town,building)!=null)
                     throw new InvalidOperationException("Unrented tavern did not register guest inventory without payment or bookings.");
-                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_UNRENTED_INVENTORY_PASS: building="+building+"; guestRooms="+lodging.Rooms.Count+"; no receipt, booking or charge.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_UNRENTED_INVENTORY_PASS: building="+building+"; beds="+lodging.Beds.Count+"; no receipt, booking or charge.");
             }
             finally
             {
@@ -677,9 +675,9 @@ namespace PeopleOfTheIliacBay.DFU
                 }
                 if(lodging==null || lodging.Bookings.Count!=1 || lodging.Bookings[0].EndsAt!=expiry)
                     throw new InvalidOperationException("Native paid rental was not imported by running controller.");
-                Dictionary<int,string> mapping; TavernRoomSurvey.Read(interior,out mapping);
+                Dictionary<int,string> mapping; TavernBedSurvey.Read(interior,out mapping);
                 var booking=lodging.Bookings[0];
-                if(booking.RoomId!=mapping[1] || receipt.allocatedBedIndex!=1 || receipt.expiryTime!=expiry || player.GetGoldAmount()!=gold)
+                if(booking.BedIds.Count!=1 || booking.BedIds[0]!=mapping[1] || receipt.allocatedBedIndex!=1 || receipt.expiryTime!=expiry || player.GetGoldAmount()!=gold)
                     throw new InvalidOperationException("Native rental import changed allocation or payment.");
                 receipt.expiryTime+=86400; deadline=Time.realtimeSinceStartup+15;
                 while(Time.realtimeSinceStartup<deadline)
@@ -691,7 +689,7 @@ namespace PeopleOfTheIliacBay.DFU
                 if(lodging.Bookings.Count!=1 || lodging.Bookings[0].Id!=booking.Id || lodging.Bookings[0].StartsAt!=booking.StartsAt ||
                     lodging.Bookings[0].EndsAt!=receipt.expiryTime || player.GetGoldAmount()!=gold)
                     throw new InvalidOperationException("Native rental extension duplicated or charged booking.");
-                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_NATIVE_RENTAL_PASS: building="+receipt.buildingKey+"; room="+booking.RoomId+"; paid marker preserved, repeat/extension no charge.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_NATIVE_RENTAL_PASS: building="+receipt.buildingKey+"; bed="+booking.BedIds[0]+"; paid marker preserved, repeat/extension no charge.");
             }
             finally
             {
@@ -700,35 +698,35 @@ namespace PeopleOfTheIliacBay.DFU
                 host.RestoreSaveData(current);
             }
         }
-        private static void VerifyRooms(DaggerfallInterior interior,List<BedAnchor> beds,DaggerfallActionDoor[] doors)
+        private static void VerifyBeds(DaggerfallInterior interior,List<BedAnchor> beds,DaggerfallActionDoor[] doors)
         {
             var original=new List<bool>(); foreach(var door in doors) original.Add(door.IsOpen);
             try
             {
                 foreach(var door in doors) door.SetOpen(false,true,true); Physics.SyncTransforms();
                 Dictionary<int,string> closedMarkers,openMarkers;
-                var closed=TavernRoomSurvey.Read(interior,out closedMarkers);
+                var closed=TavernBedSurvey.Read(interior,out closedMarkers);
                 foreach(var door in doors) door.SetOpen(true,true,true); Physics.SyncTransforms();
-                var opened=TavernRoomSurvey.Read(interior,out openMarkers);
-                Func<List<LodgingRoom>,string> signature=rooms=> {
-                    var parts=new List<string>(); foreach(var room in rooms) parts.Add(room.Id+"="+string.Join(",",room.Beds.ToArray()));
+                var opened=TavernBedSurvey.Read(interior,out openMarkers);
+                Func<List<LodgingBed>,string> signature=values=> {
+                    var parts=new List<string>(); foreach(var bed in values) parts.Add(bed.Id);
                     return string.Join(";",parts.ToArray()); };
-                if(signature(closed)!=signature(opened)) throw new InvalidOperationException("Opening tavern doors changed private room partition.");
+                if(signature(closed)!=signature(opened)) throw new InvalidOperationException("Opening tavern doors changed bed identity.");
                 var assigned=new HashSet<string>();
-                foreach(var room in closed) foreach(var bed in room.Beds)
-                    if(!assigned.Add(bed)) throw new InvalidOperationException("Bed belongs to multiple tavern rooms.");
-                foreach(var bed in beds) if(!assigned.Contains("bed:"+bed.RecordIndex)) throw new InvalidOperationException("Tavern bed missing from room partition: "+bed.RecordIndex);
-                if(closed.Count<2) throw new InvalidOperationException("Known multi-room tavern collapsed into one room.");
+                foreach(var bed in closed)
+                    if(!assigned.Add(bed.Id)) throw new InvalidOperationException("Duplicate tavern bed identity.");
+                foreach(var bed in beds) if(!assigned.Contains("bed:"+bed.RecordIndex)) throw new InvalidOperationException("Tavern bed missing from inventory: "+bed.RecordIndex);
+                if(closed.Count!=beds.Count) throw new InvalidOperationException("Physical and registered bed counts differ.");
                 var markers=interior.FindMarkers(DaggerfallInterior.InteriorMarkerTypes.Rest);
                 if(closedMarkers.Count!=markers.Length || openMarkers.Count!=markers.Length)
-                    throw new InvalidOperationException("Native rental markers are missing room mappings.");
+                    throw new InvalidOperationException("Native rental markers are missing bed mappings.");
                 for(int index=0;index<markers.Length;index++)
                 {
                     if(!closedMarkers.ContainsKey(index) || !openMarkers.ContainsKey(index) || closedMarkers[index]!=openMarkers[index] ||
-                        !closed.Exists(r=>r.Id==closedMarkers[index])) throw new InvalidOperationException("Rental marker mapping changed with open doors.");
-                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TAVERN_MARKER_PASS: building="+interior.EntryDoor.buildingKey+"; marker="+index+"; room="+closedMarkers[index]);
+                        !closed.Exists(b=>b.Id==closedMarkers[index])) throw new InvalidOperationException("Rental marker mapping changed with open doors.");
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TAVERN_MARKER_PASS: building="+interior.EntryDoor.buildingKey+"; marker="+index+"; bed="+closedMarkers[index]);
                 }
-                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TAVERN_ROOMS_PASS: building="+interior.EntryDoor.buildingKey+"; "+signature(closed)+"; open/closed identical.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TAVERN_BEDS_PASS: building="+interior.EntryDoor.buildingKey+"; "+signature(closed)+"; open/closed identical.");
             }
             finally { for(int i=0;i<doors.Length;i++) doors[i].SetOpen(original[i],true,true); Physics.SyncTransforms(); }
         }

@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "purpose": "review-only seed experiment; not runtime voice assignment",
+  "voiceSet": "female",
+  "portraitId": "common-075",
+  "portraitRecord": 75,
+  "seed": 887887560,
+  "exactText": "Before you leave, let me tell you about the old mill beyond the village. Follow the little yellow lanterns across the blue bridge, then turn left by the willow tree. The miller brings fresh bread, warm apple pies, and five fine bottles of wine to the market every morning. Oh, and do look out for the wolves near the ruined tower. If you hear a low howl, keep your bow close and walk home quietly. We can talk about your journey over a cup of tea when you return.",
+  "referenceSha256": "e8ca4c1b5f252462ef86350435cf5b0e150d9bcc15002a63763b245d43253b0e",
+  "profileId": "npcvoice-01",
+  "profileSha256": "778b21bd8e397e20c6d7704a0bd1c42c48f042cc555ad26d926187a674f3cd31",
+  "modelId": "breeze",
+  "expectedModelFile": "breeze-tts-2-q4_0.gguf",
+  "audioSets": [
+    {
+      "emotionId": "neutral",
+      "audio": "neutral.wav",
+      "timing": "neutral.visemes.json",
+      "audioSha256": "96279e8732be6989ef29a41bf32ce6cf31987cc6356998d08cd287d124c35552",
+      "timingSha256": "404aab93dcc7778e34bce661017b56b7c18d285911b89b836966ca5055845fd9",
+      "id": "neutral"
+    },
+    {
+      "emotionId": "happy",
+      "audio": "happy.wav",
+      "timing": "happy.visemes.json",
+      "audioSha256": "3ffe10d69495ef0bfe66258797011ede1ecf7b24edd66b776cfe352fd3e8cd51",
+      "timingSha256": "a4a41c1a81743506314ee6a67a8206f9b1cfbe0408c385e2bee6ab4c4cc04c3a",
+      "id": "happy"
+    },
+    {
+      "emotionId": "angry",
+      "audio": "angry.wav",
+      "timing": "angry.visemes.json",
+      "audioSha256": "3bf680f0f6c889eadf5863f74c18573c93dff0796891a6bcd0a7e672649881dd",
+      "timingSha256": "bf8640a35ef2653c50bb4a929d1585ef3c7f6a572d7e9d55352e1a625a6198e4",
+      "id": "angry"
+    },
+    {
+      "emotionId": "sad",
+      "audio": "sad.wav",
+      "timing": "sad.visemes.json",
+      "audioSha256": "24934e0b2df06689458c9eb9552d644b4674ab84a751e174a52b87ac8eb7a150",
+      "timingSha256": "ea9d922d40a1dcbe361c7be75f827a3a7db7fadc07450fa71bbf6d805cbe4f8c",
+      "id": "sad"
+    },
+    {
+      "emotionId": "afraid",
+      "audio": "afraid.wav",
+      "timing": "afraid.visemes.json",
+      "audioSha256": "328088eea1fa2b0b37dcce400a2833dea97df8c757c28916a4c060d6ada733b5",
+      "timingSha256": "0c5039841b5f82e1c87eb218bf758b8c53c0623e2bbedd20134dcb8f2ac27b3d",
+      "id": "afraid"
+    },
+    {
+      "emotionId": "guarded",
+      "audio": "guarded.wav",
+      "timing": "guarded.visemes.json",
+      "audioSha256": "3fe51a5eaddfde721cc7d30f9793efec72221e88119b004393480ce3eeaa3b43",
+      "timingSha256": "c4891c7724226c468548b9f0581d26c96bbc61843b725c00d8a956a85b9f4a64",
+      "id": "guarded"
+    }
+  ],
+  "sameText": "Before you leave, let me tell you about the old mill beyond the village. Follow the little yellow lanterns across the blue bridge, then turn left by the willow tree. The miller brings fresh bread, warm apple pies, and five fine bottles of wine to the market every morning. Oh, and do look out for the wolves near the ruined tower. If you hear a low howl, keep your bow close and walk home quietly. We can talk about your journey over a cup of tea when you return.",
+  "sameReferenceSha256": "e8ca4c1b5f252462ef86350435cf5b0e150d9bcc15002a63763b245d43253b0e"
+}

@@ -10,19 +10,20 @@ namespace PeopleOfTheIliacBay.DFU
     // Materialize pure deterministic plans only for a first, empty inventory binding.
     public static class NativeNpcStartingBelongings
     {
-        public static ItemCollection CreateInitialItems(WorldStateStore world,string personId,MobilePersonNPC visiblePerson=null,Resident resident=null)
+        public static ItemCollection CreateInitialItems(WorldStateStore world,string personId,MobilePersonNPC visiblePerson=null,Resident resident=null,
+            NpcArchetype? explicitArchetype=null,Genders? explicitGender=null,Races? explicitRace=null)
         {
             if(world==null)throw new ArgumentNullException(nameof(world));
             if(string.IsNullOrWhiteSpace(personId))throw new ArgumentException("Invalid NPC identity.",nameof(personId));
             resident=resident??world.ResolveResident(personId);
-            bool hasIdentity=visiblePerson!=null || resident!=null;
-            Genders gender=visiblePerson!=null?visiblePerson.Gender:
-                resident!=null && resident.Sex==ResidentSex.Female?Genders.Female:Genders.Male;
+            bool hasIdentity=visiblePerson!=null || resident!=null || explicitGender.HasValue;
+            Genders gender=explicitGender??(visiblePerson!=null?visiblePerson.Gender:
+                resident!=null && resident.Sex==ResidentSex.Female?Genders.Female:Genders.Male);
             // Match ResidentActor's existing native race fallback, including for
             // a first offscreen inn visit before the body is materialized.
-            Races race=visiblePerson!=null?visiblePerson.Race:
-                resident!=null && resident.Race>=0 && Enum.IsDefined(typeof(Races),resident.Race)?(Races)resident.Race:Races.Breton;
-            var archetype=world.ResolveNpcArchetype(personId);
+            Races race=explicitRace??(visiblePerson!=null?visiblePerson.Race:
+                resident!=null && resident.Race>=0 && Enum.IsDefined(typeof(Races),resident.Race)?(Races)resident.Race:Races.Breton);
+            var archetype=explicitArchetype??world.ResolveNpcArchetype(personId);
             var plan=NpcStartingBelongings.Generate(world.WorldSeed,personId,archetype);
             var items=new ItemCollection();
             foreach(var entry in plan)
@@ -65,7 +66,7 @@ namespace PeopleOfTheIliacBay.DFU
                     }
                 }
             }
-            if(hasIdentity && world.Traveler(personId)!=null &&
+            if(hasIdentity && (world.Traveler(personId)!=null || explicitArchetype.HasValue) &&
                 NpcStartingBelongings.ShouldStartWithMagicItem(world.WorldSeed,personId,archetype))
             {
                 DaggerfallUnityItem magic=CreateDeterministicMageMagicItem(world,personId,gender,race);

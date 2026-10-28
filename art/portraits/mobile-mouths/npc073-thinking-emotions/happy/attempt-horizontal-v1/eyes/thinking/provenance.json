@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T10:22:08.3656196Z",
+    "portraitRecord":  73,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Use case: illustration-story\nAsset type: NPC portrait horizontal gaze atlas for Daggerfall Unity\nInput image: Image 1 is the exact NPC073 happy thinking-reference-grid.png. Use this one local image as the only reference.\nPrimary request: Make a 2×2 atlas, canvas ratio 64:35, of the same complete 64×35 upper-face crop. Cell order: top-left LEFT open, top-right RIGHT open; bottom-left LEFT half, bottom-right RIGHT half. Each cell keeps same full crop, framing, wand, hair and pixel scale. No labels, gutters, borders, zooms, or extra panels.\nGaze: In LEFT cells, move both compact iris/pupil clusters gently about one native pixel toward the character\u0027s left, inside existing eye openings. In RIGHT cells, move both clusters about one native pixel toward the character\u0027s right. Keep pupil direction synchronized between both eyes. Make left and right distinguishable, with horizontal movement only.\nLock eye anatomy: Preserve the narrow source happy open aperture and exact eyelid contours in both top cells. Preserve exact selected happy half aperture, upper-lid coverage, and contours in both bottom cells. Do not widen either opening or move, reshape, redraw, raise, or lower any eyelid. Preserve happy brows and their placement.\nIdentity and palette: Keep NPC073\u0027s same gentle happy expression and original eye spacing, compact stepped amber-brown irises, dark pupils, muted source-like glints, muted skin, gold-brown hair, blue wand, and face registration. Iris shape, width, and color stay fixed. No vertical iris movement, enlarged eye white, broad pale sclera, bright new highlights, white flashes, blurred brows, or heavy black outlines.\nConstraints: Change horizontal gaze only. Keep all other face pixels visually stable. No head-shape edits, facial-expression changes, extra subjects, text, or watermark.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-53755420-c31c-4e5e-aaf5-af07d1e6ef78.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-53755420-c31c-4e5e-aaf5-af07d1e6ef78.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "8505d9e9fde3c536cf08958e97076aba44aa5d60e2e76ba6fc3fdb1384b8d643",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "6371167eb25a618560c876a0103407501646fef8dee11724c4fd2c3c881232a7",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-53755420-c31c-4e5e-aaf5-af07d1e6ef78.png",
+                      "sha256":  "43969878df35009426c9092c408c4b2ab9b299f74c53c1620b69813b8f0f2c1e",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "43969878df35009426c9092c408c4b2ab9b299f74c53c1620b69813b8f0f2c1e",
+                "width":  1695,
+                "height":  928
+            }
+}

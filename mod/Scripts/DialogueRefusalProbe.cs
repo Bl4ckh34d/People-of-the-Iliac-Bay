@@ -21,7 +21,7 @@ namespace PeopleOfTheIliacBay.DFU
         private const BindingFlags Private = BindingFlags.Instance | BindingFlags.NonPublic;
         private const string Threat = "I will kill your family.";
         private const string SaveTitle = "People of the Iliac Bay - family threat refusal";
-        private const string OwnedCharacter = "PeopleOfTheIliacBayTest-9a5f197b";
+        private const string OwnedCharacter = "Hakon Ironhand";
         private const string OwnedBaselineSave = "People - Gothway Garden";
 
         private sealed class KeeperFixture
@@ -124,7 +124,7 @@ namespace PeopleOfTheIliacBay.DFU
         {
             var game = GameManager.Instance;
             var guards = host ? host.GetComponent<GuardPopulation>() : null;
-            if (!host || !streets || !game || !character.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal))
+            if (!host || !streets || !game || !NativeProbeText.IsTestCharacter(character))
                 throw new InvalidOperationException("Family-threat refusal probe requires the owned disposable town fixture.");
             float readyDeadline = Time.realtimeSinceStartup + 60f;
             while ((!streets.Ready || !guards || !guards.OwnsSettlement || !guards.HasAvailableDialogueGuards()) &&
@@ -624,7 +624,7 @@ namespace PeopleOfTheIliacBay.DFU
         private static void CancelOwnedTransport(PeopleOfTheIliacBayMod host)
         {
             ConversationMoodProbe.CancelTransport(host);
-            var cancel = typeof(PeopleOfTheIliacBayMod).GetMethod("CancelDecisionShadow", Private);
+            var cancel = typeof(PeopleOfTheIliacBayMod).GetMethod("CancelConversationWork", Private);
             if (cancel != null) cancel.Invoke(host, null);
         }
 

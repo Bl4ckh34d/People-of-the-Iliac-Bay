@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T02:33:08.3612268Z",
+    "portraitRecord":  89,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "afraid",
+    "prompt":  "Use case: stylized-concept\nAsset type: Daggerfall Unity NPC pixel-art eye animation atlas\nInput image: Image 1 is the only reference and layout guide: eyes-reference-grid.png, a 2×2 grid of repeated whole upper 64×35 portrait halves enlarged 8×. Use no other reference.\nPrimary request: Create one complete 2×2 atlas of the same upper-face halves. Preserve each cell boundary, exact crop, face identity, pixel grid, spacing, and aspect ratio. Row-major cells: open, half closed, fully closed, repeated open. Modify only eye and brow expression; keep all other face, hair, skin, nose, background, and framing unchanged.\nExpression: afraid and worried, with gently pinched inner brows and alert lids. Make fear clearly different from sad: do not use sad raised inner brows or downcast eyes. Avoid merely circular wide eyes, alarmed bulging eyes, or exaggerated surprise. Keep both brows complete and softly brown; make fear visible through a subtle inner-brow pinch plus alert upper lids.\nEye anatomy: Preserve same gaze direction, eye spacing, pupil position, original gray-violet iris width, shape, and stationary glint position in every phase. Alert open eyes stay narrow and natural, never round. Half-closed lids cover iris vertically only; do not shift gaze, move glints, shrink or round irises, or cross the lower lid. Fully closed phase conceals iris and sclera completely. Keep the afraid brow master and stationary orbital creases consistent in every phase. Fourth cell repeats first open cell.\nPalette and pixels: preserve original muted warm tan/brown skin, olive/brown eye shadows, gray-violet irises, restrained brown detail, and subdued pixel-art contrast. Retain native pixel clusters after downsampling. No orange skin, red lipstick, white flashes, heavy near-black brows, blur, smooth vector shapes, antialiasing, labels, margins, extra panels, or watermark.\nComposition: output only the complete 2×2 atlas of upper halves, with same cell proportions and 64:35 aspect ratio as reference. Do not output a full portrait, isolated eye close-up, alternate crop, or redesigned background.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a16172-370e-7840-a7fd-4ff090e7e19f as C:\\Users\\Daniel\\.codex\\generated_images\\01a16172-370e-7840-a7fd-4ff090e7e19f\\exec-ef971099-88b4-4ba8-84da-283821c6f9bd.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a16172-370e-7840-a7fd-4ff090e7e19f\\exec-ef971099-88b4-4ba8-84da-283821c6f9bd.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "ff6db931146aa84fe2260b0daba0269a20455b1dcbb61e232e011a87291b4b5f",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "008e6c201b9ae39befd93d7ab0602009398521c5c3577624bfd81db4e9d2a249",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a16172-370e-7840-a7fd-4ff090e7e19f\\exec-ef971099-88b4-4ba8-84da-283821c6f9bd.png",
+                      "sha256":  "697da40144165b60213bac535c81a101ca33e9bf9b2de0099c78fc3169d5f306",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/afraid/raw.png",
+                "sha256":  "697da40144165b60213bac535c81a101ca33e9bf9b2de0099c78fc3169d5f306",
+                "width":  1695,
+                "height":  928
+            }
+}

@@ -16,7 +16,7 @@ namespace PeopleOfTheIliacBay.DFU
     internal static class NativeSocialSkillTallyProbe
     {
         internal const string RunFlag = "-peopleoftheiliacbay-social-skill-tally-probe";
-        private const string FixtureCharacter = "PeopleOfTheIliacBayTest-9a5f197b";
+        private const string FixtureCharacter = "Hakon Ironhand";
         private const string FixtureSave = "People - Gothway Garden";
         private const NpcExperienceAppliedEffectsMask AppliedMask =
             NpcExperienceAppliedEffectsMask.Mood | NpcExperienceAppliedEffectsMask.Affinity;

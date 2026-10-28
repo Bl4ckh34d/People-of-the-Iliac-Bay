@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>PeopleOfTheIliacBay.Tests</AssemblyName>
+    <TargetFramework>net8.0</TargetFramework>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <StartupObject>PeopleOfTheIliacBay.Tests.FamilyFocusedRunner</StartupObject>
+    <HostManaged Condition="'$(HostManaged)' == ''">$(MSBuildThisFileDirectory)..\..\..\Player\DaggerfallUnity_Data\Managed\</HostManaged>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/PeopleOfTheIliacBay.Core/PeopleOfTheIliacBay.Core.csproj" />
+    <Reference Include="FullSerializer - Unity"><HintPath>$(HostManaged)FullSerializer - Unity.dll</HintPath></Reference>
+    <Compile Include="../../tests/PeopleOfTheIliacBay.Tests/*.cs" />
+    <Compile Include="Runner.cs" />
+    <Compile Include="../../mod/Scripts/PortraitVisemeTimeline.cs" />
+    <Compile Include="../../mod/Scripts/PortraitVisemeSidecar.cs" />
+    <Compile Include="../../mod/Scripts/PortraitPreparedPresentation.cs" />
+    <Compile Include="../../mod/Scripts/BreezeTtsStreamingPolicy.cs" />
+    <Compile Include="../../mod/Scripts/PortraitSpeechOwnership.cs" />
+    <Compile Include="../../mod/Scripts/PortraitSpeechLoadPolicy.cs" />
+    <Compile Include="../../mod/Scripts/PortraitVisemePreviewPolicy.cs" />
+    <Compile Include="../../mod/Scripts/SplitPortraitManifest.cs" />
+    <Compile Include="../../mod/Scripts/SplitPortraitComposition.cs" />
+    <Compile Include="../../mod/Scripts/SplitPortraitPresentation.cs" />
+  </ItemGroup>
+</Project>

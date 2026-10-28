@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "createdUtc": "2026-10-22T04:11:46.0907654Z",
+  "portraitRecord": 90,
+  "bank": "TFAC00I0.RCI",
+  "part": "eyes",
+  "emotion": "afraid",
+  "prompt": "Make one bounded correction to the attached inspected 2x2 original eye reference grid, which is the only image and ONLY reference. Create an exact 2x2 atlas canvas with same grid geometry and aspect ratio as input: 2 columns x 2 rows, four complete 64x35 upper-face cells enlarged equally, no padding/gutters/borders/text/labels. Cells row-major: open, half-closed, closed, repeated open. Same woman, exact framing, hair, forehead, nose bridge, face placement and original pixel scale. Preserve the original narrow almond eye shape, original small muted olive-green irises at exact width and locations, original spacing and eye-opening height. Do not enlarge eyes or irises, do not add white sclera, do not make round surprised eyes. Main correction is worried fear brow expression: subtly lift inner brow corners while drawing them inward toward center, add restrained brow tension/short worry crease. Make brows dark warm brown, soft and low contrast, never black, never angry V. Keep outer brow and native eyelids restrained. Match original palette and clustered pixel lattice. Across phases keep both eyeballs and irises fixed in x and width; lids cover same eyeball vertically. Half closed phase is narrow horizontal slit with unchanged iris width/location, no lower-lid clipping, no vertical iris stretch. Closed phase covers the eye with dark brown eyelid pixels and no iris/white flashes. Repeat open cell matches top-left. Preserve all source anatomy and colors outside eye/brow expression changes; no blue, no bright whites, no new pixels outside face, no smoothing, antialiasing, gradient, repainting, or new face.",
+  "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161cc-b55d-7751-a8f9-64715b695c0f as C:\\Users\\Daniel\\.codex\\generated_images\\01a161cc-b55d-7751-a8f9-64715b695c0f\\exec-04728d25-33e1-43fa-b49d-ad5b5770f238.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+  "generatedPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a161cc-b55d-7751-a8f9-64715b695c0f\\exec-04728d25-33e1-43fa-b49d-ad5b5770f238.png",
+  "sourceOriginal": {
+    "path": "original.png",
+    "sha256": "b8b0a0da8a68fea050774dbe95633fcb561aa0d4a4b316a787b9831b46247489",
+    "width": 64,
+    "height": 64
+  },
+  "referenceGrid": {
+    "path": "eyes-reference-grid.png",
+    "sha256": "6ab5ede4469b2edecb63c4b4f5238c7808248ee7f5afc1a45b7f4730465acf9b",
+    "width": 1024,
+    "height": 560
+  },
+  "generator": {
+    "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a161cc-b55d-7751-a8f9-64715b695c0f\\exec-04728d25-33e1-43fa-b49d-ad5b5770f238.png",
+    "sha256": "18cd0234db93040ae71a620e65c6eea3539e14a28c653d28fce30716967f338e",
+    "width": 1695,
+    "height": 928
+  },
+  "raw": {
+    "path": "eyes/afraid/raw.png",
+    "sha256": "18cd0234db93040ae71a620e65c6eea3539e14a28c653d28fce30716967f338e",
+    "width": 1695,
+    "height": 928
+  }
+}

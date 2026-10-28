@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T10:29:22.1477219Z",
+    "portraitRecord":  74,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "afraid",
+    "prompt":  "Use case: stylized-concept\nAsset type: native pixel-art NPC eye animation atlas\nInput image: the single attached exact local `eyes-reference-grid.png` for NPC074. It contains the source\u0027s open eyes repeated across the top row and its source half-lidded eyes repeated across the bottom row.\n\nCreate a clean 2×2 atlas of complete upper-face crops in the same framing and native pixel scale. No labels, borders, gutters, margins, text, or extra panels. Required row-major cell order: top-left OPEN; top-right HALF; bottom-left CLOSED; bottom-right OPEN REPEAT. Each cell must match the proportions of a 64×35 upper portrait.\n\nPreserve this portrait\u0027s worried, fearful expression with subtly tense raised inner brows and alert but narrow eyes. Keep the brows stable in all four cells. Keep both eyes coherent, naturally aligned and anatomically matched to the source. Irises remain compact, pale and fully contained within the source-scale lid opening. Do not create round surprised eyes, enlarge the eye whites, add broad white bands, oversized pupils, or bright flashes. Keep the source\u0027s low-set eye spacing, light-brown/blond hairline, blue ornament registration, warm muted skin palette, and original pixel-cluster style.\n\nOPEN and OPEN REPEAT must match each other; HALF must be a plausible synchronized blink transition with the irises still contained; CLOSED must close naturally without losing the fearful brow expression. Change only eye/brow/lid details needed for these emotional phases. Keep every other feature, framing and surrounding pixel geometry consistent with the attached source. Use crisp native pixel clusters; no blur, smoothing, gradients, or vector-like shapes.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-24a7c0fc-16e6-419f-9568-8c6a5bc731d3.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-24a7c0fc-16e6-419f-9568-8c6a5bc731d3.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "2efaad16ffae3fc9541f3d14137095db7cddeb908310fef80410ce201fd2ad84",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-24a7c0fc-16e6-419f-9568-8c6a5bc731d3.png",
+                      "sha256":  "2ad4e4f2e7fc3c072c808391b9561ceefd54115e2b95c1fcac45ef65b87a16c9",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/afraid/raw.png",
+                "sha256":  "2ad4e4f2e7fc3c072c808391b9561ceefd54115e2b95c1fcac45ef65b87a16c9",
+                "width":  1695,
+                "height":  928
+            }
+}

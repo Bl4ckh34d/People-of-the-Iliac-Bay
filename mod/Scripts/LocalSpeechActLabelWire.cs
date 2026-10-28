@@ -5,7 +5,6 @@ using PeopleOfTheIliacBay.Core;
 namespace PeopleOfTheIliacBay.DFU
 {
     // Gemma uses the normal /completion path with a native label grammar.
-    // LocalSpeechActWire remains the isolated legacy systemone/D3 adapter.
     internal static class LocalSpeechActLabelWire
     {
         internal const int ResponseTokens = 24;

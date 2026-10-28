@@ -14,7 +14,7 @@ import import_corpus_profiles
 
 class CoordinatorProtocolTests(unittest.TestCase):
     def _run_prepared_request(self, root, request_id, *, fail_phase=None, cancel_after_visemes=False,
-                              per_npc_voices=False, fast_utterance=False):
+                              per_npc_voices=False, fast_utterance=False, require_overlap=False):
         import hashlib
         import inspect
         import sys
@@ -42,6 +42,8 @@ class CoordinatorProtocolTests(unittest.TestCase):
         viseme_path = responses / (request_id + ".visemes.json")
         cancel_path = requests / (request_id + ".cancel.json")
         calls = []
+        import threading
+        preparation_barrier = threading.Barrier(2) if require_overlap else None
 
         def synthesize(command, **kwargs):
             self.assertGreaterEqual(kwargs["timeout"], 1)
@@ -61,8 +63,9 @@ class CoordinatorProtocolTests(unittest.TestCase):
 
         def fake_rhubarb(cli, audio, text, output_path, **kwargs):
             calls.append("visemes")
+            if preparation_barrier is not None:
+                preparation_barrier.wait(timeout=1)
             self.assertFalse(manifest_path.exists(), "WAV manifest appeared before viseme cues were ready")
-            self.assertFalse(alignment_path.exists(), "word alignment must not delay viseme preparation")
             self.assertEqual(exact_text, text)
             self.assertEqual(2, kwargs["threads"])
             self.assertGreaterEqual(kwargs["timeout_seconds"], 1)
@@ -86,9 +89,12 @@ class CoordinatorProtocolTests(unittest.TestCase):
 
         def fake_alignment(cli, model, audio, text, output_path, **kwargs):
             calls.append("alignment")
+            if preparation_barrier is not None:
+                preparation_barrier.wait(timeout=1)
             self.assertFalse(manifest_path.exists(), "WAV manifest appeared before word alignment was ready")
-            self.assertTrue(viseme_path.is_file())
             self.assertEqual(exact_text, text)
+            if fail_phase == "alignment":
+                raise RuntimeError("test alignment failure")
             with wave.open(str(audio), "rb") as audio_file:
                 frame_count = audio_file.getnframes()
             timeline = {"schemaVersion": 1, "status": "ready", "timelineKind": "forced-word-alignment",
@@ -99,7 +105,7 @@ class CoordinatorProtocolTests(unittest.TestCase):
                 "provenance": {"requestId": request_id,
                     "audioSha256": coordinator.sha256_file(Path(audio)),
                     "transcriptSha256": hashlib.sha256(text.encode("utf-8")).hexdigest(),
-                    "modelSha256": model_hash, "backend": "cpu", "threads": 1,
+                    "modelSha256": model_hash, "backend": "cpu", "threads": kwargs["threads"],
                     "phonemeAlignment": False}}
             Path(output_path).write_text(json.dumps(timeline), encoding="utf-8")
             return timeline
@@ -135,7 +141,7 @@ class CoordinatorProtocolTests(unittest.TestCase):
             result, calls, worker, manifest, alignment, visemes, _ = self._run_prepared_request(
                 root, "personal-prepared", per_npc_voices=True)
             self.assertEqual("ready", result["status"], result)
-            self.assertEqual(["visemes", "alignment"], calls)
+            self.assertCountEqual(["visemes", "alignment"], calls)
             self.assertTrue(json.loads(manifest.read_text())["presentationReady"])
             self.assertTrue(alignment.is_file())
             self.assertTrue(visemes.is_file())
@@ -184,12 +190,20 @@ class CoordinatorProtocolTests(unittest.TestCase):
                 self.assertTrue(('verification-reached' in str(_raised_182.exception)), str(_raised_182.exception))
             verify_assets.assert_called_once()
 
+    def test_prepared_jobs_overlap_but_audio_waits_for_both(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            result, calls, _, manifest, alignment, visemes, _ = self._run_prepared_request(
+                Path(temporary), "prepared-overlap", require_overlap=True)
+            self.assertIs(result["presentationReady"], True)
+            self.assertCountEqual(["visemes", "alignment"], calls)
+            self.assertTrue(alignment.is_file() and visemes.is_file() and manifest.is_file())
+
     def test_prepared_request_publishes_visemes_and_alignment_before_audio(self):
         with tempfile.TemporaryDirectory() as temporary:
             result, calls, postprocessor, manifest, alignment, visemes, _ = self._run_prepared_request(
                 Path(temporary), "prepared-success")
             self.assertEqual("ready", result["status"])
-            self.assertEqual(["visemes", "alignment"], calls)
+            self.assertCountEqual(["visemes", "alignment"], calls)
             self.assertTrue(alignment.is_file())
             self.assertTrue(visemes.is_file())
             self.assertTrue(manifest.is_file())
@@ -197,13 +211,24 @@ class CoordinatorProtocolTests(unittest.TestCase):
             self.assertIs(manifest_value.get("presentationReady"), True)
             self.assertEqual([], postprocessor.jobs)
 
+    def test_alignment_failure_cleans_up_parallel_visemes_after_workers_finish(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            result, calls, _, manifest, alignment, visemes, _ = self._run_prepared_request(
+                Path(temporary), "alignment-failure", fail_phase="alignment", require_overlap=True)
+            self.assertCountEqual(["visemes", "alignment"], calls)
+            self.assertIs(result["presentationReady"], False)
+            self.assertTrue(manifest.is_file())
+            self.assertFalse(alignment.exists())
+            self.assertFalse(visemes.exists())
+
     def test_prepared_viseme_failure_publishes_audio_for_rms_fallback(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             result, calls, postprocessor, manifest, alignment, visemes, _ = self._run_prepared_request(
                 root, "prepared-failure", fail_phase="visemes")
             self.assertEqual("ready", result["status"])
-            self.assertEqual(["visemes"], calls)
+            self.assertIn("visemes", calls)
+            self.assertTrue(set(calls).issubset({"visemes", "alignment"}))
             self.assertTrue(manifest.exists())
             self.assertIs(json.loads(manifest.read_text(encoding="utf-8"))["presentationReady"], False)
             self.assertTrue((root / "responses" / "prepared-failure.wav").is_file())
@@ -221,7 +246,8 @@ class CoordinatorProtocolTests(unittest.TestCase):
             result, calls, postprocessor, manifest, alignment, visemes, cancel = self._run_prepared_request(
                 root, "prepared-cancelled", cancel_after_visemes=True)
             self.assertEqual("cancelled", result["status"])
-            self.assertEqual(["visemes"], calls)
+            self.assertIn("visemes", calls)
+            self.assertTrue(set(calls).issubset({"visemes", "alignment"}))
             self.assertTrue(cancel.is_file())
             self.assertFalse(manifest.exists())
             self.assertFalse((root / "responses" / "prepared-cancelled.wav").exists())

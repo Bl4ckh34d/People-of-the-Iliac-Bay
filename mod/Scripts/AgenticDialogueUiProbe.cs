@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace PeopleOfTheIliacBay.DFU
 {
-    // Native-window acceptance for combined LLM + D3 Talk presentation.
+    // Native-window acceptance for single LLM Talk presentation.
     // Runs only from the explicitly requested conversation-mood probe.
     internal static class AgenticDialogueUiProbe
     {
@@ -22,7 +22,6 @@ namespace PeopleOfTheIliacBay.DFU
                 throw new InvalidOperationException("Agentic dialogue UI probe requires an open Talk window and its opt-in run flag.");
 
             FieldInfo localDialogueEnabledField = HostField("localDialogueEnabled");
-            FieldInfo routingSessionField = HostField("decisionRoutingSession");
             FieldInfo dialogueWasOpenField = HostField("dialogueWasOpen");
             FieldInfo conversationSessionOpenField = HostField("conversationSessionOpen");
             FieldInfo returningGreetingPendingField = HostField("returningGreetingPending");
@@ -66,12 +65,6 @@ namespace PeopleOfTheIliacBay.DFU
             }
 
             bool oldLlmEnabled = Convert.ToBoolean(localDialogueEnabledField.GetValue(host));
-            object oldSession = routingSessionField.GetValue(host);
-            var probeSession = new LocalDecisionSession
-            {
-                ExpectedModelId = "probe-ui-only",
-                Enabled = true
-            };
             bool oldDialogueWasOpen = Convert.ToBoolean(dialogueWasOpenField.GetValue(host));
             bool oldConversationSessionOpen = Convert.ToBoolean(conversationSessionOpenField.GetValue(host));
             bool oldGreetingPending = Convert.ToBoolean(returningGreetingPendingField.GetValue(host));
@@ -91,7 +84,6 @@ namespace PeopleOfTheIliacBay.DFU
 
             try
             {
-                routingSessionField.SetValue(host, probeSession);
                 dialogueWasOpenField.SetValue(host, true);
                 conversationSessionOpenField.SetValue(host, true);
                 returningGreetingPendingField.SetValue(host, false);
@@ -110,9 +102,8 @@ namespace PeopleOfTheIliacBay.DFU
                 for (int i = 0; i < buttons.Length; i++) vanillaButtons[i] = buttons[i].Enabled;
                 bool vanillaMarker = marker.Enabled;
 
-                // First disable LLM while D3 remains enabled.
+                // Disabling free text restores native controls.
                 localDialogueEnabledField.SetValue(host, false);
-                probeSession.Enabled = true;
                 updateDialogue.Invoke(host, null);
                 RequireVanilla(talk, mainPanel, nativeBackground, toneField, input, questionLabel, vanillaTone, buttons,
                     vanillaButtons, marker, vanillaMarker, "LLM off");
@@ -120,19 +111,16 @@ namespace PeopleOfTheIliacBay.DFU
                 // Disabling the optional planner must not restore controls that
                 // conflict with LLM-owned conversational tone.
                 localDialogueEnabledField.SetValue(host, true);
-                probeSession.Enabled = false;
                 updateDialogue.Invoke(host, null);
                 Require(!ReferenceEquals(mainPanel.BackgroundTexture, nativeBackground),
-                    "LLM mode with D3 off did not replace the Talk background.");
+                    "LLM mode did not replace the Talk background.");
                 Require((DaggerfallTalkWindow.TalkTone)toneField.GetValue(talk) == DaggerfallTalkWindow.TalkTone.Normal,
-                    "LLM mode with D3 off left a non-neutral native tone selected.");
+                    "LLM mode left a non-neutral native tone selected.");
                 for (int i = 0; i < buttons.Length; i++)
-                    Require(!buttons[i].Enabled, "LLM mode with D3 off left a tone button enabled: " + buttonFields[i].Name + ".");
-                Require(!marker.Enabled, "LLM mode with D3 off left the tone marker enabled.");
+                    Require(!buttons[i].Enabled, "LLM mode left a tone button enabled: " + buttonFields[i].Name + ".");
+                Require(!marker.Enabled, "LLM mode left the tone marker enabled.");
 
-                // Exercise the actual production gate with a valid local-only
-                // session. No transport request is sent by this UI-only probe.
-                probeSession.Enabled = true;
+                // Exercise the production free-text gate without making a model request.
                 toneField.SetValue(talk, DaggerfallTalkWindow.TalkTone.Blunt);
                 localDialogueEnabledField.SetValue(host, true);
                 updateDialogue.Invoke(host, null);
@@ -179,8 +167,6 @@ namespace PeopleOfTheIliacBay.DFU
             finally
             {
                 localDialogueEnabledField.SetValue(host, oldLlmEnabled);
-                routingSessionField.SetValue(host, oldSession);
-                probeSession.Dispose();
                 dialogueWasOpenField.SetValue(host, oldDialogueWasOpen);
                 conversationSessionOpenField.SetValue(host, oldConversationSessionOpen);
                 returningGreetingPendingField.SetValue(host, oldGreetingPending);

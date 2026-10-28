@@ -172,6 +172,7 @@ namespace PeopleOfTheIliacBay.DFU
                 foreach(var household in population.Households)
                     foreach(var candidate in household.Residents) if(candidate.Id==proposal.ResidentId) person=candidate;
                 if(person==null || !person.IsAlive) continue;
+                NativeNpcGuildMembership.InitializeKnown(sourceStore,person,home.Grid.Buildings);
                 var location=locationFor(proposal.DestinationSettlement);
                 var pixel=MapsFile.LongitudeLatitudeToMapPixel(location.MapTableData.Longitude,location.MapTableData.Latitude);
                 IReadOnlyList<RoutePoint> road=preparedRoad;

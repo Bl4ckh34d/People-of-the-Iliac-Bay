@@ -117,7 +117,7 @@ namespace PeopleOfTheIliacBay.Core
         private static List<HouseholdRecoveryReservation> CopyHouseholdRecoveries(WorldState source,WorldState target)
         {
             var result=new List<HouseholdRecoveryReservation>();
-            if(source.Version<20 || source.HouseholdRecoveries==null) return result;
+            Require(source.HouseholdRecoveries!=null,"Missing household recovery ledger.");
             var keys=new HashSet<string>();
             foreach(var raw in source.HouseholdRecoveries)
             {

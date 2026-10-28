@@ -156,7 +156,7 @@ namespace PeopleOfTheIliacBay.DFU
                     Disposition = result.Disposition, ProposalMoodDelta = result.ProposalMoodDelta,
                     ProposalRound = round.Round, ProposalEffectId = NpcCommerceHagglingPolicy.ProposalEffectId(haggle.NegotiationId, round.Round),
                     Status = acceptedRound != null ? "The offer is accepted." : result.Disposition == NpcCommerceHaggleDisposition.Reject
-                        ? "They refuse that offer." : "They suggest another amount." };
+                        ? actor.DisplayName + " refuses that offer." : actor.DisplayName + " suggests another amount." };
                 acceptedQuote = quote;
                 return true;
             };

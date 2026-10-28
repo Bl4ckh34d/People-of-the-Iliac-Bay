@@ -61,8 +61,6 @@ namespace PeopleOfTheIliacBay.DFU
         private bool uiRegistered, redirectingChildTalk;
         private ResidentActor conversationActor;
         private bool localDialogueEnabled;
-        private bool decisionPlannerEnabled;
-        private bool decisionPlannerSettingCaptured;
         private int localDialogueTimeoutMilliseconds = 120000;
         private float nextCheck;
         private string diagnostic = "Awaiting a loaded settlement.";
@@ -74,6 +72,7 @@ namespace PeopleOfTheIliacBay.DFU
             NativeNpcServiceContractFunding.BindMainThread();
             NativeNpcDiseases.Install(initParams.Mod);
             HouseholdPropertyKeyItem.Register();
+            NativeMarketGoodsItem.Register();
             var host = new GameObject("People of the Iliac Bay");
             DontDestroyOnLoad(host);
             var component = host.AddComponent<PeopleOfTheIliacBayMod>();
@@ -85,9 +84,11 @@ namespace PeopleOfTheIliacBay.DFU
             host.AddComponent<HauntingLifetime>().Install(()=>!component.saveFault && component.options.Enabled);
             component.streets.QuestOwnsResident = id => component.questOffers != null && component.questOffers.OwnsResident(id);
             component.streets.SetSleepingArt(initParams.Mod);
+            component.guards.SetSleepingArt(initParams.Mod);
             SittingArt.Install(initParams.Mod);
             host.AddComponent<NativeNavigationWorld>().Install(initParams.Mod);
             StandingArt.Install(initParams.Mod);
+            CompletedNpcArt.Install(initParams.Mod);
             component.streets.InstallReactionHook();
             component.nativeRentals.Install(()=>component.store,()=>!component.saveFault && component.options.Enabled);
             component.bankListings=new BankHouseListings(()=>component.store,()=>!component.saveFault && component.options.Enabled);
@@ -95,7 +96,8 @@ namespace PeopleOfTheIliacBay.DFU
             // Ordinary authored guest-bedroom flats are replaced by normal mobile
             // travelers. Do not allocate new permanent homes for the retired flats.
             host.AddComponent<DefenseCombatAdapter>().Install(()=>component.store,
-                ()=>!component.saveFault && component.options.Enabled && component.guards.OwnsSettlement);
+                ()=>!component.saveFault && component.options.Enabled && component.guards.OwnsSettlement,
+                ()=>!component.saveFault && component.options.Enabled);
             host.AddComponent<NativeVerbalJustice>().Install(()=>component.store,
                 ()=>!component.saveFault && component.options.Enabled);
             var lifetimeType = Type.GetType("PeopleOfTheIliacBay.QuestHooks.NativeGuardLifetimeHooks, PeopleOfTheIliacBay.QuestHooks", true);
@@ -108,7 +110,6 @@ namespace PeopleOfTheIliacBay.DFU
             component.explicitTtsTrialRequested = Array.IndexOf(component.startupArguments, BreezeTtsTrialBridge.RunFlag) >= 0;
             initParams.Mod.LoadSettings();
             component.InstallConversationHooks();
-            component.InitializeDecisionShadow();
             DaggerfallUI.UIManager.OnWindowChange += component.OnWindowChange;
             component.uiRegistered = true;
             initParams.Mod.IsReady = true;
@@ -126,6 +127,8 @@ namespace PeopleOfTheIliacBay.DFU
         }
         private void OnDestroy()
         {
+            ResetStationaryLife();
+            RestoreExteriorStaticNpcNight();
             CancelConversationMemoryCompaction();
             ClearConversationMemoryLastSpeaker();
             ShutdownSplitPortraitRuntime();
@@ -133,9 +136,9 @@ namespace PeopleOfTheIliacBay.DFU
             EndDialogueMemory(false);
             AdvanceConversationSaveEpoch();
             UnregisterConversationContextLifecycle();
-            DisposeDecisionShadow();
             SittingArt.Shutdown();
             StandingArt.Shutdown();
+            CompletedNpcArt.Shutdown();
             RestoreAgenticToneChooser();
             if (agenticDialogueBackground) Destroy(agenticDialogueBackground);
             if (conversationHooks != null) conversationHooks.Dispose();
@@ -219,6 +222,7 @@ namespace PeopleOfTheIliacBay.DFU
                 guards.TorchLightLimit = settings.GetInt("Guards", "TorchLightLimit");
                 guards.TorchRange = settings.GetInt("Guards", "TorchRange");
                 guards.NightPatrols = settings.GetBool("Guards", "NightPatrols");
+                guards.DayPatrols = settings.GetBool("Guards", "DayPatrols");
                 guards.MaximumPatrolPairs = settings.GetInt("Guards", "MaximumPatrolPairs");
                 guards.EnemyDefense = settings.GetBool("Guards", "EnemyDefense");
             }
@@ -239,16 +243,6 @@ namespace PeopleOfTheIliacBay.DFU
             if (!options.DiagnosticsEnabled) panel = false;
             questHouseholdsEnabled = settings.GetBool("General", "QuestHouseholds");
             localDialogueEnabled = settings.GetBool("Dialogue", "EnableFreeText");
-            bool requestedDecisionPlanner = settings.GetBool("Dialogue", "EnableDecisionPlanner");
-            if (!decisionPlannerSettingCaptured)
-            {
-                decisionPlannerEnabled = requestedDecisionPlanner;
-                decisionPlannerSettingCaptured = true;
-            }
-            else if (requestedDecisionPlanner != decisionPlannerEnabled)
-            {
-                Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_SETTINGS_RESTART_REQUIRED: EnableDecisionPlanner takes effect after restart.");
-            }
             localDialogueTimeoutMilliseconds = Mathf.Clamp(settings.GetInt("Dialogue", "TimeoutMilliseconds"), 100, 300000);
             dialoguePrewarmEnabled = settings.GetBool("Dialogue", "PrewarmModel");
             conversationDispositionEnabled = settings.GetBool("Dialogue", "ConversationDisposition");
@@ -273,7 +267,7 @@ namespace PeopleOfTheIliacBay.DFU
             RefreshSplitPortraitRuntime();
             dialoguePrewarmQueued = false;
             if (!localDialogueEnabled && localDialogue) localDialogue.Cancel();
-            if (!localDialogueEnabled || !options.Enabled) CancelDecisionShadow();
+            if (!localDialogueEnabled || !options.Enabled) CancelConversationWork();
             if (questHouseholdsEnabled && !saveFault && questOffers == null)
                 questOffers = CreateQuestOffers();
             nextCheck = 0;
@@ -375,6 +369,8 @@ namespace PeopleOfTheIliacBay.DFU
         }
         private void ResetWorld()
         {
+            ResetStationaryLife();
+            RestoreExteriorStaticNpcNight();
             CancelConversationMemoryCompaction();
             ClearConversationMemoryLastSpeaker();
             AdvanceConversationSaveEpoch();
@@ -391,6 +387,8 @@ namespace PeopleOfTheIliacBay.DFU
         }
         private void BeforeLoad(SaveData_v1 ignored)
         {
+            ResetStationaryLife();
+            RestoreExteriorStaticNpcNight();
             CancelConversationMemoryCompaction();
             ClearConversationMemoryLastSpeaker();
             AdvanceConversationSaveEpoch();
@@ -439,10 +437,13 @@ namespace PeopleOfTheIliacBay.DFU
             if (streets) streets.CaptureObservedVisits();
             if (streets) { streets.CaptureNpcInventories(); streets.CaptureNpcActionPositions(); }
             if (roadActors) roadActors.CaptureNpcInventories();
+            CaptureStationaryLife();
             return store.SnapshotForSave();
         }
         public void RestoreSaveData(object saveData)
         {
+            ResetStationaryLife();
+            RestoreExteriorStaticNpcNight();
             CancelConversationMemoryCompaction();
             ClearConversationMemoryLastSpeaker();
             AdvanceConversationSaveEpoch();
@@ -457,6 +458,9 @@ namespace PeopleOfTheIliacBay.DFU
             if (streets) streets.Clear();
             saveFault = true; current = null;
             store.Restore(saveData as WorldState, DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
+            // Native restore precedes mod restore. Reserve persisted item IDs
+            // before any newly materialized person allocates starting items.
+            DaggerfallUnity.CurrentUID=store.NextAvailableNpcItemUid(DaggerfallUnity.CurrentUID);
             if (store.Snapshot().QuestBindings.Count > 0 || (questHouseholdsEnabled && mod != null))
                 questOffers = CreateQuestOffers();
             saveFault = false; nextCheck = 0;
@@ -479,7 +483,6 @@ namespace PeopleOfTheIliacBay.DFU
             try { TickHouseholdSimulations(); }
             finally { RuntimeTiming.End("household-simulations",stage); }
             UpdateEmbeddedDialogue();
-            UpdateDecisionShadow();
             AdvanceConversationRecallWarmup();
             stage=RuntimeTiming.Start("travel-planning");
             try { AdvanceTravelPlanning(); }
@@ -487,6 +490,8 @@ namespace PeopleOfTheIliacBay.DFU
             long started=RuntimeTiming.Start("population-refresh");
             try { UpdatePopulation(); }
             finally { RuntimeTiming.End("population-refresh",started); }
+            TickExteriorStaticNpcNight();
+            TickStationaryLife();
             TickNpcHealthExperienceEpisodes();
             TickNativeCombatRoles();
             stage=RuntimeTiming.Start("experience-and-memory");
@@ -550,7 +555,8 @@ namespace PeopleOfTheIliacBay.DFU
                     store, options.WakeHour, options.SleepHour);
                 } finally { RuntimeTiming.End("population-street-setup",streetsStarted); }
             }
-            if (guards && exteriorGuardsEnabled && streets && streets.Ready && !deferGuardRoutes)
+            if (guards && exteriorGuardsEnabled && readyNavigation && !deferGuardRoutes &&
+                (!SettlementClassification.SupportsPopulation((int)directory.LocationData.MapTableData.LocationType) || streets && streets.Ready))
             {
                 long guardsStarted=RuntimeTiming.Start();
                 try { guards.SetTown(directory, game.StreamingWorld.GetCurrentCityNavigation(), current, store); }

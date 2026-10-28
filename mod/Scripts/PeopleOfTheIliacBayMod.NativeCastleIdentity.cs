@@ -10,11 +10,11 @@ namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class PeopleOfTheIliacBayMod
     {
-        // Authored castle layout is stable. Quest replacements retain their own boundary.
+        // Actual castle layout and native seed remain stable when a quest claims its person.
         private static bool TryNativeCastleLayoutKey(StaticNPC npc,out string key)
         {
             key=null;var game=GameManager.Instance;
-            if(!npc || npc.Data.context!=StaticNPC.Context.Dungeon || npc.GetComponent<QuestResourceBehaviour>() ||
+            if(!npc || npc.Data.context!=StaticNPC.Context.Dungeon ||
                 game==null || !game.IsPlayerInsideCastle || !game.PlayerGPS.HasCurrentLocation ||
                 npc.Data.mapID!=game.PlayerGPS.CurrentMapID ||
                 npc.Data.locationID!=(int)game.PlayerGPS.CurrentLocation.Exterior.ExteriorData.LocationId)return false;
@@ -29,6 +29,8 @@ namespace PeopleOfTheIliacBay.DFU
 
         private static string StaticConversationPersonId(StaticNPC npc)
         {
+            var life=npc?npc.GetComponent<NativeStationaryLife>():null;
+            if(life && life.Person!=null)return life.Person.Id;
             if(!npc)return null;var data=npc.Data;string key;
             int exteriorTown,exteriorHash;
             if(NativeExteriorNpcIdentity.TryRead(npc,out exteriorTown,out exteriorHash))

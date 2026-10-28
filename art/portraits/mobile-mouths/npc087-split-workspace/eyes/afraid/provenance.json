@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T01:33:53.5641865Z",
+    "portraitRecord":  87,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "afraid",
+    "prompt":  "Use case: stylized-concept\nAsset type: Daggerfall Unity NPC pixel-art eye-animation atlas, record 87 fear only\nPrimary request: Edit the supplied original 2x2 reference atlas into one 2x2 fear eye atlas. Preserve its exact canvas aspect ratio, repeated-cell placement, full upper-face crop and four equal cells. Each cell corresponds to a 64x35 native upper half enlarged 8x. Row-major cells: open, half closed, closed, repeated open. Keep the face identity, asymmetric eye geometry and original pixel grid.\nInput image: the supplied eyes-reference-grid is the edit target and sole anatomical reference.\nStyle/medium: original muted low-resolution pixel art; preserve exact pixel-cell feel, soft contrast and restrained warm tan/brown palette. Existing irises are brown; retain their original color and asymmetry.\nComposition/framing: no added borders, labels, gutters, crop, resizing, camera shift or new features. Keep original eye spacing, eye width, brow positions, and framing exactly aligned in all four cells. Only alter brows and eyelids to express fear; surrounding hair, forehead, temples, nose edge, cheeks and background remain as in each source cell.\nEmotion: afraid means subtly worried and alert: inner brow ends gently tense, slightly raised and drawn together, with restrained lid tension and only slight lid widening. Keep it apprehensive rather than sad, angry, neutral, or comically surprised. Do not make eyes larger.\nBlink continuity: Open and repeated-open are the same design. Half closed covers the same eyeballs vertically. Closed hides all iris and sclera. Keep each original small brown iris exactly the same width, shape, horizontal location, vertical location and gaze in every phase where visible. Keep each tiny original highlight/glint fixed to its original pixels; lids cover it naturally rather than moving it. Do not round, shrink, enlarge, stretch, or shift iris/pupil; do not let iris or glint cross the lower eyelid. Preserve all original eye asymmetry. Brow shape and stationary orbital creases must be identical in all four cells.\nColor/material: original softly blended pixel-art tan skin, muted brown brows and shadows, brown irises, existing subtle highlights. Keep subdued contrast.\nAvoid: anime eyes, bulging or circular eyes, alarmed wide-eyed expression, shifted gaze, moved glints, new white flashes, bright white sclera, thick jet-black brows, orange skin halo, lipstick-red accents, smooth vector lines, antialiasing that breaks pixel cells, changing face/hair/background, extra parts, text, symbols, frame dividers.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a160c7-2947-7951-a025-d361fa65da49 as C:\\Users\\Daniel\\.codex\\generated_images\\01a160c7-2947-7951-a025-d361fa65da49\\exec-bbfbffa1-5b06-4eb3-9f1c-28f02ede92a0.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c7-2947-7951-a025-d361fa65da49\\exec-bbfbffa1-5b06-4eb3-9f1c-28f02ede92a0.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "b8851f9df69ee15e297ab3aa7e70025710d27bd2e84dd0ed46d7ff7e94ab7717",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "e5eced47ef4d478fbdb37db34c991b62c22a3fe4a06d13ec0545bf27e0b32e7c",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c7-2947-7951-a025-d361fa65da49\\exec-bbfbffa1-5b06-4eb3-9f1c-28f02ede92a0.png",
+                      "sha256":  "d9574e0d7ab5e837bcce36f493dda5bcd55f93880fdb0179d151edc8eb1e2ff9",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/afraid/raw.png",
+                "sha256":  "d9574e0d7ab5e837bcce36f493dda5bcd55f93880fdb0179d151edc8eb1e2ff9",
+                "width":  1695,
+                "height":  928
+            }
+}

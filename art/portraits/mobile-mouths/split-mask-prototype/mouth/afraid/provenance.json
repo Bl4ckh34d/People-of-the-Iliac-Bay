@@ -1,0 +1,37 @@
+{
+  "emotion": "afraid",
+  "portraitRecord": 77,
+  "generator": "built-in image_gen",
+  "source_paths_and_sha256": [
+    {
+      "sha256": "81b130639901da518717b9b48b461c210ce9f9d8d1c7141ce409d46e542dd7de",
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\mouth-reference-grid.png"
+    },
+    {
+      "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\original.png"
+    }
+  ],
+  "generated_original_path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-2ede-7fc1-b24a-9d18707baa51\\exec-f0794c27-4441-4c3d-9b3b-8ba18242f89a.png",
+  "output_path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\mouth\\afraid\\raw.png",
+  "output_sha256": "047062f74df579c406dcecc3a1c88054c9d4b9f11c621053b8726dc8f33e6045",
+  "dimensions": "1863x844",
+  "expected_source_dimensions": "1536x696",
+  "aspectRatio": 2.20735,
+  "expectedAspectRatio": 2.2069,
+  "grid_order": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "X"
+  ],
+  "generation_count": 1,
+  "visible_deviations": "Output is 1863x844 with aspect ratio 2.20735, close to 2.20690. No resize/crop performed. The sheet visibly preserves nine mouth poses; A is closed and X is slightly parted.",
+  "status": "prototype-user-review-pending-not-installed",
+  "prompt": "Use case: illustration-story\nAsset type: raw 3×3 atlas of complete lower 64×29 portrait halves for NPC 077 dialogue visemes\nInput image: Image 1 is exact edit target: the approved lower-half 3×3 mouth reference grid. Preserve one whole lower half per cell, row-major, with no gutters or text.\nPrimary request: Give this woman a clearly afraid, nervous mouth expression across the nine speech poses. Add subtle lip-corner tension and small nearby folds only. Keep her mouth shapes quiet and natural. X may be slightly parted as tense resting lips; A must remain fully closed.\nExact row-major mouth order A B C / D E F / G H X: A closed M/B/P; B narrow consonant with slight teeth; C medium EH; D moderately open AH, no yawn; E rounded OH; F small OO/W; G upper teeth touch lower lip for F/V; H subtle raised tongue behind upper teeth for L, no protruding tongue; X nervous resting lips, slightly parted. C/D/E/F/G/H retain their speech sounds and distinct openings. Do not make every cell the same nervous smile.\nPreserve: each cell's original complete lower-half framing, exact mouth scale, anchors, face center, nose and chin position, hair edges, cell layout, aspect ratio about 2.20690, soft original muted skin palette and shading. Mouth stays within full-face x22..41/y39..51, equivalent local lower y4..16. Parent applies mask later.\nAvoid: enlarged or widened lips, moving mouth/nose/chin, giant teeth, stretched grin, yawn, tongue sticking out, hard contrast, black outlines, labels, borders, gutters, cropping, scaling, compositing, extra faces or details. Output one complete 3×3 lower-half atlas only."
+}

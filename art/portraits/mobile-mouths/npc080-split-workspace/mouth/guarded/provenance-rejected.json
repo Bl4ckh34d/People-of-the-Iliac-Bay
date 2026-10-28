@@ -1,0 +1,18 @@
+{
+  "portrait": 80,
+  "emotion": "guarded / skeptical",
+  "status": "FAILED: built-in image_gen output rejected by safety moderation; no raw mouth asset; no retry per bounded task",
+  "generator": "built-in image_gen edit",
+  "generation_attempts": 1,
+  "generated_original": null,
+  "output": null,
+  "output_sha256": null,
+  "reference": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc080-split-workspace\\mouth-reference-grid.png",
+    "sha256": "360FBBCED7A02766A36B31374267AF4E8C05702708815D7720B030712A5BD435"
+  },
+  "cell_order": "3x3 row-major A B C / D E F / G H X",
+  "prompt": "Edit the supplied image only. It is a nonsexual, fully clothed adult fantasy-game NPC portrait asset in classic Daggerfall pixel-art style. Preserve exact face, mouth location, original muted warm palette, crop, pixel scale and geometry. Make one complete 3x3 mouth atlas, row-major A B C / D E F / G H X. Change only mouth shapes. Keep guarded skepticism subtle and reserved: closed A and X have firm closed lips with only a slight asymmetry at corners, not a frown or smile. Make all nine speech shapes distinct and readable at native scale: A closed; B small opening; C medium opening; D narrow opening with a little upper teeth; E wider opening; F rounded medium opening; G open rounded shape; H narrow teeth shape; X closed. Keep natural original lip size and soft muted lip color. No lipstick red, orange skin spots, hard outlines, oversized teeth, pout, grin, sneer, or anger. Preserve every non-mouth feature and the whole 3x3 atlas geometry. No extra content, labels or text.",
+  "failure": "http 400 Bad Request: image_generation_user_error, moderation_blocked, moderation_stage=output, categories=[sexual], request_id=98ea127c-f241-4355-a8a1-3a4d1defbf90",
+  "visual_review": "No generated output exists to inspect or copy. Do not select, assemble or install a mouth atlas."
+}

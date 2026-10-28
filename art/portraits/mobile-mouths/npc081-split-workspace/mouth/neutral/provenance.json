@@ -1,0 +1,37 @@
+{
+  "asset": "npc081 neutral mouth raw atlas",
+  "generatedWith": "built-in image_gen",
+  "prompt": "Use case: precise-object-edit\nAsset type: mouth-viseme reference atlas for a native 64x29 lower-half Daggerfall Unity NPC portrait\nInput image: Image 1 is the inspected 3x3 mouth-reference-grid.png showing repeated crops of the exact original portrait lower half.\nPrimary request: Return the same 3x3 atlas, same full canvas and exact cell boundaries, with cells in row-major order: A B C / D E F / G H X. Edit only the mouth area in each cell; preserve the original lower-face geometry.\nStyle: Match the source's softly shaded, muted native pixel-art palette, pixel scale, edge softness, skin tone, and low contrast. Keep every feature crisp at native scale without blur, extra contrast, thick outlines, or color grading.\nVisemes, all clearly distinct and natural for this same character: A lips fully closed; B teeth gently clenched and visible; C small slightly open mouth; D wide open mouth; E rounded open mouth; F narrow protruding/pursed mouth; G lower lip lightly touching upper teeth; H small open mouth with just the tongue tip visible; X quiet closed resting mouth.\nConstraints: Keep identity, face, nose, cheeks, chin, neck, hair, background, crop, scale, grid, and all non-mouth pixels unchanged. Mouths must sit in the same native position and scale, integrate with the original skin shading, and retain the soft original palette. No red lipstick, no orange/saturated skin, no added highlights, no dark thick contours, no labels, no watermark.",
+  "reference": {
+    "path": "mouth-reference-grid.png",
+    "sha256": "195f9a431b7a6509ca0c701eb5057672431e11ab58037bef41cc61402bbe851f",
+    "dimensions": "1536x696"
+  },
+  "original": {
+    "path": "original.png",
+    "sha256": "eb0f7dcd1d390a6ff58d1bc0bba7a3855b5930ee824aa54e2f749211721e8ba0",
+    "dimensions": "64x64"
+  },
+  "output": {
+    "path": "raw.png",
+    "sha256": "4f093361fb934a550ee8a673814d68a9ff7a00b68e967447e7b38542405bc523",
+    "dimensions": "1863x844",
+    "copiedUnmodified": true
+  },
+  "cellOrder": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "X"
+  ],
+  "observedQualityLimits": [
+    "Visemes look distinguishable in the generated preview, but have not been sampled at native pixel scale.",
+    "Generated skin/lip colors appear warmer and redder than the original reference; teeth/cavity contrast is stronger than the source.",
+    "Raw atlas has not been cropped or composited; parent palette/geometry review remains required."
+  ]
+}

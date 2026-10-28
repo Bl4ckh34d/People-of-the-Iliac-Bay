@@ -18,7 +18,7 @@ namespace PeopleOfTheIliacBay.DFU
             var game=GameManager.Instance;
             PaidTravelProbeRequire(Array.IndexOf(Environment.GetCommandLineArgs(),
                 "-peopleoftheiliacbay-paid-companion-travel-probe")>=0 && game!=null && game.PlayerEntity!=null &&
-                !string.IsNullOrEmpty(expectedCharacter) && expectedCharacter.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal) &&
+                !string.IsNullOrEmpty(expectedCharacter) && NativeProbeText.IsTestCharacter(expectedCharacter) &&
                 game.PlayerEntity.Name==expectedCharacter && !game.IsPlayerInside && streets!=null && streets.Ready &&
                 roadActors!=null && store!=null && crossExterior!=null,
                 "Paid travel probe requires an owned exterior fixture and a native exterior-crossing callback.");

@@ -2,7 +2,7 @@ using System;
 using System.Text.Json;
 using PeopleOfTheIliacBay.Core;
 
-internal static class Program
+internal static class ServiceHealthCareStoreRegression
 {
     private const string ContractId = "health-service-store";
     private const string Escrow = "contract:health-service-store:escrow";
@@ -41,8 +41,8 @@ internal static class Program
         var contract = Contract(fixture.Store);
         Check(contract.Status == NpcServiceContractStatus.Suspended &&
             contract.SuspensionOwnerKind == NpcServiceSuspensionOwnerKind.HealthCare &&
-            contract.SuspensionOwnerId == fixture.Care.Id && contract.EligibleServiceSeconds == 100 &&
-            contract.EarnedGold == 100 && contract.EscrowGold == 100,
+            contract.SuspensionOwnerId == fixture.Care.Id && contract.EligibleServiceSeconds == 0 &&
+            contract.EarnedGold == 100 && contract.EscrowGold == 0,
             "service owner, accrual or escrow wrong");
         Check(fixture.Store.Snapshot().NpcServiceEvidence.CompletedTransfers.Count == 1,
             "no-transfer pause appended native evidence");
@@ -192,7 +192,7 @@ internal static class Program
         Check(resumed.Status == NpcServiceContractStatus.Active &&
             resumed.SuspensionOwnerKind == NpcServiceSuspensionOwnerKind.None && resumed.SuspensionOwnerId == null &&
             resumed.BlockEndAt == 86400 && resumed.LastServiceUpdateAt == 202 &&
-            resumed.EligibleServiceSeconds == 100,
+            resumed.EligibleServiceSeconds == 0,
             "resumption billed pause or changed fixed expiry");
         Check(!Resume(fixture, ticket, 203, out _), "stale ticket replayed resumption");
     }
@@ -273,7 +273,7 @@ internal static class Program
         string before = Signature(fixture.Store);
         Check(!Resume(fixture, fixture.Store.CaptureNpcServiceContractWriteTicket(), 90000, out _),
             "expired contract resumed instead of awaiting settlement");
-        Check(Signature(fixture.Store) == before && Contract(fixture.Store).EscrowGold == 100,
+        Check(Signature(fixture.Store) == before && Contract(fixture.Store).EscrowGold == 0,
             "expired retry changed escrow or saved owner");
     }
 
@@ -309,8 +309,8 @@ internal static class Program
             "new care did not inherit saved unpaid pause: " + error);
         var transferred = Contract(fixture.Store);
         Check(transferred.Status == NpcServiceContractStatus.Suspended &&
-            transferred.SuspensionOwnerId == fixture.Care.Id && transferred.EligibleServiceSeconds == 100 &&
-            transferred.FundedGold == 100 && transferred.EscrowGold == 100 &&
+            transferred.SuspensionOwnerId == fixture.Care.Id && transferred.EligibleServiceSeconds == 0 &&
+            transferred.FundedGold == 100 && transferred.EscrowGold == 0 &&
             fixture.Store.Snapshot().NpcServiceEvidence.CompletedTransfers.Count == 1,
             "owner transfer changed billing or native receipt evidence");
         Check(!TransferOwner(fixture, stale, oldEpisode, 206, out _),
@@ -382,11 +382,13 @@ internal static class Program
             "service terms fixture failed");
         var ticket = fixture.Store.CaptureNpcServiceContractWriteTicket();
         var funding = NpcServiceTransferReceipt.Create("funding-health", ContractId,
-            NpcServiceTransferKind.Funding, NpcDirectedRelationship.PlayerTargetId, Escrow, 100, 0);
+            NpcServiceTransferKind.Funding, NpcDirectedRelationship.PlayerTargetId, fixture.Person, 100, 0);
         Check(NpcServiceContractLedger.TryReserve(ticket.SourceLedger, ticket.ExpectedLedgerRevision,
             terms, funding, out var reserved), "funded service candidate failed");
-        Check(fixture.Store.TryCommitNpcServiceContracts(ticket, reserved, new[] { funding },
-            Array.Empty<NpcServiceRenewalAuthorization>(), out string error), "funding commit failed: " + error);
+        Check(fixture.Store.InitializeNpcInventory(fixture.Person,0,Array.Empty<NpcInventoryItem>()),"wallet fixture");
+        var wallet=fixture.Store.ReadNpcInventory(fixture.Person);
+        Check(fixture.Store.TryCommitNpcServiceSettlement(ticket,reserved,new NpcInventoryUpdate {PersonId=fixture.Person,
+            ExpectedRevision=wallet.Revision,WalletGold=100,Items=wallet.Items},new[]{funding},out string error),"payment commit failed: "+error);
         ticket = fixture.Store.CaptureNpcServiceContractWriteTicket();
         var current = ticket.SourceLedger.Read(ContractId);
         Check(current.TryStart(current.Revision, 0, out var active), "service start transition failed");

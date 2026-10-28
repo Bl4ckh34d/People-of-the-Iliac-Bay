@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "status": "parent-approved-bounded-neutral-B-replacement",
+  "portraitRecord": 72,
+  "mood": "neutral",
+  "shape": "B",
+  "sourceSelection": {
+    "raw3x3Atlas": "work/portrait072-neutral-mouth-audit/publication-b-only-20261022T204214Z/neutral-raw-b-only-atlas.png",
+    "raw3x3AtlasSha256": "d56fd13cd520f928285a7547d0d3d407bfa58c7777ec6d24cf480407e0c46820",
+    "rawReplacementOnly": "cell B (row 0, column 1); other eight raw cells pixel-identical",
+    "reviewedComposedFullface": "work/portrait072-neutral-mouth-audit/candidate-neutral-b-v2/fullface/B.png",
+    "reviewedComposedFullfaceSha256": "68226bc76a708d87317adbeeed1898dd6705ef36520fdec025443f1bec888052"
+  },
+  "replay": {
+    "recipeScript": "mouth/neutral/replay-B-mask.py",
+    "base": "original.png",
+    "action": "copy reviewed fullface pixels only within these absolute native coordinates, then crop y=35..63 for the 64x29 lower frame",
+    "maskRows": {
+      "38": [
+        26,
+        37
+      ],
+      "39": [
+        25,
+        38
+      ],
+      "40": [
+        24,
+        39
+      ],
+      "41": [
+        24,
+        39
+      ],
+      "42": [
+        25,
+        39
+      ],
+      "43": [
+        26,
+        38
+      ],
+      "44": [
+        28,
+        36
+      ]
+    },
+    "edgeTreatment": "no second feather; preserve every outside pixel exactly from original; no palette edits",
+    "expectedChangedPixels": 95,
+    "outsideMaskChangedPixels": 0
+  },
+  "selectedNativeSha256": "c24aea90efcf462b305bc9c6e3c72e588de48e1c151ac0549ed8bdd876e744c4",
+  "selectedDiffSha256": "c4b93945d55995ab04bbcf3ef26fb5b99ca46ca16287e5cf57b3774e613fb6aa",
+  "boundedGalleryReviewOnly": true,
+  "wholeNPCAcceptance": "pending"
+}

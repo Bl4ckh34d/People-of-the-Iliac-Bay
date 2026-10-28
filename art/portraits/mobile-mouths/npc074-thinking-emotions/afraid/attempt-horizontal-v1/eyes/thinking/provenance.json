@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T10:49:28.9813634Z",
+    "portraitRecord":  74,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Use case: stylized-concept\nAsset type: native pixel-art horizontal gaze atlas for NPC074 afraid thinking eyes\nInput image: the single attached exact local `thinking-reference-grid.png`. It shows the selected afraid v2 open-eye phase repeated across the top row and the corrected narrow half-closed v2 phase repeated across the bottom row.\n\nCreate an exact 2×2 atlas. Each cell is a complete upper-face crop matching the 64×35 native portrait-half proportions and framing. No labels, borders, gutters, margins, text, extra panels, or decorations. Row-major cells: top-left LEFT open; top-right RIGHT open; bottom-left LEFT half-closed; bottom-right RIGHT half-closed.\n\nChange gaze horizontally only. In both LEFT cells, move each compact iris/pupil cluster about one native pixel toward image-left. In both RIGHT cells, move each cluster about one native pixel toward image-right. Both eyes must track together, at the same vertical level. Keep each pupil centered inside its compact iris and inside the lid opening. Do not change iris size or add vertical gaze.\n\nPreserve NPC074\u0027s fearful raised inner brows, blue-gray iris clusters, small pale muted glints, low-set eye spacing, narrow source-like aperture, warm skin palette, blond/light-brown hairline, blue ornament and crisp native pixel clusters. Keep the upper-row OPEN aperture from the selected v2. Preserve the clearly narrowed lower-row HALF aperture from the selected v2: upper lids remain lowered, with a narrow readable slit and irises contained beneath them. Do not lift those lids back toward OPEN, widen the white bands, or make HALF nearly indistinguishable from OPEN. Do not create giant pupils, round/vector irises, bright flashes, blur, smoothing, gradients or outside-face changes.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-bdfa6c27-39e9-4abb-8484-10fa3d8aab52.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-bdfa6c27-39e9-4abb-8484-10fa3d8aab52.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "86d6254c17db0e1979768ab6f4f5614c2395f2bd0f68533d2882b9f0e559b1f5",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-bdfa6c27-39e9-4abb-8484-10fa3d8aab52.png",
+                      "sha256":  "aeea0ef5ba2f973e0059034e52bb680ab0adf15637854e788c71c31f83354ac8",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "aeea0ef5ba2f973e0059034e52bb680ab0adf15637854e788c71c31f83354ac8",
+                "width":  1695,
+                "height":  928
+            }
+}

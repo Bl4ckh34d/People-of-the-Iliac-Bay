@@ -83,8 +83,8 @@ namespace PeopleOfTheIliacBay.DFU
             int[] pricedMenu = new int[prices.Length];
             for (int index = 0; index < prices.Length; index++)
                 pricedMenu[index] = holiday == 37 ? Math.Max(1, prices[index] / 2) : prices[index];
-            int menuIndex=worldStore.PlannedHouseholdInnMenu(physical.HouseholdDayId,actor.Resident.Id);
-            if(menuIndex<0)menuIndex = NpcInnConsumption.SelectMenuIndex(pricedMenu, buyer.WalletGold, visitSeed);
+            int menuIndex = NpcInnConsumption.SelectMenuIndex(pricedMenu,
+                worldStore.HouseholdInnCounterBudget(physical.HouseholdDayId,actor.Resident.Id,buyer.WalletGold),visitSeed);
             int price = pricedMenu[menuIndex];
             // DFU halves tavern menu prices on holiday 37; New Life's player-only
             // free purchase is excluded so an NPC must still pay its real wallet.

@@ -1,0 +1,34 @@
+{
+  "portraitRecord": 78,
+  "emotion": "happy",
+  "asset": "upper-half eye expression sheet",
+  "generator": "built-in image_gen",
+  "generation_count": 1,
+  "source": {
+    "path": "art/portraits/mobile-mouths/npc078-split-workspace/eyes-reference-grid.png",
+    "sha256": "770BCAF228993A243E7AF873727E0EA24EE1788439AFA29E5DFB66BED0581340",
+    "dimensions_px": [1024, 560]
+  },
+  "generated": {
+    "path": "C:/Users/Daniel/.codex/generated_images/01a15fde-8b98-7181-a1df-84e7b766303c/exec-b5ef582b-4957-4b6b-a5e9-cfc951007555.png",
+    "sha256": "EE5F8FE6608763DE60EEFA74BF0C502052FDC080520143B3CCC14328D9A36DD7",
+    "dimensions_px": [1695, 928]
+  },
+  "output": {
+    "path": "art/portraits/mobile-mouths/npc078-split-workspace/eyes/happy/raw.png",
+    "sha256": "EE5F8FE6608763DE60EEFA74BF0C502052FDC080520143B3CCC14328D9A36DD7",
+    "dimensions_px": [1695, 928]
+  },
+  "grid": {
+    "rows": 2,
+    "columns": 2,
+    "row_major_order": ["open-happy", "half-blink-happy", "closed-happy", "open-happy-repeat"],
+    "native_cell_dimensions_px": [64, 35],
+    "reference_dimensions_px": [1024, 560]
+  },
+  "prompt": "Create one complete HAPPY eye-expression 2x2 pixel-art sheet by editing this reference grid. The reference is the sole geometry, identity, soft muted palette, and framing source. Preserve the same woman, 64x35 native upper-half cell framing enlarged 8x, face/hairline/forehead/skin shading, exact eye spacing, eye size, iris and pupil size/position, and low-contrast coarse pixel texture. Output four equal cells in row-major order: top-left open happy eyes; top-right half blink happy eyes; bottom-left fully closed happy blink; bottom-right repeat the same open happy eyes. Give all four cells a clearly warm friendly happy expression through relaxed gently smiling eyes and only a tiny cheek lift near the eyes; keep brows natural and at exactly the same height/shape across all four phases. Keep gaze straight and matching in both eyes. Blink must close by upper lids moving down over the same stationary eyeballs; do not shrink or move irises horizontally. Keep palette and contrast as soft and muted as source. Do not add hard eyeliner, black outlines, sharp contrast, blur, smoothing, extra details, makeup, text, labels, or gutters. Preserve complete grid and canvas ratio. Output only the full 2x2 sheet.",
+  "visual_review": {
+    "status": "raw generation; parent review pending",
+    "notes": "Open, half, and closed phases read clearly at full-sheet view. Brows look broadly consistent across phases. Eye highlights appear somewhat brighter and cleaner than source; full-sheet output is 1695x928 rather than reference 1024x560. No resizing or postprocessing performed. Verify native-cell size, iris locks, and blink transition before adoption."
+  }
+}

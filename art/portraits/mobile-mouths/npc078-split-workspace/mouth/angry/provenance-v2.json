@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 78,
+  "emotion": "angry",
+  "revision": 2,
+  "assetType": "speech-mouth 3x3 raw atlas",
+  "editType": "built-in image_gen edit",
+  "sourceReferences": [
+    {
+      "file": "raw.png",
+      "sha256": "0aa6ac237a0eff417fd8b0ff3f0c6d7997f362cc403acccc1345d10396796603"
+    },
+    {
+      "file": "../../mouth-reference-grid.png",
+      "sha256": "723a29c0e82dc6a0b811139c36f110100a031876b51ea7eea10984dd1a3e9f45"
+    }
+  ],
+  "rawFile": "raw-v2.png",
+  "rawSha256": "d26a4ec6645b7d70f9f34dc712c455401a67d8a5aefa43667c48326422077782",
+  "imagegenOutputName": "exec-e792c329-c1a6-4bdf-8be8-e921bdb86f48.png",
+  "prompt": "Use case: stylized-concept\nAsset type: revised pixel-art angry speech-mouth atlas for Daggerfall Unity NPC 78\nInput images: Image 1 is the current NPC 78 angry 3x3 mouth atlas to edit. Preserve its exact 3x3 cell grid, same lower-face crops, alignment, identity and all non-mouth pixels. Image 2 is the inspected neutral reference grid; use it to keep original mouth width, face geometry, skin/lip palette, hair and neck.\nPrimary request: revise only the nine mouth expressions so every pose reads controlled anger and tension. Keep exact row-major viseme order A B C / D E F / G H X, nine equal complete lower-half frames, no text or gutters.\nMouth acting by cell: all nine should have visibly tense lips and firmer corners. A and X are emotionally closed with restrained pressed lips and slight corner tension, not a large comic frown. B slightly parted and tense; C narrow opening with tight lips; D a natural broad speech opening with taut corners; E rounded but tense; F speech opening with a small, fitting amount of clenched upper teeth; G asymmetrically open with a tense corner; H rounded/pursed speech shape with tight corners. Add small partial teeth in some open cues only where the shape naturally calls for them; vary it across cues. No permanent teeth-clench look across the open poses.\nNative scale and bounds: keep original lip width and shape envelope; the mouth stays inside full-portrait mask x=22..41, y=39..51 (local lower-half rows y=4..16). Do not enlarge the mouth to convey anger. Keep the complete lower-half crop at native 64x29 proportions in all nine cells.\nStyle: crisp, softly shaded low-resolution fantasy portrait; use the same muted natural red-brown lips and warm medium skin. Pixel edges remain readable; no heavy outlines.\nConstraints: edit only mouth, lips and immediate mouth-corner tension within the stated mask. Keep nose, chin, jaw, cheeks, neck, hair, background, crop, colors and framing unchanged. No giant mouths, hard black contours, cartoon rage, oversized frown, red skin, smudging, blur, extra face creases, text, watermark, seams, or inconsistent grid alignment."
+}

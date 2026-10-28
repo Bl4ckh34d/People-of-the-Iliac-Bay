@@ -31,7 +31,6 @@ namespace PeopleOfTheIliacBay.DFU
                 int value;
                 return QuoteShopItem(actor, item, 1, out value) ? value : 0;
             };
-            long gameDay = GuildPotionGameDay(now);
             var providers = new List<StaticNPC>(interior.GetComponentsInChildren<StaticNPC>());
             providers.Sort((left, right) =>
             {
@@ -50,19 +49,19 @@ namespace PeopleOfTheIliacBay.DFU
 
                 NativeNpcGuildPotionOffer offer;
                 if (!NativeNpcGuildPotionSupply.TryPrepareOffer(worldStore, actor, npc, KeeperPerson,
-                    gameDay, now, quote, out offer, out providerReason))
+                    now, quote, out offer, out providerReason))
                 {
                     reason = providerReason ?? reason;
                     continue;
                 }
                 if (offer == null || offer.Provider == null || offer.Provider.Id != provider.Id ||
-                    offer.Item == null || offer.ItemUid == 0 || offer.Price < 1 || offer.SellerBinding == null ||
+                    offer.Item == null || offer.RecipeOfferId == 0 || offer.Price < 1 || offer.SellerBinding == null ||
                     offer.SellerBinding.PersonId != provider.Id) continue;
 
                 NpcActionTarget target = ActionPosition(approach);
                 target.PersonId = provider.Id;
                 target.ContainerId = offer.ContainerId;
-                target.ItemId = offer.ItemUid.ToString(CultureInfo.InvariantCulture);
+                target.ItemId = offer.RecipeOfferId.ToString(CultureInfo.InvariantCulture);
                 target.Quantity = 1;
                 target.QuotedGold = offer.Price;
                 task = HealthPurchaseTask(care, now, target);
@@ -74,11 +73,11 @@ namespace PeopleOfTheIliacBay.DFU
 
         private bool IsGuildPotionTarget(NpcActionTarget target)
         {
-            ulong container, item;
+            ulong container, item;int recipeKey;
             return target != null && target.Kind == NpcActionTargetKind.IndoorPoint &&
                 !string.IsNullOrWhiteSpace(target.PersonId) &&
                 target.ContainerId == NpcGuildPotionSupply.GuildPotionContainerId.ToString(CultureInfo.InvariantCulture) &&
-                ulong.TryParse(target.ItemId, NumberStyles.None, CultureInfo.InvariantCulture, out item) && item != 0 &&
+                ulong.TryParse(target.ItemId, NumberStyles.None, CultureInfo.InvariantCulture, out item) && NpcGuildPotionSupply.TryRecipeKey(item,out recipeKey) &&
                 ulong.TryParse(target.ContainerId, NumberStyles.None, CultureInfo.InvariantCulture, out container) &&
                 container == NpcGuildPotionSupply.GuildPotionContainerId && target.Quantity == 1 && target.QuotedGold > 0;
         }
@@ -110,17 +109,17 @@ namespace PeopleOfTheIliacBay.DFU
                 return QuoteShopItem(actor, item, 1, out value) ? value : 0;
             };
             NativeNpcGuildPotionOffer offer;
-            long now = GuildActionNow(out double gameNow);
+            double gameNow = ActionNow();
             if (!NativeNpcGuildPotionSupply.TryPrepareOffer(worldStore, actor, npc, KeeperPerson,
-                now, gameNow, quote, out offer, out reason)) return false;
-            ulong expectedUid;
+                gameNow, quote, out offer, out reason)) return false;
+            ulong expectedOfferId;
             if (offer == null || offer.Provider == null || offer.Provider.Id != provider.Id ||
-                !ulong.TryParse(job.Target.ItemId, NumberStyles.None, CultureInfo.InvariantCulture, out expectedUid) ||
-                offer.ItemUid != expectedUid || offer.ContainerId != job.Target.ContainerId ||
+                !ulong.TryParse(job.Target.ItemId, NumberStyles.None, CultureInfo.InvariantCulture, out expectedOfferId) ||
+                offer.RecipeOfferId != expectedOfferId || offer.ContainerId != job.Target.ContainerId ||
                 offer.Price != job.Target.QuotedGold || offer.Price < 1 || offer.SellerBinding == null ||
                 offer.SellerBinding.PersonId != provider.Id || offer.SellerInventoryRevision < 0)
             {
-                reason = "The guild potion UID, price, provider or inventory revision changed.";
+                reason = "The guild potion recipe, price, provider or inventory revision changed.";
                 return false;
             }
 
@@ -133,7 +132,7 @@ namespace PeopleOfTheIliacBay.DFU
             NpcActionTarget target = ActionPosition(approach);
             target.PersonId = provider.Id;
             target.ContainerId = offer.ContainerId;
-            target.ItemId = offer.ItemUid.ToString(CultureInfo.InvariantCulture);
+            target.ItemId = offer.RecipeOfferId.ToString(CultureInfo.InvariantCulture);
             target.Quantity = 1;
             target.QuotedGold = offer.Price;
             job.Target = target;
@@ -176,30 +175,29 @@ namespace PeopleOfTheIliacBay.DFU
                 int value;
                 return QuoteShopItem(actor, item, 1, out value) ? value : 0;
             };
-            long gameDay = GuildPotionGameDay(now);
-            ulong expectedUid;
-            if (!ulong.TryParse(job.Target.ItemId, NumberStyles.None, CultureInfo.InvariantCulture, out expectedUid))
+            ulong expectedOfferId;
+            if (!ulong.TryParse(job.Target.ItemId, NumberStyles.None, CultureInfo.InvariantCulture, out expectedOfferId))
             {
-                reason = "The guild purchase no longer names a valid potion UID.";
+                reason = "The guild purchase no longer names a valid recipe offer.";
                 return false;
             }
 
-            // Reopen the exact persisted seller inventory without preparing a
-            // new offer. Preparing at arrival can trigger a daily restock and
-            // change the seller revision underneath this reserved purchase.
+            // Revalidate the provider wallet and native recipe at arrival.
             NativeNpcInventoryBinding seller;
             if (!NativeNpcInventoryBridge.TryOpen(worldStore, provider.Id, null,
                 NativeNpcInventoryBridge.InitialWalletGold(worldStore, provider.Id), out seller, out reason) ||
                 seller == null || seller.PersonId != provider.Id || seller.Revision != job.ExpectedTargetInventoryRevision ||
                 seller.Items == null)
             {
-                if (string.IsNullOrEmpty(reason)) reason = "The reserved guild seller inventory changed before arrival.";
+                if (string.IsNullOrEmpty(reason)) reason = "The guild provider inventory changed before arrival.";
                 return false;
             }
-            DaggerfallUnityItem reservedItem = seller.Items.GetItem(expectedUid);
+            int recipeKey;
+            if (!NpcGuildPotionSupply.TryRecipeKey(expectedOfferId, out recipeKey)) return false;
+            DaggerfallUnityItem reservedItem = ItemBuilder.CreatePotion(recipeKey);
             if (!NativeNpcHealingItem.IsSupportedPotion(reservedItem))
             {
-                reason = "The reserved UID is no longer a supported native healing potion.";
+                reason = "The quoted recipe is no longer a supported native healing potion.";
                 return false;
             }
             int currentPrice;
@@ -207,12 +205,12 @@ namespace PeopleOfTheIliacBay.DFU
             catch (Exception error) { reason = error.Message; return false; }
             if (currentPrice != job.ServicePrice || currentPrice != job.Target.QuotedGold)
             {
-                reason = "The reserved guild potion's live price changed before arrival.";
+                reason = "The quoted guild potion's live price changed before arrival.";
                 return false;
             }
 
             Func<bool> arrivalAccess = () => GuildPotionArrivalAccess(actor, npc, job.Target, ActionNow());
-            return NativeNpcInventoryBridge.TryCompleteActionGuildPotionPurchase(worldStore, job, now, gameDay,
+            return NativeNpcInventoryBridge.TryCompleteActionGuildPotionPurchase(worldStore, job, now,
                 owner.Binding, seller, npc, KeeperPerson, quote, arrivalAccess, out reason);
         }
 
@@ -302,16 +300,5 @@ namespace PeopleOfTheIliacBay.DFU
             return true;
         }
 
-        private static long GuildPotionGameDay(double now)
-        {
-            if (double.IsNaN(now) || double.IsInfinity(now) || now < 0 || now / 86400d > long.MaxValue) return -1;
-            return (long)Math.Floor(now / 86400d);
-        }
-
-        private long GuildActionNow(out double now)
-        {
-            now = ActionNow();
-            return GuildPotionGameDay(now);
-        }
     }
 }

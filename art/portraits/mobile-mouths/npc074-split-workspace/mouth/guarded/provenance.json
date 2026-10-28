@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T10:29:53.7901956Z",
+    "portraitRecord":  74,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "guarded",
+    "prompt":  "Use case: stylized-concept\nAsset type: pixel-art lower-mouth atlas for an existing DFU NPC talking portrait.\nInput image: Image 1 is the exact prepared 3x3 reference grid of NPC074\u0027s original lower halves. Use it as the character identity, muted palette, lip scale, crop boundaries, pixel texture, hair, jaw, and face registration reference.\nPrimary request: Generate one clean 3x3 atlas at the same overall 64:29 aspect ratio. Every cell repeats the same complete 64x29 lower-half portrait crop. Row-major visemes: A B C / D E F / G H X. No labels, grid lines, gutters, borders, extra margins, full-face views, or independent mouth closeups.\nExpression: guarded and skeptical, with restrained doubtful lip tension and subtle asymmetry. Keep this expression consistent across all nine visemes. The mouth must remain legible as each distinct speech pose, not collapse into a repeated closed mouth.\nActual Rhubarb pose meanings:\nA: closed, pressured lips for P/B/M.\nB: narrow opening, teeth nearly together, for consonants and EE.\nC: medium unrounded opening for EH/AE.\nD: wide AA opening.\nE: slightly rounded AO/ER, no wider than C.\nF: puckered UW/OW/W.\nG: upper teeth touch the lower lip for F/V.\nH: tongue raised behind the upper teeth for L, opening between C and D.\nX: relaxed closed idle.\nPalette and detail: Preserve the source\u0027s small lip scale and muted pale brown-pink lip color. Keep teeth subdued gray-ivory, softly distinct from skin, never bright white. Use restrained oral-cavity contrast and native stepped pixel clusters. Preserve the original nose, lower face, jaw, chin, hair, blue side ornament, neck and background registration in every cell.\nAvoid: lipstick-red or saturated lips, glossy lips, bright white teeth, oversized tooth blocks, giant mouth openings, exaggerated grimaces or smile, changed face geometry, orange skin spill, duplicated mouth shapes, blur, smooth vector forms, labels, text, watermark.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-49083528-4981-4b21-905c-e69d9fd0646f.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-49083528-4981-4b21-905c-e69d9fd0646f.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "fb9c8ade231ed63083cb2e8913d0227f84681dca1515de3e03a14898c767e061",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-49083528-4981-4b21-905c-e69d9fd0646f.png",
+                      "sha256":  "05c821f95920ef879f933ab89fa04c4c7e66d2e8f306055c05319da346414487",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/guarded/raw.png",
+                "sha256":  "05c821f95920ef879f933ab89fa04c4c7e66d2e8f306055c05319da346414487",
+                "width":  1863,
+                "height":  844
+            }
+}

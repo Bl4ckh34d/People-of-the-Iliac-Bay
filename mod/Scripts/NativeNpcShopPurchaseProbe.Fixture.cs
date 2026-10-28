@@ -28,7 +28,7 @@ namespace PeopleOfTheIliacBay.DFU
         {
             Require((Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-shop-commerce-probe")>=0 ||
                 Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-shop-loot-sale-probe")>=0) &&
-                character!=null && character.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal),"Shop fixture requires its explicit flag and owned character.");
+                character!=null && NativeProbeText.IsTestCharacter(character),"Shop fixture requires its explicit flag and owned character.");
             Require(!taskFailureProbe || Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-task-failure-probe")>=0,
                 "Task failure fixture requires its explicit Player flag.");
             Require(!routineRecoveryPhysicalProbe || Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-routine-recovery-physical-probe")>=0,
@@ -250,13 +250,16 @@ namespace PeopleOfTheIliacBay.DFU
             var task=store.ActiveNpcTask(actor.Resident.Id);
             Require(task!=null && task.Steps.Count==2 && task.Steps[1].ItemSourceStep==1,"Accepted purchase lost its queued handover.");
             int playerCount=ItemCount(game.PlayerEntity.Items,bought.ItemGroup,bought.TemplateIndex);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_SHOP_HANDOVER_CAPACITY: carried="+game.PlayerEntity.CarriedWeight+
+                "; capacity="+game.PlayerEntity.MaxEncumbrance+"; item="+bought.EffectiveUnitWeightInKg());
             string handoverId=task.Id+":step:1";
             var previous=actor.transform.position;
             float walked=0,maxStep=0;deadline=Time.realtimeSinceStartup+120;
             while(Time.realtimeSinceStartup<deadline)
             {
-                float step=Vector3.Distance(previous,actor.transform.position);walked+=step;maxStep=Mathf.Max(maxStep,step);previous=actor.transform.position;
                 if(NpcActionExecutor.IsTerminal(store.ReadNpcAction(handoverId))) break;
+                Require(actor,"Delivery actor disappeared before completion: "+store.ReadNpcTask(task.Id).FailureReason);
+                float step=Vector3.Distance(previous,actor.transform.position);walked+=step;maxStep=Mathf.Max(maxStep,step);previous=actor.transform.position;
                 yield return null;
             }
             var handed=store.ReadNpcAction(handoverId);

@@ -11,6 +11,14 @@ namespace PeopleOfTheIliacBay.DFU
     {
         private DaggerfallUnityItem guardBow,guardArrows,guardMelee;
         private float nextArrowAt;
+        private bool wallNativeAttackReady;
+        private Coroutine wallAttackStart;
+        private void EnsureWallBowEquipped()
+        {
+            if(guardBow==null)InitializeArchery();
+            if(guardBow!=null && entity.ItemEquipTable.GetItem(EquipSlots.RightHand)!=guardBow)
+                entity.ItemEquipTable.EquipItem(guardBow,true,false);
+        }
         private void InitializeArchery()
         {
             var record=roster.Guards.Find(g=>g.Id==GuardId);
@@ -32,9 +40,51 @@ namespace PeopleOfTheIliacBay.DFU
             var target=senses.Target;
             var record=roster.Guards.Find(g=>g.Id==GuardId);
             if(!CombatReady || !target || target.Entity.CurrentHealth<=0 || entity.IsParalyzed) return;
+            ShootGuardArrow(target,false);
+        }
+        public void DefendWallPost(DaggerfallEntityBehaviour target)
+        {
+            if(!target || target.Entity==null || target.Entity.CurrentHealth<=0 || entity.IsParalyzed)return;
+            if(WallLawActive && target!=GameManager.Instance.PlayerEntityBehaviour)EndCombat();
+            if(guardBow==null)InitializeArchery();
+            if(!wallNativeAttackReady)
+            {
+                if(wallAttackStart==null)wallAttackStart=StartCoroutine(InitializeWallAttack());
+                return;
+            }
+            // Let the native motor choose pursuit/retreat and reject walls and
+            // cliffs. Place no longer resets a fighting archer to its duty post.
+            var senses=GetComponent<EnemySenses>();
+            var motor=GetComponent<EnemyMotor>();
+            motor.MakeEnemyHostileToAttacker(target);motor.IsHostile=target==GameManager.Instance.PlayerEntityBehaviour;
+            motor.enabled=true;senses.enabled=true;GetComponent<EnemyAttack>().enabled=true;
+            senses.Target=target;senses.LastKnownTargetPos=target.transform.position;
+            senses.OldLastKnownTargetPos=target.transform.position;senses.PredictedTargetPos=target.transform.position;
+            WallCombatActive=true;wallCombatTarget=target;wallCombatDisplaced=true;wallReturnCorners=null;
+            if(target==GameManager.Instance.PlayerEntityBehaviour &&
+                GameManager.Instance.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.None)
+            {
+                // Native damage and court keep their existing ownership.
+                WallLawActive=true;
+                if(OfferWallArrest(target))return;
+            }
+            ShootGuardArrow(target,true);
+        }
+        private System.Collections.IEnumerator InitializeWallAttack()
+        {
+            var attack=GetComponent<EnemyAttack>();
+            attack.enabled=true;GetComponent<EnemyMotor>().enabled=true;GetComponent<EnemySenses>().enabled=true;
+            yield return null; // Let the native Start cache its damage dependencies.
+            attack.enabled=false;GetComponent<EnemyMotor>().enabled=false;GetComponent<EnemySenses>().enabled=false;
+            wallNativeAttackReady=true;wallAttackStart=null;
+        }
+        private void ShootGuardArrow(DaggerfallEntityBehaviour target,bool holdPost)
+        {
+            var motor=GetComponent<EnemyMotor>();
+            var record=roster.Guards.Find(g=>g.Id==GuardId);
             float distance=Vector3.Distance(transform.position,target.transform.position);
             bool canShoot=record.HasBow && record.ArrowsRemaining>0 && guardBow!=null && guardArrows!=null &&
-                distance>EnemyAttack.minRangedDistance && distance<EnemyAttack.maxRangedDistance &&
+                distance>(holdPost ? (WallLawActive ? GetComponent<EnemyAttack>().MeleeDistance : .1f) : EnemyAttack.minRangedDistance) && distance<EnemyAttack.maxRangedDistance &&
                 ClearGuardArrowShot(target);
             if(!canShoot)
             {
@@ -45,11 +95,7 @@ namespace PeopleOfTheIliacBay.DFU
             }
             // City-watch art has no native ranged attack frames. Use native arrows
             // and hit resolution without pretending unsupported frames exist.
-            motor.enabled=false;
-            // The disabled motor no longer updates Idle/Move from velocity.
-            if(mobile.EnemyState!=MobileStates.Idle)mobile.ChangeEnemyState(MobileStates.Idle);
-            var facing=target.transform.position-transform.position;facing.y=0;
-            if(facing.sqrMagnitude>0.001f) transform.forward=facing.normalized;
+            motor.enabled=true;
             if(Time.time<nextArrowAt) return;
             var attack=GetComponent<EnemyAttack>();
             if(!attack.ArrowMissilePrefab) return;
@@ -57,6 +103,8 @@ namespace PeopleOfTheIliacBay.DFU
             var missile=Instantiate(attack.ArrowMissilePrefab);
             missile.Caster=GetComponent<DaggerfallEntityBehaviour>();
             missile.TargetType=TargetTypes.SingleTargetAtRange;missile.ElementType=ElementTypes.None;missile.IsArrow=true;
+            // Native missile aiming already supplies its one muzzle/model
+            // height offset and current sensed target. Do not add it twice.
             record.ArrowsRemaining--;guardArrows.stackCount=record.ArrowsRemaining;
             if(record.ArrowsRemaining==0) entity.Items.RemoveItem(guardArrows);
             nextArrowAt=Time.time+2.5f;

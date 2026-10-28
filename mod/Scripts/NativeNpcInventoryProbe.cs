@@ -42,7 +42,16 @@ namespace PeopleOfTheIliacBay.DFU
             Require(HouseholdPropertyKeyItem.IsMatching(reopened.Items.GetItem(key.UID),100,10),"Custom class metadata or original UID did not survive native save.");
             var stock=new ItemCollection();var sword=ItemBuilder.CreateItem(ItemGroups.Weapons,(int)Weapons.Longsword);stock.AddItem(sword);
             Require(NativeNpcInventoryBridge.TryPurchase(store,first,stock,b,second.Revision,sword.UID,1,9,()=>true,"purchase",out reason),reason);
-            Require(stock.Count==0 && first.Items.GetItem(sword.UID)!=null && store.ReadNpcInventory(a).WalletGold==41 && store.ReadNpcInventory(b).WalletGold==29,"Purchase did not move real stock and money.");
+            DaggerfallUnityItem purchased=null;
+            for(int i=0;i<first.Items.Count;i++)
+            {
+                var item=first.Items.GetItem(i);
+                if(item.ItemGroup==ItemGroups.Weapons && item.TemplateIndex==(int)Weapons.Longsword && item.UID!=sword.UID)
+                {purchased=item;break;}
+            }
+            Require(stock.Count==1 && ReferenceEquals(stock.GetItem(sword.UID),sword) && purchased!=null &&
+                store.ReadNpcInventory(a).WalletGold==41 && store.ReadNpcInventory(b).WalletGold==29,
+                "Purchase did not preserve native stock, allocate owned stock and move money.");
             Require(!NativeNpcInventoryBridge.TryPayService(store,a,9,"purchase",first.Revision,out reason),"Duplicate receipt charged wallet.");
             Require(NativeNpcInventoryBridge.TryPayService(store,a,4,"drink",first.Revision,out reason),reason);
             Require(store.ReadNpcInventory(a).WalletGold==37,"Service charged wrong wallet.");

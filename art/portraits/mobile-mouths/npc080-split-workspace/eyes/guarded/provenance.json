@@ -1,0 +1,24 @@
+{
+  "portrait": 80,
+  "emotion": "guarded / skeptical",
+  "status": "generated; visual review pending; not installed",
+  "generator": "built-in image_gen edit",
+  "generation_count": 1,
+  "generated_original": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-626e-7471-95f3-109617bb3581\\exec-e5797a9c-eeeb-47fa-9c8f-5933a8ed9441.png",
+  "output": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc080-split-workspace\\eyes\\guarded\\raw.png",
+  "dimensions": "1695x928",
+  "output_sha256": "677EA30C84C954BE6AEA355A0587D842150BFBEBAB2649D9ED29F1B0F4F2EC1D",
+  "references": [
+    {
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc080-split-workspace\\eyes-reference-grid.png",
+      "sha256": "68275F3A970329CD449C3A75313210237AE84FE4ADE1B0A18E6BE6B93E7EE842"
+    },
+    {
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc080-split-workspace\\original.png",
+      "sha256": "4EA9B975047475AE696146FBD02A9B005B16C4BAAB7E1C1E1C3651EE287F4B0B"
+    }
+  ],
+  "cell_order": "2x2 row-major: open, true half-closed blink, fully closed blink, repeat open",
+  "prompt": "Image 1 is the exact 2x2 atlas template. Image 2 is the immutable original portrait for identity, color and geometry. Create one complete 2x2 atlas of the original upper 64x35 portrait halves, preserving exact pixel scale, full framing, hair, skin shading, soft muted palette, eye spacing and compact dark-gold irises. Row-major cells: open / true half-closed blink / fully closed blink / repeat open. Change only eyes, brows and eyelids. Make the emotion clearly guarded and skeptical, not neutral: raise the viewer-left brow modestly but unmistakably; lower or flatten the viewer-right brow slightly. Keep both complete brow tails visible, sharp and inside the original frame. Do not create a symmetrical angry V, scowl, high cartoon arches, or hard black edges. Keep gaze forward. Keep irises and pupils compact, pixelated, equal in size and exactly stationary in open and half-blink cells. Half blink must visibly close the eyelids over roughly half of each eye; it must not look like another open-eye frame. Closed phase fully hides iris and pupil. Keep eyebrow shape and asymmetry identical in all four phases. No iris enlargement, no pupil jump, no crossed eyes. Preserve original warm muted colors. Do not add text or extra panels; return one faithful 2x2 sheet.",
+  "visual_review": "Atlas shows distinct open, genuine half-closed, closed, repeat-open phases. Irises remain compact and in consistent locations. Brow asymmetry is present and tails remain visible; expression may still read only mildly skeptical at native scale. Inspect native frames before selection."
+}

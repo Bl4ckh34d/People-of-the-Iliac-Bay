@@ -34,7 +34,7 @@ namespace PeopleOfTheIliacBay.Core
                     var traveler=state.Travelers.Find(p=>p.Id==personId);
                     if(traveler!=null)home=traveler.HomeSettlement;
                     // Unresolved rented-bedroom guests are not local workers.
-                    else if(native!=null && NativeGuestBedroom(personId)==null)home=native.SettlementId;
+                    else if(native!=null && NativeGuestBed(personId)==null)home=native.SettlementId;
                 }
             }
             bool noble=native!=null && nobleFaction(native.FactionId);

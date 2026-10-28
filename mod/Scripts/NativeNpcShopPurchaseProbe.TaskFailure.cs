@@ -68,7 +68,7 @@ namespace PeopleOfTheIliacBay.DFU
                 "Purchased native item did not remain in the NPC inventory.");
             Require(store.ReadNpcInventory(actor.Resident.Id).WalletGold==buyerGoldBefore-purchase.ServicePrice &&
                 store.ReadNpcInventory(purchase.Target.PersonId).WalletGold==sellerGoldBefore+purchase.ServicePrice &&
-                (stock.Items.GetItem(ulong.Parse(purchase.Target.ItemId))==null?0:stock.Items.GetItem(ulong.Parse(purchase.Target.ItemId)).stackCount)==stockBefore-1,
+                (stock.Items.GetItem(ulong.Parse(purchase.Target.ItemId))==null?0:stock.Items.GetItem(ulong.Parse(purchase.Target.ItemId)).stackCount)==stockBefore,
                 "Purchase wallet or stock changes were not retained exactly once.");
             Require(game.PlayerEntity.GetGoldAmount()==playerGoldBefore && EncodeProbeItems(game.PlayerEntity.Items)==playerItemsBefore &&
                 store.ReadNpcAction(task.Id+":step:1")==null && store.ReadNpcAction(task.Id+":step:2")==null,

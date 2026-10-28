@@ -47,11 +47,9 @@ namespace PeopleOfTheIliacBay.Core
             Func<string, bool> knownNpcIdentity)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
-            if (source.Version < 1 || source.Version > VersionCurrent)
+            if (source.Version != VersionCurrent)
                 throw new ArgumentOutOfRangeException(nameof(source.Version));
-            if (source.Revision < 0 || source.Entries == null ||
-                source.Version < 5 && (source.RetiredCount != 0 || source.DetailRevision != 0 ||
-                    source.LegacyImportedRevision != 0))
+            if (source.Revision < 0 || source.Entries == null)
                 throw new ArgumentException("Invalid NPC experience inbox header.", nameof(source));
 
             var copy = new NpcExperienceInbox
@@ -68,21 +66,7 @@ namespace PeopleOfTheIliacBay.Core
             long previousOrdinal = 0;
             foreach (var raw in source.Entries)
             {
-                if (source.Version < 5 && raw != null &&
-                    (raw.EnqueueOrdinal != 0 || raw.SourceVitalsRevision != 0 ||
-                     raw.SourceKind != NpcExperienceSourceKind.LegacyUnknown))
-                    throw new ArgumentException("Legacy inbox contains a future enqueue ordinal.", nameof(source));
-                if (source.Version == 1 && raw != null && raw.Status == NpcExperienceInboxStatus.Deferred)
-                    throw new ArgumentException("Version one inbox cannot contain deferred rows.", nameof(source));
-                if (source.Version < 3 && raw != null &&
-                    (raw.StatusKind != 0 || raw.StatusNativeEffectKey != null || raw.StatusOnsetSequence != 0))
-                    throw new ArgumentException("Legacy inbox cannot contain typed status fields.", nameof(source));
-                if (source.Version < 4 && raw != null &&
-                    (raw.HasKnownImmediateAffinityDelta || raw.ImmediateAffinityDelta != 0 ||
-                     raw.AffinityExclusion != NpcObservedSpeechAffinityExclusion.None))
-                    throw new ArgumentException("Legacy inbox cannot contain native speech affinity provenance.", nameof(source));
                 var entry = NpcExperienceInboxEntry.CopyValidated(raw);
-                if (source.Version < 5) entry.EnqueueOrdinal = copy.Entries.Count + 1;
                 if (entry.EnqueueOrdinal <= previousOrdinal || entry.EnqueueOrdinal > source.Revision)
                     throw new ArgumentException("Invalid retained enqueue ordinal.", nameof(source));
                 previousOrdinal = entry.EnqueueOrdinal;
@@ -96,15 +80,7 @@ namespace PeopleOfTheIliacBay.Core
                 perObserver[entry.ObserverId] = ownerCount + 1;
                 copy.Entries.Add(entry);
             }
-            if (source.Version < 5)
-            {
-                if (source.Revision != source.Entries.Count)
-                    throw new ArgumentException("Legacy inbox revision must match canonical event history.", nameof(source));
-                copy.RetiredCount = 0;
-                copy.DetailRevision = 0;
-                copy.LegacyImportedRevision = source.Revision;
-            }
-            else if (source.RetiredCount < 0 || source.DetailRevision < 0 ||
+            if (source.RetiredCount < 0 || source.DetailRevision < 0 ||
                 source.Revision - source.RetiredCount != source.Entries.Count ||
                 source.LegacyImportedRevision < 0 || source.LegacyImportedRevision > source.Revision ||
                 (source.Entries.Count > MaximumRetainedEntries ||
@@ -701,81 +677,9 @@ namespace PeopleOfTheIliacBay.Core
 
         private static NpcExperienceInbox CopyNpcExperienceInbox(WorldState source, WorldState validated)
         {
-            if (source.Version < 35)
-            {
-                // Old serializers may supply a blank initializer for this later
-                // field. Never discard actual rows or advanced v5 accounting.
-                var future = source.NpcExperienceInbox;
-                Require(future == null || future.Revision == 0 && future.RetiredCount == 0 &&
-                    future.DetailRevision == 0 && future.LegacyImportedRevision == 0 &&
-                    (future.Entries == null || future.Entries.Count == 0),
-                    "Pre-inbox save contains NPC experience history.");
-                return NpcExperienceInbox.Create();
-            }
             Require(source.NpcExperienceInbox != null, "Missing NPC experience inbox.");
-            Require(source.Version >= 54 || source.NpcExperienceInbox.Version < 5,
-                "Legacy save contains future NPC experience retirement fields.");
-            Require(source.Version >= 54 ||
-                (source.NpcExperienceInbox.RetiredCount == 0 &&
-                 source.NpcExperienceInbox.DetailRevision == 0 &&
-                 source.NpcExperienceInbox.LegacyImportedRevision == 0),
-                "Legacy save contains future NPC experience retirement fields.");
-            var persistedInbox = source.Version < 38
-                ? NormalizeLegacyNativeInbox(source.NpcExperienceInbox)
-                : source.NpcExperienceInbox;
-            return NpcExperienceInbox.CopyValidated(persistedInbox,
+            return NpcExperienceInbox.CopyValidated(source.NpcExperienceInbox,
                 id => KnownNpcIdentity(validated, id, out _));
-        }
-
-        private static NpcExperienceInbox NormalizeLegacyNativeInbox(NpcExperienceInbox source)
-        {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            if (source.Entries == null) throw new ArgumentException("Missing legacy NPC experience entries.", nameof(source));
-            var normalized = new NpcExperienceInbox
-            {
-                Version = source.Version,
-                Revision = source.Revision,
-                Entries = new List<NpcExperienceInboxEntry>(source.Entries.Count)
-            };
-            foreach (var raw in source.Entries)
-            {
-                if (raw == null) throw new ArgumentException("Null legacy NPC experience entry.", nameof(source));
-                if ((raw.Origin != 0 && raw.Origin != NpcExperienceEventOrigin.NativeOutcome) ||
-                    raw.EventKind < NpcExperienceEventKind.MoneyReceived ||
-                    raw.EventKind > NpcExperienceEventKind.ObligationBreached ||
-                    raw.AlreadyAppliedEffectsMask != NpcExperienceAppliedEffectsMask.None || raw.UtteranceId != null ||
-                    raw.AttributedSpeakerId != null || raw.ObservedTurnObserverId != null || raw.ObservedTurnEpisodeId != null ||
-                    raw.ObservedTurnSpeakerId != null || raw.ObservedTurnReceiptId != null || raw.ObservedTurnText != null ||
-                    raw.ObservedTurnGameTime != 0 || raw.ImpactDetailsKind != 0 || raw.HealthInitial != 0 ||
-                    raw.HealthFinal != 0 || raw.HealthMaximum != 0 || raw.HealthDamageTotal != 0 ||
-                    raw.HealthHealingTotal != 0 || raw.HealthChangeCount != 0 || raw.TransferQuantity != 0 ||
-                    raw.TransferCurrency != 0 || raw.NativeValuationStatus != 0 || raw.NativeGoldValue != 0 || raw.ReceivedItemUid != 0 ||
-                    raw.StatusKind != 0 || raw.StatusNativeEffectKey != null || raw.StatusOnsetSequence != 0 ||
-                    raw.EnqueueOrdinal != 0 || raw.SourceVitalsRevision != 0 ||
-                    raw.SourceKind != NpcExperienceSourceKind.LegacyUnknown ||
-                    raw.DeferralReason != NpcExperienceDeferralReason.None ||
-                    raw.DeferralAttempts != 0)
-                    throw new ArgumentException("Legacy NPC experience row contains fields unavailable in schemas 35 to 37.", nameof(source));
-                normalized.Entries.Add(new NpcExperienceInboxEntry
-                {
-                    Origin = NpcExperienceEventOrigin.NativeOutcome,
-                    ObserverId = raw.ObserverId,
-                    SubjectPersonId = raw.SubjectPersonId,
-                    ReceiptId = raw.ReceiptId,
-                    EpisodeId = raw.EpisodeId,
-                    OutcomeId = raw.OutcomeId,
-                    EventKind = raw.EventKind,
-                    ObservedGameTime = raw.ObservedGameTime,
-                    Revision = raw.Revision,
-                    UpdatedAt = raw.UpdatedAt,
-                    ResponsibleActorAttribution = raw.ResponsibleActorAttribution,
-                    ResponsibleActorId = raw.ResponsibleActorId,
-                    DeduplicationKey = raw.DeduplicationKey,
-                    Status = raw.Status,
-                    Appraisal = raw.Appraisal == null ? null : NpcExperienceAppliedAppraisal.CopyValidated(raw.Appraisal)
-                });
-            }
-            return normalized;
         }
     }
 }

@@ -47,7 +47,7 @@ namespace PeopleOfTheIliacBay.Core
             ConversationActionReplySource source, string sourceId, string personId, long sourceRevision,
             string effectReceiptId, int completedSteps, int totalSteps,
             long activeActionRevision = 0, NpcActionPhase? activeActionPhase = null,
-            bool unsuccessfulCancellation = false, string unresolvedReason = null)
+            bool unsuccessfulCancellation = false, string unresolvedReason = null, bool partialTaskFailure = false)
         {
             Status = status;
             ActionKind = actionKind;
@@ -70,6 +70,8 @@ namespace PeopleOfTheIliacBay.Core
                 ":" + (activeActionPhase.HasValue ? ((int)activeActionPhase.Value).ToString(System.Globalization.CultureInfo.InvariantCulture) : "-");
             NpcText = Format(status, source == ConversationActionReplySource.Task, completedSteps, totalSteps,
                 CancellationAttemptFailed);
+            if(partialTaskFailure && (status==ConversationActionReplyStatus.AcceptedPending || status==ConversationActionReplyStatus.InProgress))
+                NpcText="An earlier step failed. I will continue only the independent work we agreed I could still do.";
         }
 
         public static ConversationActionReply NoChange()
@@ -155,13 +157,23 @@ namespace PeopleOfTheIliacBay.Core
             try { NpcTaskContract.Validate(task); }
             catch (ArgumentException) { return false; }
 
+            int confirmedSteps=0;
             for (int index = 0; index < task.CurrentStepIndex; index++)
             {
+                var step=task.Steps[index];
+                if(step.FailureReason!=null)
+                {
+                    var failed=store.ReadNpcAction(task.Id+":step:"+index.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                    if(step.Blocked?failed!=null:failed!=null &&
+                        (!TryReadTaskStep(store,task,index,out failed) || failed.Phase!=NpcActionPhase.Failed))return false;
+                    continue;
+                }
                 NpcActionJob completed;
                 if (!TryReadTaskStep(store, task, index, out completed) ||
                     completed.Phase != NpcActionPhase.Completed ||
                     completed.CompletedEffectId != task.Steps[index].CompletedEffectId)
                     return false;
+                confirmedSteps++;
             }
 
             ConversationActionReplyStatus status;
@@ -225,8 +237,8 @@ namespace PeopleOfTheIliacBay.Core
             }
 
             reply = new ConversationActionReply(status, null, ConversationActionReplySource.Task,
-                task.Id, task.ResidentId, task.Revision, effectReceipt, task.CurrentStepIndex, task.Steps.Count,
-                activeActionRevision, activeActionPhase);
+                task.Id, task.ResidentId, task.Revision, effectReceipt, confirmedSteps, task.Steps.Count,
+                activeActionRevision, activeActionPhase, partialTaskFailure:task.FailureReason!=null);
             return true;
         }
 

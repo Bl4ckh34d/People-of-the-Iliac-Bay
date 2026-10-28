@@ -100,7 +100,6 @@ namespace PeopleOfTheIliacBay.Core
         private static List<NpcKnowledgeState> CopyNpcKnowledge(WorldState source, WorldState validated)
         {
             var result = new List<NpcKnowledgeState>();
-            if (source.Version < 38) return result;
             Require(NpcKnowledgeValidation.ValidId(source.NpcFrameworkScopeId, 128),
                 "Missing NPC framework knowledge scope.");
             Require(source.NpcKnowledge != null, "Missing NPC knowledge ledgers.");

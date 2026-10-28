@@ -46,7 +46,7 @@ namespace PeopleOfTheIliacBay.DFU
         public static IEnumerator Run(PeopleOfTheIliacBayMod host,StreetPopulation streets,string character)
         {
             if(Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-move-to-wait-probe")<0 ||
-                string.IsNullOrWhiteSpace(character) || !character.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal))
+                string.IsNullOrWhiteSpace(character) || !NativeProbeText.IsTestCharacter(character))
                 throw new InvalidOperationException("MoveTo/Wait probe requires the explicit flag and owned disposable character.");
             var game=GameManager.Instance;
             if(!host || !streets || !game || game.PlayerEntity.Name!=character || game.PlayerEnterExit.IsPlayerInsideBuilding || !streets.Ready)
@@ -230,6 +230,14 @@ namespace PeopleOfTheIliacBay.DFU
 
         private static Fixture FindFixture(StreetPopulation streets,WorldStateStore store,TownGeometry geometry,
             BuildingDirectory directory,GameManager game,HashSet<string> rejectedResidents,out string reason)
+        {return FindFixtureCore(streets,store,geometry,directory,game,rejectedResidents,out reason,null);}
+
+        internal static object FindPaidFixture(StreetPopulation streets,WorldStateStore store,TownGeometry geometry,
+            BuildingDirectory directory,GameManager game,HashSet<string> rejectedResidents,out string reason,string paidResidentId)
+        {return FindFixtureCore(streets,store,geometry,directory,game,rejectedResidents,out reason,paidResidentId);}
+
+        private static Fixture FindFixtureCore(StreetPopulation streets,WorldStateStore store,TownGeometry geometry,
+            BuildingDirectory directory,GameManager game,HashSet<string> rejectedResidents,out string reason,string paidResidentId)
         {
             reason="No eligible existing adult had a clear 2-4m observer point and a reachable surveyed named entrance.";
             var residents=UnityEngine.Object.FindObjectsOfType<ResidentActor>();
@@ -240,7 +248,9 @@ namespace PeopleOfTheIliacBay.DFU
                     actor.Resident.AgeGroup!=ResidentAgeGroup.Adult || actor.IsSleeping || actor.IsConversing ||
                     streets.IsAlarmed(actor.Resident.Id) ||
                     rejectedResidents.Contains(actor.Resident.Id) ||
-                    store.ActiveNpcTask(actor.Resident.Id)!=null || store.ActiveNpcAction(actor.Resident.Id)!=null)continue;
+                    paidResidentId!=null && actor.Resident.Id!=paidResidentId ||
+                    store.ActiveNpcTask(actor.Resident.Id)!=null || (paidResidentId==null?store.ActiveNpcAction(actor.Resident.Id)!=null:
+                        store.ReadPaidFollowForTravelTask(actor.Resident.Id,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds())==null))continue;
                 var actorStart=actor.transform.position-Vector3.up;
                 Vector3 observerGround;
                 if(!TryObserverGround(geometry,directory,actorStart,out observerGround))continue;

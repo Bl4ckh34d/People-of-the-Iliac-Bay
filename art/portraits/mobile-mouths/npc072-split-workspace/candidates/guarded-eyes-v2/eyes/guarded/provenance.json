@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T09:43:34.3521217Z",
+    "portraitRecord":  72,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "guarded",
+    "prompt":  "Create a 2×2 pixel-art eye atlas for NPC072’s guarded expression, using the single supplied complete-face reference grid as the exact identity, palette, framing and composition guide. The complete output canvas must keep the same 64:35 aspect ratio as each source upper-half crop; each cell is a full, identical 64×35 portrait upper-half crop aligned exactly, with no labels, gutters, borders, extra panels, independent zooms or new background. Row-major cells: top-left OPEN, top-right HALF CLOSED, bottom-left FULLY CLOSED, bottom-right OPEN REPEAT.\n\nMake this clearly skeptical and appraising, distinct from the reference’s neutral expression: the eyebrow over the image-left eye is distinctly raised into a restrained arch; the opposite eyebrow is lower and flatter. Keep the asymmetry plainly visible at native pixel scale, but anatomically natural and inside the existing eye/brow mask. Slightly narrow the lids into a watchful appraising gaze. Do not create a symmetric angry V, neutral brows, frightened round eyes or an exaggerated surprised expression. Keep the original head, face, hair, crop, spacing and muted skin palette unchanged.\n\nRetain the source’s compact olive-brown iris clusters, their exact approximate size and color, facing forward with pupils centered in the same eye openings. Use tiny muted highlights only. Do not shift or enlarge either iris, add broad white sclera bands, bright glints, vector circles, smooth airbrushed shading, blur, heavy black outlines or any lipstick/red color. HALF and FULLY CLOSED preserve the same guarded brow asymmetry and placement as OPEN. Half lids lower naturally; fully closed lids cover both eyes opaquely. The repeated OPEN cell matches the first. Crisp native-resolution pixel clusters with the source’s softened edge treatment.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-835cce02-df47-4e59-96b4-026b376edbb9.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-835cce02-df47-4e59-96b4-026b376edbb9.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "4af6922ef7f8345a11ae8418761144f64dcaaa8b836f461486a2fb206cbebd85",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "54d6fd210b1a398af8045a12af8675cde83466f12bf4006cc8a7bbb8e135a2fe",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-835cce02-df47-4e59-96b4-026b376edbb9.png",
+                      "sha256":  "fdef90789a7589027c900eb233930bde8986ebeb6925c1a9fa12ca59b770965a",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/guarded/raw.png",
+                "sha256":  "fdef90789a7589027c900eb233930bde8986ebeb6925c1a9fa12ca59b770965a",
+                "width":  1695,
+                "height":  928
+            }
+}

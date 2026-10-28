@@ -21,22 +21,20 @@ namespace PeopleOfTheIliacBay.DFU
             bool permanent=SaveLoadManager.StateManager.ContainsPermanentScene(scene);
             try
             {
-                Dictionary<int,string> markers; var rooms=TavernRoomSurvey.Read(interior,out markers);
-                foreach(var room in rooms) room.NonRentable=!new HashSet<string>(markers.Values).Contains(room.Id);
+                Dictionary<int,string> markers; var beds=TavernBedSurvey.Read(interior,out markers);
                 var store=(WorldStateStore)typeof(PeopleOfTheIliacBayMod).GetField("store",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(host);
-                store.RegisterLodging(town,building,rooms);
+                store.RegisterLodgingBeds(town,building,beds);
                 double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
                 store.TryBookLodging(town,building,"rest-guest","guest",town+1,false,1,now,now+86400,markers[0]);
                 game.PlayerEntity.RentedRooms.RemoveAll(r=>r.mapID==town && r.buildingKey==building);
                 var receipt=new RoomRental_v1 { mapID=town,buildingKey=building,allocatedBedIndex=0,expiryTime=(ulong)now+86400 };
                 game.PlayerEntity.RentedRooms.Add(receipt); SaveLoadManager.StateManager.AddPermanentScene(scene);
-                if(CanRest(false)) throw new InvalidOperationException("Rest accepted native receipt pointing at another guest's room.");
+                if(CanRest(false)) throw new InvalidOperationException("Rest accepted native receipt pointing at another guest's bed.");
                 DaggerfallUI.Instance.PopToHUD();
                 receipt.allocatedBedIndex=1;
-                if(!CanRest(false)) throw new InvalidOperationException("Rest blocked valid unoccupied player room.");
+                if(!CanRest(false)) throw new InvalidOperationException("Rest blocked valid unoccupied player bed.");
                 DaggerfallUI.Instance.PopToHUD();
-                var guestRoom=rooms.Find(r=>r.Id==markers[0]);
-                int bedId=int.Parse(guestRoom.Beds[0].Substring(4));
+                int bedId=int.Parse(markers[0].Substring(4));
                 var bed=BedGeometry.Read(interior).Find(b=>b.RecordIndex==bedId);
                 game.PlayerMotor.transform.position=interior.transform.TransformPoint(bed.LocalCenter)+Vector3.up;
                 if(CanRest(true)) throw new InvalidOperationException("Rest-here bypassed occupied physical bed.");
@@ -49,7 +47,7 @@ namespace PeopleOfTheIliacBay.DFU
                 receipt.allocatedBedIndex=999;
                 if(CanRest(false)) throw new InvalidOperationException("Invalid paid marker silently fell back to another bed.");
                 DaggerfallUI.Instance.PopToHUD();
-                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TAVERN_REST_PASS: building="+building+"; conflicting-target/rest-here/invalid-marker rejected; own allocated room/different-storey allowed.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TAVERN_REST_PASS: building="+building+"; conflicting-target/rest-here/invalid-marker rejected; own allocated bed/different-storey allowed.");
             }
             finally
             {

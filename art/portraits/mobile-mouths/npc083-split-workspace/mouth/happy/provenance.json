@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-21T23:24:37.2618134Z",
+    "portraitRecord":  83,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "happy",
+    "prompt":  "Use case: stylized-concept\nAsset type: pixel-art portrait animation atlas, record083 HAPPY mouth half\nInput images: Image 1: original 64x64 portrait for identity and muted palette; Image 2: 3x3 repeated original lower-half reference grid showing exact mouth placement and scale\nPrimary request: Create one clean 3x3 atlas of the same portrait\u0027s lower face for HAPPY, with cells ordered A B C / D E F / G H X for Rhubarb visemes. Full half-fixed framing; each cell is the identical 64x29 crop and scale as the reference, with no gutters or labels. Show nine distinct, readable mouth shapes at native pixel scale: A and X closed, B lips lightly parted, C rounded, D open vertical, E wider open, F teeth/lip shape, G small open, H broad but controlled open, X closed. Keep a subtle natural happy smile as the shared expression, with gentle lifted corners and relaxed brown lips; visible warm happiness distinct from neutral without a grin.\nStyle/medium: faithful low-resolution pixel art matching the source, soft muted contrast, original brown skin and hair, brown lips\nComposition/framing: 3x3 equal 64:29 aspect-ratio cells, no gutters, no text, no added border; match source position exactly\nConstraints: Change only the mouth shape and immediate lip opening as needed. Preserve jaw, nose, neck, hair, background, face identity, feature placement, and original skin tone. Keep the mouth small and natural at the original lip scale. Oral cavity and teeth only where the viseme requires them, using restrained soft shades.\nAvoid: enlarged mouth, enlarged head or neck, red lipstick, orange skin halos, bright white teeth flashes, hard contrast, exaggerated cartoon smile, any text or watermark.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-9bd3-7e53-9a05-a02b7e03724a as C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-9bd3-7e53-9a05-a02b7e03724a\\exec-902618ad-a746-4a1b-86aa-6c564d9d21d9.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-9bd3-7e53-9a05-a02b7e03724a\\exec-902618ad-a746-4a1b-86aa-6c564d9d21d9.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "e46c900779f687610af7b821b988300b998aea48632c829537f88cb829b5acfb",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "02c785ad86feeb9c87f4744c9fc735459dac0b08b4971913b01cbe5709c292cd",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-9bd3-7e53-9a05-a02b7e03724a\\exec-902618ad-a746-4a1b-86aa-6c564d9d21d9.png",
+                      "sha256":  "fc2a339b84237be883669975dfb30d92aac58b86ca342340436ecf9c21789560",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/happy/raw.png",
+                "sha256":  "fc2a339b84237be883669975dfb30d92aac58b86ca342340436ecf9c21789560",
+                "width":  1863,
+                "height":  844
+            }
+}

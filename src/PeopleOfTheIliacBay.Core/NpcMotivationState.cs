@@ -710,64 +710,6 @@ namespace PeopleOfTheIliacBay.Core
                     System.Globalization.CultureInfo.InvariantCulture, out sourceRevision) && sourceRevision > 0;
         }
 
-        internal static NpcMotivationState MigrateV1(NpcMotivationState legacy, ICollection<string> pinnedOrigins,
-            List<CivilianIncident> retainedIncidents)
-        {
-            var old = CopyValidated(legacy);
-            if (old.Version != 1) throw new ArgumentException("Expected version-one motivation state.");
-            var next = new NpcMotivationState { OwnerPersonId = old.OwnerPersonId, Revision = old.Revision,
-                LastGameTime = old.LastGameTime, Needs = old.Needs, Goals = old.Goals, Priorities = old.Priorities,
-                AcceptedUpdates = new List<NpcAcceptedMotivationUpdate>(old.AcceptedUpdates) };
-            foreach (var receipt in old.AcceptedUpdates)
-            {
-                ValidateNativeSafetyReceipt(receipt);
-                long sourceRevision;
-                if (receipt.OperationId.StartsWith("motivation:native-health:v1:", StringComparison.Ordinal) ||
-                    receipt.EvidenceId != null && receipt.EvidenceId.StartsWith("native-health:v1:", StringComparison.Ordinal))
-                {
-                    string kind = receipt.RowId == "need:native-health" && receipt.ChangeKind == NpcMotivationStateChangeKind.Need ? "need" :
-                        receipt.RowId == "goal:native-recovery" && receipt.ChangeKind == NpcMotivationStateChangeKind.Goal ? "goal" : null;
-                    if (kind == null || !TryParseHealthOperation(receipt.OperationId, kind, out sourceRevision) ||
-                        !ValidHealthEvidenceId(receipt.EvidenceId, kind, sourceRevision))
-                        throw new ArgumentException("Malformed legacy native health source receipt.");
-                }
-                if (receipt.RowId == "need:native-health" && TryParseHealthOperation(receipt.OperationId, "need", out sourceRevision))
-                    next.LastHealthNeedVitalsRevision = Math.Max(next.LastHealthNeedVitalsRevision, sourceRevision);
-                if (receipt.RowId == "goal:native-recovery" && TryParseHealthOperation(receipt.OperationId, "goal", out sourceRevision))
-                    next.LastHealthGoalVitalsRevision = Math.Max(next.LastHealthGoalVitalsRevision, sourceRevision);
-            }
-            foreach (var incident in retainedIncidents)
-            {
-                if (incident.ThreatId == null) continue;
-                string operation = "motivation:native-safety:start:" + NpcNativeSafetyGoalLifecycle.EpisodeDigest(old.OwnerPersonId, incident);
-                if (old.AcceptedUpdates.Exists(x => x.OperationId == operation))
-                    next.LastStartedSafetySerial = Math.Max(next.LastStartedSafetySerial, incident.GenerationSerial);
-            }
-            var currentSafety = next.Goals.Find(x => x.Id == "goal:native-safety");
-            string safetyDigest, safetyPhase;
-            if (TryParseSafetyEvidence(currentSafety?.Evidence?.EvidenceId, out safetyDigest, out safetyPhase))
-            {
-                next.LastStartedSafetyDigest = safetyDigest;
-                if (safetyPhase != "active") next.LastClosedSafetyDigest = safetyDigest;
-            }
-            else if (currentSafety?.Evidence?.EvidenceId?.StartsWith("native-safety:v1:", StringComparison.Ordinal) == true)
-                throw new ArgumentException("Malformed legacy native safety goal evidence.");
-            while (next.AcceptedUpdates.Count > MaxAcceptedUpdates)
-            {
-                var removed = next.AcceptedUpdates[0]; next.AcceptedUpdates.RemoveAt(0);
-                next.ReceiptBaseRevision = removed.Revision;
-                if (CurrentRowRevision(next.Needs, next.Goals, next.Priorities, removed.ChangeKind, removed.RowId) == removed.Revision)
-                    UpsertAnchor(next.LatestRowAnchors, removed);
-                if (removed.GoalGenerationOrigin && (TailReferencesOrigin(next.AcceptedUpdates, removed.RowId, removed.Revision) ||
-                    IsCurrentGoalOrigin(next.Goals, removed.RowId, removed.Revision) ||
-                    pinnedOrigins != null && pinnedOrigins.Contains(OriginKey(removed.RowId, removed.Revision))))
-                    UpsertOrigin(next.GoalOriginAnchors, removed);
-            }
-            next.GoalOriginAnchors.RemoveAll(x => !TailReferencesOrigin(next.AcceptedUpdates, x.RowId, x.Revision) &&
-                !IsCurrentGoalOrigin(next.Goals, x.RowId, x.Revision) &&
-                (pinnedOrigins == null || !pinnedOrigins.Contains(OriginKey(x.RowId, x.Revision))));
-            return CopyValidated(next);
-        }
 
         internal static void ValidateOriginAnchors(NpcMotivationState state, ICollection<string> pinnedOrigins)
         {

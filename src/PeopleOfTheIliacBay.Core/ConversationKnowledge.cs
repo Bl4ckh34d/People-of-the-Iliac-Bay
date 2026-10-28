@@ -78,6 +78,8 @@ namespace PeopleOfTheIliacBay.Core
                 "Choose the most specific intent below, not the general action label when a specific one applies:\n" +
                 "social: ordinary conversation, statements, questions about THIS NPC's feelings, current activity, errands or reason for being here, or the player's own plans. A personal question stays social even if it mentions a shop or market. Threats, insults and harassment directed AT the NPC are social, never tasks for the NPC to perform. A threat by the player is still social when conditional on refusal.\n" +
                 "topic: a factual question about external native places, people, organizations, quests or services. Merely mentioning these in a statement is not a topic request. No matching topic ID is needed at this stage.\n" +
+                "biography: a personal question about THIS NPC's past, childhood, entering their profession, formative experience, long-term wishes or shared family memories. Current errands and feelings remain social. This route authorizes no world action.\n" +
+                "enterprise: planning a dungeon crawl, raid, burglary or murder together with a companion, or explicitly granting/revoking that enterprise's loot rights. Withdrawing permission or telling the companion to stop taking loot on the current expedition is enterprise, even when phrased as a negative statement. This changes an existing permission now; it is not a denial of a past event or ordinary social talk. A plan is not criminal consent. A report, quotation or threat against this NPC remains social.\n" +
                 "map: asking to record a destination on the player's map.\n" +
                 "guide: asking the NPC to personally lead the player to a destination, including the NPC's home. This includes escorting or accompanying the player TO a destination. The player follows the NPC's guidance. Directions without accompanying the player are topic; marking a destination is map.\n" +
                 "home: asking about or requesting a marker for THIS NPC's own residence. Physically leading the player home is guide.\n" +
@@ -98,7 +100,7 @@ namespace PeopleOfTheIliacBay.Core
 
         public static string RoutingGrammar()
         {
-            return "root ::= \"social|-1|\" tone \"|\" social-intent | (\"topic\" | \"map\" | \"unknown\" | \"action\" | \"guide\" | \"appointment\" | \"home\" | \"trade\" | \"borrow\" | \"return_loan\") \"|-1|\" tone \"|none\"\n" +
+            return "root ::= \"social|-1|\" tone \"|\" social-intent | (\"topic\" | \"map\" | \"unknown\" | \"action\" | \"guide\" | \"appointment\" | \"home\" | \"trade\" | \"borrow\" | \"return_loan\" | \"biography\" | \"enterprise\") \"|-1|\" tone \"|none\"\n" +
                 "tone ::= \"neutral\" | \"polite\" | \"apology\" | \"rude\" | \"insult\" | \"flirt\"\n" +
                 "social-intent ::= \"none\" | \"busy_pause\" | \"family_threat\"\n";
         }
@@ -107,7 +109,7 @@ namespace PeopleOfTheIliacBay.Core
         {
             string[] parts = (output ?? string.Empty).Trim().Split('|');
             if (parts.Length != 4 || parts[1] != "-1" ||
-                !IsOneOf(parts[0], "social", "topic", "map", "unknown", "action", "guide", "appointment", "home", "trade", "borrow", "return_loan") ||
+                !IsOneOf(parts[0], "social", "topic", "map", "unknown", "action", "guide", "appointment", "home", "trade", "borrow", "return_loan", "biography", "enterprise") ||
                 !IsOneOf(parts[2], "neutral", "polite", "apology", "rude", "insult", "flirt") ||
                 !IsOneOf(parts[3], "none", "busy_pause", "family_threat")) return null;
             string intent = parts[0];

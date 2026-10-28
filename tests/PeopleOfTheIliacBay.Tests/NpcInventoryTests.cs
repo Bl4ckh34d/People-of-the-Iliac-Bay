@@ -9,8 +9,34 @@ namespace PeopleOfTheIliacBay.Tests
         private static WorldStateStore Create(out string a,out string b)
         {var s=new WorldStateStore(42);var t=s.GetOrCreate(100,new[]{10,20},1);a=t.Households[0].Residents[0].Id;b=t.Households[1].Residents[0].Id;return s;}
         private static NpcInventoryItem Item(ulong uid) {return new NpcInventoryItem{Uid=uid,NativePayload="{\"uid\":"+uid+",\"stackCount\":3}"};}
+        private static ulong NextItemUid(WorldStateStore world,ulong nativeNext)
+        {return world.NextAvailableNpcItemUid(nativeNext);}
         public static void Add(List<(string Name,Action Body)> cases)
         {
+            cases.Add(("Restored native allocation advances beyond every saved NPC item without rewriting items",()=>{
+                string a,b;var world=Create(out a,out b);
+                Check.True(world.InitializeNpcInventory(a,17,new[]{Item(33555768)}));
+                Check.True(world.InitializeNpcInventory(b,23,new[]{Item(33555810)}));
+                var restored=new WorldStateStore(0);restored.Restore(world.Snapshot());
+                Check.Equal(33555811UL,NextItemUid(restored,33555768));
+                Check.Equal(33555768UL,restored.ReadNpcInventory(a).Items[0].Uid);
+                Check.Equal(33555810UL,restored.ReadNpcInventory(b).Items[0].Uid);
+                Check.Equal(17,restored.ReadNpcInventory(a).WalletGold);
+                Check.Equal(23,restored.ReadNpcInventory(b).WalletGold);
+                Check.Equal(0L,restored.ReadNpcInventory(a).Revision);
+            }));
+            cases.Add(("NPC item allocation never rewinds an empty or already advanced native counter",()=>{
+                string a,b;var world=Create(out a,out b);
+                Check.Equal(80000UL,NextItemUid(world,80000));
+                Check.True(world.InitializeNpcInventory(a,0,new[]{Item(50000)}));
+                Check.Equal(80000UL,NextItemUid(world,80000));
+                Check.Equal(50001UL,NextItemUid(world,50001));
+            }));
+            cases.Add(("NPC item allocation retains unsigned precision above the floating point range",()=>{
+                string a,b;var world=Create(out a,out b);
+                Check.True(world.InitializeNpcInventory(a,0,new[]{Item(9007199254740993UL)}));
+                Check.Equal(9007199254740994UL,NextItemUid(world,9007199254740992UL));
+            }));
             cases.Add(("Starting wallets use permanent origins, deterministic ranges and saved balances",()=>{
                 int[] lows={250,50,10,0}, highs={500,150,35,15};
                 for(int type=0;type<4;type++) {
@@ -89,7 +115,6 @@ namespace PeopleOfTheIliacBay.Tests
                 var save=s.Snapshot();var p=s.ReadNpcInventory(a);p.Items.Clear();Check.Equal(1,s.ReadNpcInventory(a).Items.Count);
                 Check.True(s.CommitNpcInventoryTransaction("remove",new[]{new NpcInventoryUpdate{PersonId=a,ExpectedRevision=0,WalletGold=50}}));
                 Check.Equal(0,s.ReadNpcInventory(a).Items.Count);s.Restore(save);Check.Equal(77UL,s.ReadNpcInventory(a).Items[0].Uid);
-                var old=s.Snapshot();old.Version=27;old.NpcInventories=null;s.Restore(old);Check.Equal(0,s.Snapshot().NpcInventories.Count);
             }));
             cases.Add(("Empty NPC inventory ledger remains present after save restore and rejects refill",()=>{
                 string a,b;var store=Create(out a,out b);

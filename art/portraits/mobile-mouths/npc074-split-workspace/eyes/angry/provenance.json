@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T10:28:45.9950386Z",
+    "portraitRecord":  74,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "angry",
+    "prompt":  "Create one production sprite atlas for NPC074 angry eyes, using the supplied exact 2×2 repeated-original-upper-half grid as the only reference.\n\nUse case: stylized-concept\nAsset type: native pixel-art portrait eye atlas\nComposition: Four equal cells with complete upper 64×35 crop and 64:35 cell ratio. Row-major: OPEN / HALF CLOSED / FULLY CLOSED / OPEN REPEAT. No labels, gutters, borders, panels, added hair, or zoomed eye features.\nExpression: Clearly angry but restrained. Lower the inner ends of both brows and add slight nose-bridge tension. Keep source brow color, softened pixel shading, and natural brow mass. Do not paint solid black brows or push corners into an extreme scowl. Preserve same angry brow position in all four cells.\nEyes: Preserve source\u0027s narrow low-set eye aperture, pale gray-ivory irises, native eye spacing and size, soft highlights, and low-contrast shading. Do not widen lids, add broad white bands, enlarge irises, or move pupils. Half-lidded and fully closed poses cover eyes naturally and opaquely.\nSubject: Preserve NPC074 identity, blond/light-brown hair, blue left-side ornament, skin colors, crop, framing, and all outside feature pixels. Crisp nearest-neighbor pixel art.\nAvoid: bright white flashes, exaggerated angry expression, thick black outline, blurry brow edges, vector-like circles, changed face shape, new accessories, or background changes.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-53b5be11-10cb-479e-ad05-1a34eb500d94.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-53b5be11-10cb-479e-ad05-1a34eb500d94.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "2efaad16ffae3fc9541f3d14137095db7cddeb908310fef80410ce201fd2ad84",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-53b5be11-10cb-479e-ad05-1a34eb500d94.png",
+                      "sha256":  "f7dfe69356eb26d1b73b57b3f6d47992288a80f577d16c0a772e860bf6523ca2",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/angry/raw.png",
+                "sha256":  "f7dfe69356eb26d1b73b57b3f6d47992288a80f577d16c0a772e860bf6523ca2",
+                "width":  1695,
+                "height":  928
+            }
+}

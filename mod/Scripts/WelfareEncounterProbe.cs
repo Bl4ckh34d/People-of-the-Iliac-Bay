@@ -88,7 +88,7 @@ namespace PeopleOfTheIliacBay.DFU
         private static IEnumerator ReloadApproach(GuardPopulation guards)
         {
             var game=GameManager.Instance;
-            if(!game.PlayerEntity.Name.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal))
+            if(!NativeProbeText.IsTestCharacter(game.PlayerEntity.Name))
                 throw new InvalidOperationException("Welfare reload requires the dedicated test character.");
             bool saved=false,loaded=false;
             SaveLoadManager.OnSaveEventHandler onSave=ignored=>saved=true;

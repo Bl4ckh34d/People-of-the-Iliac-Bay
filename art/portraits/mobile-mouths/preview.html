@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="de"><meta charset="utf-8"><title>Mobile NPCs – Mundanimation</title>
+<style>
+body{background:#19191e;color:#ece9db;font:16px system-ui;margin:2rem;max-width:1100px}h1{font-size:26px}p{color:#bbb;line-height:1.5}main{display:flex;gap:32px;flex-wrap:wrap}.pair{display:flex;gap:12px}canvas{width:256px;height:256px;image-rendering:pixelated;background:#302936}figure{margin:0}figcaption{color:#bbb;font-size:14px;margin:8px 0}button,select{font:inherit;padding:8px 12px;margin:5px;background:#353543;color:#fff;border:1px solid #666;border-radius:5px}audio{display:block;width:min(600px,100%);margin:20px 0}.proof{color:#9dd6a7}#state{min-height:24px}
+</style>
+<h1>Mobile NPCs: vollständige Portraitframes</h1>
+<p>Links Original, rechts Mundanimation. Portraits 77 und 78 aus TFAC00I0.RCI. Vorschau, noch nicht im Mod installiert.</p>
+<p class="proof">Version 5: Das vollständige Portrait wechselt mit den Lauten. Keine ausgeschnittenen oder nachträglich skalierten Münder.</p>
+<main id="faces"></main>
+<p>Gleiche weibliche Teststimme für beide Gesichter, damit sich die Mundbewegung direkt vergleichen lässt.</p>
+<audio id="speech" controls preload="auto" src="sample.wav"></audio>
+<p>“Good day. I have been in this town for many years. What brings you here today?”</p>
+<div><button id="cycle">Alle Mundformen durchgehen</button><button id="rest">Ruhepose</button><select id="shape" aria-label="Einzelne Mundform"><option>X</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option></select></div>
+<p id="state">Lade Bilder und Rhubarb-Lautzeiten …</p>
+<script>
+const shapes='ABCDEFGHX',audio=document.querySelector('#speech'),state=document.querySelector('#state');
+let faces=[],timeline=null,cycle=false,cycleStart=0,manual='X';
+function image(src){return new Promise((resolve,reject)=>{const i=new Image();i.onload=()=>resolve(i);i.onerror=()=>reject(Error('Bild fehlt: '+src));i.src=src})}
+function paint(face,shape){const n=shapes.indexOf(shape),w=face.atlas.naturalWidth/3,h=face.atlas.naturalHeight/3;face.ctx.imageSmoothingEnabled=false;face.ctx.clearRect(0,0,64,64);face.ctx.drawImage(face.atlas,(n%3)*w,Math.floor(n/3)*h,w,h,0,0,64,64)}
+function frame(now){let s=manual;if(!audio.paused&&!audio.ended&&timeline){const sample=Math.floor(audio.currentTime*timeline.audioSampleRate);s=(timeline.cues.find(c=>sample>=c.startSample&&sample<c.endSample)||{shape:'X'}).shape;state.textContent='Audio-Lautform: '+s}else if(cycle){s=shapes[Math.floor((now-cycleStart)/650)%shapes.length];state.textContent='Formvorschau ohne Audio: '+s}faces.forEach(f=>paint(f,s));requestAnimationFrame(frame)}
+async function init(){for(const id of ['077','078']){const section=document.createElement('section');section.innerHTML='<h2>Portrait '+id+'</h2><div class="pair"><figure><canvas width="64" height="64"></canvas><figcaption>Original</figcaption></figure><figure><canvas width="64" height="64"></canvas><figcaption>Vollständige Portraitframes</figcaption></figure></div>';document.querySelector('#faces').append(section);const [original,atlas]=await Promise.all([image('tfac-'+id+'-original.png'),image('tfac-'+id+'-full-frame-v5.png')]);if(atlas.naturalWidth%3||atlas.naturalHeight%3)throw Error('Ungültiges Portraitraster');const canvases=section.querySelectorAll('canvas');canvases[0].getContext('2d').drawImage(original,0,0);faces.push({ctx:canvases[1].getContext('2d'),atlas})}const response=await fetch('sample.visemes.json');if(!response.ok)throw Error('Lautzeiten fehlen');timeline=await response.json();state.textContent='Bereit. Audio abspielen oder Mundformen einzeln wählen.';requestAnimationFrame(frame)}
+audio.onplay=()=>{cycle=false;manual='X'};audio.onended=()=>{manual='X';state.textContent='Audio beendet; Original-Ruhepose.'};audio.onpause=()=>{manual='X'};
+document.querySelector('#cycle').onclick=()=>{audio.pause();cycle=true;cycleStart=performance.now()};document.querySelector('#rest').onclick=()=>{audio.pause();cycle=false;manual='X';state.textContent='Original-Ruhepose.'};document.querySelector('#shape').onchange=e=>{audio.pause();cycle=false;manual=e.target.value;state.textContent='Einzelform: '+manual};
+init().catch(e=>{state.textContent=e.message;state.style.color='#ff9696'});
+</script></html>

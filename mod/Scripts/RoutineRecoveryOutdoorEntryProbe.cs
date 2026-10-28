@@ -21,7 +21,7 @@ namespace PeopleOfTheIliacBay.DFU
         public static IEnumerator Run(StreetPopulation streets,string expectedCharacter)
         {
             Require(Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-routine-recovery-scenechange-probe")>=0 &&
-                streets && !string.IsNullOrEmpty(expectedCharacter) && expectedCharacter.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal),
+                streets && !string.IsNullOrEmpty(expectedCharacter) && NativeProbeText.IsTestCharacter(expectedCharacter),
                 "Scene-change fixture requires its explicit flag and owned test character.");
             var game=GameManager.Instance;game.SaveLoadManager.EnumerateSaves();
             int slot=game.SaveLoadManager.FindSaveFolderByNames(expectedCharacter,"People - Daggerfall day");
@@ -145,7 +145,7 @@ namespace PeopleOfTheIliacBay.DFU
             var game=GameManager.Instance;
             Require(streets && streets.Ready && !game.PlayerEnterExit.IsPlayerInsideBuilding &&
                 !string.IsNullOrEmpty(residentId) && !string.IsNullOrEmpty(terminalActionId) &&
-                !string.IsNullOrEmpty(expectedCharacter) && expectedCharacter.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal) &&
+                !string.IsNullOrEmpty(expectedCharacter) && NativeProbeText.IsTestCharacter(expectedCharacter) &&
                 game.PlayerEntity.Name==expectedCharacter && enterUnrelatedViaNativeDoor!=null,
                 "Scene-change probe requires owned player outside and native unrelated-building callback.");
 

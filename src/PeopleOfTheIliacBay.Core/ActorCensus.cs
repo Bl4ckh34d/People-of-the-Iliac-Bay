@@ -124,8 +124,8 @@ namespace PeopleOfTheIliacBay.Core
                 {
                     var booking = lodging.Bookings[p];
                     yield return now >= booking.StartsAt && now < booking.EndsAt ? new ActorCensusClaim {
-                        Identity = booking.GuestId, Kind = "current room booking; individual bed not inferred",
-                        Bed = lodging.SettlementId + ":" + lodging.BuildingKey + ":room:" + booking.RoomId } : null;
+                        Identity = booking.GuestId, Kind = "current lodging booking",
+                        Bed = lodging.SettlementId + ":" + lodging.BuildingKey + ":" + booking.BedIds[0] } : null;
                 }
                 yield return null;
             }

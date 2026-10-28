@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "portraitId": "common-078",
+  "profileId": "common-078-voice-design-02",
+  "profilePath": "work/portrait-female-voice-design-02/profiles/common-078.json",
+  "profileSha256": "d2ac06aceceadb46cd76321c2c44e08c59462cd2b1d0bbca30b5e369192f8255",
+  "attributes": {
+    "pitch": "an upper mezzo-soprano register",
+    "timbre": "dry and focused",
+    "roughness": "slightly husky",
+    "breathiness": "with softly breathy phrasing",
+    "vocalFry": "with a light creaky edge on low phrase endings",
+    "pace": "a lightly brisk conversational pace"
+  },
+  "stableInstruction": "An adult woman speaking British English with a neutral southern English accent. Her distinctive voice has an upper mezzo-soprano register; its timbre is dry and focused, slightly husky, with softly breathy phrasing, with a light creaky edge on low phrase endings. Use a lightly brisk conversational pace. Keep this individual vocal identity consistent; speak naturally, without caricature, shouting, or added vocal events.",
+  "seed": 1438819863,
+  "guidanceScale": 4.0,
+  "anchorText": "Good day. I have been in this town for many years. What brings you here today?",
+  "anchorRequestPurpose": "Breeze VoiceDesign without voice_ref; stable per-woman profile instruction and seed.",
+  "requestPayload": {
+    "model": "breeze",
+    "input": "Good day. I have been in this town for many years. What brings you here today?",
+    "response_format": "pcm",
+    "stream_format": "sse",
+    "options": {
+      "instruct": "An adult woman speaking British English with a neutral southern English accent. Her distinctive voice has an upper mezzo-soprano register; its timbre is dry and focused, slightly husky, with softly breathy phrasing, with a light creaky edge on low phrase endings. Use a lightly brisk conversational pace. Keep this individual vocal identity consistent; speak naturally, without caricature, shouting, or added vocal events.",
+      "guidance_scale": 4.0,
+      "stream_lookahead_margin": 0,
+      "stream_chunk_policy": "grow",
+      "seed": 1438819863
+    }
+  },
+  "requestPayloadSha256": "0fa00c0429262b4c7b40a397ccadbbd3e79e35e166173042e3d68699ad8761ce",
+  "referenceWav": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait-female-voice-design-02\\anchors\\common-078\\reference.wav",
+  "referenceSha256": "f6a8d8417115f17de203b343a337daedd70a443cccced467ea7e63ac9682943f",
+  "referenceRawWav": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait-female-voice-design-02\\anchors\\common-078\\reference.raw.wav",
+  "referenceRawSha256": "3c66f492b1d284037dc772e4883492f0a52a6e0f7ba0c5221b3e61d582f2296d",
+  "audioSampleRate": 24000,
+  "audioFrames": 101760,
+  "normalization": {
+    "schemaVersion": 1,
+    "normalizer": "pcm16-active-rms-v1",
+    "status": "normalized",
+    "targetActiveRmsDbfs": -20.0,
+    "peakCeilingDbfs": -3.0,
+    "maxBoostDb": 12.0,
+    "gateDbfs": -50.0,
+    "appliedGainDb": -0.9586339894532678,
+    "input": {
+      "sha256": "3c66f492b1d284037dc772e4883492f0a52a6e0f7ba0c5221b3e61d582f2296d",
+      "sampleRate": 24000,
+      "channels": 1,
+      "sampleWidthBytes": 2,
+      "frames": 101760,
+      "peakDbfs": -5.422961374770821,
+      "activeRmsDbfs": -19.04136601054673,
+      "activeFrames": 85200
+    },
+    "output": {
+      "sha256": "f6a8d8417115f17de203b343a337daedd70a443cccced467ea7e63ac9682943f",
+      "sampleRate": 24000,
+      "channels": 1,
+      "sampleWidthBytes": 2,
+      "frames": 101760,
+      "peakDbfs": -6.3816056358421855,
+      "activeRmsDbfs": -19.987756240146645,
+      "activeFrames": 84960
+    }
+  },
+  "synthesis": {
+    "outputWav": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait-female-voice-design-02\\anchors\\common-078\\reference.raw.wav",
+    "pcmBytes": 203520,
+    "sampleRate": 24000,
+    "channels": 1,
+    "synthesisMs": 2148.482,
+    "firstAudioMs": 374.743,
+    "audioDeltaCount": 7,
+    "serverTiming": {
+      "ttft_ms": 373.349
+    }
+  }
+}

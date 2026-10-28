@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 81,
+  "bank": "TFAC00I0.RCI",
+  "emotion": "guarded",
+  "feature": "eyes",
+  "sourceReference": "../../eyes-reference-grid.png",
+  "sourceReferenceSha256": "ec8e562898b5c269e5484294666940fd3d06392155fc32134d53d585209636f5",
+  "originalSha256": "eb0f7dcd1d390a6ff58d1bc0bba7a3855b5930ee824aa54e2f749211721e8ba0",
+  "attempts": [
+    {
+      "source": "eyes-reference-grid.png",
+      "result": "not securely captured; no output path/hash retained",
+      "call": 1
+    },
+    {
+      "source": "eyes-reference-grid.png",
+      "result": "not securely captured; no output path/hash retained",
+      "call": 2
+    },
+    {
+      "source": "eyes-reference-grid.png",
+      "imageUrlPrefix": "data omitted",
+      "outputSha256": "70bc008c89736eeea068e4ba53c6c915822c435814702a6f6ebdb544f5a02f74",
+      "imageUrlLength": "not retained",
+      "outputHintPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-626e-7471-95f3-109617bb3581\\exec-8d8da7e3-6d10-4947-ac39-e019d2475f64.png",
+      "prompt": "RETRY — required asset is the 2×2 EYE AND BROW grid, not a mouth sheet. Use Image 1, the exact 2×2 eyes-reference-grid.png for portrait 081, as the sole edit target. Return the same four upper-face cells with eyes and both eyebrows clearly visible. Do not show lips, mouth, chin, neck, or a 3×3 grid. Keep exact 2×2 row-major order: open, half-closed, closed, repeated open. Change only brows and eyelid expression to restrained skeptical/guarded: viewer-left brow slightly raised, viewer-right brow gently lowered or flattened; both complete brows including outer tails, original thickness. Mildly questioning, observant suspicion, never angry: no V-shaped scowl, no rage, no cartoon arches. Preserve fixed compact forward-facing pupils at identical size and position in open/half; no side gaze, movement, crossed eyes, iris rounding, lid break, or white flash. Half blink partly covers the same fixed eye; closed lid fully hides iris/pupil; final open repeats first. Keep portrait identity, geometry, crop, soft original palette, subdued contrast and all non-eye pixels unchanged. No text, no cropping, no resizing, no new grid lines.",
+      "call": 3
+    }
+  ],
+  "selectedOutput": {
+    "height": 928,
+    "status": "raw generated output; parent review pending",
+    "path": "eyes/guarded/raw.png",
+    "width": 1695,
+    "sha256": "70bc008c89736eeea068e4ba53c6c915822c435814702a6f6ebdb544f5a02f74"
+  },
+  "visualLimitations": [
+    "Brows are visibly thicker and higher contrast than source brows.",
+    "Output dimensions/aspect differ from 1024x512 reference grid.",
+    "Do not treat as accepted or native-size checked."
+  ],
+  "retryDisclosure": "Third eye-only call is the explicitly selected, path-bound result. First two calls used same eye reference but their results were not captured or independently matched."
+}

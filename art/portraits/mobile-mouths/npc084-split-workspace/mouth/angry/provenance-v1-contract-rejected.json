@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-21T23:40:29.6380679Z",
+    "portraitRecord":  84,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "angry",
+    "prompt":  "Use case: stylized-concept\nAsset type: DFU record084 angry mouth atlas, raw lower-half source for pixel-art portrait animation\nInput image: Image 1 is the prepared mouth reference grid and exact edit target. It shows nine identical enlarged original lower portrait halves.\nPrimary request: Edit only the mouth in each cell into an angry speech atlas. Preserve all nine cell boundaries, crop, scale, original face, nose, jaw, neck, golden wavy hair, and background.\nCell order: A B C / D E F / G H X. A and X show tense compressed brown lips closed. Speech cells B through H have distinct, anatomically scaled speaking mouth shapes. Include restrained glimpses of clenched teeth in only suitable poses; most poses should not be clenched teeth. Use dark mouth interior only where needed.\nStyle: match source muted brown skin, original muted brown lips, and soft low-contrast DOS-era pixel clusters. Preserve original portrait identity and native pixel-art scale inside each enlarged cell.\nConstraints: change mouth expression only. Preserve jaw, chin, neck, nose, hair, lighting, background, crop, face and 3×3 grid. No red lipstick, orange skin, harsh contrast, repeated closed mouths or clenched grins, broad glowing teeth, extra tooth shine, or changed head shape.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-cafd-70e1-800c-efd1106f663d as C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-cafd-70e1-800c-efd1106f663d\\exec-097c4e98-874f-4626-806a-b3d44eb8c5a6.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-cafd-70e1-800c-efd1106f663d\\exec-097c4e98-874f-4626-806a-b3d44eb8c5a6.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "10ec019f2359c6e700ebcba2286778ad666255ba107e21849cbe885f65de2d88",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "47a9646b4ccc362eba8f1855ca36d8b0a14294103b22c6a2f9ede335c0459d47",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-cafd-70e1-800c-efd1106f663d\\exec-097c4e98-874f-4626-806a-b3d44eb8c5a6.png",
+                      "sha256":  "ea0e079f58a2dce964703a67c26f7a6e35dd7a5427771b2acb2a27d0db2204ac",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/angry/raw.png",
+                "sha256":  "ea0e079f58a2dce964703a67c26f7a6e35dd7a5427771b2acb2a27d0db2204ac",
+                "width":  1863,
+                "height":  844
+            }
+}

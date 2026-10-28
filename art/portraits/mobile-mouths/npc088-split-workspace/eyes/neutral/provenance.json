@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T02:06:48.0575831Z",
+    "portraitRecord":  88,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Use case: illustration-story\nAsset type: Daggerfall Unity NPC portrait eye animation atlas\nPrimary request: Create one clean 2-by-2 atlas of the same portrait\u0027s upper 64-by-35 face half, based only on the supplied eye reference grid. The full canvas must preserve exact 64:35 aspect ratio and contain four equal cells with no gutters or labels, each showing the complete upper half at the supplied 8x pixel-art scale. Row-major cells: neutral relaxed eyes open; same neutral eyes half-closed; same neutral eyes fully closed; repeat of the open neutral cell. Keep both eyes and both brows fully visible in every cell.\nInput images: Image 1 is the only edit reference and supplies the exact face, crop, palette, and native pixel-art anatomy.\nSubject: Same adult woman portrait, same facial identity, eye spacing, gaze, iris size, brow length, nose bridge, hair and background as reference.\nStyle/medium: Muted pixel art with crisp native pixel clusters, matching reference scale and soft pixel-art shading.\nColor palette: Preserve warm muted tan skin, olive-brown eye shadows, gray-violet irises and subtle glints, soft brown brows, and subdued contrast. No orange skin, near-black brows, or white flashes.\nConstraints: Keep content restricted to the full upper-half eye reference crop in all four cells; do not create or paste a full face. Keep brow shape and stationary orbital creases identical in every phase. Open phase retains source eye geometry and gaze. Half-close by lowering the upper lid vertically over the same eyeball; do not move or shrink iris/glint, shift gaze, or let iris cross lower lid. Fully closed phase conceals iris and sclera completely with a natural lid line. Preserve pixel-grid anatomy, eye spacing, hairline and crop alignment. No new expression: neutral relaxed only. No text, labels, borders, or added elements.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1615a-49e8-76f2-af60-baf02d290c32 as C:\\Users\\Daniel\\.codex\\generated_images\\01a1615a-49e8-76f2-af60-baf02d290c32\\exec-cd212dc2-b6a8-4fcb-ac7a-cd28bb71a5db.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1615a-49e8-76f2-af60-baf02d290c32\\exec-cd212dc2-b6a8-4fcb-ac7a-cd28bb71a5db.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "f2e18bec953ffba12224397a695b2f80ddda822519be1414696b593243bc864c",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "9a64d43e6429fdae0fd71363647e7a736ebbb1d45093a1c58689582b0bb93508",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1615a-49e8-76f2-af60-baf02d290c32\\exec-cd212dc2-b6a8-4fcb-ac7a-cd28bb71a5db.png",
+                      "sha256":  "3c6c61f61786662b5707154ad9999ab8c7711d9979e040d84850532f17f36405",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "3c6c61f61786662b5707154ad9999ab8c7711d9979e040d84850532f17f36405",
+                "width":  1695,
+                "height":  928
+            }
+}

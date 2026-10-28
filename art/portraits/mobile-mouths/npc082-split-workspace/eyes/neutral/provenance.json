@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 82,
+  "emotion": "neutral",
+  "asset": "2x2 eye and blink atlas",
+  "tool": "built-in image_gen",
+  "toolCallsForThisArtifact": 1,
+  "exactToolOutputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-5744-7b43-9b03-e8cced819bb7 as C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-5744-7b43-9b03-e8cced819bb7\\exec-77e7c63f-3179-43e6-b454-60bc5f53b614.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+  "prompt": "Use case: precise-object-edit\nAsset type: 2x2 eye-and-blink atlas for a native 64x35 upper half of Daggerfall Unity portrait record 82\nInput images: Image 1 is eyes-reference-grid.png, an inspected 2x2 atlas of repeated crops from this exact portrait.\nPrimary request: Keep the same canvas, four equal cells, framing, cell alignment, and face. Return row-major cells OPEN, HALF-CLOSED, FULLY CLOSED, OPEN. Change only eyelids/eye expression.\nStyle/medium: preserve the softly shaded, muted, low-contrast pixel-art palette and original pixel scale. Keep native-size edges crisp; no blur, sharpening, heavier outlines or contrast increase.\nConstraints: Keep this same woman and exact eye spacing, hair, brows, forehead, nose, skin colors, crop, scale and background. Keep neutral brows identical in position and shape in all cells. Keep compact iris/pupil shapes, widths, and horizontal positions identical across the four cells. For half and closed phases, eyelids descend vertically over the existing stationary eyes; do not move, shrink, round, or stretch the iris/pupils. Do not add bright sclera flashes, white glints, or pixels below the closed lid. The first and last open cells should match each other and the source. Preserve the atlas boundaries; add no text, labels, lines, or watermark. Avoid red/orange skin shifts, stronger contrast, or dark thick brows.",
+  "sourceOriginal": {
+    "path": "original.png",
+    "sha256": "37270c9eb3e1260c3774263d512bfd0bab8e144fef129b32a0f065c92aa48d26",
+    "dimensions": "64x64"
+  },
+  "reference": {
+    "path": "eyes-reference-grid.png",
+    "sha256": "8bae461f66a90aa6765a4ab9879e23172d11eb901b6551fe0f910224c970d5a7",
+    "dimensions": "1024x560"
+  },
+  "generatedOutput": {
+    "exactSourcePath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-5744-7b43-9b03-e8cced819bb7\\exec-77e7c63f-3179-43e6-b454-60bc5f53b614.png",
+    "sha256": "1873c74219a941510610398023966490532132d47dc63e04dba6854dc0e8c68a",
+    "dimensions": "1695x928"
+  },
+  "savedRaw": {
+    "path": "eyes/neutral/raw.png",
+    "sha256": "1873c74219a941510610398023966490532132d47dc63e04dba6854dc0e8c68a",
+    "dimensions": "1695x928",
+    "copiedUnmodified": true
+  },
+  "cellOrder": [
+    "open",
+    "half",
+    "closed",
+    "open"
+  ],
+  "visibleQualityLimits": [
+    "In the displayed atlas, the repeat-open lower-right eye may differ slightly in iris/sclera balance from the first open cell; inspect at native scale before assembly.",
+    "The half-closed cell still appears to retain a narrow pale eye strip; verify lid coverage and stationary iris placement at native scale.",
+    "No native-cell sampling or compositing was performed."
+  ]
+}

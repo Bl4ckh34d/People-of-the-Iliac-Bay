@@ -29,7 +29,7 @@ namespace PeopleOfTheIliacBay.Core
     }
     // NativePayload is the complete native ItemData_v1 serialization, not a
     // reconstruction from a template. Unknown custom classes remain opaque.
-    [Serializable] public sealed class NpcInventoryItem {public ulong Uid;public string NativePayload;}
+    [Serializable] public sealed class NpcInventoryItem {public ulong Uid;public string NativePayload;public bool OrdinaryPurchase;}
     [Serializable] public sealed class NpcInventoryState
     {
         public string PersonId;
@@ -72,6 +72,15 @@ namespace PeopleOfTheIliacBay.Core
         {var inventory=IndexedNpcInventory(personId);return inventory!=null && inventory.WalletGold==0;}
         public string NpcInventoryItemOwner(ulong uid)
         {IndexedNpcInventory(null);string owner;return npcItemOwners.TryGetValue(uid,out owner)?owner:null;}
+        public ulong NextAvailableNpcItemUid(ulong nativeNext)
+        {
+            // DFU snapshots its allocator before mod save callbacks. Those
+            // callbacks can capture additional items with newer native UIDs.
+            foreach(var inventory in state.NpcInventories)
+                foreach(var item in inventory.Items)
+                    if(item.Uid>=nativeNext)nativeNext=checked(item.Uid+1);
+            return nativeNext;
+        }
         public string CorpseInventoryOwner(string incidentId)
         {
             var incident=state.AlarmIncidents.Find(a=>a.Id==incidentId);
@@ -99,7 +108,15 @@ namespace PeopleOfTheIliacBay.Core
                 var current=IndexedNpcInventory(update.PersonId);
                 if(current==null || update.ExpectedRevision!=current.Revision || current.Revision>=NpcInventoryLimits.MaximumRevision || current.LastTransactionId==transactionId)return false;
                 var proposed=new NpcInventoryState{PersonId=update.PersonId,WalletGold=update.WalletGold,Revision=current.Revision+1,LastTransactionId=transactionId,Items=update.Items};
-                try {ValidateNpcInventory(proposed,uids);proposals.Add(CopyNpcInventory(proposed));}
+                try
+                {
+                    ValidateNpcInventory(proposed,uids);var copy=CopyNpcInventory(proposed);
+                    // Native capture contains only native item data. Preserve the receipt
+                    // while the exact UID remains with its original buyer, never on a gift.
+                    foreach(var item in copy.Items)
+                        item.OrdinaryPurchase=current.Items.Exists(old=>old.Uid==item.Uid && old.OrdinaryPurchase);
+                    proposals.Add(copy);
+                }
                 catch(ArgumentException){return false;}
             }
             foreach(var proposed in proposals)foreach(var item in proposed.Items)
@@ -151,7 +168,7 @@ namespace PeopleOfTheIliacBay.Core
         private static NpcInventoryState CopyNpcInventory(NpcInventoryState value)
         {
             var result=new NpcInventoryState{PersonId=value.PersonId,WalletGold=value.WalletGold,Revision=value.Revision,LastTransactionId=value.LastTransactionId};
-            foreach(var item in value.Items)result.Items.Add(new NpcInventoryItem{Uid=item.Uid,NativePayload=item.NativePayload});return result;
+            foreach(var item in value.Items)result.Items.Add(new NpcInventoryItem{Uid=item.Uid,NativePayload=item.NativePayload,OrdinaryPurchase=item.OrdinaryPurchase});return result;
         }
     }
 }

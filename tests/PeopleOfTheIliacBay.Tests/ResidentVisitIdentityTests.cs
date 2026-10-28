@@ -14,7 +14,7 @@ namespace PeopleOfTheIliacBay.Tests
         {
             var store=new WorldStateStore(12);id=store.GetOrCreate(100,new[]{1},1).Households[0].Residents[0].Id;
             foreach(int town in new[]{200,300})
-            {store.GetOrCreate(town,new[]{2},1);store.RegisterLodging(town,10,new[]{new LodgingRoom {Id="room",Beds=new List<string>{"bed"+town}}});}
+            {store.GetOrCreate(town,new[]{2},1);store.RegisterLodgingBeds(town,10,new[]{new LodgingBed {Id="bed"+town}});}
             var trip=ResidentTrip.Create(id,100,200,0,600,10,new[]{new RoutePoint(10,10),new RoutePoint(11,10)});
             trip.Destination=new ResidentDestination {ExitWalkSeconds=60,ExitRoute=Path(10,0),Stops=new List<ResidentVisitStop> {
                 new ResidentVisitStop {BuildingKey=10,Purpose=ResidentVisitPurpose.Inn,WalkSeconds=60,DwellSeconds=120,Route=Path(0,10)}}};

@@ -110,6 +110,8 @@ namespace PeopleOfTheIliacBay.DFU
                 string roleText = verifiedRole.HasValue ? StaticNpcRoleProjection.RoleText(verifiedRole.Value) : null;
                 plan = ConversationLifeContext.NativeStaticDuty(roleText);
             }
+            string outdoorDuty=ExteriorStaticNpcNightContext(staticSpeaker?game.TalkManager.StaticNPC:null,now);
+            if(!string.IsNullOrEmpty(outdoorDuty))plan+=" "+outdoorDuty;
             var care=resident==null || store==null?null:store.ReadNpcHealthCare(resident.Id);
             if(care!=null && !alarmed && care.Phase!=NpcHealthCarePhase.Recovered && now>=care.StartedAt)
             {

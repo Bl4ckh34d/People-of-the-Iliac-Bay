@@ -36,7 +36,7 @@ namespace PeopleOfTheIliacBay.DFU
         public static IEnumerator Run(PeopleOfTheIliacBayMod host, StreetPopulation streets, string character)
         {
             var game = GameManager.Instance;
-            if (!host || !streets || !game || !character.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal))
+            if (!host || !streets || !game || !NativeProbeText.IsTestCharacter(character))
                 throw new InvalidOperationException("Semantic conversation probe requires the owned disposable town fixture.");
             if (game.PlayerEnterExit.IsPlayerInsideBuilding)
                 throw new InvalidOperationException("Semantic conversation probe requires the exterior town fixture.");

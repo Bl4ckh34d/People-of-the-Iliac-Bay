@@ -1,4 +1,6 @@
 * text=auto
+# Art manifests and source files are pinned by SHA256; preserve exact bytes.
+art/** -text
 *.png binary
 *.gif binary
 *.bytes binary

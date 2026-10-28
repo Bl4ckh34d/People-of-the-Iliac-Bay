@@ -180,22 +180,6 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.Equal(0, restored.ApplyConversationTone("npc", "polite", "No faster recovery", time39));
             })));
 
-            cases.Add(("Legacy five point friendship migrates without a reload bonus", new Action(() => {
-                var legacy = new WorldState { Version = 30, ConversationAttitudes = new List<ConversationAttitude> {
-                    new ConversationAttitude { PersonId = "legacy", Offset = 5, Day = 0, LastEncounterAt = 100 }
-                } };
-                var store = new WorldStateStore(1);
-                store.Restore(legacy);
-                Check.Equal(0, store.ApplyConversationTone("legacy", "polite", "No legacy bonus", 100));
-                double halfInterval = ExpectedIntervalSeconds("legacy", 0) / 2;
-                double halfIntervalAt = 100 + halfInterval;
-                store.RecordConversationEncounter("legacy", halfIntervalAt);
-                Check.Equal(1, store.ApplyConversationTone("legacy", "polite", "Half day one", halfIntervalAt));
-                Check.Equal(1, store.ApplyConversationTone("legacy", "polite", "Half day two", halfIntervalAt));
-                Check.Equal(0, store.ApplyConversationTone("legacy", "polite", "Half day fraction", halfIntervalAt));
-                Check.Equal(7, store.ConversationDisposition("legacy"));
-            })));
-
             cases.Add(("Friendship save rejects invalid credit and stage fields", new Action(() => {
                 var store = new WorldStateStore(1);
                 store.RecordConversationEncounter("npc", 0);

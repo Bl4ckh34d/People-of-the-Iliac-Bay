@@ -19,7 +19,7 @@ namespace PeopleOfTheIliacBay.DFU
     internal static class NpcAcuteFearProbe
     {
         internal const string RunFlag = "-peopleoftheiliacbay-npc-acute-fear-probe";
-        private const string OwnedCharacter = "PeopleOfTheIliacBayTest-9a5f197b";
+        private const string OwnedCharacter = "Hakon Ironhand";
         private const string BaselineSave = "People - Gothway Garden";
         private const BindingFlags InstanceMembers = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
         private const BindingFlags PrivateInstance = BindingFlags.Instance | BindingFlags.NonPublic;

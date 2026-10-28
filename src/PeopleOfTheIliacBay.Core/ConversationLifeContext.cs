@@ -283,8 +283,11 @@ namespace PeopleOfTheIliacBay.Core
         public static string TripStatus(ResidentTrip trip, double now, ResidentTripSnapshot actual,
             Func<int, string> settlementName, Func<int, string> destinationBuildingName,ActivitySnapshot? observed=null)
         {
-            if (trip == null || Math.Floor(now / 86400) != Math.Floor(trip.DepartsAt / 86400)) return null;
+            if (trip == null) return null;
             if (settlementName == null || destinationBuildingName == null) throw new ArgumentNullException();
+            string lodging=trip.LodgingPlanContext(now,destinationBuildingName);
+            if(lodging!=null)return "Recorded lodging plan: "+lodging+" Observed position and activity determine whether you are physically there or asleep.";
+            if(Math.Floor(now / 86400) != Math.Floor(trip.DepartsAt / 86400))return null;
             string town = settlementName(trip.DestinationSettlement);
             if (string.IsNullOrWhiteSpace(town)) town = "another settlement";
             var text = new StringBuilder("Current verified travel activity: ");

@@ -1,0 +1,22 @@
+{
+  "portraitRecord": 82,
+  "emotion": "afraid",
+  "asset": "eye-blink-atlas",
+  "generationMode": "built-in image_gen edit",
+  "layout": "2x2 row-major open / half-closed / closed / repeated-open",
+  "sourcePortrait": "art/portraits/mobile-mouths/npc082-split-workspace/original.png",
+  "sourcePortraitSha256": "37270c9eb3e1260c3774263d512bfd0bab8e144fef129b32a0f065c92aa48d26",
+  "reference": "art/portraits/mobile-mouths/npc082-split-workspace/eyes-reference-grid.png",
+  "referenceSha256": "8bae461f66a90aa6765a4ab9879e23172d11eb901b6551fe0f910224c970d5a7",
+  "referenceDimensions": "1024x560",
+  "generatedSourcePath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-2ede-7fc1-b24a-9d18707baa51\\exec-fec6390d-883d-4448-b760-a2256e872c4b.png",
+  "output": "art/portraits/mobile-mouths/npc082-split-workspace/eyes/afraid/raw.png",
+  "outputDimensions": "1695x928",
+  "outputSha256": "9f0f9b0d32de478351b81b7d74999182d390bc4db76ddf9b46593b4b5bddd3cf",
+  "prompt": "Use case: precise-object-edit. Asset type: pixel-art NPC portrait eye animation atlas. Input image: Image 1 is NPC082's exact 2x2 repeated upper-face reference grid; preserve its character identity, native pixel-art style, eye geometry, palette, hair and framing. Make four upper-face cells in row-major order: open, half-closed, closed, repeated open. Change only eyes/lids and subtle emotion brows. Make fear visibly alarmed and watchful through alert openings and tense, raised inner brows; do not make it sad, downcast, pleading, or cartoonish. Preserve the original compact stepped iris and pupil shapes and exact horizontal width/location. Pupils stay in the same direction and at the same position in every phase, fully contained inside the iris and respecting the lower lid; blinking only changes lid coverage. Do not enlarge round eyeballs or add large white sclera. Keep the same brow master geometry through all phases, brows fully visible and not clipped. Closed phase should be a natural lid closure, no white flashes. Preserve muted source colors, soft contrast, identical face, nose bridge, hair, background, scale and 2x2 framing. No orange skin, no red additions, no sweat/tears/props/text/watermark, no photorealism, no heavy black outlines.",
+  "visibleQaIssues": [
+    "2x2 atlas has open, half, closed, repeated-open cells with matching face and frame.",
+    "Eyes look alert and concerned; iris shape/position appears compact and stable in this visual sheet inspection, but exact native-pixel width and lower-lid contact are not established.",
+    "White eye pixels appear prominent at atlas scale; check on composed native 64px frame before acceptance. No corrective pass performed."
+  ]
+}

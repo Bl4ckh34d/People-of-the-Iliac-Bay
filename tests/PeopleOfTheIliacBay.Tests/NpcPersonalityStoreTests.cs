@@ -70,17 +70,6 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.Equal(residentProfile.Description(), restored.ReadNpcPersonality(resident.Id).Description());
                 Check.Equal(travelerProfile.Description(), restored.ReadNpcPersonality("traveler:personality").Description());
             }));
-            cases.Add(("Schema 32 migration drops personality records and initializes empty ledger", () =>
-            {
-                var store = KnownNativeStore();
-                store.GetOrCreateNpcPersonality("npc:1:5:12", 7, NpcSocialBackground.Noble);
-                var legacy = store.Snapshot();
-                legacy.Version = 32;
-                var restored = new WorldStateStore(0);
-                restored.Restore(legacy);
-                Check.Equal(0, restored.Snapshot().NpcPersonalities.Count);
-                Check.True(restored.ReadNpcPersonality("npc:1:5:12") == null);
-            }));
             cases.Add(("Legacy personality restore selects three saved values once and preserves the subset on reload", () =>
             {
                 var source = KnownNativeStore(); var legacy = source.Snapshot();

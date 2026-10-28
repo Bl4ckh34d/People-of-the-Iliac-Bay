@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 73,
+  "bank": "TFAC00I0.RCI",
+  "sourcePath": "art/portraits/mobile-mouths/split-mask-prototype/catalog/common-073.png",
+  "sourceSha256": "8505d9e9fde3c536cf08958e97076aba44aa5d60e2e76ba6fc3fdb1384b8d643",
+  "inventoryRgbaSha256": "cd70abe965771aec7deb71679f6b5f3bdd40fc7f1127449b5225202c226f6af0",
+  "width": 64,
+  "height": 64,
+  "splitY": 35,
+  "browLockEndY": 23,
+  "eyeRegions": [
+    {
+      "x": 15,
+      "y": 18,
+      "width": 18,
+      "height": 14
+    },
+    {
+      "x": 37,
+      "y": 18,
+      "width": 18,
+      "height": 14
+    }
+  ],
+  "mouthRegion": {
+    "x": 21,
+    "y": 40,
+    "width": 22,
+    "height": 12
+  },
+  "calibrationStatus": "provisional-source-only; generated phases and masks require production review",
+  "calibrationEvidence": [
+    "work/portrait073-full-preflight/portrait073-full-preflight.md",
+    "work/portrait073-full-preflight/parent-followup-review.md",
+    "work/portrait073-full-preflight/common-073-native-grid.png",
+    "work/portrait073-full-preflight/common-073-proposed-masks.png",
+    "work/portrait073-full-preflight/feature-zoom.png"
+  ],
+  "eyeReason": "Eye masks use exclusive bounds [15,18,33,32) and [37,18,55,32). They include the full visible brow, lid and eye envelope. Source brow/upper-eye shading reaches about rows20-23, leaving two native rows of headroom above it for a modest raised emotional brow and antialiasing. browLockEndY is inclusive row23 and preserves each emotion's own open brow through half/closed phases; it does not lock emotional open brows to the original. Left mask starts at x15, beyond the blue wand at x10-14. Right mask ends at x55 before the hair edge.",
+  "mouthReason": "Mouth bounds [21,40,43,52) include visible lips around x27-39/y44-49, with four rows above for open-AA articulation and two below for lip contour. The box avoids the side wand/hair and ends above chin/neck shading.",
+  "limitations": [
+    "The source brow is low contrast and merges into upper-eye shading; validate actual raised emotional brows against the two-row top margin.",
+    "Mouth AA poses must be checked against the chin boundary; do not expand the mask toward the neck without a new source review.",
+    "This is a layout proposal only. No workspace, art, manifest or generated frame was created or changed."
+  ],
+  "sourceSelections": {
+    "eyes": {
+      "afraid": {
+        "file": "candidates/afraid-eyes-v3/eyes/afraid/raw.png"
+      },
+      "angry": {
+        "file": "eyes/angry/raw.png"
+      },
+      "sad": {
+        "file": "eyes/sad/raw.png"
+      },
+      "guarded": {
+        "file": "candidates/guarded-eyes-v3/eyes/guarded/raw.png"
+      }
+    }
+  }
+}

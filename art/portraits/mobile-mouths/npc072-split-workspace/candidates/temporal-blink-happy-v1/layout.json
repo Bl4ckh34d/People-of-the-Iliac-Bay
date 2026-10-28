@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 72,
+  "bank": "TFAC00I0.RCI",
+  "width": 64,
+  "height": 64,
+  "splitY": 35,
+  "browLockEndY": 19,
+  "eyeRegions": [
+    {
+      "x": 15,
+      "y": 12,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "x": 36,
+      "y": 12,
+      "width": 17,
+      "height": 16
+    }
+  ],
+  "mouthRegion": {
+    "x": 21,
+    "y": 35,
+    "width": 23,
+    "height": 13
+  },
+  "calibrationStatus": "parent-inspected-source-boundary; localized SAD-half iris repair and SAD/GUARDED cheek locks; review pending",
+  "calibrationEvidence": "work/portrait072-blink-followup-diagnosis/calibration-v2.json",
+  "calibrationReason": "NPC072 native source places eye/iris at y21-23, lower lid y24, and smooth cheeks y25-27. Lock only SAD/guarded cheek strip; freeze SAD open/closed upper eye artwork and SAD-half brow from preserved selected phases. Select corrected SAD atlas for HALF only.",
+  "sourceSelections": {
+    "eyes": {
+      "guarded": {
+        "file": "candidates/guarded-eyes-v2/eyes/guarded/raw.png"
+      },
+      "sad": {
+        "half": "candidates/sad-eyes-v1/eyes/sad/raw.png"
+      }
+    }
+  },
+  "eyeFeatureLocks": [
+    {
+      "emotion": "sad",
+      "phase": "open",
+      "sourceFile": "source-upper.png",
+      "x": 15,
+      "y": 25,
+      "width": 16,
+      "height": 3
+    },
+    {
+      "emotion": "sad",
+      "phase": "open",
+      "sourceFile": "source-upper.png",
+      "x": 36,
+      "y": 25,
+      "width": 17,
+      "height": 3
+    },
+    {
+      "emotion": "sad",
+      "phase": "half",
+      "sourceFile": "source-upper.png",
+      "x": 15,
+      "y": 25,
+      "width": 16,
+      "height": 3
+    },
+    {
+      "emotion": "sad",
+      "phase": "half",
+      "sourceFile": "source-upper.png",
+      "x": 36,
+      "y": 25,
+      "width": 17,
+      "height": 3
+    },
+    {
+      "emotion": "sad",
+      "phase": "closed",
+      "sourceFile": "source-upper.png",
+      "x": 15,
+      "y": 25,
+      "width": 16,
+      "height": 3
+    },
+    {
+      "emotion": "sad",
+      "phase": "closed",
+      "sourceFile": "source-upper.png",
+      "x": 36,
+      "y": 25,
+      "width": 17,
+      "height": 3
+    },
+    {
+      "emotion": "guarded",
+      "phase": "open",
+      "sourceFile": "source-upper.png",
+      "x": 15,
+      "y": 25,
+      "width": 16,
+      "height": 3
+    },
+    {
+      "emotion": "guarded",
+      "phase": "open",
+      "sourceFile": "source-upper.png",
+      "x": 36,
+      "y": 25,
+      "width": 17,
+      "height": 3
+    },
+    {
+      "emotion": "guarded",
+      "phase": "half",
+      "sourceFile": "source-upper.png",
+      "x": 15,
+      "y": 25,
+      "width": 16,
+      "height": 3
+    },
+    {
+      "emotion": "guarded",
+      "phase": "half",
+      "sourceFile": "source-upper.png",
+      "x": 36,
+      "y": 25,
+      "width": 17,
+      "height": 3
+    },
+    {
+      "emotion": "guarded",
+      "phase": "closed",
+      "sourceFile": "source-upper.png",
+      "x": 15,
+      "y": 25,
+      "width": 16,
+      "height": 3
+    },
+    {
+      "emotion": "guarded",
+      "phase": "closed",
+      "sourceFile": "source-upper.png",
+      "x": 36,
+      "y": 25,
+      "width": 17,
+      "height": 3
+    }
+  ]
+}

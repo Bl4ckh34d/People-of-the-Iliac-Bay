@@ -73,20 +73,27 @@ namespace PeopleOfTheIliacBay.DFU
                     foreach(var stop in itinerary.Stops) if(!keys.Contains(stop.BuildingKey))keys.Add(stop.BuildingKey);
                 }
                 else if(plan.Routine.DestinationKey>=0 && !keys.Contains(plan.Routine.DestinationKey))keys.Add(plan.Routine.DestinationKey);
-                float nearest=float.PositiveInfinity;SavedRoutePoint chosenDoor=null;
-                if(motionOrigin>=0 && keys.Contains(motionOrigin) && TryRoutineRecoveryDoor(plan,motionOrigin,out chosenDoor))
-                    originBuildingKey=motionOrigin;
-                else foreach(int key in keys)
+                var family=RuntimeFamily(plan,job.UpdatedAt);
+                if(family!=null && family.Source.JointInn!=null && !keys.Contains(family.Source.JointInn.InnKey))
+                    keys.Add(family.Source.JointInn.InnKey);
+                if(motionOrigin>=0 && keys.Remove(motionOrigin))keys.Insert(0,motionOrigin);
+                double nearest=double.PositiveInfinity;SavedRoutePoint chosenDoor=null;
+                var from=directory.transform.InverseTransformPoint(actual);
+                var start=new SavedRoutePoint {X=from.x,Z=from.z};List<SavedRoutePoint> points=null;
+                foreach(int key in keys)
                 {
                     SavedRoutePoint candidateDoor;if(!TryRoutineRecoveryDoor(plan,key,out candidateDoor))continue;
-                    var nodePoint=geometry.ScenePoint(new RoutePoint(candidateDoor.X,candidateDoor.Z));float distance=(nodePoint-actual).sqrMagnitude;
-                    if(distance>=nearest)continue;nearest=distance;chosenDoor=candidateDoor;originBuildingKey=key;
+                    var candidate=geometry.RouteBetweenPoints(start,candidateDoor);
+                    if(candidate==null || candidate.Count<2 || candidate.Count>128)continue;
+                    var end=geometry.ScenePoint(new RoutePoint(candidate[candidate.Count-1].X,candidate[candidate.Count-1].Z));
+                    var nodePoint=geometry.ScenePoint(new RoutePoint(candidateDoor.X,candidateDoor.Z));
+                    if(Vector3.Distance(end,nodePoint)>0.4f)continue;
+                    double distance=RouteLength(candidate);
+                    if(distance>=nearest)continue;
+                    nearest=distance;chosenDoor=candidateDoor;originBuildingKey=key;points=candidate;
+                    if(key==motionOrigin)break;
                 }
-                if(chosenDoor==null || originBuildingKey<0)return false;
-                var from=directory.transform.InverseTransformPoint(actual);
-                var to=directory.transform.InverseTransformPoint(geometry.ScenePoint(new RoutePoint(chosenDoor.X,chosenDoor.Z)));
-                var points=geometry.RouteBetweenPoints(new SavedRoutePoint {X=from.x,Z=from.z},new SavedRoutePoint {X=to.x,Z=to.z});
-                if(points.Count<2 || points.Count>128)return false;
+                if(chosenDoor==null || originBuildingKey<0 || points==null)return false;
                 foreach(var point in points)route.Add(ActionPosition(geometry.ScenePoint(new RoutePoint(point.X,point.Z))));
                 route[0]=ActionPosition(actual);
                 var node=geometry.ScenePoint(new RoutePoint(chosenDoor.X,chosenDoor.Z));

@@ -15,8 +15,7 @@ namespace PeopleOfTheIliacBay.DFU
         private string goalLastExtractionPrompt, goalLastExtractionOutput;
         private string goalFirstExtractionRequestJson, goalFirstExtractionResponseJson, goalFirstExtractionResult;
         private string goalLastExtractionStatus, goalLastBindingStatus;
-        private bool GoalExtractionEnabled => (DecisionWillingnessEnabled || QwenWillingnessEnabled) &&
-            Array.IndexOf(Environment.GetCommandLineArgs(), "-peopleoftheiliacbay-goal-extraction") >= 0;
+        private bool GoalExtractionEnabled => DialogueWillingnessEnabled;
 
         private bool TryBeginGoalActionConversation(DaggerfallTalkWindow window, string text, string history,
             ConversationContextSnapshot snapshot)
@@ -139,6 +138,8 @@ namespace PeopleOfTheIliacBay.DFU
                     conversationPersonId != person || conversationActor != actor) return;
                 var step = goal.Steps[index];
                 var candidates = streets.ConversationActionCandidates(person);
+                if(store.ReadPaidFollowForTravelTask(person,ConversationActionTime())!=null)
+                    candidates.RemoveAll(candidate=>candidate.Kind!=NpcActionKind.MoveTo && candidate.Kind!=NpcActionKind.Wait);
                 if (index > 0)
                 {
                     candidates = NpcActionSequenceChat.BindWaitOptionsAfterMoveTo(previous[index - 1], candidates);
@@ -152,7 +153,23 @@ namespace PeopleOfTheIliacBay.DFU
                 }
                 IList<NpcActionOption> eligible = NpcGoalBinding.FilterCandidates(goal, index, candidates, previous);
                 if (eligible == null || eligible.Count == 0)
-                { RejectGoalAction(window, text, snapshot, "No offered target can satisfy the requested step and prior-step bindings."); return; }
+                {
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GOAL_NO_CANDIDATE: index="+index+"; kind="+step.Kind+
+                        "; duration="+(step.Duration==null?"null":step.Duration.Amount.ToString(CultureInfo.InvariantCulture)+" "+step.Duration.Unit)+
+                        "; quantity="+(step.Quantity==null?"null":step.Quantity.Amount.ToString(CultureInfo.InvariantCulture))+
+                        "; nativeCandidates="+candidates.Count);
+                    int logged=0;
+                    foreach(var candidate in candidates)
+                    {
+                        if(!candidate.PaidCompanion && candidate.Kind.ToString()!=step.Kind)continue;
+                        NpcActionDecision ignored;string rejection;
+                        NpcGoalBinding.TryBindStep(goal,index,candidates,candidate.Id,previous,out ignored,out rejection);
+                        Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GOAL_CANDIDATE_REJECTED: option="+candidate.Id+"; kind="+candidate.Kind+
+                            "; paid="+candidate.PaidCompanion+"; reason="+rejection);
+                        if(++logged==3)break;
+                    }
+                    RejectGoalAction(window, text, snapshot, "No offered target can satisfy the requested step and prior-step bindings."); return;
+                }
                 SelectSemanticActionCandidates(window, step.Source.Text, history, eligible, selected =>
                 {
                     if (!IsCurrentConversationContext(snapshot, window)) return;
@@ -193,10 +210,10 @@ namespace PeopleOfTheIliacBay.DFU
                         { RejectGoalAction(window, text, snapshot, reason); return; }
                         goalLastBindingStatus = "bound";
                         if (goalWillingnessDispatchCount < long.MaxValue) goalWillingnessDispatchCount++;
-                        ResolveProposedActionWillingness(actor, window, text, history, snapshot, true, bound.CopyDecisions(), agreed =>
+                        ResolveProposedActionWillingness(actor, window, text, history, snapshot, bound.CopyDecisions(), agreed =>
                         {
                             string proposalId = "goal:" + Guid.NewGuid().ToString("N");
-                            bool task = agreed.Count > 1;
+                            bool task = agreed.Count > 1 || store.ReadPaidFollowForTravelTask(person,ConversationActionTime())!=null;
                             if(!task && TryBeginPaidCompanionConsent(window,text,snapshot,session,person,proposalId,agreed[0]))return;
                             string failure;
                             bool saved = task ? streets.TryAcceptConversationTask(person, proposalId, agreed,

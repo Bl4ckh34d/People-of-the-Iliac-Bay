@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 79,
+  "emotion": "sad",
+  "revision": "v2 corrective edit",
+  "asset": "mouth/sad/raw-v2.png",
+  "tool": "built-in image_gen",
+  "editTarget": "mouth/neutral/raw.png",
+  "prompt": "Edit the provided NEUTRAL mouth atlas in place. It is the exact layout, geometry, identity, framing, and pose source; the original portrait is the palette and face-shading reference. Return the same 3-column × 3-row atlas, same canvas dimensions, same cell boundaries, same face scale and alignment. Row-major mouth poses must be clearly distinct and exactly: A closed lips; B narrow slight opening with upper/lower tooth contact; C medium opening with muted teeth; D wide open Ah; E rounded O; F smaller protruded rounded U; G lower lip touching upper teeth F/V; H visible tongue tip L; X relaxed closed sad resting lips. Keep nose, cheeks, jaw, neck, hair, background, shadows, and every non-mouth detail unchanged in every tile. Change only the lips/oral opening, preserving each cell's exact geometry and position. Sadness remains low-energy: subtle downturned corners and gentle tension, while all open phoneme shapes stay fully articulated and not closed. Match the original lower-half palette: do not deepen or saturate lip red, do not brighten skin, and do not use pure white teeth or highlights; use muted native cream/brown pixels. No added objects, tears, captions, dividers, distortion, head movement, rescaling, or new crop.",
+  "promptSha256": "827854c36f69c30a021244de52305c754175539861bc552d1173d92b70d2ad76",
+  "references": [
+    {
+      "sha256": "7a6b51cbe9e6382103e7833921e92a6014622b0f48fa94f64e05bb0199e55ffa",
+      "path": "mouth/neutral/raw.png"
+    },
+    {
+      "sha256": "70b1b52df73159543afd5776eae7565bfd3619fd31bc5fd90af674e42520d460",
+      "path": "original.png"
+    }
+  ],
+  "generationOutputPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-fb9b-7322-8190-74bf6fb54c9d\\exec-2a3d71b1-8988-414d-a5d5-1f800a0b5b1a.png",
+  "resultSha256": "7997176fcbd13d269800f83380911493f505542df72803ecd4fe4909711b0009",
+  "dimensions": {
+    "height": 845,
+    "width": 1862
+  },
+  "rawCopiedUnchanged": true,
+  "preservesPreviousSadRaw": true,
+  "visibleQA": [
+    "Nine mouth forms are now substantially more distinct, including a wide-open Ah, rounded O/U, lip-to-teeth F/V and tongue-tip L.",
+    "Face framing, lower-half geometry and surrounding hair/neck appear consistent with the input atlas.",
+    "Some oral openings and teeth remain broad/bright at enlarged view; parent should check native cells and original-palette match before selection.",
+    "Output canvas is 1862×845 while neutral input canvas is 1863×844 (one-pixel width/height mismatch); verify cell alignment before use."
+  ]
+}

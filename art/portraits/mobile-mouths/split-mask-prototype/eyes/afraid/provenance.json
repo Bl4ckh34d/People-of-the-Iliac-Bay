@@ -1,0 +1,34 @@
+{
+  "emotion": "afraid",
+  "portraitRecord": 77,
+  "generator": "built-in image_gen",
+  "source_paths_and_sha256": [
+    {
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\eyes-reference-grid.png",
+      "sha256": "a533a7bd5e93c132a22191fb9c4ec35466840a8b0bac4218064db6bc5f4faacc"
+    },
+    {
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\source-upper.png",
+      "sha256": "1ac0547d22fdefb5dda5874acd21aef2069bc8d55d05513b7724211ff9187db4"
+    },
+    {
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\original.png",
+      "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+    }
+  ],
+  "generated_original_path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-2ede-7fc1-b24a-9d18707baa51\\exec-8592eaf7-6cf8-4d9b-9a36-0f55d7f114ef.png",
+  "output_path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\eyes\\afraid\\raw.png",
+  "output_sha256": "7712e605ec631c65063fe46f229324268fb621b0099beee021aa1dc7ba6bb1ce",
+  "dimensions": "1695x928",
+  "expected_source_dimensions": "1024x560",
+  "grid_order": [
+    "open",
+    "half",
+    "closed",
+    "open-reference"
+  ],
+  "generation_count": 1,
+  "visible_deviations": "The repeated bottom-right open reference has a slightly higher pupil gaze than top-left open. Output is 1695x928; ratio 1.8265, close to source 1.8286. No resize/crop performed.",
+  "status": "prototype-user-review-pending-not-installed",
+  "prompt": "Use case: illustration-story\nAsset type: raw 2×2 atlas of complete 64×35 upper portrait halves for NPC 077\nInput image: Image 1 is exact edit target: original 2×2 eyes-reference grid, 1024×560, four complete upper-half portraits. Preserve sheet dimensions, 2×2 cell layout, order, and full cells.\nPrimary request: Make one consistent AFRAID expression across cells. In OPEN cells, give her wide, alert, alarmed eyes looking straight ahead, crisp visible irises and pupils, modest visible sclera, and raised tense brows. Fear must read clearly distinct from sad/downcast revision: eyes alert and widened, brows raised in alarm, not drooping, not pleading, not sorrowful. Keep brows expressive but soft, natural and not angry.\nGrid order: top-left open afraid; top-right half blink; bottom-left fully closed blink; bottom-right repeated open afraid reference. The repeated open cell must match top-left exactly.\nStyle and invariants: preserve original coarse pixel-art structure, muted low-contrast palette, soft skin shading, hairline, forehead, face shape, head angle, crop, scale, lighting, and background in every cell. Both brows remain visible in every cell. No head tilt. No enlargement of eyes or shifts to hair.\nBlink phases: half upper lids cover about half each iris, with lower iris visible. Closed lids fully hide iris and sclera. Expression and brow position stay identical across all four cells; eyelid phase alone changes between open, half and closed.\nAvoid: blurry or smoky eyes, airbrush, hard black cartoon brows, thick eyeliner, sharpening, changed face or framing, giant eyes, tears, sweat, props, labels, borders, gutters, or cropping. Return one complete 2×2 upper-half sheet; do not crop, composite or resize."
+}

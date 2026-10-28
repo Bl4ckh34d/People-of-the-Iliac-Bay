@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T12:01:35.2987704Z",
+    "portraitRecord":  75,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Create one 2×2 horizontal-pair thinking-eye atlas from this exact single local reference. Cell order and pose: top-left LEFT OPEN, top-right RIGHT OPEN, bottom-left LEFT HALF, bottom-right RIGHT HALF. Keep the original face crop, hair, brow shape, spacing, fearful expression, skin palette, and native-looking chunky pixel clusters. Keep the eye apertures at the same narrow source size; do not enlarge or round the eyes. The master has dark, shaded olive-brown/amber irises and dark pupils with only tiny muted warm glints. Preserve that dark iris/pupil appearance. Do not brighten the interiors, turn them cream or pale, add white or cream bands, add glints, or widen visible sclera. Both irises and pupils move together toward the same canvas side in each column: both eyes glance slightly LEFT in the left column, both glance slightly RIGHT in the right column. Keep the gaze paired, never one eye fixed or cross-eyed. In the bottom row, naturally lower the upper lids over the same compact irises so the HALF state shows less iris and a narrow shaded opening than OPEN; do not open the eye wider or expose extra white. Keep the frightened lifted brows unchanged and the two eyes consistent with each other. No labels or framing; output exactly this 2×2 atlas at the same 64:35 aspect as the provided reference.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-ebbd0f90-cfab-483e-ac9f-e62e1f93e90e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-ebbd0f90-cfab-483e-ac9f-e62e1f93e90e.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "fd85cd9ea8b9e3ea4878a14f977048675b8f38fa1e9b92eaeef1f2ac930dbb2c",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-ebbd0f90-cfab-483e-ac9f-e62e1f93e90e.png",
+                      "sha256":  "d40981a7828fd2fdeb83ea33b74689b79b0137c559680c1cd26dcfc5faed3162",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "d40981a7828fd2fdeb83ea33b74689b79b0137c559680c1cd26dcfc5faed3162",
+                "width":  1695,
+                "height":  928
+            }
+}

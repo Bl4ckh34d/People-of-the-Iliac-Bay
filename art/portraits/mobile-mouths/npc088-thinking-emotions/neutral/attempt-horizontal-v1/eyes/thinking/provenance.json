@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T08:59:21.6380049Z",
+    "portraitRecord":  88,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Use case: image edit\nAsset type: Daggerfall Unity NPC neutral thinking-eye atlas\nInput images: Image 1 is the exact source reference grid. Preserve this portrait\u0027s identity, neutral brow and original eye anatomy.\nComposition: Exact 2×2 pixel-art atlas on a 64:35 canvas, each cell 64×35 native pixels. Top-left: image-left gaze with eyes open. Top-right: image-right gaze with eyes open. Bottom-left: image-left gaze with half blink. Bottom-right: image-right gaze with half blink.\nConstraints: Preserve the exact source lid contours, narrow aperture, compact stepped iris/pupil size, original gray-blue iris hue, neutral brow and source palette. Change only gaze by shifting each iris/pupil cluster about one native pixel horizontally; keep pupils fully inside the eye. Use small subdued source-like glints. Keep continuous lids and natural half-blink coverage. No widening, broad white bands, bright flashes, vertical/diagonal shifts, color changes, new makeup, text, borders or added detail. Keep all four cells aligned and the outer face unchanged.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54 as C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-42d532f8-0cd8-4a44-8c86-58f5b21062ae.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-42d532f8-0cd8-4a44-8c86-58f5b21062ae.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "f2e18bec953ffba12224397a695b2f80ddda822519be1414696b593243bc864c",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "0afed8d882cb034042bca5ac73b183193478bab640beb42107f876314c97a219",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1628d-0825-7d71-a131-b87fa97c0d54\\exec-42d532f8-0cd8-4a44-8c86-58f5b21062ae.png",
+                      "sha256":  "dd43cdac0809c68fd4a104e2f1529d03c95ee3e6e09a292c028abbe097f384b8",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "dd43cdac0809c68fd4a104e2f1529d03c95ee3e6e09a292c028abbe097f384b8",
+                "width":  1695,
+                "height":  928
+            }
+}

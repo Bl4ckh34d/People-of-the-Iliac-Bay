@@ -5,6 +5,7 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using PeopleOfTheIliacBay.Core;
 using UnityEngine;
+using UnityEngine.AI;
 namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class ShopVisitGeometry
@@ -37,6 +38,7 @@ namespace PeopleOfTheIliacBay.DFU
         private readonly Dictionary<string,List<ShopOccupancy>> reserved=new Dictionary<string,List<ShopOccupancy>>();
         private readonly Dictionary<string,string> rejectedVisits=new Dictionary<string,string>();
         private string candidateFailure;
+        internal string ActivityRouteFailure {get;private set;}
         public string RejectionFor(string id) { string reason;return rejectedVisits.TryGetValue(id,out reason)?reason:null; }
         public ShopVisitGeometry(DaggerfallInterior room,InteriorGeometry geometry,Func<StaticNPC,bool> livingTavernKeeper=null)
         {
@@ -333,6 +335,7 @@ namespace PeopleOfTheIliacBay.DFU
         }
         public List<GuardPoint3> ActivityRouteBetween(Vector3 actual,Vector3 target,SelectedSeatAccess egressAccess=null,string targetSeatId=null)
         {
+            ActivityRouteFailure=null;
             FurnitureSeatSlot startSeat,endSeat;seatStops.TryGetValue(actual,out startSeat);seatStops.TryGetValue(target,out endSeat);
             if(targetSeatId!=null)
             {
@@ -352,11 +355,87 @@ namespace PeopleOfTheIliacBay.DFU
             if(startSeat==null)foreach(var pair in seatStops)if((pair.Key-actual).sqrMagnitude<0.1225f){startSeat=pair.Value;break;}
             var start=startSeat==null?actual:room.transform.InverseTransformPoint(startSeat.Approach);
             var end=endSeat==null?target:room.transform.InverseTransformPoint(endSeat.Approach);
-            var result=(start-end).sqrMagnitude<0.000001f?new List<GuardPoint3>{Point(start)}:geometry.RouteBetween(start,end);
+            bool nativeInn=HasNativeInnNavigation();
+            var result=nativeInn?NativeInnActivityRoute(start,end,endSeat):new List<GuardPoint3>();
+            // An unrelated counter/activity may intentionally finish off mesh.
+            // Its existing physical final approach remains unchanged. A selected
+            // chair must use a verified native corridor and never this fallback.
+            if(!nativeInn || result.Count==0 && endSeat==null)
+                result=(start-end).sqrMagnitude<0.000001f?new List<GuardPoint3>{Point(start)}:geometry.RouteBetween(start,end);
             if(result.Count==0)return result;
             if(startSeat!=null)result.Insert(0,Point(actual));
             if(endSeat!=null)result.Add(Point(target));
             return result;
+        }
+        private bool HasNativeInnNavigation()
+        {
+            var game=GameManager.Instance;var world=NativeNavigationWorld.Current;
+            return IsTavern && innLayout!=null && world && world.Ready && game && game.PlayerEnterExit &&
+                game.PlayerEnterExit.Interior==room && game.PlayerGPS.HasCurrentLocation &&
+                world.Scene=="interior-"+game.PlayerGPS.CurrentLocation.MapTableData.MapId+"-"+room.EntryDoor.buildingKey;
+        }
+        private List<GuardPoint3> NativeInnActivityRoute(Vector3 start,Vector3 end,FurnitureSeatSlot endSeat)
+        {
+            var worldStart=room.transform.TransformPoint(start);var worldEnd=room.transform.TransformPoint(end);
+            NavMeshHit first,last;var path=new NavMeshPath();
+            var prefix=new List<GuardPoint3>{Point(start)};
+            if(!NavMesh.SamplePosition(worldStart,out first,0.4f,NavMesh.AllAreas))
+            {
+                // A real counter endpoint can be outside the walking surface.
+                // Preserve its supported physical egress rather than requiring
+                // that service endpoint itself to be a native walking point.
+                bool joined=false;
+                foreach(var point in geometry.RouteBetween(start,end))
+                {
+                    var local=new Vector3((float)point.X,(float)point.Y,(float)point.Z);
+                    if(!NavMesh.SamplePosition(room.transform.TransformPoint(local),out first,0.4f,NavMesh.AllAreas))continue;
+                    var physical=geometry.RouteBetween(start,room.transform.InverseTransformPoint(first.position));
+                    if(physical.Count!=2 || !innLayout.AllowsPublicRoute(physical))continue;
+                    prefix=physical;joined=true;break;
+                }
+                if(!joined)
+                {ActivityRouteFailure="no supported physical service egress to native surface; start="+worldStart.ToString("R");return new List<GuardPoint3>();}
+            }
+            bool connected=NavMesh.SamplePosition(worldEnd,out last,0.4f,NavMesh.AllAreas) &&
+                NavMesh.CalculatePath(first.position,last.position,NavMesh.AllAreas,path) && path.status==NavMeshPathStatus.PathComplete &&
+                NativeInnPublicPath(path.corners,endSeat==null?worldEnd:endSeat.Ground);
+            if(endSeat!=null)
+            {
+                // The floor graph can select an approach beyond the baked walking
+                // surface. Keep this exact chair and validate its real furniture
+                // approach on the same native surface used by the movement owner.
+                if(!connected || !Seating.SetApproach(endSeat,last.position))
+                {
+                    if(!NativeSeatNavigation.TryApproach(Seating,endSeat,first.position,out path,
+                        allowsRoute:corners=>NativeInnPublicPath(corners,endSeat.Ground)))
+                    {ActivityRouteFailure="no connected furniture approach; seat="+endSeat.Id+"; nativeStart="+first.position.ToString("R");return new List<GuardPoint3>();}
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_NATIVE_INN_SEAT_ROUTE: seat="+endSeat.Id+"; originalApproach="+worldEnd.ToString("R")+
+                        "; nativeApproach="+endSeat.Approach.ToString("R")+"; ground="+endSeat.Ground.ToString("R")+"; corners="+path.corners.Length);
+                }
+                worldEnd=endSeat.Approach;
+            }
+            else if(!connected)return new List<GuardPoint3>();
+            var result=prefix;
+            foreach(var corner in path.corners)
+            {
+                var local=room.transform.InverseTransformPoint(corner);
+                var previous=result[result.Count-1];
+                if((local-new Vector3((float)previous.X,(float)previous.Y,(float)previous.Z)).sqrMagnitude>0.000001f)result.Add(Point(local));
+            }
+            // Activity identity remains exact. Only the corridor's intermediate
+            // points change; the existing physical endpoint controller still owns
+            // the final standing position or reserved chair.
+            var exactEnd=room.transform.InverseTransformPoint(worldEnd);
+            var tail=result[result.Count-1];
+            if((exactEnd-new Vector3((float)tail.X,(float)tail.Y,(float)tail.Z)).sqrMagnitude>0.000001f)result.Add(Point(exactEnd));
+            return result;
+        }
+        private bool NativeInnPublicPath(Vector3[] corners,Vector3 final)
+        {
+            var local=new List<GuardPoint3>();
+            foreach(var corner in corners)local.Add(Point(room.transform.InverseTransformPoint(corner)));
+            local.Add(Point(room.transform.InverseTransformPoint(final)));
+            return innLayout.AllowsPublicRoute(local);
         }
         private static GuardPoint3 Point(Vector3 p){return new GuardPoint3 {X=p.x,Y=p.y,Z=p.z};}
         private Vector3? InnKeeperStop(List<Vector3> chosen,List<Vector3> rejected)

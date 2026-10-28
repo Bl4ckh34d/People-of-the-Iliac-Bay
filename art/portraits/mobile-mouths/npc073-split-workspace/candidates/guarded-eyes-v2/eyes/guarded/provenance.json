@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "createdUtc": "2026-10-22T11:23:42.0100270Z",
+  "portraitRecord": 73,
+  "bank": "TFAC00I0.RCI",
+  "part": "eyes",
+  "emotion": "guarded",
+  "prompt": "Create a 2×2 pixel-art eye atlas for NPC073's guarded, unmistakably skeptical expression, using the attached exact candidate eyes-reference-grid.png as the sole reference. Keep the same complete upper-half 64:35 crop and registration in each cell; no gutters, labels, borders, extra panels, or zooms. Row-major phases OPEN / HALF-CLOSED / FULLY-CLOSED / OPEN REPEAT. Make the expression visibly asymmetric rather than near-neutral: the viewer-left eyebrow is conspicuously raised into a skeptical arch with its full outer end intact; the viewer-right eyebrow is lower and flatter, with a slightly lowered inner section. Pair this one-high/one-low brow shape with a mildly narrowed, appraising gaze. Keep this exact asymmetric expression stable across all four phases and match the repeated open pose to the first open pose. Preserve the source's warm face, brown-gold hair, native soft pixel clusters, compact muted amber-brown irises, tiny subdued glints, and blue wand/edge geometry. Keep brows continuous and softly shaded in the source brown palette, with no duplicate or fragmented lines, no sharp black outlines, and no symmetric angry V or neutral matched arches. Half and closed lids must close naturally and opaquely while retaining the same brows. Keep eye shape compact and natural; do not enlarge smooth round irises, widen the eyes, add bright white bands or vivid glints, repaint skin, or alter fringe, hair, wand, head crop, or surrounding pixels. No text.",
+  "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-47c87e45-a188-42e7-9171-b4906db20547.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+  "generatedPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-47c87e45-a188-42e7-9171-b4906db20547.png",
+  "sourceOriginal": {
+    "path": "original.png",
+    "sha256": "8505d9e9fde3c536cf08958e97076aba44aa5d60e2e76ba6fc3fdb1384b8d643",
+    "width": 64,
+    "height": 64
+  },
+  "referenceGrid": {
+    "path": "eyes-reference-grid.png",
+    "sha256": "c6d813083b72162535d946fdab92c8327e91b20edef562492001ed6bf5d023ce",
+    "width": 1024,
+    "height": 560
+  },
+  "generator": {
+    "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-47c87e45-a188-42e7-9171-b4906db20547.png",
+    "sha256": "804880d5d6a30b17a35693eb2f3e27ba3122536effb1f7935395f57e210e8d44",
+    "width": 1696,
+    "height": 927
+  },
+  "raw": {
+    "path": "eyes/guarded/raw.png",
+    "sha256": "804880d5d6a30b17a35693eb2f3e27ba3122536effb1f7935395f57e210e8d44",
+    "width": 1696,
+    "height": 927
+  }
+}

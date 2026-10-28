@@ -1,0 +1,289 @@
+{
+  "portraitRecord": 80,
+  "bank": "TFAC00I0.RCI",
+  "width": 64,
+  "height": 64,
+  "splitY": 35,
+  "eyeRegions": [
+    {
+      "x": 15,
+      "y": 15,
+      "width": 16,
+      "height": 17
+    },
+    {
+      "x": 34,
+      "y": 15,
+      "width": 17,
+      "height": 17
+    }
+  ],
+  "mouthRegion": {
+    "x": 22,
+    "y": 39,
+    "width": 20,
+    "height": 13
+  },
+  "maskBoundsRationale": "Inspected native record80 uncovered front-facing portrait. Both eye/brow clusters fit x15..30 and x34..50, y15..31; native lips fit x22..41/y39..51. These are initial bounds, to be checked after atlas sampling. No corrective locks or palette anchors inherited.",
+  "useOriginalFeaturePalette": true,
+  "paletteRationale": "A/B test on080: generated feature colors snap to actual original feature palettes; mouth permits restrained dark/highlight colors already present in the original for new oral details. Outside-feature pixels remain exact original. Parent must judge possible detail loss before rollout.",
+  "eyeFeatureLocks": [
+    {
+      "emotion": "happy",
+      "phase": "open",
+      "x": 18,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "source-upper.png"
+    },
+    {
+      "emotion": "happy",
+      "phase": "open",
+      "x": 36,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "source-upper.png"
+    },
+    {
+      "emotion": "happy",
+      "phase": "half",
+      "x": 18,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "eyes/neutral/half.png"
+    },
+    {
+      "emotion": "happy",
+      "phase": "half",
+      "x": 36,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "eyes/neutral/half.png"
+    },
+    {
+      "emotion": "happy",
+      "phase": "closed",
+      "x": 18,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "eyes/neutral/closed.png"
+    },
+    {
+      "emotion": "happy",
+      "phase": "closed",
+      "x": 36,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "eyes/neutral/closed.png"
+    },
+    {
+      "emotion": "sad",
+      "phase": "open",
+      "x": 18,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "source-upper.png"
+    },
+    {
+      "emotion": "sad",
+      "phase": "open",
+      "x": 36,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "source-upper.png"
+    },
+    {
+      "emotion": "sad",
+      "phase": "half",
+      "x": 18,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "eyes/neutral/half.png"
+    },
+    {
+      "emotion": "sad",
+      "phase": "half",
+      "x": 36,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "eyes/neutral/half.png"
+    },
+    {
+      "emotion": "sad",
+      "phase": "closed",
+      "x": 18,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "eyes/neutral/closed.png"
+    },
+    {
+      "emotion": "sad",
+      "phase": "closed",
+      "x": 36,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "eyes/neutral/closed.png"
+    },
+    {
+      "emotion": "afraid",
+      "phase": "open",
+      "x": 18,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "source-upper.png"
+    },
+    {
+      "emotion": "afraid",
+      "phase": "open",
+      "x": 36,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "source-upper.png"
+    },
+    {
+      "emotion": "afraid",
+      "phase": "half",
+      "x": 18,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "eyes/neutral/half.png"
+    },
+    {
+      "emotion": "afraid",
+      "phase": "half",
+      "x": 36,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "eyes/neutral/half.png"
+    },
+    {
+      "emotion": "afraid",
+      "phase": "closed",
+      "x": 18,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "eyes/neutral/closed.png"
+    },
+    {
+      "emotion": "afraid",
+      "phase": "closed",
+      "x": 36,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "eyes/neutral/closed.png"
+    },
+    {
+      "emotion": "angry",
+      "phase": "half",
+      "x": 16,
+      "y": 23,
+      "width": 14,
+      "height": 2
+    },
+    {
+      "emotion": "angry",
+      "phase": "half",
+      "x": 35,
+      "y": 23,
+      "width": 14,
+      "height": 2
+    },
+    {
+      "emotion": "angry",
+      "phase": "closed",
+      "x": 16,
+      "y": 23,
+      "width": 14,
+      "height": 2
+    },
+    {
+      "emotion": "angry",
+      "phase": "closed",
+      "x": 35,
+      "y": 23,
+      "width": 14,
+      "height": 2
+    },
+    {
+      "emotion": "angry",
+      "phase": "open",
+      "x": 18,
+      "y": 25,
+      "width": 11,
+      "height": 6,
+      "sourceFile": "source-upper.png"
+    },
+    {
+      "emotion": "angry",
+      "phase": "open",
+      "x": 36,
+      "y": 25,
+      "width": 11,
+      "height": 6,
+      "sourceFile": "source-upper.png"
+    },
+    {
+      "emotion": "angry",
+      "phase": "half",
+      "x": 18,
+      "y": 25,
+      "width": 11,
+      "height": 6,
+      "sourceFile": "eyes/neutral/half.png"
+    },
+    {
+      "emotion": "angry",
+      "phase": "half",
+      "x": 36,
+      "y": 25,
+      "width": 11,
+      "height": 6,
+      "sourceFile": "eyes/neutral/half.png"
+    },
+    {
+      "emotion": "angry",
+      "phase": "closed",
+      "x": 18,
+      "y": 25,
+      "width": 11,
+      "height": 6,
+      "sourceFile": "eyes/neutral/closed.png"
+    },
+    {
+      "emotion": "angry",
+      "phase": "closed",
+      "x": 36,
+      "y": 25,
+      "width": 11,
+      "height": 6,
+      "sourceFile": "eyes/neutral/closed.png"
+    }
+  ],
+  "featureLockRationale": "Native080 review: fear irises were too large; generated happy/sad blink eye details varied. Keep exact original compact eyes and stable neutral lid phases within inspected x18..28/x36..46,y24..30, retaining each generated emotion-specific brow. This is independently calibrated for080, not an inherited repair. Angry-v2 supplies a clear V-brow but its eyeballs/lid phases also varied; inspected y25..30 reuses the original/neutral eyeballs while keeping V tips in y23..24.",
+  "sourceSelections": {
+    "eyes": {
+      "angry": {
+        "raw": "eyes/angry/raw-v2.png"
+      }
+    }
+  },
+  "browLockEndY": 23
+}

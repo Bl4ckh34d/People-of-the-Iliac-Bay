@@ -1,0 +1,78 @@
+﻿{
+    "kind":  "current-copy-source-preparation",
+    "createdAtUtc":  "2026-10-22T11:43:48.1775913Z",
+    "portraitRecord":  74,
+    "emotionId":  "afraid",
+    "sourceWorkspace":  "art/portraits/mobile-mouths/npc074-split-workspace",
+    "sourceManifestSha256":  "2a35c8b38066f4ff849521e42a40683c21d42a99abe9fd5e16c0ba72e9916666",
+    "claim":  "Copied only immutable original/split and the selected mood open/half/closed sources from the current split workspace. No generation, historical art provenance, or source editing is claimed.",
+    "sourceFile":  "original.png",
+    "sourceSha256":  "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae",
+    "sourceWidth":  64,
+    "sourceHeight":  64,
+    "splitY":  35,
+    "sourceFiles":  [
+                        "original.png",
+                        "source-upper.png",
+                        "source-lower.png",
+                        "eyes/afraid/open.png",
+                        "eyes/afraid/half.png",
+                        "eyes/afraid/closed.png"
+                    ],
+    "copiedFiles":  {
+                        "original.png":  {
+                                             "source":  "art/portraits/mobile-mouths/npc074-split-workspace/original.png",
+                                             "sha256":  "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae",
+                                             "sourceSha256":  "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae"
+                                         },
+                        "source-upper.png":  {
+                                                 "source":  "art/portraits/mobile-mouths/npc074-split-workspace/source-upper.png",
+                                                 "sha256":  "612a546d616f94df3809dbd66b11a5f9bb28c64afab248c225e1b65a6204651b",
+                                                 "sourceSha256":  "612a546d616f94df3809dbd66b11a5f9bb28c64afab248c225e1b65a6204651b"
+                                             },
+                        "source-lower.png":  {
+                                                 "source":  "art/portraits/mobile-mouths/npc074-split-workspace/source-lower.png",
+                                                 "sha256":  "c3a21e95349e2c1d6efd172d3195ab5d628bc71b7d801e29d1726b2d20b7dd0f",
+                                                 "sourceSha256":  "c3a21e95349e2c1d6efd172d3195ab5d628bc71b7d801e29d1726b2d20b7dd0f"
+                                             },
+                        "layout.json":  {
+                                            "source":  "art/portraits/mobile-mouths/npc074-split-workspace/layout.json",
+                                            "sha256":  "9fd909344e780753f4260af7138fe402ca53ab5d838267005be2deed759010fd",
+                                            "sourceSha256":  "988dc1cd1c03dfbc226e54100f0c08c4bda09382d50376d9ce5d886254dbbe9d"
+                                        },
+                        "eyes/afraid/open.png":  {
+                                                     "source":  "art/portraits/mobile-mouths/npc074-split-workspace/eyes/afraid/open.png",
+                                                     "sha256":  "b29b198f4065759158fb2298b130146e10b960cdba7be94bc6e2dbd6ab75b24f",
+                                                     "sourceSha256":  "b29b198f4065759158fb2298b130146e10b960cdba7be94bc6e2dbd6ab75b24f"
+                                                 },
+                        "eyes/afraid/half.png":  {
+                                                     "source":  "art/portraits/mobile-mouths/npc074-split-workspace/eyes/afraid/half.png",
+                                                     "sha256":  "64f6f28cfbd933d9e56e4439105213946cd2bb5226ff563728ba1701a004665b",
+                                                     "sourceSha256":  "64f6f28cfbd933d9e56e4439105213946cd2bb5226ff563728ba1701a004665b"
+                                                 },
+                        "eyes/afraid/closed.png":  {
+                                                       "source":  "art/portraits/mobile-mouths/npc074-split-workspace/eyes/afraid/closed.png",
+                                                       "sha256":  "95aeea67f876701ca49500bf21d63669a7b2f0b98e05cef0bc78aec8dff4b468",
+                                                       "sourceSha256":  "95aeea67f876701ca49500bf21d63669a7b2f0b98e05cef0bc78aec8dff4b468"
+                                                   }
+                    },
+    "sourceLayoutSha256":  "988dc1cd1c03dfbc226e54100f0c08c4bda09382d50376d9ce5d886254dbbe9d",
+    "workspaceLayoutSha256":  "9fd909344e780753f4260af7138fe402ca53ab5d838267005be2deed759010fd",
+    "browLockEndY":  25,
+    "browInspection":  "Native 64x35 phase crops inspected; preserve afraid brow through row 25 inclusively, then candidate eye area. Parent-inspected starting bound; gaze art remains pending parent review.",
+    "referenceGrid":  {
+                          "file":  "thinking-reference-grid.png",
+                          "sha256":  "f6c464fac465cd50e4a08f9b0d43069c927e2f65bca6575a7bcd88a7fa0d8259",
+                          "width":  1024,
+                          "height":  560,
+                          "nearestNeighborScale":  8,
+                          "cellOrder":  [
+                                            "open-left",
+                                            "open-right",
+                                            "half-left",
+                                            "half-right"
+                                        ]
+                      },
+    "candidateWorkspace":  "art/portraits/mobile-mouths/npc074-thinking-emotions/afraid/attempt-horizontal-v2",
+    "notCopied":  "No current manifest or legacy thinking map was copied into this mood root; no mouth source or unrelated mood source was copied."
+}

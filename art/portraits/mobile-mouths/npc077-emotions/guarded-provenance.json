@@ -1,0 +1,77 @@
+{
+  "emotion": "guarded",
+  "emotion_description": "reserved, suspicious, skeptical; mildly narrowed eyes; restrained lips; intended distinct from angry",
+  "character": "first gallery NPC only (record 77)",
+  "generator": "built-in image_gen",
+  "status": "prototype; user-review-pending; not installed",
+  "phase_order": [
+    "open",
+    "half",
+    "closed"
+  ],
+  "viseme_order": "A B C / D E F / G H X",
+  "dimensions": "1254x1254",
+  "source": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\tfac-077-full-frame-v5.png",
+    "sha256": "D2BD017E7773336DE704BF3E4C935AB1EF7D0FC84DD4BBC551A61E22AF322223"
+  },
+  "outputs": [
+    {
+      "input": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\tfac-077-full-frame-v5.png",
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\guarded-open.png",
+      "phase": "open",
+      "sha256": "176208B54C569A41F4EB66BA4C20A02A03F7484FCA6B0872234A35B41B40ACD7"
+    },
+    {
+      "input": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\guarded-open.png",
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\guarded-half.png",
+      "phase": "half",
+      "sha256": "FFF3D8A9F37D552A353F21083FC3A64664AD0A6E36C39EAF0BACA44C32A1FA4E"
+    },
+    {
+      "input": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\guarded-open.png",
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\guarded-closed.png",
+      "phase": "closed",
+      "sha256": "AA78ED200B1FCAE76BE86F3FD6CEB388F2285EAD8D203C568ACF220AFE4536AF"
+    }
+  ],
+  "rejected": [
+    {
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\guarded-open-rejected-v1.png",
+      "phase": "open-initial-v1",
+      "sha256": "4D4D22A46BAE0A9960E4371BC7221262BF96570202B2533D792864ED5BD0FC8A",
+      "reason": "Brows read too angry; targeted correction produced guarded-open.png"
+    }
+  ],
+  "generations": [
+    {
+      "input": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\tfac-077-full-frame-v5.png",
+      "prompt": "Edit the referenced complete square 3x3 pixel-art portrait atlas into one consistent GUARDED / suspicious / skeptical emotion for the same female fantasy-town NPC. Preserve exact 3x3 grid, equal cells, exact canvas square and framing; preserve her identity, head size, brown wavy hair, skin, muted colors, painterly pixel-art texture and background. In every cell give her a reserved, quietly suspicious look: slightly narrowed but clearly open eyes, subtle mild asymmetry between brows, restrained lips and gentle tension at mouth corners. Emotion must read guarded and skeptical, not angry: no overt rage, no deep scowl, no grin. Preserve all nine distinct viseme poses in the original row-major order A B C / D E F / G H X: A closed M/B/P; B narrow consonant with slight teeth; C medium EH; D moderately open AH; E rounded OH; F small OO/W; G upper teeth touching lower lip F/V; H subtle raised tongue behind upper teeth for L; X relaxed closed mouth appropriate to guarded emotion. Keep mouth size modest and aligned exactly like source; do not enlarge lips, do not paste resized mouth crops. Full-frame portraits in every cell, all nine useful matching speech poses, same scale and alignment. No missing row, no reordering, no duplicated poses. No added objects, tears, text, labels, borders, gutters, giant teeth, exposed tongue, caricature, or broad smile. Open-eye sheet only; do not close eyelids. Result one complete square 3x3 atlas.",
+      "generated_original": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-626e-7471-95f3-109617bb3581\\exec-a2d45388-d4d1-43e2-a0ab-fac7e4cf4adb.png",
+      "phase": "open-initial-v1",
+      "saved_output": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\guarded-open-rejected-v1.png"
+    },
+    {
+      "input": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\guarded-open-rejected-v1.png",
+      "prompt": "Make one targeted expression correction to this complete square 3x3 atlas. Keep exact grid, all nine faces, face identity/framing/hair/colors/pixel art, and every mouth shape and viseme pose unchanged. Correct eyebrows and eye expression only: current brows are too sharply pinched into a symmetrical inward V and read angry. Replace with relaxed, gently asymmetrical brows: one brow lifted just slightly, the other nearly level, with only faint inward tension. Make eyes subtly narrowed but still clearly open. Expression should feel reserved, wary, quietly skeptical, not angry or scowling. Keep lips restrained and mouth scale modest. Preserve exact row-major mouth order A B C / D E F / G H X and all corresponding speech openings. Keep as open-eye atlas. No furrowed brow, no sharp V, no rage, no grin, no text, no labels, no crop, no layout changes. Full complete atlas.",
+      "generated_original": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-626e-7471-95f3-109617bb3581\\exec-66b2dcde-6ebb-4f0b-a99f-118359efb0e2.png",
+      "phase": "open-correction-v1",
+      "saved_output": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\guarded-open.png"
+    },
+    {
+      "input": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\guarded-open.png",
+      "prompt": "Create the HALF-EYES blink phase from this completed guarded open-eye 3x3 atlas. Edit only eyelids in every cell so the upper lids cover roughly half of each iris. Preserve the same complete square 3x3 grid, identity, hair, brows, guarded expression, colors, pixel-art style, exact face framing, and all nine matching mouth poses and their row-major order A B C / D E F / G H X. Do not alter brows or expression. Every cell keeps its corresponding speaking mouth. This is a full-frame atlas, not an overlay or crop. No other changes, no missing row, no reordered or duplicated visemes, no text or labels.",
+      "generated_original": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-626e-7471-95f3-109617bb3581\\exec-fbb2c553-ac2f-401b-80d2-2cf904458bb5.png",
+      "phase": "half",
+      "saved_output": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\guarded-half.png"
+    },
+    {
+      "input": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\guarded-open.png",
+      "prompt": "Create the CLOSED-EYES blink phase from this completed guarded open-eye 3x3 atlas. Edit only eyelids in every cell: both lids fully shut with no iris or sclera visible beneath. Preserve the same complete square 3x3 grid, identity, hair, brows, guarded expression, colors, pixel-art style, exact face framing, and all nine matching mouth poses and their row-major order A B C / D E F / G H X. Do not alter brows or expression. Every cell keeps its corresponding speaking mouth, including the open visemes. This is a full-frame atlas, not an overlay or crop. No other changes, no missing row, no reordered or duplicated visemes, no text or labels.",
+      "generated_original": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-626e-7471-95f3-109617bb3581\\exec-3f5e21d7-a9f1-411c-90e0-b84fbe73f9f7.png",
+      "phase": "closed",
+      "saved_output": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\guarded-closed.png"
+    }
+  ],
+  "generation_count": 4
+}

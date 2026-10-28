@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "purpose": "review-only seed experiment; not runtime voice assignment",
+  "voiceSet": "female",
+  "portraitId": "common-073",
+  "portraitRecord": 73,
+  "seed": 1648288971,
+  "exactText": "Before you leave, let me tell you about the old mill beyond the village. Follow the little yellow lanterns across the blue bridge, then turn left by the willow tree. The miller brings fresh bread, warm apple pies, and five fine bottles of wine to the market every morning. Oh, and do look out for the wolves near the ruined tower. If you hear a low howl, keep your bow close and walk home quietly. We can talk about your journey over a cup of tea when you return.",
+  "sameText": "Before you leave, let me tell you about the old mill beyond the village. Follow the little yellow lanterns across the blue bridge, then turn left by the willow tree. The miller brings fresh bread, warm apple pies, and five fine bottles of wine to the market every morning. Oh, and do look out for the wolves near the ruined tower. If you hear a low howl, keep your bow close and walk home quietly. We can talk about your journey over a cup of tea when you return.",
+  "referenceSha256": "e8ca4c1b5f252462ef86350435cf5b0e150d9bcc15002a63763b245d43253b0e",
+  "sameReferenceSha256": "e8ca4c1b5f252462ef86350435cf5b0e150d9bcc15002a63763b245d43253b0e",
+  "profileId": "npcvoice-01",
+  "profileSha256": "778b21bd8e397e20c6d7704a0bd1c42c48f042cc555ad26d926187a674f3cd31",
+  "modelId": "breeze",
+  "expectedModelFile": "breeze-tts-2-q4_0.gguf",
+  "audioSets": [
+    {
+      "id": "neutral",
+      "emotionId": "neutral",
+      "audio": "neutral.wav",
+      "timing": "neutral.visemes.json",
+      "audioSha256": "cf820f7f23be8d59cbe95015bfc3632c253e0ed58573988f7080afd71815f472",
+      "timingSha256": "497dd2be72d5125200659a050644630bfa97ae9b1a1b1e7b58779d039e50749e"
+    },
+    {
+      "id": "happy",
+      "emotionId": "happy",
+      "audio": "happy.wav",
+      "timing": "happy.visemes.json",
+      "audioSha256": "f54c57408aae70894aafad4e8ef107a1fd256bf917bfe270cd8429218134d4dd",
+      "timingSha256": "392483a46e80ab84b169043224927e5f33682bb12a2e262df6893460661f47f4"
+    },
+    {
+      "id": "angry",
+      "emotionId": "angry",
+      "audio": "angry.wav",
+      "timing": "angry.visemes.json",
+      "audioSha256": "9ee6e34ed91674928757398462a245c074695c627c1ba9eb398ab33b27f18cd5",
+      "timingSha256": "578872196ff14ed6f797fa1592795aad8278024c2bcf7e80e0066ef00b69a981"
+    },
+    {
+      "id": "sad",
+      "emotionId": "sad",
+      "audio": "sad.wav",
+      "timing": "sad.visemes.json",
+      "audioSha256": "5c2ed7b6c5c69191195b2f113fa455958e659b5edf869c9d790b768c6c116f49",
+      "timingSha256": "e5b8377fb0e93efb914c56800c27011286b49f5fda997c5c03f6bcd65498b823"
+    },
+    {
+      "id": "afraid",
+      "emotionId": "afraid",
+      "audio": "afraid.wav",
+      "timing": "afraid.visemes.json",
+      "audioSha256": "0ad943ad50d04612c23024744836764e4d1a7d891b463f8e4254dc616b1ded67",
+      "timingSha256": "1fe20e74cab985d6973b0cb5794d195f742780627b3fcd582aab8983f035a383"
+    },
+    {
+      "id": "guarded",
+      "emotionId": "guarded",
+      "audio": "guarded.wav",
+      "timing": "guarded.visemes.json",
+      "audioSha256": "bbd423f5d52e963e0d5eba7305a585092c13359f2fedc398e83b5b9205edc11a",
+      "timingSha256": "48846dfbfba4b403f858ac05844451df2a31bfb45abf7ea77f573801eab66d4b"
+    }
+  ]
+}

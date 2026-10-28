@@ -25,12 +25,14 @@ namespace PeopleOfTheIliacBay.DFU
         {
             reason="No bounded local task was selected.";
             if(!Ready || worldStore==null || string.IsNullOrWhiteSpace(proposalId) || proposalId.Length>180 ||
-                decisions==null || decisions.Count<2 || decisions.Count>NpcTaskContract.MaximumSteps)return false;
+                decisions==null || decisions.Count<1 || decisions.Count>NpcTaskContract.MaximumSteps)return false;
             var actor=FindActor(residentId);
             if(!actor || !actor.gameObject.activeInHierarchy ||
                 Vector3.Distance(actor.transform.position,GameManager.Instance.PlayerMotor.transform.position)>8)
             {reason="The NPC must be nearby to agree to a task.";return false;}
             double now=ActionNow(),budget=60;
+            bool paidTravel=worldStore.ReadPaidFollowForTravelTask(residentId,now)!=null;
+            if(decisions.Count<2 && !paidTravel)return false;
             var task=new NpcTaskPlan {Id="task:"+proposalId,ProposalId=proposalId,ResidentId=residentId,AcceptedAt=now,UpdatedAt=now};
             for(int i=0;i<decisions.Count;i++)
             {
@@ -46,9 +48,16 @@ namespace PeopleOfTheIliacBay.DFU
                     decision.Option.Target.ContainerId==NativeNpcTempleTraining.TargetContainerId;
                 budget+=timed?duration+60:templeTraining?NativeNpcTempleTraining.DurationSeconds+600:executionBudget>0?executionBudget:300;
                 task.Steps.Add(new NpcTaskStep {Kind=decision.Option.Kind,Target=NpcActionExecutor.CopyTarget(decision.Option.Target),
-                    DurationSeconds=duration,ExecutionBudgetSeconds=executionBudget,ItemSourceStep=decision.Option.ItemSourceStep});
+                    DurationSeconds=duration,ExecutionBudgetSeconds=executionBudget,ItemSourceStep=decision.Option.ItemSourceStep,
+                    ContinueAfterFailure=decision.ContinueAfterFailure});
             }
             task.DeadlineAt=now+budget;
+            if(paidTravel)
+            {
+                NpcTaskPlan covered;
+                if(!worldStore.TryBindPaidFollowTravelTask(task,out covered,out reason))return false;
+                task=covered;
+            }
             if(legacyAdmission)
             {if(!worldStore.TryAcceptNpcTask(task,true,out reason))return false;}
             else
@@ -63,7 +72,13 @@ namespace PeopleOfTheIliacBay.DFU
                 if(!worldStore.TryAcceptNpcTaskFromConversation(capability,task,true,out reason))return false;
             }
             if(!DispatchConversationTaskStep(task,out reason))
-            {worldStore.FailNpcTask(task.Id,task.Revision,ActionNow(),reason);return false;}
+            {
+                string failure=reason;
+                worldStore.FailNpcTask(task.Id,task.Revision,ActionNow(),failure);
+                reason="The task was accepted and saved, but its first step could not start: "+failure+
+                    " Only separately permitted independent steps may continue. No missing effect was completed.";
+                return true;
+            }
             reason="The task is accepted and saved. Each later step will be checked again before it starts.";return true;
         }
 
@@ -120,7 +135,8 @@ namespace PeopleOfTheIliacBay.DFU
             DeliverConversationTaskFailure(residentId,actor);
             var task=worldStore.ActiveNpcTask(residentId);if(task==null)return;
             var bound=task.ActiveActionId==null?null:worldStore.ReadNpcAction(task.ActiveActionId);
-            if(task.Phase==NpcTaskPhase.Running && NpcActionExecutor.IsTerminal(bound) || task.Phase==NpcTaskPhase.Ready && now>=task.DeadlineAt)
+            if(task.Phase==NpcTaskPhase.Running && NpcActionExecutor.IsTerminal(bound) ||
+                (task.Phase==NpcTaskPhase.Ready || task.PaidFollowActionId!=null) && now>=task.DeadlineAt)
             {
                 worldStore.ReconcileNpcTask(task.Id,task.Revision,now);
                 task=worldStore.ActiveNpcTask(residentId);

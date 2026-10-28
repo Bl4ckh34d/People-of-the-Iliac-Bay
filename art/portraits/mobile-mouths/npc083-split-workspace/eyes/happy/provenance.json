@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-21T23:24:04.7576610Z",
+    "portraitRecord":  83,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "happy",
+    "prompt":  "Use case: stylized-concept\nAsset type: pixel-art portrait animation atlas, record083 HAPPY eye half\nInput images: Image 1: original 64x64 portrait for identity and muted palette; Image 2: 2x2 repeated original upper-half reference grid, exact eye and brow placement\nPrimary request: Create one clean 2x2 atlas of the same portrait\u0027s upper face for HAPPY. Full half-fixed framing, each cell exactly the same upper-half crop and scale as the reference, arranged row-major: open, half closed, fully closed, repeated open. Clearly distinct warm happy expression: subtly lifted relaxed brows and gentle raised lower eye corners, while keeping the brows stationary and identical across all four blink phases. Preserve original eye spacing, gray-blue iris size and horizontal position under descending lids; no iris in fully closed pose. The first and fourth open poses must match.\nStyle/medium: faithful low-resolution pixel art matching the source, soft muted contrast, original brown skin and hair, gray-blue irises\nComposition/framing: 2x2 grid, four equal 64:35 aspect-ratio cells, no gutters, no labels, no added border; same crop and pixel-scale impression as reference\nConstraints: Edit only eyelids/eyes and emotion-specific brow expression. Keep face identity and feature placement. Happy warmth must be visible yet subtle, distinct from neutral. Keep each eye natural and coherent at native pixel scale.\nAvoid: cartoon grin cues in eyes, exaggerated arches, moving or shrinking irises, mismatched gaze, white flashes, bright highlights, thick near-black brow bars, orange skin halos, any text or watermark.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-9bd3-7e53-9a05-a02b7e03724a as C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-9bd3-7e53-9a05-a02b7e03724a\\exec-413a3589-9c2f-454b-aaee-7b6c5939da69.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-9bd3-7e53-9a05-a02b7e03724a\\exec-413a3589-9c2f-454b-aaee-7b6c5939da69.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "e46c900779f687610af7b821b988300b998aea48632c829537f88cb829b5acfb",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "2744ee08ff7932c1ab5b295847612b1fafa442a2518db98dae88f5e84b392bd9",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-9bd3-7e53-9a05-a02b7e03724a\\exec-413a3589-9c2f-454b-aaee-7b6c5939da69.png",
+                      "sha256":  "c82e83070026bc425dc55e15c372f611633134ffa450a5932bc33a50fc1b4df2",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/happy/raw.png",
+                "sha256":  "c82e83070026bc425dc55e15c372f611633134ffa450a5932bc33a50fc1b4df2",
+                "width":  1695,
+                "height":  928
+            }
+}

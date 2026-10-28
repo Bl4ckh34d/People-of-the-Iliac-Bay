@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "createdUtc": "2026-10-22T02:07:10.4195398Z",
+  "portraitRecord": 88,
+  "bank": "TFAC00I0.RCI",
+  "part": "mouth",
+  "emotion": "angry",
+  "prompt": "Use case: illustration-story\nAsset type: Daggerfall Unity pixel-art NPC mouth atlas, exact reference-grid edit.\nInput image: Image 1 is the only edit target and sole reference: mouth-reference-grid.png, a 3×3 grid of the same lower 64×29 portrait half enlarged 8×. It is row-major A B C / D E F / G H X.\nPrimary request: Return one 1536×696 image containing the same exact 3×3 grid and cell boundaries. Change only lips, mouth opening, teeth, and tiny tongue detail needed for speech. Keep face framing and all other pixels aligned to the reference.\nStyle: original softly blended pixel art on a true native pixel grid, nearest-neighbor 8× enlargement; no smooth vector shapes.\nAngry expression: tense lips and downturned corners across every pose, restrained and clearly angry. Preserve original lip scale and subdued warm brown lip color. Preserve muted warm tan skin and original soft pixel-art contrast. Do not use red lipstick, orange surrounding skin, white flashes, bright tooth blocks, or near-black details. Small warm teeth may appear only where pose meaning requires them.\nNine Rhubarb poses, row-major:\nA: closed, lightly pressured P/B/M lips.\nB: narrow horizontal opening, teeth nearly together, for consonants/EE.\nC: medium relaxed unrounded EH/AE opening.\nD: wide vertical AA opening, larger than C.\nE: slightly rounded AO/ER opening, no wider than C.\nF: small forward pucker for UW/OW/W; not tooth biting.\nG: upper teeth touching lower lip for F/V; not a wide vowel or pucker.\nH: tongue raised behind upper teeth for L, opening between C and D; tiny tongue may be subtle.\nX: relaxed closed idle lips.\nTension and corners may vary with the angry expression, but keep each pose family recognizable and distinct. Keep nose, jaw, chin, cheeks, hair, neck, clothing, background, head shape, lighting, and all non-mouth pixels unchanged. Mouth reference grid only. No text, letters, labels, borders, or watermark. Full grid content, exact aspect, alignment, and all nine correctly ordered cells are required.",
+  "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1615a-c5ed-71c2-9d47-ca70c40fbb53 as C:\\Users\\Daniel\\.codex\\generated_images\\01a1615a-c5ed-71c2-9d47-ca70c40fbb53\\exec-cb4ac698-da8a-4ae6-bca9-8d49929af208.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+  "generatedPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1615a-c5ed-71c2-9d47-ca70c40fbb53\\exec-cb4ac698-da8a-4ae6-bca9-8d49929af208.png",
+  "sourceOriginal": {
+    "path": "original.png",
+    "sha256": "f2e18bec953ffba12224397a695b2f80ddda822519be1414696b593243bc864c",
+    "width": 64,
+    "height": 64
+  },
+  "referenceGrid": {
+    "path": "mouth-reference-grid.png",
+    "sha256": "530927adf4a79396a3c9bc650a907262d3da5938423cd2f891d9b6296ae66997",
+    "width": 1536,
+    "height": 696
+  },
+  "generator": {
+    "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1615a-c5ed-71c2-9d47-ca70c40fbb53\\exec-cb4ac698-da8a-4ae6-bca9-8d49929af208.png",
+    "sha256": "5b29a32b2a59cdedf3051ec2d9ebfa3f53293764bc9c1503e787eb704377262d",
+    "width": 1863,
+    "height": 844
+  },
+  "raw": {
+    "path": "mouth/angry/raw.png",
+    "sha256": "5b29a32b2a59cdedf3051ec2d9ebfa3f53293764bc9c1503e787eb704377262d",
+    "width": 1863,
+    "height": 844
+  }
+}

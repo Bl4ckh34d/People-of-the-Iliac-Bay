@@ -20,6 +20,7 @@ namespace PeopleOfTheIliacBay.DFU
     // Explicit command-line test mode only; never starts a character during normal play.
     public sealed class TownSmokeHarness : MonoBehaviour
     {
+        public const string CanonicalFixtureCharacter = "Hakon Ironhand";
         private bool saved, loaded;
         private string preparationProgress;
         private void OnGUI()
@@ -41,6 +42,10 @@ namespace PeopleOfTheIliacBay.DFU
         private void OnApplicationFocus(bool focused) { ReleaseTestCursor(); }
         private static void ReleaseTestCursor()
         {
+            // Explicit graphical input acceptance uses DFU's normal cursor
+            // owner. Never set cursor state to manufacture a passing result.
+            if(Environment.GetEnvironmentVariable("POTIB_NATIVE_INPUT_PROBE")=="1" &&
+                Environment.GetEnvironmentVariable("POTIB_ROADMAP_PROBE")=="native-vendor-trade")return;
             // This component exists only in the explicitly launched test player.
             // Transitions can reset native cursor settings, so keep ownership here.
             var game = GameManager.Instance;
@@ -151,10 +156,32 @@ namespace PeopleOfTheIliacBay.DFU
             while (GameManager.Instance == null || !GameManager.Instance.IsReady) yield return null;
             yield return null;
             var game = GameManager.Instance;
+            bool nativeInput=Environment.GetEnvironmentVariable("POTIB_NATIVE_INPUT_PROBE")=="1" &&
+                Environment.GetEnvironmentVariable("POTIB_ROADMAP_PROBE")=="native-vendor-trade";
+            if(nativeInput)
+            {
+                // Loading a fixture pops the startup video. Vanilla's video
+                // releases its cursor lock on normal completion, not OnPop.
+                // Let that owner finish; never repair cursor flags in a test.
+                var hidden=typeof(DaggerfallWorkshop.Game.PlayerMouseLook).GetField("forceHideCursor",
+                    System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic);
+                var startupVideo=DaggerfallUI.UIManager.TopWindow as DaggerfallVidPlayerWindow;
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_NATIVE_INPUT_STARTUP: top="+
+                    (DaggerfallUI.UIManager.TopWindow==null?"none":DaggerfallUI.UIManager.TopWindow.GetType().Name)+
+                    "; video="+(startupVideo==null?"none":startupVideo.PlayOnStart)+
+                    "; forceHide="+(game.PlayerMouseLook && hidden!=null && (bool)hidden.GetValue(game.PlayerMouseLook)));
+                float startupVideoDeadline=Time.realtimeSinceStartup+60;
+                while(DaggerfallUI.UIManager.TopWindow is DaggerfallVidPlayerWindow && Time.realtimeSinceStartup<startupVideoDeadline)
+                    yield return null;
+                if(DaggerfallUI.UIManager.TopWindow is DaggerfallVidPlayerWindow ||
+                    game.PlayerMouseLook && hidden!=null && (bool)hidden.GetValue(game.PlayerMouseLook))
+                    throw new InvalidOperationException("Native input fixture startup video has not released its cursor lock.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_NATIVE_INPUT_STARTUP_READY: normalVideoCompletion=true; cursorFlagsUnmodified=true");
+            }
             // This owned test process drives transitions and camera directly. Do not
             // let desktop clicks/keys accidentally activate doors during assertions.
             InputManager.Instance.ClearAllActions();
-            InputManager.Instance.enabled = false;
+            InputManager.Instance.enabled = nativeInput;
             game.PlayerActivate.enabled = false;
             string[] startupArguments = Environment.GetCommandLineArgs();
             if (Array.IndexOf(startupArguments, BreezeTtsTrialCapacityProbe.RunFlag) >= 0)
@@ -171,7 +198,9 @@ namespace PeopleOfTheIliacBay.DFU
             int fixtureArgument = Array.IndexOf(arguments, "-peopleoftheiliacbay-fixture-character");
             if (fixtureArgument >= 0)
             {
-                if (fixtureArgument + 1 >= arguments.Length || !arguments[fixtureArgument + 1].StartsWith("PeopleOfTheIliacBayTest-", StringComparison.Ordinal))
+                if (fixtureArgument + 1 >= arguments.Length ||
+                    arguments[fixtureArgument + 1] != CanonicalFixtureCharacter &&
+                    !arguments[fixtureArgument + 1].StartsWith("PeopleOfTheIliacBayTest-", StringComparison.Ordinal))
                 { Debug.LogError("PEOPLE_OF_THE_ILIAC_BAY_TOWN_FAIL: invalid fixture character."); yield break; }
                 yield return VerifyLoads(arguments[fixtureArgument + 1], pixel, location.MapTableData.MapId);
                 yield break;
@@ -183,10 +212,11 @@ namespace PeopleOfTheIliacBay.DFU
             start.NoWorld = false;
             start.EnableVideos = false;
             start.GodMode = true;
-            string freshCharacter = "PeopleOfTheIliacBayTest-" + Guid.NewGuid().ToString("N").Substring(0, 8);
+            string freshCharacter = Array.IndexOf(arguments, "-peopleoftheiliacbay-fresh-previews") >= 0 ?
+                CanonicalFixtureCharacter : "PeopleOfTheIliacBayTest-" + Guid.NewGuid().ToString("N").Substring(0, 8);
             start.CharacterDocument = new CharacterDocument {
                 name = freshCharacter,
-                backStory = new List<string> { "Disposable People of the Iliac Bay integration-test character." },
+                backStory = new List<string> { "Veteran axe fighter used for People of the Iliac Bay integration tests." },
                 biographyEffects = new List<string>() };
             start.StartMethod = StartGameBehaviour.StartMethods.NewCharacter;
             Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TOWN_START: " + location.Name + "; pixel=" + pixel.X + "," + pixel.Y);
@@ -276,14 +306,24 @@ namespace PeopleOfTheIliacBay.DFU
             var game = GameManager.Instance;
             var adapter = GetComponent<PeopleOfTheIliacBayMod>();
             var streets = GetComponent<StreetPopulation>();
-            if (Array.IndexOf(Environment.GetCommandLineArgs(), "-peopleoftheiliacbay-decision-shadow-probe") >= 0)
-                DisableDialogueServicesForDecisionShadowProbe(adapter);
             SaveLoadManager.OnLoad += OnLoaded;
             var restartArgs=Environment.GetCommandLineArgs();
+            if(Array.IndexOf(restartArgs,"-peopleoftheiliacbay-running-pilot-probe")>=0&&character==CanonicalFixtureCharacter)
+            {
+                game.SaveLoadManager.EnumerateSaves();
+                int fixture=game.SaveLoadManager.FindSaveFolderByNames(character,"People - Gothway Garden");
+                if(fixture<0)throw new InvalidOperationException("Completed sprite probe requires the owned Gothway Garden fixture.");
+                loaded=false;game.SaveLoadManager.Load(fixture);DaggerfallUI.Instance.PopToHUD();
+                float deadline=Time.realtimeSinceStartup+90;
+                while((!loaded||!streets.Ready||!game.StreamingWorld.IsReady||game.StreamingWorld.IsRepositioningPlayer)&&Time.realtimeSinceStartup<deadline)yield return null;
+                if(!loaded||!streets.Ready||game.PlayerEnterExit.IsPlayerInside)throw new InvalidOperationException("Completed sprite fixture load failed.");
+                game.PauseGame(false);yield return RunningPilotProbe.Run();
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TOWN_TEST_PASS: completed running sprite integration.");yield break;
+            }
             if(Environment.GetEnvironmentVariable("POTIB_QUEST_PERSON_LOCATION_PROBE")=="1" &&
                 Array.IndexOf(restartArgs,"-peopleoftheiliacbay-quest-binding-probe")>=0)
             {
-                const string ownedCharacter="PeopleOfTheIliacBayTest-9a5f197b";
+                const string ownedCharacter="Hakon Ironhand";
                 const string ownedSave="People - Gothway Garden";
                 int saveArgument=Array.IndexOf(restartArgs,"-peopleoftheiliacbay-fixture-save");
                 if(character!=ownedCharacter || saveArgument<0 || saveArgument+1>=restartArgs.Length ||
@@ -446,8 +486,16 @@ namespace PeopleOfTheIliacBay.DFU
                 if (fixture < 0) throw new InvalidOperationException("Daggerfall preview fixture missing.");
                 loaded = false; game.SaveLoadManager.Load(fixture); DaggerfallUI.Instance.PopToHUD();
                 float limit = Time.realtimeSinceStartup + (Array.IndexOf(testArguments,"-peopleoftheiliacbay-editor-profile")>=0?240:60);
-                while ((!loaded || !streets.Ready) && Time.realtimeSinceStartup < limit) yield return null;
-                if (!loaded || !streets.Ready) throw new InvalidOperationException("Daggerfall preview load timed out.");
+                bool nativeExteriorTrial=outdoorNavigationProbe && Environment.GetEnvironmentVariable("POTIB_NAVMESH_TRIAL")=="1";
+                Func<bool> fixtureReady=()=>streets.Ready || nativeExteriorTrial && !game.IsPlayerInside &&
+                    game.PlayerGPS.HasCurrentLocation && game.PlayerGPS.CurrentLocation.HasDungeon &&
+                    (game.PlayerGPS.CurrentLocation.MapTableData.LocationType==DFRegion.LocationTypes.DungeonLabyrinth ||
+                    game.PlayerGPS.CurrentLocation.MapTableData.LocationType==DFRegion.LocationTypes.DungeonKeep ||
+                    game.PlayerGPS.CurrentLocation.MapTableData.LocationType==DFRegion.LocationTypes.DungeonRuin) &&
+                    game.StreamingWorld.IsReady && !game.StreamingWorld.IsInit && !game.StreamingWorld.IsRepositioningPlayer &&
+                    game.StreamingWorld.GetCurrentBuildingDirectory();
+                while ((!loaded || !fixtureReady()) && Time.realtimeSinceStartup < limit) yield return null;
+                if (!loaded || !fixtureReady()) throw new InvalidOperationException("Daggerfall preview load timed out.");
                 if(locationBlockProbe)
                 {
                     yield return IncrementalLocationBlocksProbe.Run(character);
@@ -488,7 +536,8 @@ namespace PeopleOfTheIliacBay.DFU
                     // An indoor-only acceptance run needs the restored itinerary
                     // and surveyed doors, not every citizen's outdoor migration.
                     if(Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-daily-interior-only")<0 &&
-                        Array.IndexOf(testArguments,"-peopleoftheiliacbay-household-body-probe")<0)
+                        Array.IndexOf(testArguments,"-peopleoftheiliacbay-household-body-probe")<0 &&
+                        Array.IndexOf(testArguments,"-peopleoftheiliacbay-household-inn-physical-probe")<0)
                         yield return DailyItineraryProbe.Run(adapter,streets);
                     if(Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-household-body-probe")>=0)
                         yield return HouseholdJointBodyProbe.Run(adapter,streets);
@@ -545,8 +594,6 @@ namespace PeopleOfTheIliacBay.DFU
                         yield break;
                     }
                     yield return PerformanceProbe.Run();
-                    yield return DailyItineraryProbe.Run(adapter,streets);
-                    yield return MurderWitnessProbe.Run(adapter,streets);
                 }
                 else if(crossRegionTripProbe) yield return CrossRegionTripProbe.Run();
                 else if(residentTripProbe) yield return ResidentTripProbe.Run();
@@ -557,11 +604,7 @@ namespace PeopleOfTheIliacBay.DFU
             if (Array.IndexOf(Environment.GetCommandLineArgs(), "-peopleoftheiliacbay-dialogue-probe") >= 0 ||
                 Array.IndexOf(Environment.GetCommandLineArgs(), "-peopleoftheiliacbay-dialogue-refusal-probe") >= 0 ||
                 Array.IndexOf(Environment.GetCommandLineArgs(), "-peopleoftheiliacbay-semantic-conversation-probe") >= 0 ||
-                Array.IndexOf(Environment.GetCommandLineArgs(), "-peopleoftheiliacbay-decision-shadow-probe") >= 0 ||
-                Array.IndexOf(Environment.GetCommandLineArgs(), "-peopleoftheiliacbay-decision-routing-probe") >= 0 ||
-                Array.IndexOf(Environment.GetCommandLineArgs(), "-peopleoftheiliacbay-decision-routing-appraisal-reopen-probe") >= 0 ||
-                Array.IndexOf(Environment.GetCommandLineArgs(), "-peopleoftheiliacbay-decision-willingness-probe") >= 0 ||
-                Array.IndexOf(Environment.GetCommandLineArgs(), GoalQwenWillingnessProbe.RunFlag) >= 0 ||
+                Array.IndexOf(Environment.GetCommandLineArgs(), GoalDialogueWillingnessProbe.RunFlag) >= 0 ||
                 Array.IndexOf(Environment.GetCommandLineArgs(), "-peopleoftheiliacbay-goal-binding-probe") >= 0 ||
                 Array.IndexOf(Environment.GetCommandLineArgs(), "-peopleoftheiliacbay-goal-sequence-probe") >= 0 ||
                 Array.IndexOf(Environment.GetCommandLineArgs(), "-peopleoftheiliacbay-goal-cancellation-probe") >= 0 ||
@@ -628,7 +671,6 @@ namespace PeopleOfTheIliacBay.DFU
                     "-peopleoftheiliacbay-experience-appraisal-transport-probe",
                     NativeSocialSkillTallyProbe.RunFlag,
                     "-peopleoftheiliacbay-experience-inbox-deferred-serialization-probe",
-                    "-peopleoftheiliacbay-decision-routing-appraisal-reopen-probe",
                     BreezeTtsStreamingAcceptanceProbe.RunFlag,
                     NativeTopicTtsProbe.RunFlag,
                     SplitPortraitRuntimeProbe.RunFlag,
@@ -645,7 +687,7 @@ namespace PeopleOfTheIliacBay.DFU
                     Array.IndexOf(dialogueArguments, "-peopleoftheiliacbay-fixture-save") < 0 ||
                     Array.IndexOf(dialogueArguments, "-peopleoftheiliacbay-fixture-save") + 1 >= dialogueArguments.Length ||
                     dialogueArguments[Array.IndexOf(dialogueArguments, "-peopleoftheiliacbay-fixture-save") + 1] != "People - Gothway Garden" ||
-                    character != "PeopleOfTheIliacBayTest-9a5f197b"))
+                    character != "Hakon Ironhand"))
                     throw new InvalidOperationException("Controlled native probes require the exact owned character and Gothway Garden save.");
                 int dialogueSaveArgument=Array.IndexOf(dialogueArguments,"-peopleoftheiliacbay-fixture-save");
                 if ((Array.IndexOf(dialogueArguments, "-peopleoftheiliacbay-breeze-tts-probe") >= 0 ||
@@ -729,7 +771,7 @@ namespace PeopleOfTheIliacBay.DFU
                 {
                     if (dialogueSaveArgument < 0 || dialogueSaveArgument + 1 >= dialogueArguments.Length ||
                         dialogueArguments[dialogueSaveArgument + 1] != "People - Gothway Garden" ||
-                        character != "PeopleOfTheIliacBayTest-9a5f197b")
+                        character != "Hakon Ironhand")
                         throw new InvalidOperationException("Mixer receipt probe requires the exact owned character and Gothway Garden save.");
                     yield return BreezeTtsMixerReceiptProbe.Run(character, dialogueArguments[dialogueSaveArgument + 1]);
                     yield break;
@@ -852,29 +894,6 @@ namespace PeopleOfTheIliacBay.DFU
                     Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TOWN_TEST_PASS: native dialogue availability, isolated outage, recovery, transcript disk reload, and exact baseline restore.");
                     yield break;
                 }
-                if(Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-decision-shadow-probe")>=0)
-                {
-                    yield return DecisionShadowProbe.Run(adapter,streets,character);
-                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TOWN_TEST_PASS: native decision shadow callback without world dispatch.");
-                    yield break;
-                }
-                if(Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-decision-routing-appraisal-reopen-probe")>=0)
-                {
-                    yield return DecisionRoutingProbe.Run(adapter,streets,character);
-                    yield break;
-                }
-                if(Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-decision-routing-probe")>=0)
-                {
-                    yield return DecisionRoutingProbe.Run(adapter,streets,character);
-                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TOWN_TEST_PASS: live decision routing deterministic native callbacks.");
-                    yield break;
-                }
-                if(Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-decision-willingness-probe")>=0)
-                {
-                    yield return DecisionWillingnessProbe.Run(adapter,streets,character);
-                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TOWN_TEST_PASS: live D3 action willingness and native Wait lifecycle.");
-                    yield break;
-                }
                 if(Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-goal-sequence-probe")>=0)
                 {
                     yield return GoalSequenceProbe.Run(adapter,streets,character);
@@ -912,18 +931,18 @@ namespace PeopleOfTheIliacBay.DFU
                     Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TOWN_TEST_PASS: controlled goal chain length="+stepCount+".");
                     yield break;
                 }
-                if(Array.IndexOf(Environment.GetCommandLineArgs(),GoalQwenWillingnessProbe.RunFlag)>=0)
+                if(Array.IndexOf(Environment.GetCommandLineArgs(),GoalDialogueWillingnessProbe.RunFlag)>=0)
                 {
                     if(dialogueSaveArgument<0 || dialogueSaveArgument+1>=dialogueArguments.Length ||
                         dialogueArguments[dialogueSaveArgument+1]!="People - Gothway Garden" ||
-                        character!="PeopleOfTheIliacBayTest-9a5f197b")
+                        character!="Hakon Ironhand")
                         throw new InvalidOperationException("Qwen willingness probe requires the exact owned character and Gothway Garden save.");
-                    yield return GoalQwenWillingnessProbe.Run(adapter,streets,character,dialogueArguments[dialogueSaveArgument+1]);
+                    yield return GoalDialogueWillingnessProbe.Run(adapter,streets,character,dialogueArguments[dialogueSaveArgument+1]);
                     yield break;
                 }
                 if(Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-goal-binding-probe")>=0)
                 {
-                    yield return GoalBindingProbe.Run(adapter,streets,character);
+                    yield return GoalDialogueWillingnessProbe.Run(adapter,streets,character,"People - Gothway Garden");
                     Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TOWN_TEST_PASS: typed goal extraction and native binding.");
                     yield break;
                 }
@@ -1641,22 +1660,6 @@ namespace PeopleOfTheIliacBay.DFU
             Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TOWN_TEST_PASS: real saves, repeated loads and street actors; character=" + character);
         }
 
-        private static void DisableDialogueServicesForDecisionShadowProbe(PeopleOfTheIliacBayMod adapter)
-        {
-            if (!adapter) throw new InvalidOperationException("Decision shadow probe needs PeopleOfTheIliacBayMod.");
-            const System.Reflection.BindingFlags flags = System.Reflection.BindingFlags.Instance |
-                System.Reflection.BindingFlags.NonPublic;
-            var type = typeof(PeopleOfTheIliacBayMod);
-            var textEnabled = type.GetField("localDialogueEnabled", flags);
-            var prewarmEnabled = type.GetField("dialoguePrewarmEnabled", flags);
-            var dialogueField = type.GetField("localDialogue", flags);
-            if (textEnabled == null || prewarmEnabled == null || dialogueField == null)
-                throw new InvalidOperationException("Cannot disable dialogue model calls for decision shadow probe.");
-            textEnabled.SetValue(adapter, false);
-            prewarmEnabled.SetValue(adapter, false);
-            var dialogue = dialogueField.GetValue(adapter) as LocalDialogueClient;
-            if (dialogue) dialogue.Cancel();
-        }
         private IEnumerator VerifyFamilies(int mapId, bool required)
         {
             var adapter = GetComponent<PeopleOfTheIliacBayMod>();

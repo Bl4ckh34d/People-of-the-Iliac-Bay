@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "status": "source-only-provisional-native-review-required",
+  "emotionId": "sad",
+  "referenceUpperFile": "eyes/sad/open.png",
+  "browSourceFile": "eyes/sad/open.png",
+  "halfSourceFile": "eyes/sad/half.png",
+  "closedSourceFile": "eyes/sad/closed.png",
+  "sourceSha256": "b8b0a0da8a68fea050774dbe95633fcb561aa0d4a4b316a787b9831b46247489",
+  "referenceSha256": "ea1a2986ced6992553cdf43944195fadecfa088df6b93bd62676ad3833d2139c",
+  "halfLidRegions": [
+    {
+      "x": 11,
+      "y": 22,
+      "width": 17,
+      "height": 2
+    },
+    {
+      "x": 35,
+      "y": 22,
+      "width": 18,
+      "height": 2
+    }
+  ],
+  "rationale": "Existing native review places orbital shading through row21, upper lid rows22–23, olive iris from24. Candidate rows22–23 preserve green iris below; do not widen. This same-face band was compared against this emotion’s open/half/closed contact-sheet cells. It is a source-only proposal, not an approved mask or a claim that all gaze directions have been checked. Copy only the contiguous upper skin/lid band; preserve every gaze iris/sclera below it."
+}

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NPC-Portraits – Animationen</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,sans-serif;background:#19191e;color:#ede9df}body{margin:0}main{max-width:1180px;margin:auto;padding:24px}h1{font-size:27px}h2{font-size:21px;margin-top:26px}p{line-height:1.5;color:#bdb9b3;max-width:1050px}button,select{font:inherit;background:#32323e;color:#f4f0e8;border:1px solid #66636d;border-radius:5px;padding:8px 12px}button{cursor:pointer}button[aria-pressed=true]{border-color:#ddbd7c;background:#55503d}.controls,.row{display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start}.controls{align-items:center;margin:20px 0}.controls label{display:grid;gap:5px}.row figure{margin:0;width:256px}.row canvas{width:256px;image-rendering:pixelated;background:#302936}.face canvas{height:256px}.upper canvas{height:140px}.lower canvas{height:116px}figcaption{font-size:14px;color:#bdb9b3;margin-top:6px}#state,#proof{color:#b3d4b6;font-size:14px}audio{width:min(650px,100%)}.error{color:#ff9999!important}@media(max-width:600px){main{padding:14px}.row{gap:12px}.row figure,.row canvas{width:160px}.face canvas{height:160px}.upper canvas{height:87.5px}.lower canvas{height:72.5px}}
+</style>
+<main>
+<h1>NPC-Portraits</h1>
+<div class="controls"><label>NPC-Portrait <select id="portrait"></select></label><span id="portrait-status"></span></div>
+<div id="emotions" class="controls" aria-label="Augenausdruck"></div>
+<div class="controls">
+  <label>Mundausdruck <select id="mouth-emotion"></select></label>
+  <label>Augenphase <select id="eyes"><option value="auto">Unregelmäßig blinzeln</option><option value="open">Offen</option><option value="half">Halb geschlossen</option><option value="closed">Geschlossen</option></select></label>
+  <label>Nachdenkblick <select id="thinking-gaze"><option value="idle">Mit Blinzeln</option><option value="off">Aus</option><option value="auto">Wechselnd</option><option value="left">Links</option><option value="right">Rechts</option></select></label>
+  <label>Mundform <select id="mouth"><option value="X">X – Original / Ruhe</option><option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option><option>H</option></select></label>
+  <button id="blink" title="Blinzeln" aria-label="Blinzeln">👁️</button><button id="double-blink" title="Doppelblinzeln" aria-label="Doppelblinzeln">👀</button><button id="hold-test" title="Kurze Augenhaltung" aria-label="Kurze Augenhaltung">😑</button><button id="cycle" title="Mundformen durchgehen" aria-label="Mundformen durchgehen">👄</button><button id="rest" title="Ruhepose" aria-label="Ruhepose">😌</button>
+  <button id="play">Sprache abspielen</button><label><input id="loop" type="checkbox" checked> Sprache im Loop</label>
+</div>
+<p id="state" hidden aria-live="off">Lade …</p>
+<div class="row face">
+  <figure><canvas id="original" width="64" height="64"></canvas><figcaption>Original</figcaption></figure>
+  <figure><canvas id="live" width="64" height="64"></canvas><figcaption>Zusammengesetztes Portrait</figcaption></figure>
+</div>
+<h2>Sprachvorschau</h2>
+<audio id="speech" controls loop preload="auto" src="../sample.wav"></audio>
+<p id="proof" hidden></p><p id="status" role="status">Lade Portrait …</p>
+</main>
+<script type="module" src="preview.js?v=de-moods-2"></script>
+</html>

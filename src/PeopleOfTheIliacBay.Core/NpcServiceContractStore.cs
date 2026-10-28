@@ -60,12 +60,8 @@ namespace PeopleOfTheIliacBay.Core
             IList<NpcServiceRenewalAuthorization> completedNativeAuthorizations,
             out string error)
         {
-            // Native funding and non-currency contract changes use this seam. A wage or
-            // refund also changes a real destination purse and needs the combined commit.
-            if (completedNativeTransfers != null)
-                foreach (var transfer in completedNativeTransfers)
-                    if (transfer == null || transfer.Kind != NpcServiceTransferKind.Funding)
-                    { error = "Earnings and refunds require the combined settlement commit."; return false; }
+            if (completedNativeTransfers == null || completedNativeTransfers.Count != 0)
+            { error = "Daily payments and failed-start reversals require the combined wallet commit."; return false; }
             NpcServiceContractLedgerState nextContracts;
             NpcServiceNativeEvidenceState nextEvidence;
             if (!TryPrepareNpcServiceContractCommit(ticket, candidate, completedNativeTransfers,
@@ -240,7 +236,6 @@ namespace PeopleOfTheIliacBay.Core
         {
             if (source == null || validated == null || knownActor == null)
                 throw new ArgumentNullException("Service evidence copy requires validated world and actor IDs.");
-            if (source.Version < 38) return new NpcServiceNativeEvidenceState();
             if (!NpcServiceContractLedger.ValidEvidenceRegistry(source.NpcServiceEvidence))
                 throw new ArgumentException("Invalid save-owned native service evidence registry.");
             foreach (var authorization in source.NpcServiceEvidence.Authorizations)
@@ -255,7 +250,6 @@ namespace PeopleOfTheIliacBay.Core
         {
             if (source == null || validated == null || evidence == null || knownActor == null)
                 throw new ArgumentNullException("Service contract copy requires validated save context.");
-            if (source.Version < 38) return NpcServiceContractLedger.Create().ToSaveState(validated.NpcFrameworkScopeId);
             NpcServiceContractLedger ledger;
             if (!NpcServiceContractLedger.TryRestoreHistorical(source.NpcServiceContracts,
                 validated.NpcFrameworkScopeId, knownActor, evidence, out ledger))

@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T09:26:33.3715651Z",
+    "portraitRecord":  72,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "happy",
+    "prompt":  "Use case: illustration-story\nAsset type: NPC portrait speech-mouth atlas for Daggerfall Unity\nInput image: Image 1 is exact NPC072 mouth-reference-grid.png. Use it as the only visual reference.\nPrimary request: Create one 3x3 atlas of the same woman\u0027s complete original 64x29 lower-face crop. Cell order A B C / D E F / G H X. Canvas ratio 64:29. Keep each full crop at same scale and registration, including nose, jaw, chin, neck, hair, background and original lip center. No labels, gutters, borders, extra panels or zooms.\nEmotion: Make this happy atlas visibly warmer than neutral through a soft smile, gently lifted mouth corners and subtle natural cheek creases. Keep smile restrained. No giant grin, downturned corners, or same full smile in every phoneme.\nIdentity and palette: Preserve source identity and muted warm tan/brown skin, soft dark rust-brown lips, source lip scale and softened pixel clusters. No lipstick red, broad orange patches, bright shiny teeth, tooth gaps or warm skin-colored teeth. Teeth, where pose requires them, are modest muted ivory/gray, distinct from skin, with gentle cavity contrast.\nRhubarb mouth pose definitions:\nA: Pressed closed lips with light pressure for P/B/M.\nB: Slightly open with teeth nearly together and narrow horizontal opening for most consonants and EE.\nC: Medium opening with relaxed unrounded lips for EH/AE.\nD: Wide vertical opening for AA, larger than C.\nE: Slightly rounded AO/ER opening, no wider than C.\nF: Puckered rounded lips with small forward opening for UW/OW/W; not a tooth bite.\nG: Upper teeth touch lower lip for F/V; not a wide open vowel.\nH: Tongue raised behind upper teeth for long L; opening between C and D. Tongue may be small at native scale.\nX: Relaxed closed idle lips.\nConstraints: Keep every cell a complete identical-size lower-half crop. Change lips and required mouth interior only; keep nose, jaw, chin, neck, hair and exterior source-registered. Preserve distinct pose families and happy expression without overstatement. No text or watermark.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-e9f1b2c9-a7af-41c5-929d-9b64ea032c96.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-e9f1b2c9-a7af-41c5-929d-9b64ea032c96.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "4af6922ef7f8345a11ae8418761144f64dcaaa8b836f461486a2fb206cbebd85",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "439016eece9c19baa01534109a73a9de37ac5555ae9f7e4d5bbbcdc6fbcbe550",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-e9f1b2c9-a7af-41c5-929d-9b64ea032c96.png",
+                      "sha256":  "fc4e857f35e738835bd370253a9ac358c28d0d5c968c3599152fac612b2e8df6",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/happy/raw.png",
+                "sha256":  "fc4e857f35e738835bd370253a9ac358c28d0d5c968c3599152fac612b2e8df6",
+                "width":  1863,
+                "height":  844
+            }
+}

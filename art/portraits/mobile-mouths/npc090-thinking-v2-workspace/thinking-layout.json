@@ -1,0 +1,19 @@
+{
+  "halfLidRegions": [
+    {
+      "x": 11,
+      "y": 22,
+      "width": 17,
+      "height": 2
+    },
+    {
+      "x": 35,
+      "y": 22,
+      "width": 18,
+      "height": 2
+    }
+  ],
+  "sourceSha256": "b8b0a0da8a68fea050774dbe95633fcb561aa0d4a4b316a787b9831b46247489",
+  "referenceSha256": "b119171ec078bd3dde1c835a3c10fd85439c7c59def8e581622bb8485aa7ac41",
+  "rationale": "Native review of v2 attempt2 shows green iris pixels begin at row24 in all top-row cells. Preserve their gaze by copying neutral half-lids only on rows22-23. browLockEndY remains21. This keeps two skin/lid rows and excludes every detected olive iris pixel. Review remains pending."
+}

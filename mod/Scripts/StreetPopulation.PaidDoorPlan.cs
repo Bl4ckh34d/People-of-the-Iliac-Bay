@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 using PeopleOfTheIliacBay.Core;
+using UnityEngine;
 
 namespace PeopleOfTheIliacBay.DFU
 {
     // It owns no lodging or travel simulation. Binding exists only while one
-    // active paid Follow action uses existing native door adapter.
+    // travel Follow action uses the existing native door adapter or retires.
     public sealed partial class StreetPopulation
     {
         private sealed class PaidDoorPlanBinding
@@ -32,16 +33,24 @@ namespace PeopleOfTheIliacBay.DFU
         }
 
         // Scene actor cleanup may run between native source and destination.
-        // Rebuild only from persisted active paid Follow transition targeting this scene.
+        // Rebuild from an active door transition, or a fast-travel follower
+        // already saved inside this exact building after that crossing ended.
+        private bool CurrentTravelDoorFollow(NpcActionJob job,double now)
+        {
+            NpcServiceContract contract;
+            return NpcPaidCompanionTravel.TryReadActiveTravel(worldStore,job,now,out contract) ||
+                job!=null && job.FastTravelFollowOwner && NpcCompanionFastTravel.CanFollow(worldStore,job,now,true);
+        }
         private void RestorePaidDoorPlans(double now)
         {
             if(worldStore==null)return;
             foreach(var job in worldStore.PendingNpcActions())
             {
-                if(job.Kind!=NpcActionKind.Follow || job.FollowTransition==null ||
-                    !ActionSpaceMatches(job.FollowTransition.Destination))continue;
-                NpcServiceContract contract;
-                if(!NpcPaidCompanionTravel.TryReadActiveTravel(worldStore,job,now,out contract))continue;
+                if(job.Kind!=NpcActionKind.Follow)continue;
+                bool crossingHere=job.FollowTransition!=null && ActionSpaceMatches(job.FollowTransition.Destination);
+                bool savedInside=job.FastTravelFollowOwner && interior && job.FollowTransition==null && ActionSpaceMatches(job.LastPosition);
+                if(!crossingHere && !savedInside)continue;
+                if(!CurrentTravelDoorFollow(job,now))continue;
                 PaidDoorPlanBinding current;
                 if(paidDoorPlans.TryGetValue(job.ResidentId,out current) && current!=null &&
                     ReferenceEquals(current.Store,worldStore) && current.ActionId==job.Id && current.Plan!=null)continue;
@@ -57,8 +66,7 @@ namespace PeopleOfTheIliacBay.DFU
         private bool TryBindRoadPaidDoorPlan(ResidentActor actor,NpcActionJob job,double now)
         {
             if(actor==null || actor.Resident==null || job==null || worldStore==null)return false;
-            NpcServiceContract contract;
-            if(!NpcPaidCompanionTravel.TryReadActiveTravel(worldStore,job,now,out contract))return false;
+            if(!CurrentTravelDoorFollow(job,now))return false;
             PaidDoorPlanBinding current;
             if(paidDoorPlans.TryGetValue(job.ResidentId,out current))
             {
@@ -86,8 +94,9 @@ namespace PeopleOfTheIliacBay.DFU
             PaidDoorPlanBinding binding=paidDoorPlans[plan.Resident.Id];
             if(!ReferenceEquals(binding.Store,worldStore))return false;
             var job=worldStore==null?null:worldStore.ReadNpcAction(binding.ActionId);
-            NpcServiceContract contract;
-            if(!NpcPaidCompanionTravel.TryReadActiveTravel(worldStore,job,now,out contract))return false;
+            // Scheduled is sampled before the action overlay retires this plan.
+            // Expiry must not fall through to a foreign NPC's absent local schedule.
+            if(job==null)return false;
             var point=job.FollowTransition!=null ? job.FollowTransition.Destination : job.LastPosition;
             if(point==null)return false;
             bool indoors=point.Kind==NpcActionTargetKind.IndoorPoint && point.BuildingKey>=0;
@@ -103,12 +112,16 @@ namespace PeopleOfTheIliacBay.DFU
                 ReferenceEquals(binding.Store,worldStore) && worldStore!=null ? worldStore.ReadNpcAction(binding.ActionId) : null;
         }
 
+        private bool PaidDoorOwnsTravel(Plan plan,NpcActionJob job,double now)
+        {
+            var bound=ReadPaidDoorAction(plan);
+            return job!=null && bound!=null && bound.Id==job.Id && !NpcActionExecutor.IsTerminal(job) &&
+                CurrentTravelDoorFollow(job,now);
+        }
+
         private bool PaidDoorPlanNeedsRetirement(NpcActionJob job,double now)
         {
-            if(job==null || !NpcPaidCompanionAction.IsPaidFollowJob(job))return true;
-            NpcServiceContract contract;
-            return NpcActionExecutor.IsTerminal(job) ||
-                !NpcPaidCompanionTravel.TryReadActiveTravel(worldStore,job,now,out contract);
+            return !CurrentTravelDoorFollow(job,now);
         }
 
         // Never destroy visible paid door body. Road owner keeps same actor at
@@ -116,6 +129,17 @@ namespace PeopleOfTheIliacBay.DFU
         private bool RetirePaidDoorPlan(Plan plan,ref ResidentActor actor,NpcActionJob job,double now)
         {
             if(!IsPaidDoorActionPlan(plan))return false;
+            if(job!=null && job.FastTravelFollowOwner && !NpcPaidCompanionAction.IsPaidFollowJob(job))
+            {
+                if(!NpcActionExecutor.IsTerminal(job))
+                    EndAction(job,now,"The agreed Follow period ended or can no longer continue.",false);
+                // No local routine or measured return route belongs to this plan.
+                // Keep its real body in the current scene until normal scene cleanup.
+                if(actor)actor.Place(actor.transform.position-Vector3.up,actor.transform.forward,
+                    standing:true,freeStanding:true,preferNative:false);
+                else ReleasePaidDoorPlan(plan);
+                return true;
+            }
             if(actor && roadTravelActors && roadTravelActors.TryRetirePaidCompanionFromStreet(actor,worldStore,job,now))
             {
                 actors.Remove(plan.Resident.Id);ReleasePaidDoorPlan(plan);return true;

@@ -65,11 +65,6 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.Equal(0, store.Snapshot().AlarmIncidents[0].People[0].Warned.Count);
                 Check.Throws<ArgumentException>(() => store.RecordViolence(99, ids[0], 100));
             }));
-            cases.Add(("Schema four migrates without invented alarms or trimmed households", () => {
-                var store = World(); var old = store.Snapshot(); old.Version = 4; old.AlarmIncidents = null;
-                store.Restore(old); Check.Equal(0, store.Snapshot().AlarmIncidents.Count);
-                Check.True(store.Snapshot().Settlements[0].Households.All(h => h.BedCapacity == -1));
-            }));
             cases.Add(("Nine-bed families round trip and overcrowding rejects without replacement", () => {
                 var store = new WorldStateStore(42);
                 var town = store.GetOrCreateFamilies(1, Enumerable.Range(0, 10000).Select(k => new HomeProfile(k, 9, 300)));

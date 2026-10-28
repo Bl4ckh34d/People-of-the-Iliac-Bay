@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T08:28:21.7969942Z",
+    "portraitRecord":  83,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Create one pixel-art eye atlas for common portrait NPC083 in the exact sad expression. Use the attached 2x2 reference as the exact face identity, dark sad brow and eyeliner shape, eye spacing, native pixel style, palette, and crop guide. Return a 2-column by 2-row atlas, overall aspect ratio 64:35 (about 1.83:1), four equal cells, no gutters, labels, borders, text, or extra panels.\n\nRow-major cells: top-left is both eyes open with a gentle one-native-pixel horizontal glance to the viewer\u0027s left; top-right is the same sad eyes open with a gentle one-native-pixel horizontal glance to the viewer\u0027s right. Bottom-left repeats the left gaze in a natural half-blink. Bottom-right repeats the right gaze in a natural half-blink. Both eyes glance together. No up or down gaze.\n\nPreserve the exact source upper and lower lid contours, narrow aperture, dark eyeliner, and sad brow; do not widen the eyes or lift either lid. Keep compact gray-blue irises and dark pupils within the existing narrow opening, shifted only minimally side-to-side. Use subdued, source-matched skin/beige around the iris and only a tiny mild glint. Retain the dark, low-contrast eye appearance in the reference. Half-blink cells must preserve the existing sad half-lid coverage and retain a small visible part of the same-direction iris.\n\nDo not add pale horizontal sclera bands, bright white patches, large glints, oversized or round irises, alert/wide eyes, or any new bright eye highlights. Do not change forehead, hair, face, skin, background, framing, or pixels outside the eye features. Preserve crisp native pixel edges and muted source palette; no smoothing, blur, antialiasing, resampling, or invented colors. Closed phase reuses the existing sad closed source and is not included in this atlas.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-4c20c1c7-e354-4410-b160-f2c42e76a8b7.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-4c20c1c7-e354-4410-b160-f2c42e76a8b7.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "e46c900779f687610af7b821b988300b998aea48632c829537f88cb829b5acfb",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "8e56e46b233b567ad8a7a7cf1c347ae86679dd9ec01c3b3522911fe10da37685",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-4c20c1c7-e354-4410-b160-f2c42e76a8b7.png",
+                      "sha256":  "29ae1607d59225a63fc8bae975572124932bd5ed85cefb14503fb9400715d9fd",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "29ae1607d59225a63fc8bae975572124932bd5ed85cefb14503fb9400715d9fd",
+                "width":  1695,
+                "height":  928
+            }
+}

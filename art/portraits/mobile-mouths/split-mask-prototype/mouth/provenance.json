@@ -1,0 +1,125 @@
+{
+  "record": "077",
+  "sourceAtlas": {
+    "path": "art/portraits/mobile-mouths/tfac-077-full-frame-v5.png",
+    "sha256": "D2BD017E7773336DE704BF3E4C935AB1EF7D0FC84DD4BBC551A61E22AF322223",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "grid": [
+      3,
+      3
+    ],
+    "cellSize": [
+      418,
+      418
+    ],
+    "expectedManifestSha256": "D2BD017E7773336DE704BF3E4C935AB1EF7D0FC84DD4BBC551A61E22AF322223"
+  },
+  "immutableOriginal": {
+    "path": "art/portraits/mobile-mouths/split-mask-prototype/original.png",
+    "sha256": "4BBB1C9F6BEA7561D316FA6587A93FD0C9BCBFA3C9AA0992BB85B804AA213125",
+    "dimensions": [
+      64,
+      64
+    ]
+  },
+  "method": "For each complete 418x418 source cell, sample a complete 64x64 frame using the center of each native pixel footprint (nearest-neighbor); composite only the declared mask from the sampled complete frame onto the original lower half. No independent mouth resize.",
+  "cellOrder": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "X"
+  ],
+  "sampledCompleteCellSha256": {
+    "A": "E5396F1EC418A9812C5979D672936F8CF033FF98AB0B752B00D3D01EED7189D4",
+    "B": "55B52558900F99F64283E4145D3A5E2DFF48E63C74CD672A71F67488744383B8",
+    "C": "D2AF2D43A9AEFD4F375C14A42513289CF8AAF5CF926F29CFCFEE3508A94BF963",
+    "D": "0126903DA31E900A2D1F323AC971A715C7F5F2CCDEA3736092435ACD6CF93720",
+    "E": "FE444D691B87D0C4ED37466B2CDE242A268F0C23B0A262DF44C2482C24CB075E",
+    "F": "83D071668FD9098A63675FA37AE5C47A758B31BFA1677AA05CB671F441F4E36E",
+    "G": "13ED357D701717F4E8ED7809E16539BDED271F2F5670A85F0503A05D8AF454D7",
+    "H": "5FB62CA39AC49E0ED0B553C87D814F0695D5CE3407F0AD04C58A51088106E4C5",
+    "X": "18F2CC1D75D9FE03521D6351C504F4D0F12AB42CBFCDF8E64E37E87C555F621B"
+  },
+  "outputs": {
+    "A": "727DDB78360BE5114C9C1296DE4CEB023726055CF58B66D984BBE82061F30367",
+    "B": "56A0F976AE622582FAA927B6B802B468AD16FDB6876C3344219F54868272A157",
+    "C": "A66C477AE2060876B94EFC0F28563AB2D76AB749F051031C207B87D1345BCCEE",
+    "D": "7AF07307C71BC0361C1A01984CB21A122FAC5EB766AD8919F3F4C45C5F6D5AC4",
+    "E": "899AE01072B4F81E4C71021D865802E07D04AE8E18F26F9AFCD38830AC6E5BFE",
+    "F": "F305533AF3732C8B38413D41371A3B27C10183D73FEF097E462C24D8437D7378",
+    "G": "F4C482051C4029F58B2C90981383A76C98E2D8219F41FF4677C8EE3B5D27242F",
+    "H": "4BF6C521582401449E2E7837390F3193E43CFB2C37AF96EBF7789A345A922930",
+    "X": "727DDB78360BE5114C9C1296DE4CEB023726055CF58B66D984BBE82061F30367"
+  },
+  "outputDimensions": [
+    64,
+    29
+  ],
+  "lowerHalfSourceRows": [
+    35,
+    63
+  ],
+  "mask": {
+    "file": "mouth-mask.png",
+    "outputSize": [
+      64,
+      29
+    ],
+    "fullFrameInclusiveBounds": {
+      "x": [
+        22,
+        41
+      ],
+      "y": [
+        39,
+        51
+      ]
+    },
+    "lowerHalfRelativeInclusiveBounds": {
+      "x": [
+        22,
+        41
+      ],
+      "y": [
+        4,
+        16
+      ]
+    }
+  },
+  "exactOriginalFrames": [
+    "A",
+    "X"
+  ],
+  "changedPixelsInsideMask": {
+    "A": 0,
+    "B": 259,
+    "C": 259,
+    "D": 258,
+    "E": 259,
+    "F": 259,
+    "G": 259,
+    "H": 257,
+    "X": 0
+  },
+  "changedPixelsOutsideMask": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0,
+    "E": 0,
+    "F": 0,
+    "G": 0,
+    "H": 0,
+    "X": 0
+  },
+  "strictOutsideMaskCheck": "PASS: every output pixel outside x=22..41,y=39..51 (full-frame coordinates) equals the immutable original.",
+  "review": "pending"
+}

@@ -20,6 +20,9 @@ namespace PeopleOfTheIliacBay.DFU
         private Vector2[] originalUV, viewUV;
         private Renderer nativeRenderer;
         private BoxCollider nativeBody;
+        private CharacterController guardBody;
+        private float guardHeight, guardRadius;
+        private Vector3 guardCenter;
         private bool nativeWasVisible;
         private Vector3 nativePosition, nativeSize, nativeCenter;
         private Quaternion nativeRotation;
@@ -78,9 +81,33 @@ namespace PeopleOfTheIliacBay.DFU
             transform.rotation = Quaternion.LookRotation(interior.TransformDirection(bed.LocalHeadDirection));
             nativeBody.size = new Vector3(width, 0.36f, length); nativeBody.center = Vector3.zero;
         }
+        public void BeginGuard(Transform interior, BedAnchor bed, SleepingArt.Atlas atlas)
+        {
+            currentBed = bed;
+            SetArt(atlas);
+            if (!Active)
+            {
+                var mobile = GetComponentInChildren<DaggerfallWorkshop.MobileUnit>();
+                nativeRenderer = mobile ? mobile.GetComponent<Renderer>() : null;
+                guardBody = GetComponent<CharacterController>();
+                if (!nativeRenderer || !guardBody) throw new System.InvalidOperationException("Sleeping guard lacks native sprite or controller.");
+                nativePosition = transform.position; nativeRotation = transform.rotation;
+                nativeWasVisible = nativeRenderer.enabled; nativeRenderer.enabled = false;
+                guardHeight = guardBody.height; guardRadius = guardBody.radius; guardCenter = guardBody.center;
+                guardBody.radius = 0.18f; guardBody.height = 0.36f; guardBody.center = Vector3.zero;
+                Active = true; quad.SetActive(true);
+            }
+            length = bed.Length * 0.9f; width = bed.Width * 0.85f;
+            transform.position = interior.TransformPoint(bed.LocalCenter) + Vector3.up * 0.18f;
+            transform.rotation = Quaternion.LookRotation(interior.TransformDirection(bed.LocalHeadDirection));
+        }
         private void LateUpdate()
         {
             if (!Active) return;
+            // Native EntityConcealmentBehaviour writes this renderer every Update.
+            // Keep the native body and its effects alive, but let the sleep pose
+            // own its standing sprite until Wake restores the original visibility.
+            if (nativeRenderer) nativeRenderer.enabled = false;
             // A sleeper belongs to the mattress, not the camera. Keep one complete
             // face/pillow/blanket image on a fixed horizontal bed-aligned surface.
             // Rotate the complete broadside drawing so its left-hand head points
@@ -110,6 +137,7 @@ namespace PeopleOfTheIliacBay.DFU
                 nativeRenderer.enabled = nativeWasVisible;
                 transform.position = nativePosition; transform.rotation = nativeRotation;
                 if (nativeBody) { nativeBody.size = nativeSize; nativeBody.center = nativeCenter; }
+                if (guardBody) { guardBody.radius = guardRadius; guardBody.height = guardHeight; guardBody.center = guardCenter; }
             }
         }
         public bool WakeOnFloor(InteriorGeometry geometry, out Vector3 ground)

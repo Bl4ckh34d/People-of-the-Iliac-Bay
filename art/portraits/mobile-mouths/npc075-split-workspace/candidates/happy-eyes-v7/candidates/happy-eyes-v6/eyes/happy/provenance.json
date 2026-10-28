@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T12:48:30.2067662Z",
+    "portraitRecord":  75,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "happy",
+    "prompt":  "Make a joyful, warmly happy pixel-art eye atlas for the same character, guided by the single supplied reference: four exact repeats of the selected happy v5 open phase. Preserve her identity, eye spacing, hair, pixel scale, and soft brown-and-amber palette.\n\nThe key change is the expression: give her clearly curved, gently raised, joyful brows. Raise the INNER ends by about 2–3 native pixels compared with the reference, around native row 19 rather than row 22. The inner ends must not slope down toward the nose. Make each brow a soft, shallow rounded arc, with a modest middle rise and relaxed ends. The result should read as joyful warmth at a glance, not neutral, angry, worried, or surprised. Keep each brow connected and comfortably within rows 17–22; keep the fringe at rows 15–16.\n\nCreate exactly a 2×2 atlas of complete 64×35 upper-face crops, no gutters or labels: top-left OPEN, top-right HALF, bottom-left CLOSED, bottom-right OPEN REPEAT. Keep the joyful brow shape stable in every cell. Use soft narrowed upper lids that add a smile to the eyes. Keep the compact native amber irises, dark pupils, gentle dark eye shading, and tiny muted warm glints. For HALF and CLOSED, move only the upper lid down over the iris; the lower-lid contour stays fixed at row 28 and cheeks stay still. OPEN REPEAT must match OPEN. Crisp native stepped pixel art, no new face features.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-c7f11978-2b82-4073-b7e9-2be39c1e9e76.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-c7f11978-2b82-4073-b7e9-2be39c1e9e76.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "66a53cc65463106ad20c03885238505b4c1b2a3e277526433ff23244086fecba",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-c7f11978-2b82-4073-b7e9-2be39c1e9e76.png",
+                      "sha256":  "6bd1e69faa93b96632ecc346040837a5d7198a358f12d6c2d293715e3c0312bb",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/happy/raw.png",
+                "sha256":  "6bd1e69faa93b96632ecc346040837a5d7198a358f12d6c2d293715e3c0312bb",
+                "width":  1695,
+                "height":  928
+            }
+}

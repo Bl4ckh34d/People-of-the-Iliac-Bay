@@ -121,7 +121,7 @@ namespace PeopleOfTheIliacBay.DFU
 
                 NpcServiceTransferReceipt funding = NpcServiceTransferReceipt.Create(receiptId, terms.ContractId,
                     NpcServiceTransferKind.Funding, terms.PayerId,
-                    "contract:" + terms.ContractId + ":escrow", terms.RatePer24GameHours, gameTime);
+                    terms.NpcId, terms.RatePer24GameHours, gameTime);
                 NpcServiceContractLedger candidate;
                 if (!NpcServiceContractLedger.TryReserve(ticket.SourceLedger, ticket.ExpectedLedgerRevision,
                     terms, funding, out candidate) || candidate == null)
@@ -169,8 +169,12 @@ namespace PeopleOfTheIliacBay.DFU
         private static bool CommitToStore(WorldStateStore store, NpcServiceContractWriteTicket ticket,
             NpcServiceContractLedger candidate, NpcServiceTransferReceipt receipt, out string error)
         {
-            return store.TryCommitNpcServiceContracts(ticket, candidate, new[] { receipt },
-                new NpcServiceRenewalAuthorization[0], out error);
+            var inventory=store.ReadNpcInventory(receipt.ToOwnerId);
+            if(inventory==null || (long)inventory.WalletGold+receipt.Amount>NpcInventoryLimits.MaximumWalletGold)
+            {error="Companion wallet cannot receive the daily payment.";return false;}
+            var credit=new NpcInventoryUpdate {PersonId=inventory.PersonId,ExpectedRevision=inventory.Revision,
+                WalletGold=inventory.WalletGold+receipt.Amount,Items=inventory.Items};
+            return store.TryCommitNpcServiceSettlement(ticket,candidate,credit,new[]{receipt},out error);
         }
 
         internal static bool IsKnownLivingNpc(WorldState state, string personId)

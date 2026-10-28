@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T14:05:10.1674755Z",
+    "portraitRecord":  75,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Use case: stylized-concept\nAsset type: DFU native pixel-art NPC thinking-eye atlas, NPC075 neutral mood\nPrimary request: Create exactly one 2x2 atlas, each cell the complete same-framed 64x35 upper-face crop. Cell order: top-left LEFT OPEN, top-right RIGHT OPEN, bottom-left LEFT HALF, bottom-right RIGHT HALF. No labels, gutters, margins, borders, extra crops, or added content.\nInput images: Image 1 is the sole exact local selected-neutral reference grid. Use it as source anatomy and palette.\nSubject and style: Preserve this NPC\u0027s identity, hair, fringe, brows, face, narrow source eye apertures, compact dark olive-brown/amber iris-and-pupil clusters, muted shaded eye whites, tiny subdued warm glints, and crisp native pixel clusters. Keep brow row24 and lower-lid contour row28 fixed; rows29 and below, including cheeks, stay unchanged.\nGaze: In both OPEN cells, move BOTH colored iris/dark-pupil clusters together about one native pixel toward the same canvas edge: toward image-left in LEFT OPEN and toward image-right in RIGHT OPEN. Keep the two eyes naturally aligned and convergent; do not leave one iris centered, shift the eyes in opposite directions, or move one more than about one pixel. Make direction visibly lateral but subtle.\nBlink: In each HALF cell, preserve the exact horizontal iris and pupil placement from its matching OPEN cell. Only lower the upper eyelid to cover the upper part of the iris, matching the narrow source half-open aperture. Do not shrink, resize, or vertically/horizontally reposition the iris; do not widen the sclera. Keep lower lids, cheeks, brows, hair, and framing fixed.\nAvoid: No cream-white bands, enlarged eye whites, bright glints, round/vector irises, asymmetrical/cross-eyed gaze, changed brow/expression, new wrinkle, cheek movement, blur, smoothing, labels, or edits outside the eye anatomy shown in the reference.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-4e4df3eb-fb89-49b4-bd0a-c02267dea5bd.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-4e4df3eb-fb89-49b4-bd0a-c02267dea5bd.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "7898383520199a148cbf7ed6537365a533bf081d5b8ef0d45df0fa42159f9ca7",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-4e4df3eb-fb89-49b4-bd0a-c02267dea5bd.png",
+                      "sha256":  "c3f5500c121658d18e402b92ba1789324111b93c5965af41c5c73090103d4492",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "c3f5500c121658d18e402b92ba1789324111b93c5965af41c5c73090103d4492",
+                "width":  1695,
+                "height":  928
+            }
+}

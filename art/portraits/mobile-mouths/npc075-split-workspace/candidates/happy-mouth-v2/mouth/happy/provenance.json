@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T11:04:46.6643766Z",
+    "portraitRecord":  75,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "happy",
+    "prompt":  "Use case: illustration-story. Asset type: Daggerfall Unity NPC happy-mouth viseme atlas. Use exactly one reference: the supplied local NPC075 happy-mouth-v2 mouth-reference-grid.png.\n\nOutput exactly a 3-column by 3-row atlas. It contains exactly nine cells, no more and no less. Every cell is one complete native 64×29 lower-half crop (the original portrait rows y=35..63), retaining the source framing and pixel scale. Thus the entire atlas is exactly a 192×87 layout with overall width:height ratio 64:29 (about 2.2069:1). Fill the canvas edge to edge with exactly 3 columns and 3 rows. No padding, borders, labels, dividers, extra bottom band, fourth row, neck, shoulders, or content below the original 64×29 crop. Do not add any extra panels.\n\nCell positions in row-major order:\ntop-left A: closed lips with light pressure for P/B/M.\ntop-middle B: slight opening, nearly together teeth, narrow horizontal gap for most consonants/EE.\ntop-right C: medium relaxed unrounded opening for EH/AE.\nmiddle-left D: wide vertical AA opening, clearly wider than C but still small and within the source mouth size.\nmiddle-middle E: slightly rounded AO/ER opening, no wider than C.\nmiddle-right F: small forward puckered UW/OW/W opening, not a tooth bite.\nbottom-left G: upper teeth touch the lower lip for F/V; not a wide vowel.\nbottom-middle H: raised tongue behind upper teeth for long L, opening between C and D.\nbottom-right X: relaxed closed idle lips with a gentle natural smile.\n\nKeep the NPC075 identity and original lower-face appearance: small restrained mouth, muted brown-rose lip hue, soft warm skin palette, fine native pixel clusters, unchanged nose/chin, hair and face side edges exactly as in the reference. Keep the happy expression friendly and subtle, not a huge grin, laugh, grimace, or lipstick look. Any visible teeth are tiny muted gray-ivory, never bright white. Keep all mouth changes inside the original mouth area; do not repaint broad skin or alter the lower-face framing.\n\nImportant canvas check: exactly nine mouth panels in a 3×3 grid occupying the full output. The bottom row must contain only G, H, X crops from y=35..63; after that row the image ends. No extra neck/shoulder strip. No text or watermark.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-15303e3b-3fba-465c-a72e-f4f6874889e3.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-15303e3b-3fba-465c-a72e-f4f6874889e3.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "38a9654e68f7a8e9995b0ac18f1abb0a44a4973ea2fdcc464a14185685328f53",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-15303e3b-3fba-465c-a72e-f4f6874889e3.png",
+                      "sha256":  "319e985ac4bea212ff6dc8c2f6c277531e7ef75f76f47e0994dd2bf470bf3a02",
+                      "width":  1862,
+                      "height":  845
+                  },
+    "raw":  {
+                "path":  "mouth/happy/raw.png",
+                "sha256":  "319e985ac4bea212ff6dc8c2f6c277531e7ef75f76f47e0994dd2bf470bf3a02",
+                "width":  1862,
+                "height":  845
+            }
+}

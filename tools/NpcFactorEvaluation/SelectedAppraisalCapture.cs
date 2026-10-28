@@ -538,14 +538,18 @@ namespace PeopleOfTheIliacBay.NpcFactorEvaluation
                 home => home == "fixture-home:" + owner, (id, category, revision) => true,
                 (id, revision, kind, start, end) => true, out NpcServiceContractTerms terms))
             { block = "Production service terms rejected synthetic owner contract."; return false; }
+            if(store.ReadNpcInventory(owner)==null && !store.InitializeNpcInventory(owner,0,Array.Empty<NpcInventoryItem>()))
+                throw new InvalidDataException("Synthetic service wallet initialization failed.");
+            var wallet=store.ReadNpcInventory(owner);
+            var paymentCredit=new NpcInventoryUpdate {PersonId=owner,ExpectedRevision=wallet.Revision,
+                WalletGold=wallet.WalletGold+fundedAmount,Items=wallet.Items};
             var funding = NpcServiceTransferReceipt.Create(OpaqueId("funding", pairId), contractId,
-                NpcServiceTransferKind.Funding, payer, "contract:" + contractId + ":escrow", fundedAmount, 0);
+                NpcServiceTransferKind.Funding, payer, owner, fundedAmount, 0);
             NpcServiceContractWriteTicket ticket = store.CaptureNpcServiceContractWriteTicket();
             string error = null;
             if (!NpcServiceContractLedger.TryReserve(ticket.SourceLedger, ticket.ExpectedLedgerRevision,
                 terms, funding, out NpcServiceContractLedger reserved) ||
-                !store.TryCommitNpcServiceContracts(ticket, reserved, new[] { funding },
-                    Array.Empty<NpcServiceRenewalAuthorization>(), out error))
+                !store.TryCommitNpcServiceSettlement(ticket,reserved,paymentCredit,new[]{funding},out error))
             { block = "Production service reserve transition rejected synthetic funding receipt: " + error; return false; }
             ticket = store.CaptureNpcServiceContractWriteTicket();
             NpcServiceContract current = ticket.SourceLedger.Read(contractId);

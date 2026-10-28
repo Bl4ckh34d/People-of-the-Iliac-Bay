@@ -1,0 +1,24 @@
+{
+  "task": "controlled single-image happy portrait style probe",
+  "generator": "built-in image_gen",
+  "generation_count": 1,
+  "status": "prototype; user-review-pending; not installed",
+  "source": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\tfac-077-original.png",
+    "dimensions": "64x64",
+    "sha256": "4BBB1C9F6BEA7561D316FA6587A93FD0C9BCBFA3C9AA0992BB85B804AA213125"
+  },
+  "generated_path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-8b98-7181-a1df-84e7b766303c\\exec-25dee061-e810-49b4-8412-47091932cb99.png",
+  "output": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\original-style-probe\\happy-single.png",
+    "dimensions": "1254x1254",
+    "sha256": "88B45637D7BA57A3A632B8FFE8A57D1FBF104450271D6D20629656FD42EFD6EE",
+    "copied_unaltered": true
+  },
+  "review": {
+    "native_view_dimensions": "64x64",
+    "method": "temporary nearest-neighbor downscale for inspection; review copy removed",
+    "observations": "At 64x64, palette and pixel texture remain close to original. Mouth corners and cheek warmth rise slightly, but happy expression reads subtle; eye expression stays close to neutral. No hard black eyeliner; eye shading remains dark enough to stand out."
+  },
+  "prompt": "Use case: stylized-concept\nAsset type: one complete 64×64 pixel-art NPC portrait prototype\nInput image: Image 1 is the actual original portrait and sole style/identity source. Do not use other references.\nPrimary request: edit this same portrait into a gently happy expression.\nSubject: same woman with exactly the same identity, head size, face shape, hair silhouette, framing, skin tone, and background.\nStyle/medium: preserve the original’s naturally soft, limited color palette, gentle skin-tone steps, and small, understated pixel-art clusters. Keep the original’s native 64×64 visual character. No hard contrast increase.\nComposition/framing: one complete portrait matching original bounds exactly.\nLighting/mood: warm, clearly friendly happiness. Eyes feel kind and relaxed. Slight cheek lift. Mouth closed with clearly raised natural corners.\nConstraints: change expression only. Preserve soft transitions and limited tonal range. Smile must read clearly at 64×64 without teeth. Keep eyes and eyebrows natural, delicate, and consistent with original pixel style.\nAvoid: black or hard eyeliner, harsh eyebrows, dark eye shadows, smudged or blurry eyes, heavy contrast, giant grin, visible teeth, open mouth, face reshaping, head-size change, hair changes, added pixels outside portrait, patches, crops, overlays, sharpening, filters, compositing, text, objects, borders."
+}

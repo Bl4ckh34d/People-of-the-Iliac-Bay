@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T02:07:14.4687249Z",
+    "portraitRecord":  88,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "afraid",
+    "prompt":  "Use case: stylized-concept\nAsset type: 3x3 Rhubarb viseme mouth atlas for Daggerfall Unity 64x64 pixel portrait animation\nPrimary request: Edit the supplied mouth-reference-grid.png as the sole reference image. Return only a clean 3x3 atlas of the same repeated lower portrait halves, row-major A B C / D E F / G H X. Keep each cell same framing and size as reference half (64:29 aspect per cell). Preserve NPC088 face identity, original face width, jaw, nose, cheeks, hair, neck, background, muted warm tan skin and soft brown lips. Change only mouth shapes and subtle expression tension/corners. Afraid expression: restrained tension and slight downturn, not exaggerated. Keep original lip scale and softly blended pixel-art contrast. Teeth are small and warm, never bright white blocks. Do not use lipstick red or orange patches around lips. No full-face redesign, no text, labels, borders, extra objects or watermark. Every cell must match its Rhubarb mouth-shape definition exactly: A closed lightly pressured P/B/M lips; B narrow horizontal opening, teeth nearly together, for consonants/EE; C medium relaxed unrounded opening for EH/AE; D wide vertical AA opening, larger than C; E slightly rounded AO/ER opening, no wider than C; F small forward pucker UW/OW/W, not tooth biting; G upper teeth touching lower lip for F/V, neither a wide vowel nor a pucker; H tongue raised behind upper teeth for L, opening between C and D, tiny tongue may be invisible at native 64px; X relaxed closed idle. Do not interchange F and G. Afraid tension may affect corners but must preserve each pose family. Native pixel-art shapes, crisp 64px pixel structure, not smooth vector lips.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1615b-256b-7433-9ea2-eeb1effb990c as C:\\Users\\Daniel\\.codex\\generated_images\\01a1615b-256b-7433-9ea2-eeb1effb990c\\exec-732d8553-1488-4d65-882e-998a6307acae.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1615b-256b-7433-9ea2-eeb1effb990c\\exec-732d8553-1488-4d65-882e-998a6307acae.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "f2e18bec953ffba12224397a695b2f80ddda822519be1414696b593243bc864c",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "530927adf4a79396a3c9bc650a907262d3da5938423cd2f891d9b6296ae66997",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1615b-256b-7433-9ea2-eeb1effb990c\\exec-732d8553-1488-4d65-882e-998a6307acae.png",
+                      "sha256":  "b92c520e9015f4eb217d1bea75bfb3da8ba0a2c324c4341d3828b5e166845784",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/afraid/raw.png",
+                "sha256":  "b92c520e9015f4eb217d1bea75bfb3da8ba0a2c324c4341d3828b5e166845784",
+                "width":  1863,
+                "height":  844
+            }
+}

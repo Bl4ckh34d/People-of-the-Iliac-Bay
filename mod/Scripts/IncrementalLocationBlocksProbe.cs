@@ -14,7 +14,7 @@ namespace PeopleOfTheIliacBay.DFU
     {
         internal static IEnumerator Run(string character)
         {
-            if (character != "PeopleOfTheIliacBayTest-9a5f197b" || GameManager.Instance.PlayerEntity.Name != character ||
+            if (character != "Hakon Ironhand" || GameManager.Instance.PlayerEntity.Name != character ||
                 (Array.IndexOf(Environment.GetCommandLineArgs(), "-peopleoftheiliacbay-location-block-probe") < 0 &&
                 Array.IndexOf(Environment.GetCommandLineArgs(), "-peopleoftheiliacbay-verify-playtest") < 0))
                 throw new InvalidOperationException("Location block parity requires the explicitly owned fixture.");

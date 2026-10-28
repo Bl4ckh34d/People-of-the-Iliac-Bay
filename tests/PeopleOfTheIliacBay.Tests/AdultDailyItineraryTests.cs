@@ -12,7 +12,6 @@ namespace PeopleOfTheIliacBay.Tests
                 {
                     var request=Request(seed);
                     request.DepartureAt=9*3600;request.LatestHomeAt=14*3600;
-                    request.MinimumAwaySeconds=1;request.MinimumStops=request.MaximumStops=1;
                     var closed=Option(10,ResidentVisitPurpose.Shop);closed.OpenMinute=10*60;
                     var open=Option(20,ResidentVisitPurpose.Shop);open.OpenMinute=8*60;
                     request.Options=new List<AdultDailyItineraryOption>{closed,open};
@@ -24,8 +23,7 @@ namespace PeopleOfTheIliacBay.Tests
                 var destinations=new HashSet<int>();
                 for(uint seed=1;seed<=64;seed++)
                 {
-                    var request=Request(seed);request.DepartureAt=12*3600;request.MinimumAwaySeconds=1;
-                    request.MinimumStops=request.MaximumStops=1;
+                    var request=Request(seed);request.DepartureAt=12*3600;
                     request.Options=new List<AdultDailyItineraryOption>{Option(10,ResidentVisitPurpose.Shop),Option(20,ResidentVisitPurpose.Shop),Option(30,ResidentVisitPurpose.Shop)};
                     Check.True(AdultDailyItineraryPlanner.TryCreate(request,out var result));
                     destinations.Add(result.Stops[0].BuildingKey);
@@ -41,14 +39,11 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.Equal(source,request.Routes[0].Route[0].X);
                 foreach(var route in request.Routes)foreach(var point in route.Route)Check.True(point.X!=99999);
             }));
-            cases.Add(("Bounded daily search reserves attempts for shorter valid itineraries", () =>
+            cases.Add(("Next useful destination fits a short window without exploring longer itineraries", () =>
             {
                 var request = Request(13);
                 request.DepartureAt = 9 * 3600;
                 request.LatestHomeAt = 11 * 3600 + 15 * 60;
-                request.MinimumAwaySeconds = 1;
-                request.MinimumStops = 1;
-                request.MaximumStops = 5;
                 request.Options.Add(Option(60, ResidentVisitPurpose.Shop));
                 foreach (var option in request.Options)
                     option.MinimumDwellSeconds = option.MaximumDwellSeconds = 45 * 60;
@@ -61,7 +56,7 @@ namespace PeopleOfTheIliacBay.Tests
                 }
                 int budget = 512;
                 Check.True(AdultDailyItineraryPlanner.TryCreate(request, ref budget, out var destination));
-                Check.Equal(2, destination.Stops.Count);
+                Check.Equal(1, destination.Stops.Count);
                 Check.True(budget >= 0 && budget < 512);
                 foreach (var stop in destination.Stops) Check.True(stop.Purpose != ResidentVisitPurpose.Social);
             }));
@@ -72,9 +67,6 @@ namespace PeopleOfTheIliacBay.Tests
                     var request = Request(seed);
                     request.DepartureAt = 9 * 3600;
                     request.LatestHomeAt = 12 * 3600;
-                    request.MinimumAwaySeconds = 1;
-                    request.MinimumStops = 1;
-                    request.MaximumStops = 2;
                     request.Options = new List<AdultDailyItineraryOption> {
                         Option(10, ResidentVisitPurpose.Shop), Option(20, ResidentVisitPurpose.Social) };
                     foreach (var option in request.Options)
@@ -92,8 +84,6 @@ namespace PeopleOfTheIliacBay.Tests
             cases.Add(("Initial local itinerary permits an evening Inn but never waits out the morning there", () =>
             {
                 var request = Request(3);
-                request.MinimumAwaySeconds = 1;
-                request.MinimumStops = request.MaximumStops = 1;
                 request.Options = new List<AdultDailyItineraryOption> { Option(20, ResidentVisitPurpose.Social) };
                 request.Options[0].OpenMinute = 0;
                 request.Options[0].CloseMinute = 24 * 60 - 1;
@@ -102,12 +92,10 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.True(AdultDailyItineraryPlanner.TryCreate(request, out destination));
                 Check.Equal(ResidentVisitPurpose.Social, destination.Stops[0].Purpose);
             }));
-            cases.Add(("Initial local itinerary uses actual Inn arrival time after afternoon errands", () =>
+            cases.Add(("Next destination keeps actual travel time and postpones early Inn visit", () =>
             {
                 var request = Request(7);
                 request.DepartureAt = 15 * 3600 + 30 * 60;
-                request.MinimumAwaySeconds = 1;
-                request.MinimumStops = request.MaximumStops = 2;
                 request.Options = new List<AdultDailyItineraryOption> {
                     Option(10, ResidentVisitPurpose.Shop), Option(20, ResidentVisitPurpose.Social) };
                 foreach (var option in request.Options)
@@ -117,11 +105,10 @@ namespace PeopleOfTheIliacBay.Tests
                 }
                 Check.True(AdultDailyItineraryPlanner.TryCreate(request, out var destination));
                 Check.Equal(ResidentVisitPurpose.Shop, destination.Stops[0].Purpose);
-                Check.Equal(ResidentVisitPurpose.Social, destination.Stops[1].Purpose);
                 foreach (var visit in ResidentVisitJourney.Create(request.DepartureAt, destination).ScheduledVisits())
-                    if (visit.BuildingKey == 20) Check.Near(16 * 3600 + 25 * 60, visit.EnterAt);
+                    Check.Near(request.DepartureAt + 300, visit.EnterAt);
             }));
-            cases.Add(("Adult itinerary deterministically plans multiple open-hour stops and returns home before sleep", () =>
+            cases.Add(("Adult itinerary deterministically picks useful open-hour destination and returns home", () =>
             {
                 var request = Request(12345);
                 ResidentDestination destination;
@@ -129,13 +116,12 @@ namespace PeopleOfTheIliacBay.Tests
                 var repeated = AdultDailyItineraryPlanner.TryCreate(Request(12345), out var same);
                 Check.True(repeated);
                 Check.Equal(Signature(destination), Signature(same));
-                Check.True(destination.Stops.Count >= 3);
+                Check.Equal(1,destination.Stops.Count);
                 var journey = ResidentVisitJourney.Create(request.DepartureAt, destination);
-                Check.True(journey.EndsAt >= request.DepartureAt + request.MinimumAwaySeconds);
                 Check.True(journey.EndsAt <= request.LatestHomeAt);
                 double activeSeconds = destination.ExitWalkSeconds;
                 foreach (var stop in destination.Stops) activeSeconds += stop.WalkSeconds + stop.DwellSeconds;
-                Check.True(activeSeconds >= request.MinimumAwaySeconds);
+                Check.True(activeSeconds > 0);
                 foreach (var visit in journey.ScheduledVisits())
                 {
                     Check.True(visit.EnterAt % 86400 >= 9 * 3600);
@@ -143,7 +129,7 @@ namespace PeopleOfTheIliacBay.Tests
                 }
                 var purposes = new HashSet<ResidentVisitPurpose>();
                 foreach (var stop in destination.Stops) purposes.Add(stop.Purpose);
-                Check.True(purposes.Count >= 3);
+                Check.Equal(1,purposes.Count);
                 Check.Near(0, destination.ExitRoute[destination.ExitRoute.Count - 1].X);
                 Check.Near(0, destination.ExitRoute[destination.ExitRoute.Count - 1].Z);
             }));
@@ -163,12 +149,11 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.True(destination == null);
                 var noTime = Request(4);
                 noTime.LatestHomeAt = noTime.DepartureAt + 60;
-                noTime.MinimumAwaySeconds = 30;
                 Check.True(!AdultDailyItineraryPlanner.TryCreate(noTime, out destination));
                 var longWait = Request(5);
                 longWait.DepartureAt = 30 * 60;
-                longWait.MinimumAwaySeconds = 10 * 3600;
-                Check.True(!AdultDailyItineraryPlanner.TryCreate(longWait, out destination));
+                Check.True(AdultDailyItineraryPlanner.TryCreate(longWait, out destination));
+                Check.Equal(1,destination.Stops.Count);
                 var lodgingPurpose = Request(6);
                 lodgingPurpose.Options[0].Purpose = ResidentVisitPurpose.Inn;
                 Check.Throws<ArgumentException>(() => AdultDailyItineraryPlanner.TryCreate(lodgingPurpose, out destination));
@@ -196,7 +181,7 @@ namespace PeopleOfTheIliacBay.Tests
             return new AdultDailyItineraryRequest
             {
                 HomeBuildingKey = 0, DepartureAt = 8 * 3600, LatestHomeAt = 19 * 3600,
-                MinimumAwaySeconds = 6 * 3600, MinimumStops = 3, MaximumStops = 4, Seed = seed,
+                Seed = seed,
                 Options = new List<AdultDailyItineraryOption>
                 {
                     Option(10, ResidentVisitPurpose.Shop), Option(20, ResidentVisitPurpose.Social),

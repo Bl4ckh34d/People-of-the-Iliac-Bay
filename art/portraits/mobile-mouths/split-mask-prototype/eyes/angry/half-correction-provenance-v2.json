@@ -1,0 +1,24 @@
+{
+  "task": "targeted angry half-blink upper-lid edge correction",
+  "source": {
+    "path": "art/portraits/mobile-mouths/split-mask-prototype/eyes/angry/raw.png",
+    "sha256": "6014BCAF82772D7F2789602B10D2D5B2444A360DF3BA058A7BED5FCF41DA1C90",
+    "dimensions_px": [1695, 928]
+  },
+  "reference_inspected": "art/portraits/mobile-mouths/split-mask-prototype/eyes/angry/half.png",
+  "prompt": "Edit this exact 2x2 pixel-art eye sheet, preserving its full canvas, layout, proportions, soft muted palette, face geometry and native pixel texture. Grid cells are 64x? upper-face crops in order: top-left OPEN (cell 0), top-right HALF (cell 1), bottom-left CLOSED (cell 2), bottom-right OPEN repeat (cell 3). Make a tightly localized correction only in cell 1 (top-right): on the viewer-left eye, remove the single light/skin/white pixel interrupting the dark upper eyelid edge. Continue the eyelid's existing dark brown pixel row smoothly and continuously through that exact spot, matching the adjacent dark lid pixels and keeping the same line thickness and position. Keep the eyeball and purple iris/pupil exactly the same width and horizontal position as in cell 0; do not shift or redraw either brow, the other eye, or any face area. Preserve cells 0, 2, and 3 exactly as references, with no other changes. Return the complete same-size 2x2 sheet only. No extra outlines, no new highlights, no smoothing, no added detail.",
+  "generation_count": 1,
+  "phase": "half",
+  "cell_index": 1,
+  "grid_order": ["open", "half", "closed", "open-repeat"],
+  "generated_image_path": "C:/Users/Daniel/.codex/generated_images/01a15fde-8b98-7181-a1df-84e7b766303c/exec-8f968ef3-960b-4a56-a726-d1bb07a021dc.png",
+  "saved_raw_output": {
+    "path": "art/portraits/mobile-mouths/split-mask-prototype/eyes/angry/half-correction-v2.png",
+    "sha256": "FAC7D6A907F16BD9D3B4DBD6FD7402D753A08245AA50268714179DBD38403721",
+    "dimensions_px": [1694, 929]
+  },
+  "visual_review": {
+    "status": "pending parent review",
+    "visible_issue": "The viewer-left upper-lid edge still appears to have a light interruption near its inner/right portion at the displayed native-pixel view. ImageGen also returned a canvas 1 px narrower and 1 px taller than the source; no post-generation edits were made."
+  }
+}

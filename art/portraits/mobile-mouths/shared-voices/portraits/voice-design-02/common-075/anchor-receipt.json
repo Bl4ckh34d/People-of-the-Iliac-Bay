@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "portraitId": "common-075",
+  "profileId": "common-075-voice-design-02",
+  "profilePath": "work/portrait-female-voice-design-02/profiles/common-075.json",
+  "profileSha256": "6f359610412b1518e4c6b838beaecd3e8ffdb40ff345a57325fc66da9dbf4573",
+  "attributes": {
+    "pitch": "a middle mezzo-soprano register",
+    "timbre": "bright and forward-resonant",
+    "roughness": "smooth and clear",
+    "breathiness": "with softly breathy phrasing",
+    "vocalFry": "with a light creaky edge on low phrase endings",
+    "pace": "a measured conversational pace"
+  },
+  "stableInstruction": "An adult woman speaking British English with a neutral southern English accent. Her distinctive voice has a middle mezzo-soprano register; its timbre is bright and forward-resonant, smooth and clear, with softly breathy phrasing, with a light creaky edge on low phrase endings. Use a measured conversational pace. Keep this individual vocal identity consistent; speak naturally, without caricature, shouting, or added vocal events.",
+  "seed": 1777498247,
+  "guidanceScale": 4.0,
+  "anchorText": "Good day. I have been in this town for many years. What brings you here today?",
+  "anchorRequestPurpose": "Breeze VoiceDesign without voice_ref; stable per-woman profile instruction and seed.",
+  "requestPayload": {
+    "model": "breeze",
+    "input": "Good day. I have been in this town for many years. What brings you here today?",
+    "response_format": "pcm",
+    "stream_format": "sse",
+    "options": {
+      "instruct": "An adult woman speaking British English with a neutral southern English accent. Her distinctive voice has a middle mezzo-soprano register; its timbre is bright and forward-resonant, smooth and clear, with softly breathy phrasing, with a light creaky edge on low phrase endings. Use a measured conversational pace. Keep this individual vocal identity consistent; speak naturally, without caricature, shouting, or added vocal events.",
+      "guidance_scale": 4.0,
+      "stream_lookahead_margin": 0,
+      "stream_chunk_policy": "grow",
+      "seed": 1777498247
+    }
+  },
+  "requestPayloadSha256": "ebf12a9914c441fc3318e7e94ac8c56a4d1136391700443d2cfebf490c7f349d",
+  "referenceWav": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait-female-voice-design-02\\anchors\\common-075\\reference.wav",
+  "referenceSha256": "29cfd63cd8f5a81d767c16c1ab6e2bd457461da906e6db6931a076f5eb9bbc5d",
+  "referenceRawWav": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait-female-voice-design-02\\anchors\\common-075\\reference.raw.wav",
+  "referenceRawSha256": "4f238091f56927744679b36fc8c07d4a8e0b73adef7e0b7e5773ef29b081cccd",
+  "audioSampleRate": 24000,
+  "audioFrames": 134400,
+  "normalization": {
+    "schemaVersion": 1,
+    "normalizer": "pcm16-active-rms-v1",
+    "status": "normalized",
+    "targetActiveRmsDbfs": -20.0,
+    "peakCeilingDbfs": -3.0,
+    "maxBoostDb": 12.0,
+    "gateDbfs": -50.0,
+    "appliedGainDb": -4.913019830968364,
+    "input": {
+      "sha256": "4f238091f56927744679b36fc8c07d4a8e0b73adef7e0b7e5773ef29b081cccd",
+      "sampleRate": 24000,
+      "channels": 1,
+      "sampleWidthBytes": 2,
+      "frames": 134400,
+      "peakDbfs": -2.301002258117966,
+      "activeRmsDbfs": -15.086980169031637,
+      "activeFrames": 93600
+    },
+    "output": {
+      "sha256": "29cfd63cd8f5a81d767c16c1ab6e2bd457461da906e6db6931a076f5eb9bbc5d",
+      "sampleRate": 24000,
+      "channels": 1,
+      "sampleWidthBytes": 2,
+      "frames": 134400,
+      "peakDbfs": -7.213826316110822,
+      "activeRmsDbfs": -19.932699784956082,
+      "activeFrames": 92160
+    }
+  },
+  "synthesis": {
+    "outputWav": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait-female-voice-design-02\\anchors\\common-075\\reference.raw.wav",
+    "pcmBytes": 268800,
+    "sampleRate": 24000,
+    "channels": 1,
+    "synthesisMs": 2822.318,
+    "firstAudioMs": 582.962,
+    "audioDeltaCount": 8,
+    "serverTiming": {
+      "ttft_ms": 535.616
+    }
+  }
+}

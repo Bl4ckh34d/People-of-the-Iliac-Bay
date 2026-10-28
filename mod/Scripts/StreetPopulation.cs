@@ -211,7 +211,7 @@ namespace PeopleOfTheIliacBay.DFU
         public void InstallReactionHook()
         {
             var type = Type.GetType("PeopleOfTheIliacBay.QuestHooks.NativeCivilianHooks, PeopleOfTheIliacBay.QuestHooks", true);
-            reactionHook = (IDisposable)Activator.CreateInstance(type, new object[] { new Func<Transform, Action<Exception>>(BeginWeaponHit) });
+            reactionHook = (IDisposable)Activator.CreateInstance(type, new object[] { new Func<Transform, Action<Exception>>(BeginWeaponHit),new Func<Transform, Action<Exception>>(BeginStationaryHealthHit) });
             InstallHouseholdDoorHook();
             InstallTheftHook();
             InstallPlayerShopProvenanceHook();
@@ -224,10 +224,17 @@ namespace PeopleOfTheIliacBay.DFU
         public bool IsConcealedHit(string id) { return concealedHits.Contains(id); }
         private Action<Exception> BeginWeaponHit(Transform target)
         {
+            var stationary=target?target.GetComponentInParent<StaticNPC>():null;
+            if(stationary)
+            {
+                var host=GetComponent<PeopleOfTheIliacBayMod>();var life=host?host.EnsureStationaryLife(stationary):null;
+                if(life)return life.BeginPlayerHit(true);
+            }
             var actor = target ? target.GetComponent<ResidentActor>() : null;
             bool eligible = ReactionsEnabled && Ready && responses != null && actor && actor.Resident.IsAlive &&
                 FindActor(actor.Resident.Id) == actor;
             var previousCrime = GameManager.Instance.PlayerEntity.CrimeCommitted;
+            var actualVictimHit=eligible?BeginPlayerResidentAttack(actor,GameManager.Instance.PlayerEntityBehaviour):null;
             BeforeWeaponHit(target);
             if (!eligible) return BeginKeeperHit(target);
             int deathBuilding = interior ? interior.EntryDoor.buildingKey : -1;
@@ -238,6 +245,7 @@ namespace PeopleOfTheIliacBay.DFU
                 guards && guards.OwnsSettlement &&
                 !alarm.People.Exists(p => p.DirectWitness) && concealedHits.Add(actor.Resident.Id);
             return error => {
+                actualVictimHit?.Invoke(error);
                 if (concealed) concealedHits.Remove(actor.Resident.Id);
                 if (!actor.Resident.IsAlive)
                 {
@@ -388,7 +396,7 @@ namespace PeopleOfTheIliacBay.DFU
             }
             id = null; ground = Vector3.zero; return false;
         }
-        public ResidentActor FindActor(string id) { ResidentActor actor; return actors.TryGetValue(id, out actor) ? actor : null; }
+        public ResidentActor FindActor(string id) { ResidentActor actor; return actors.TryGetValue(id, out actor) ? actor : FindMarketCommuterActor(id); }
         public void ReleaseTransferredActor(ResidentActor actor)
         {
             if(actor && FindActor(actor.Resident.Id)==actor)
@@ -437,18 +445,20 @@ namespace PeopleOfTheIliacBay.DFU
                 !IsAlarmed(id) && !worldStore.IsResidentAway(id,seconds))
                 return new ActivitySnapshot(Activity.Recovery,care.PausedPosition.BuildingKey,
                     new RoutePoint(care.PausedPosition.X,care.PausedPosition.Z),0);
+            ActivitySnapshot market;
+            if(TryMarketCommuterState(id,out market))return market;
             ActivitySnapshot destination;
             if(worldStore!=null && population!=null &&
                 worldStore.TryDestinationResidentState(id,population.SettlementId,seconds,out destination))
                 return destination.BuildingKey>=0 && ResidentInnSleeping(id,seconds) ?
                     new ActivitySnapshot(Activity.Sleep,destination.BuildingKey,destination.Position,0) : destination;
+            TravelerPlan traveler;
+            if(travelerPlans.TryGetValue(id,out traveler)) return TravelerState(traveler,seconds);
             if(worldStore!=null && worldStore.IsResidentAway(id,seconds))
                 return worldStore.LocalResidentState(id,seconds,default(ActivitySnapshot));
             var plan = plans.Find(item => item.Resident.Id == id);
             if (plan == null)
             {
-                TravelerPlan traveler;
-                if(travelerPlans.TryGetValue(id,out traveler)) return TravelerState(traveler,seconds);
                 throw new ArgumentException("Unknown resident schedule.");
             }
             ActivitySnapshot joint;
@@ -600,99 +610,72 @@ namespace PeopleOfTheIliacBay.DFU
                         geometry.Entrances.ContainsKey(home.BuildingKey))
                     {
                         var options = SelectDailyItineraryOptions(destinations, resident, home.BuildingKey);
-                        var buildingKeys = new List<int> { home.BuildingKey };
-                        foreach (var option in options) buildingKeys.Add(option.BuildingKey);
                         var residentRoutes = new Dictionary<DailyRouteKey, DailyRoute>();
-
-                        // Survey only each resident's bounded candidate graph. The shared
-                        // cache reuses paths across residents; reverse paths reuse the same
-                        // validated static route in the opposite direction.
-                        for (int fromIndex = 0; fromIndex < buildingKeys.Count; fromIndex++)
-                        for (int toIndex = 0; toIndex < buildingKeys.Count; toIndex++)
+                        double departure = DailyDepartureSeconds(resident, wake, sleep);
+                        double latestHome = DailyReturnDeadline(sleep);
+                        // Try one useful destination at a time. Once admitted, later
+                        // day windows can add another outing without an all-pairs survey.
+                        foreach (var option in options)
                         {
-                            int from = buildingKeys[fromIndex], to = buildingKeys[toIndex];
-                            if (from == to || GetDailyRoute(from, to, residentRoutes) != null) continue;
-                            var routeResult = new TownGeometry.RouteResult();
-                            Func<bool> stillCurrent = () => directory && directory.gameObject.activeInHierarchy &&
-                                ReferenceEquals(this.population, population) && ReferenceEquals(worldStore, store);
-                            var routeWork = geometry.ReadRouteSteps(geometry.Entrances[from], geometry.Entrances[to],
-                                routeResult, stillCurrent);
-                            bool routeFinished = false;
-                            try
+                            if (routine.Itinerary != null) break;
+                            if (option.Purpose == ResidentVisitPurpose.Social) continue;
+                            int from = home.BuildingKey, to = option.BuildingKey;
+                            if (GetDailyRoute(from, to, residentRoutes) == null)
                             {
-                                while (!routeFinished)
-                                {
-                                    while (GameManager.Instance.PlayerEnterExit.IsPlayerInside || GameManager.IsGamePaused)
-                                        yield return null;
-                                    if (!stillCurrent()) yield break;
-                                    long sliceStarted = RuntimeTiming.Start("daily-route-slice");
-                                    var budget = System.Diagnostics.Stopwatch.StartNew();
-                                    try
-                                    {
-                                        do
-                                        {
-                                            if (GameManager.Instance.PlayerEnterExit.IsPlayerInside || GameManager.IsGamePaused ||
-                                                !stillCurrent()) break;
-                                            routeFinished = !routeWork.MoveNext();
-                                        }
-                                        while (!routeFinished && budget.Elapsed.TotalMilliseconds < 4);
-                                    }
-                                    finally { RuntimeTiming.End("daily-route-slice", sliceStarted); }
-                                    if (!routeFinished) yield return null;
-                                }
-                            }
-                            finally { (routeWork as IDisposable)?.Dispose(); }
-                            if (routeResult.Points == null) yield break;
-                            residentRoutes[new DailyRouteKey { From = from, To = to }] =
-                                SurveyDailyRoute(from, to, routeResult.Points);
-                            yield return null;
-                        }
-
-                        var routes = new List<AdultDailyItineraryLeg>();
-                        for (int fromIndex = 0; fromIndex < buildingKeys.Count; fromIndex++)
-                        for (int toIndex = 0; toIndex < buildingKeys.Count; toIndex++)
-                        {
-                            int from = buildingKeys[fromIndex], to = buildingKeys[toIndex];
-                            if (from == to) continue;
-                            var route = GetDailyRoute(from, to, residentRoutes);
-                            if (route == null || route.Points.Count < 2 || route.WalkSeconds <= 0) continue;
-                            var leg = new AdultDailyItineraryLeg { FromBuildingKey = from, ToBuildingKey = to,
-                                WalkSeconds = route.WalkSeconds*ResidentMovement.WalkSpeed/ResidentMovement.WalkSpeedFor(resident.AppearanceSeed) };
-                            foreach (var point in route.Points)
-                                leg.Route.Add(new SavedRoutePoint { X = point.X, Z = point.Z });
-                            routes.Add(leg);
-                        }
-
-                        if (options.Count > 0 && routes.Count > 0)
-                        {
-                            double departure = DailyDepartureSeconds(resident, wake, sleep);
-                            double latestHome = DailyReturnDeadline(sleep);
-                            int minimumStops = Math.Min(3, options.Count);
-                            int maximumStops = Math.Min(5, options.Count);
-                            int[] activeMinimums = options.Count >= 3 ? new[] { 3 * 3600, 2 * 3600, 90 * 60 } :
-                                options.Count == 2 ? new[] { 90 * 60, 45 * 60 } : new[] { 20 * 60 };
-                            for (int stopFloor = minimumStops; stopFloor >= 1 && routine.Itinerary == null; stopFloor--)
-                            for (int activeIndex = 0; activeIndex < activeMinimums.Length && routine.Itinerary == null; activeIndex++)
-                            {
-                                var request = new AdultDailyItineraryRequest { HomeBuildingKey = home.BuildingKey,
-                                    DepartureAt = departure, LatestHomeAt = latestHome,
-                                    MinimumAwaySeconds = activeMinimums[activeIndex], MinimumStops = stopFloor,
-                                    MaximumStops = maximumStops, Seed = resident.AppearanceSeed,
-                                    Options = options, Routes = routes };
-                                ResidentDestination itinerary;
-                                bool planned;
-                                long planStarted = RuntimeTiming.Start("daily-itinerary-plan");
+                                var routeResult = new TownGeometry.RouteResult();
+                                Func<bool> stillCurrent = () => directory && directory.gameObject.activeInHierarchy &&
+                                    ReferenceEquals(this.population, population) && ReferenceEquals(worldStore, store);
+                                var routeWork = geometry.ReadRouteSteps(geometry.Entrances[from], geometry.Entrances[to],
+                                    routeResult, stillCurrent);
+                                bool routeFinished = false;
                                 try
                                 {
-                                    planned = AdultDailyItineraryPlanner.TryCreate(request, out itinerary);
+                                    while (!routeFinished)
+                                    {
+                                        while (GameManager.Instance.PlayerEnterExit.IsPlayerInside || GameManager.IsGamePaused)
+                                            yield return null;
+                                        if (!stillCurrent()) yield break;
+                                        long sliceStarted = RuntimeTiming.Start("daily-route-slice");
+                                        var budget = System.Diagnostics.Stopwatch.StartNew();
+                                        try
+                                        {
+                                            do
+                                            {
+                                                if (GameManager.Instance.PlayerEnterExit.IsPlayerInside || GameManager.IsGamePaused ||
+                                                    !stillCurrent()) break;
+                                                routeFinished = !routeWork.MoveNext();
+                                            }
+                                            while (!routeFinished && budget.Elapsed.TotalMilliseconds < 4);
+                                        }
+                                        finally { RuntimeTiming.End("daily-route-slice", sliceStarted); }
+                                        if (!routeFinished) yield return null;
+                                    }
                                 }
-                                catch (ArgumentException) { continue; }
-                                finally { RuntimeTiming.End("daily-itinerary-plan", planStarted); }
-                                if (!planned) continue;
-                                routine.Itinerary = itinerary;
-                                routine.ItineraryDepartureSeconds = departure;
-                                KeepFirstStopAsLegacyRoute(routine, itinerary);
+                                finally { (routeWork as IDisposable)?.Dispose(); }
+                                if (routeResult.Points == null) yield break;
+                                residentRoutes[new DailyRouteKey { From = from, To = to }] =
+                                    SurveyDailyRoute(from, to, routeResult.Points);
+                                yield return null;
                             }
+                            var route = GetDailyRoute(from, to, residentRoutes);
+                            if (route == null || route.Points.Count < 2 || route.WalkSeconds <= 0) continue;
+                            double walk = route.WalkSeconds * ResidentMovement.WalkSpeed / ResidentMovement.WalkSpeedFor(resident.AppearanceSeed);
+                            var reverse = new List<SavedRoutePoint>(route.Points); reverse.Reverse();
+                            var request = new AdultDailyItineraryRequest { HomeBuildingKey = home.BuildingKey,
+                                DepartureAt = departure, LatestHomeAt = latestHome, Seed = resident.AppearanceSeed,
+                                Options = new List<AdultDailyItineraryOption> { option },
+                                Routes = new List<AdultDailyItineraryLeg> {
+                                    new AdultDailyItineraryLeg { FromBuildingKey = from, ToBuildingKey = to, WalkSeconds = walk, Route = route.Points },
+                                    new AdultDailyItineraryLeg { FromBuildingKey = to, ToBuildingKey = from, WalkSeconds = walk, Route = reverse } } };
+                            ResidentDestination itinerary; bool planned;
+                            long planStarted = RuntimeTiming.Start("daily-itinerary-plan");
+                            try { planned = AdultDailyItineraryPlanner.TryCreate(request, out itinerary); }
+                            catch (ArgumentException) { continue; }
+                            finally { RuntimeTiming.End("daily-itinerary-plan", planStarted); }
+                            if (!planned) continue;
+                            routine.Itinerary = itinerary;
+                            routine.ItineraryDepartureSeconds = departure;
+                            KeepFirstStopAsLegacyRoute(routine, itinerary);
                         }
 
                         // Preserve original single-destination route as a fallback when
@@ -838,6 +821,25 @@ namespace PeopleOfTheIliacBay.DFU
             if (!directory) { if (plans.Count > 0) Clear(); return; }
             var game = GameManager.Instance;
             if (!Ready || game == null || !game.IsReady) return;
+            var stream=game.StreamingWorld;var enterExit=game.PlayerEnterExit;
+            if(!stream || !enterExit || stream.IsInit || stream.IsRepositioningPlayer ||
+                !game.PlayerGPS.HasCurrentLocation || directory.MapID!=game.PlayerGPS.CurrentLocation.MapTableData.MapId)return;
+            // The exterior owner is disabled inside buildings. Only the actual
+            // loaded interior may tick there; a cached town cannot spawn bodies
+            // beneath an inactive parent while another location is streaming.
+            if(enterExit.IsPlayerInsideDungeon)
+            {
+                if(game.IsPlayingGame() && !GameManager.IsGamePaused && !game.SaveLoadManager.LoadInProgress)
+                {
+                    var clock=DaggerfallUnity.Instance.WorldTime.Now;
+                    UpdateDungeonCustody(enterExit.Dungeon,clock.ToSeconds()+(clock.Second-Math.Floor(clock.Second)));
+                }
+                return;
+            }
+            if(enterExit.IsPlayerInsideBuilding)
+            {if(!enterExit.Interior || !enterExit.Interior.gameObject.activeInHierarchy)return;}
+            else if(enterExit.IsPlayerInside || !stream.IsReady || !directory.gameObject.activeInHierarchy ||
+                !ReferenceEquals(directory,stream.GetCurrentBuildingDirectory()))return;
             if(!game.IsPlayingGame())
             {
                 // Native Talk and other pausing windows bypass actor updates.
@@ -852,16 +854,23 @@ namespace PeopleOfTheIliacBay.DFU
             bool skipped=ShopVisitJourney.NeedsCatchup(lastPopulationSeconds,seconds,
                 Time.unscaledDeltaTime,DaggerfallUnity.Instance.WorldTime.TimeScale);
             var currentRoom=game.PlayerEnterExit.IsPlayerInsideBuilding?game.PlayerEnterExit.Interior:null;
-            if(skipped && lastPopulationSeconds>=0)YieldHouseholds(lastPopulationSeconds);
+            bool retainObservedInn=skipped && interior && ReferenceEquals(interior,currentRoom) && HasObservedHouseholdInnOwner();
+            if(skipped && lastPopulationSeconds>=0)YieldHouseholds(lastPopulationSeconds,retainObservedInn);
             if(skipped && interior && ReferenceEquals(interior,currentRoom))
             {
                 // Capture the last observed moment, before the skipped time. The
                 // saved remaining route then advances analytically to the new time.
                 CaptureObservedVisits(lastPopulationSeconds);
-                foreach(var id in physicalShopVisits.Keys) if(shopGeometry!=null)shopGeometry.ReleaseCounter(id);
-                ClearActors();indoorSlots.Clear();shopDepartures.Clear();
-                reconstructInteriorVisits=true;
-                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_INDOOR_TIME_CATCHUP: from="+lastPopulationSeconds+"; to="+seconds);
+                if(!retainObservedInn)
+                {
+                    foreach(var id in physicalShopVisits.Keys) if(shopGeometry!=null)shopGeometry.ReleaseCounter(id);
+                    ClearActors(retainTravelDoorBodies:true);indoorSlots.Clear();shopDepartures.Clear();
+                    reconstructInteriorVisits=true;
+                }
+                // A still observed pair keeps its real chair/exit motion owner.
+                // TickHouseholdInns consumes elapsed dwell, then walks the exit.
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_INDOOR_TIME_CATCHUP: from="+lastPopulationSeconds+"; to="+seconds+
+                    "; physicalFamilyOwnerPreserved="+retainObservedInn);
             }
             lastPopulationSeconds=seconds;
             long phase=RuntimeTiming.Start("household-days");
@@ -942,7 +951,7 @@ namespace PeopleOfTheIliacBay.DFU
             try { PrepareHouseholdOwners(seconds); }
             finally { RuntimeTiming.End("household-owners",phase); }
             phase=RuntimeTiming.Start("traveler-actors");
-            try { UpdateTravelerActors(seconds); }
+            try { UpdateTravelerActors(seconds,skipped); }
             finally { RuntimeTiming.End("traveler-actors",phase); }
             phase=RuntimeTiming.Start("destination-actors");
             try { UpdateDestinationActors(seconds); }
@@ -952,6 +961,9 @@ namespace PeopleOfTheIliacBay.DFU
             UpdateEntryReports(seconds);
             UpdateOutdoorScenes(seconds);
             UpdateCorpses(seconds);
+            phase=RuntimeTiming.Start("market-commuters");
+            try { TickMarketCommuters(seconds); }
+            finally { RuntimeTiming.End("market-commuters",phase); }
             if(ReactionsEnabled && responses!=null && Time.unscaledTime>=nextThreatSurvey)
             {
                 nextThreatSurvey=Time.unscaledTime+0.5f;
@@ -993,13 +1005,15 @@ namespace PeopleOfTheIliacBay.DFU
             foreach (var plan in RuntimePlansWithPaidDoor(seconds))
             {
                 if(density!=null)density.Considered++;
-                if(simulatedFamilyFrame.Contains(plan.Resident.Id)){if(density!=null)density.SimulatedFamily++;continue;}
-                if(pendingHouseholdInitialization.Contains(plan.Resident.Id)){if(density!=null)density.FamilyPreparing++;continue;}
-                if(roadTravelActors && roadTravelActors.OwnsPaidCompanion(plan.Resident.Id))continue;
+                bool flightPriority=worldStore.HasActiveNpcCustody(plan.Resident.Id) || Reaction(plan.Resident.Id,seconds)?.Reaction==CivilianReaction.Flee;
+                if(!flightPriority && simulatedFamilyFrame.Contains(plan.Resident.Id)){if(density!=null)density.SimulatedFamily++;continue;}
+                if(!flightPriority && pendingHouseholdInitialization.Contains(plan.Resident.Id)){if(density!=null)density.FamilyPreparing++;continue;}
+                if(!flightPriority && roadTravelActors && roadTravelActors.OwnsPaidCompanion(plan.Resident.Id))continue;
                 var state = worldStore.IsResidentAway(plan.Resident.Id,seconds) ? Scheduled(plan,seconds) :
                     EntryState(plan.Resident.Id, seconds, Scheduled(plan,seconds));
                 ActivitySnapshot jointState;
                 if(TryHouseholdJointTravelState(plan,out jointState))state=jointState;
+                state=MarketVisitState(plan,seconds,state);
                 ResidentActor actor;
                 actors.TryGetValue(plan.Resident.Id, out actor);
                 if(actor && actor.gameObject.activeInHierarchy) RecognizePartnerKiller(actor,seconds,directory.transform,-1);
@@ -1007,6 +1021,9 @@ namespace PeopleOfTheIliacBay.DFU
                 if(reaction!=null || !plan.Resident.IsAlive || QuestOwned(plan.Resident))
                 { worldStore.RemoveObservedVisit(plan.Resident.Id);RemovePhysicalShopVisit(plan.Resident.Id); }
                 if (!interior && ApplyOutdoorBodyReport(plan,ref actor,seconds,reaction)) continue;
+                // A real pending complaint owns the body before routine visibility,
+                // proactive approaches or household movement can send it home.
+                if(actor && (reaction==null || !reaction.HasPosition) && PlaceDialogueComplaint(actor,seconds))continue;
                 if(ApplyNpcActionOverlay(plan,ref actor,seconds,reaction)){if(density!=null)density.ActionOwned++;continue;}
                 if(reaction!=null) ClearProactiveContactMotion(plan.Resident.Id);
                 else if(ApplyProactiveContactApproach(plan,ref actor,seconds)) continue;
@@ -1071,6 +1088,7 @@ namespace PeopleOfTheIliacBay.DFU
                     Vector3 lawfulGuard;
                     var alarm=AlarmForReaction(plan.Resident.Id,reaction,seconds);
                     if(TryLawfulGuardFlightDanger(actor,out lawfulGuard)) danger=lawfulGuard;
+                    else if(alarm!=null && alarm.ThreatId==NpcDirectedRelationship.PlayerTargetId)danger=player;
                     else if(alarm!=null && (alarm.ThreatId!=null || alarm.KillerThreatId!=null))
                     {
                         Vector3 current; var guards=GetComponent<GuardPopulation>();
@@ -1100,6 +1118,7 @@ namespace PeopleOfTheIliacBay.DFU
                 if (ApplyHaltBystander(actor, player, position, seconds)) continue;
                 if (PlaceStreetChat(actor,seconds)) continue;
                 if (DeferHouseholdJointBody(plan,actor)) continue;
+                if (PlaceMarketVisit(plan,actor,state,seconds)) continue;
                 if (PlaceClosedShopWait(plan,actor,state,seconds)) continue;
                 var next = worldStore.IsResidentAway(plan.Resident.Id,seconds+0.1) ? Scheduled(plan,seconds+0.1) :
                     EntryState(plan.Resident.Id, seconds + 0.1, Scheduled(plan,seconds + 0.1));
@@ -1112,6 +1131,7 @@ namespace PeopleOfTheIliacBay.DFU
                 RecognizePartnerKiller(actor,seconds,directory.transform,-1);
             }
             TickHouseholdJointBodies(seconds);
+            TickFamilyExperienceSharing(seconds);
             ReportStreetDensity(density);
         }
         private void UpdateInterior(double seconds)
@@ -1121,8 +1141,9 @@ namespace PeopleOfTheIliacBay.DFU
             var bodies=worldStore.ObserveCorpses(population.SettlementId,interior.EntryDoor.buildingKey,seconds);
             foreach (var plan in RuntimePlansWithPaidDoor(seconds))
             {
-                if(simulatedFamilyFrame.Contains(plan.Resident.Id))continue;
-                if(pendingHouseholdInitialization.Contains(plan.Resident.Id))continue;
+                bool flightPriority=worldStore.HasActiveNpcCustody(plan.Resident.Id) || Reaction(plan.Resident.Id,seconds)?.Reaction==CivilianReaction.Flee;
+                if(!flightPriority && simulatedFamilyFrame.Contains(plan.Resident.Id))continue;
+                if(!flightPriority && pendingHouseholdInitialization.Contains(plan.Resident.Id))continue;
                 var state = EntryState(plan.Resident.Id, seconds, Scheduled(plan,seconds));
                 ActivitySnapshot jointState;bool sharedInn=TryHouseholdJointTravelState(plan,out jointState) && jointState.Activity==Activity.Visit;
                 if(sharedInn)state=jointState;
@@ -1295,6 +1316,7 @@ namespace PeopleOfTheIliacBay.DFU
                     continue;
                 }
                 BedAssignment bedClaim;
+                Vector3 bedside;
                 if(reaction==null && DeferHouseholdInn(plan,actor,seconds))continue;
                 var art = reaction == null && SleepEnabled && state.Activity == Activity.Sleep && sleepingArt != null &&
                     bedClaims.TryGetValue(plan.Resident.Id, out bedClaim) && bedClaim.SharingCount == 1 ?
@@ -1304,13 +1326,19 @@ namespace PeopleOfTheIliacBay.DFU
                     bedClaim = bedClaims[plan.Resident.Id];
                     actor.Sleep(interior.transform, indoorBeds[bedClaim.BedRecordIndex], art);
                 }
+                else if(reaction==null && SleepEnabled && state.Activity==Activity.Sleep &&
+                    bedClaims.TryGetValue(plan.Resident.Id,out bedClaim) && bedClaim.SharingCount==1 &&
+                    indoorGeometry.StandBesideBed(indoorBeds[bedClaim.BedRecordIndex],out bedside))
+                    actor.Place(bedside,Vector3.forward,true);
                 else if(reaction==null && PlaceStreetChat(actor,seconds)) { }
                 else if(reaction==null && state.Activity==Activity.Visit && PlaceShopVisit(actor,seconds)) { }
                 else actor.Place(interior.transform.TransformPoint(indoorGeometry.LocalAnchors[slot]), Vector3.forward, true,freeStanding:state.Activity==Activity.Home||state.Activity==Activity.Visit);
+                ConsumeOrdinaryPurchasesAtHome(actor,state);
                 RecognizePartnerKiller(actor,seconds,interior.transform,interior.EntryDoor.buildingKey);
             }
             TickHouseholdInns(seconds);
             if(shopGeometry!=null) UpdateInnChats(seconds);
+            TickFamilyExperienceSharing(seconds);
         }
         private bool PlaceShopVisit(ResidentActor actor,double seconds)
         {
@@ -1534,7 +1562,7 @@ namespace PeopleOfTheIliacBay.DFU
             foreach(var visit in physicalShopVisits.Values) visit.ReleaseReservations();
             physicalShopVisits.Clear();
         }
-        private void ClearActors()
+        private void ClearActors(bool retainTravelDoorBodies=false)
         {
             if(!destroyingPopulation)
             {
@@ -1549,8 +1577,17 @@ namespace PeopleOfTheIliacBay.DFU
             ClearInnChats();
             ClearStreetChats();nextStreetChat.Clear();nextChatScan=0;
             partnerRetaliation.Clear();nextGrudgeCheck.Clear();
-            foreach (var actor in actors.Values) if (actor) { actor.CaptureState(); actor.gameObject.SetActive(false); Destroy(actor.gameObject); }
-            actors.Clear();
+            foreach(var pair in new List<KeyValuePair<string,ResidentActor>>(actors))
+            {
+                var actor=pair.Value;PaidDoorPlanBinding binding;
+                // A clock catch-up is not a scene departure. Keep the observed
+                // travel body so the action overlay can process expiry in place.
+                if(retainTravelDoorBodies && actor && actor.Resident.IsAlive &&
+                    paidDoorPlans.TryGetValue(pair.Key,out binding) && ReferenceEquals(binding.Store,worldStore) &&
+                    binding.Plan!=null && ReferenceEquals(binding.Plan.Resident,actor.Resident))continue;
+                if(actor){actor.CaptureState();actor.gameObject.SetActive(false);Destroy(actor.gameObject);}
+                actors.Remove(pair.Key);
+            }
         }
         private void UpdateCorpses(double seconds)
         {
@@ -1604,6 +1641,8 @@ namespace PeopleOfTheIliacBay.DFU
             // Town/fast-travel changes can advance the clock before teardown.
             // Yield at the last actual frame so unloaded time remains consumable.
             if(!destroyingPopulation && lastPopulationSeconds>=0)YieldHouseholds(lastPopulationSeconds);
+            ResetMarketVisits();
+            ReleaseMarketCommuters();
             if(!destroyingPopulation && !GameManager.Instance.IsPlayerInside && roadTravelActors && worldStore!=null)
             {
                 double now=lastPopulationSeconds>=0?lastPopulationSeconds:ActionNow();

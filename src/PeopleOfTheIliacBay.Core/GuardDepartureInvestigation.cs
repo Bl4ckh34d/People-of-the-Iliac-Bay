@@ -67,7 +67,7 @@ namespace PeopleOfTheIliacBay.Core
             var report=Reports.Find(r=>r.Id==guard.IncidentId);
             if(report==null || (!report.DepartureInvestigation && !report.HasCorpseInquiryWindow) || report.SearchRoute==null)return null;
             var path=report.SearchRoute;
-            double phase=(now-guard.ArrivesAt)*report.SearchLaps/UnwitnessedScene.OccupationSeconds;
+            double phase=(Math.Max(now,guard.SearchPauseUntil)-guard.SearchDelaySeconds-guard.ArrivesAt)*report.SearchLaps/UnwitnessedScene.OccupationSeconds;
             double along=(phase-Math.Floor(phase))*Length(path);
             var result=new List<SavedRoutePoint>{SearchPosition(report,guard,now)};
             for(int i=1;i<path.Count;i++)

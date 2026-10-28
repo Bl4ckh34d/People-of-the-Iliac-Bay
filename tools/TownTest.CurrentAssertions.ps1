@@ -14,7 +14,7 @@ $positiveInteger = {param($v) $n=0L; (Test-DecimalValue $v) -and [long]::TryPars
 $nonEmpty = {param($v) -not [string]::IsNullOrWhiteSpace($v)}
 if ($SplitPortraitRuntimeProbe) {
     Assert-TownOnce 'PEOPLE_OF_THE_ILIAC_BAY_SPLIT_PORTRAIT_PASS:'
-    Assert-ProbeReceipt $body 'PEOPLE_OF_THE_ILIAC_BAY_SPLIT_PORTRAIT_PASS:' @{galleryRecords='20'; gazes='center,left,right'; missing71='native-fallback'}
+    Assert-ProbeReceipt $body 'PEOPLE_OF_THE_ILIAC_BAY_SPLIT_PORTRAIT_PASS:' @{galleryRecords='32'; gazes='center,left,right'; missing71='native-fallback'}
 }
 if ($LiveDialoguePresentationProbe) {
     Assert-TownMarker 'PEOPLE_OF_THE_ILIAC_BAY_LIVE_DIALOGUE_PRESENTATION_BASELINE_RESTORED:'
@@ -57,9 +57,17 @@ if ($NamedOtherHandoverProbe) {
     Assert-ProbeReceipt $body 'PEOPLE_OF_THE_ILIAC_BAY_NAMED_OTHER_HANDOVER_PASS ' @{source=$nonEmpty; recipient=$nonEmpty; acquiredUid=$positiveInteger; price=$positiveInteger; task={param($v) $prefix='task:native-named-other-handover:'; $v.StartsWith($prefix) -and (Test-HexValue $v.Substring($prefix.Length) ($v.Length-$prefix.Length) -Lowercase) -and $v.Length -gt $prefix.Length}}
 }
 if ($TempleTrainingProbe) {
-    Assert-TownMarker 'PEOPLE_OF_THE_ILIAC_BAY_TEMPLE_TRAINING_NATIVE_PASS:'
-    $trainingLines=@(Get-ProbeLines $body 'PEOPLE_OF_THE_ILIAC_BAY_TEMPLE_TRAINING_NATIVE_PASS:')
-    if ($trainingLines.Count -ne 1 -or -not $trainingLines[0].Contains('startNoTimeSkip=true; beforeFinishNoSkill=true; playerUnchanged=true; sameIdentity=true')) { throw 'Native lesson timing, player isolation or stable identity proof is missing.' }
+    Assert-TownOnce 'PEOPLE_OF_THE_ILIAC_BAY_TEMPLE_TRAINING_NATIVE_PASS:'
+    $trainingLine=@(Get-ProbeLines $body 'PEOPLE_OF_THE_ILIAC_BAY_TEMPLE_TRAINING_NATIVE_PASS:')[0]
+    if (-not $trainingLine.Contains('; serviceClock=10800; playerUnchanged=true; sameIdentity=true; currentNativeBody=true')) { throw 'Native lesson timer, player isolation or current body proof is missing.' }
+    Assert-ProbeReceipt $body 'PEOPLE_OF_THE_ILIAC_BAY_TEMPLE_COMPLETION_VALUES:' @{phase='Completed';serviceStep='1';completedOnce='True';playerUnchanged='True';sameActor='True';sameInventory='True';sameTrainer='True'}
+    if ($body.Contains('PEOPLE_OF_THE_ILIAC_BAY_TEMPLE_PAID_CHECKPOINT:')) {
+        Assert-ProbeReceipt $body 'PEOPLE_OF_THE_ILIAC_BAY_TEMPLE_PAID_CHECKPOINT:' @{serviceStep='1';actualPayment='true';noEarlySkill='true';noEarlyExperience='true'}
+        Assert-TownBefore 'PEOPLE_OF_THE_ILIAC_BAY_TEMPLE_PAID_CHECKPOINT:' 'PEOPLE_OF_THE_ILIAC_BAY_TEMPLE_TRAINING_NATIVE_PASS:'
+    } else {
+        Assert-ProbeReceipt $body 'PEOPLE_OF_THE_ILIAC_BAY_TEMPLE_PAID_RESUME:' @{actualBody='true';routeRepeated='false';paymentRepeated='false'}
+        Assert-TownBefore 'PEOPLE_OF_THE_ILIAC_BAY_TEMPLE_PAID_RESUME:' 'PEOPLE_OF_THE_ILIAC_BAY_TEMPLE_TRAINING_NATIVE_PASS:'
+    }
 }
 if ($EnterWaitProbe) {
     Assert-TownMarker 'PEOPLE_OF_THE_ILIAC_BAY_ENTER_WAIT_NATIVE_PASS:'
@@ -88,7 +96,7 @@ if ($HouseholdInnPhysicalProbe) {
     Assert-TownMarker 'PEOPLE_OF_THE_ILIAC_BAY_FAMILY_RUNTIME_PASS: productionSelector=true; pairedNativeRoutes=true; exteriorBodies=true; conversationHoldsBoth=true; nativeActivateChildLock=true; nativeActivateHomeEntry=true; pairedHomeBodies=true; nativeSerializer=true; controlledClock=true'
     Assert-ProbeReceipt $body 'PEOPLE_OF_THE_ILIAC_BAY_INN_SERVICE_CATALOG_PASS:' @{nativeMenu='true'; compatiblePairs=$positiveInteger; cooperativeFrames=$positiveInteger; productionScheduler='true'; cancelledSource='true'; restoreEpoch='true'; walletsUnchanged='true'; nativeReload='true'; simulatedPurchase='false'}
 }
-if ($DailyItineraryProbe -and -not $HouseholdJointBodyProbe -and -not $DailyInteriorOnly -and -not $PrepareOutdoorFixture -and -not $IndoorCatchupProbe) {
+if ($DailyItineraryProbe -and -not $HouseholdJointBodyProbe -and -not $HouseholdInnPhysicalProbe -and -not $DailyInteriorOnly -and -not $PrepareOutdoorFixture -and -not $IndoorCatchupProbe) {
     Assert-TownMarker 'PEOPLE_OF_THE_ILIAC_BAY_DAILY_EXPANSION_NATIVE_PASS:'
     Assert-TownMarker 'PEOPLE_OF_THE_ILIAC_BAY_HOUSEHOLD_DAY_PERSISTENCE_PASS:'
     Assert-TownMarker 'PEOPLE_OF_THE_ILIAC_BAY_HOUSEHOLD_JOINT_PROGRESS_PASS:'
@@ -147,8 +155,76 @@ if ($NpcHealthCareProbe) {
 }
 
 if ($OutdoorNavigationProbe) {
+    if ($env:POTIB_NAVMESH_TRIAL -eq '1' -and $env:POTIB_ROADMAP_PROBE -eq 'scene-summary') {
+        Assert-TownOnce 'PEOPLE_OF_THE_ILIAC_BAY_SCENE_SUMMARY_PASS:'
+        if ((Get-LiteralCount $body 'PEOPLE_OF_THE_ILIAC_BAY_SCENE_SUMMARY_BODY_PASS:') -ne 2) { throw 'Scene summaries require both native mobile and stationary observation/serialization proofs.' }
+    }
+    if ($env:POTIB_NAVMESH_TRIAL -eq '1' -and $env:POTIB_ROADMAP_PROBE -eq 'market-commute' -and $env:POTIB_MARKET_MORNING_PERSON) {
+        Assert-TownBefore 'PEOPLE_OF_THE_ILIAC_BAY_MARKET_MORNING_SETUP:' 'PEOPLE_OF_THE_ILIAC_BAY_MARKET_MORNING_PASS:'
+        Assert-ProbeReceipt $body 'PEOPLE_OF_THE_ILIAC_BAY_MARKET_MORNING_SETUP:' @{person='npc:1291010263:-1:813365456'; ordinaryOffscreenReconstruction='true'; eveningWalkNewlyClaimed='false'; priorEveningEvidence='market-commute22-player.log'; home='True'}
+        Assert-ProbeReceipt $body 'PEOPLE_OF_THE_ILIAC_BAY_MARKET_MORNING_PASS:' @{person='npc:1291010263:-1:813365456'; eveningMetres='0'; eveningWalkNewlyClaimed='False'; sameStaticBody='true'; sameInventory='true'; realBed='true'; sleepContext='true'; sharedHomeSleepHeal='true'; nativeMobileDuplicate='false'}
+        if ($body.Contains('phase=evening-walk;') -or $body.Contains('PEOPLE_OF_THE_ILIAC_BAY_MARKET_COMMUTE_PASS:')) { throw 'Morning-only proof must not repeat or claim a new evening walk.' }
+    }
     $roadmapMarkers=@{'starting-spells'='STARTING_SPELL_CAST_NATIVE_PASS'; 'combat-assist'='COMBAT_ASSIST_NATIVE_PASS'; 'guard-assault'='GUARD_ASSAULT_NATIVE_PASS'; 'dungeon-modules'='NAVMESH_RDB_MODULE_PROBE_PASS'; 'interior-module'='NAVMESH_INTERIOR_MODULE_PASS'; 'paid-companion'='PAID_COMPANION_PROBE_PASS'}
+    if ($env:POTIB_PAID_COMPANION_XP -eq '1') { $roadmapMarkers['paid-companion']='PAID_COMPANION_XP_NATIVE_PASS' }
+    if ($env:POTIB_PAID_COMPANION_PREVIEW -eq '1') { $roadmapMarkers['paid-companion']='PAID_COMPANION_OFFER_PREVIEW_PASS' }
+    if ($env:POTIB_PAID_COMPANION_CHECKPOINT -eq '1') { $roadmapMarkers['paid-companion']='PAID_COMPANION_SETUP_NATIVE_PASS' }
+    $roadmapMarkers['companion-interior-reload']='FAST_TRAVEL_INTERIOR_RELOAD_PASS'
+    $roadmapMarkers['family-inn-return']='FAMILY_INN_RETURN_PASS'
+    if ($env:POTIB_ROADMAP_PROBE -in @('controlled-guild-arrival','controlled-camp-arrival')) {
+        Assert-TownBefore 'PEOPLE_OF_THE_ILIAC_BAY_CONTROLLED_SHELTER_SETUP:' 'PEOPLE_OF_THE_ILIAC_BAY_CONTROLLED_SHELTER_SELECTED:'
+        Assert-TownBefore 'PEOPLE_OF_THE_ILIAC_BAY_CONTROLLED_SHELTER_SELECTED:' 'PEOPLE_OF_THE_ILIAC_BAY_CONTROLLED_SHELTER_ARRIVAL_PASS:'
+        $expectedCamping=if ($env:POTIB_ROADMAP_PROBE -eq 'controlled-camp-arrival') {'True'} else {'False'}
+        Assert-ProbeReceipt $body 'PEOPLE_OF_THE_ILIAC_BAY_CONTROLLED_SHELTER_SETUP:' @{existingPeopleOnly='true'; futureVisitControlled='true'; realNativeRoute='true'; membershipInjected='false'; preparedRestore='true'; npcMovedByProbe='false'}
+        Assert-ProbeReceipt $body 'PEOPLE_OF_THE_ILIAC_BAY_CONTROLLED_SHELTER_ARRIVAL_PASS:' @{camping=$expectedCamping; actualArrival='true'; nativeSerializer='true'; reservationsControlled='true'; visitControlled='true'; membershipInjected='false'; npcMovedByProbe='false'}
+    }
+    if ($env:POTIB_ROADMAP_PROBE -eq 'natural-shelter-census') {
+        Assert-TownOnce 'PEOPLE_OF_THE_ILIAC_BAY_NATURAL_SHELTER_CENSUS_DONE:'
+        Assert-ProbeReceipt $body 'PEOPLE_OF_THE_ILIAC_BAY_NATURAL_SHELTER_CENSUS_DONE:' @{physicalArrivalClaimed='false'; probeBookings='false'; probeMembershipGrant='false'}
+        if ($env:POTIB_SHELTER_REQUIRE_VISITOR_REPORT -eq '1') {
+            Assert-ProbeReceipt $body 'PEOPLE_OF_THE_ILIAC_BAY_TRAVELER_CORPSE_REPORT_PASS:' @{foreignVisitor='true'; nativeCorpse='true'; actualVisibleDiscovery='true'; nativeSerializer='true'; validatedRestore='true'; probeWitnessInjection='false'; probeCombatInjection='false'}
+        }
+    }
+    if ($env:POTIB_ROADMAP_PROBE -eq 'natural-checkout') {
+        Assert-TownBefore 'PEOPLE_OF_THE_ILIAC_BAY_NATURAL_CHECKOUT_ROOM_READY:' 'PEOPLE_OF_THE_ILIAC_BAY_NATURAL_CHECKOUT_RETURN_STARTED:'
+        Assert-TownBefore 'PEOPLE_OF_THE_ILIAC_BAY_NATURAL_CHECKOUT_RETURN_STARTED:' 'PEOPLE_OF_THE_ILIAC_BAY_NATURAL_CHECKOUT_PASS:'
+        Assert-ProbeReceipt $body 'PEOPLE_OF_THE_ILIAC_BAY_NATURAL_CHECKOUT_PASS:' @{person='s:1356029978:h:65792:r:0'; actualDoorReached='true'; bookingExpired='true'; itineraryChanged='false'; regionalReturnObserved='false'}
+    }
+    if ($env:POTIB_ROADMAP_PROBE -eq 'natural-fallback') {
+        Assert-TownBefore 'PEOPLE_OF_THE_ILIAC_BAY_NATURAL_FALLBACK_SOURCE_FULL:' 'PEOPLE_OF_THE_ILIAC_BAY_NATURAL_FALLBACK_PASS:'
+        Assert-ProbeReceipt $body 'PEOPLE_OF_THE_ILIAC_BAY_NATURAL_FALLBACK_SOURCE_FULL:' @{person='s:1276329198:h:262:r:0'; availableOffer='false'; productionBookingUnchanged='true'}
+        Assert-ProbeReceipt $body 'PEOPLE_OF_THE_ILIAC_BAY_NATURAL_FALLBACK_PASS:' @{person='s:1276329198:h:262:r:0'; existingVisit='true'; newBookingsByProbe='false'; guildOrCamp='false'; unobservedExteriorWalkClaimed='false'}
+    }
+    if ($env:POTIB_ROADMAP_PROBE -eq 'companion-fast-travel' -and $env:POTIB_FAST_TRAVEL_MULTIPLE -eq '1') { Assert-TownMarker 'PEOPLE_OF_THE_ILIAC_BAY_FAST_TRAVEL_PARTY_PASS:' }
+    $roadmapMarkers['companion-interior-entry']='FAST_TRAVEL_INTERIOR_ENTRY_PASS'
+    $roadmapMarkers['companion-dungeon-fast-travel']='FAST_TRAVEL_DUNGEON_PASS'
+    $roadmapMarkers['companion-dungeon-entry']='FAST_TRAVEL_DUNGEON_PASS'
+    if ($env:POTIB_ROADMAP_PROBE -eq 'dungeon-follow' -and $env:POTIB_DUNGEON_DANGER_BOUNDARY -eq '1') {
+        Assert-TownMarker 'PEOPLE_OF_THE_ILIAC_BAY_DUNGEON_DANGER_BOUNDARY_PASS:'
+    }
+    if ($env:POTIB_ROADMAP_PROBE -eq 'dungeon-follow' -and $env:POTIB_DUNGEON_DANGER_EXIT -eq '1') { Assert-TownMarker 'PEOPLE_OF_THE_ILIAC_BAY_DUNGEON_DANGER_EXIT_PASS:' }
+    if ($env:POTIB_ROADMAP_PROBE -eq 'dungeon-follow' -and $env:POTIB_DUNGEON_CONTAINER_LOOT -eq '1') {
+        if ($env:POTIB_DUNGEON_CONTAINER_STACK -eq '1') { Assert-TownMarker 'PEOPLE_OF_THE_ILIAC_BAY_COMPANION_CONTAINER_STACK_PASS:' }
+        else { Assert-TownMarker 'PEOPLE_OF_THE_ILIAC_BAY_COMPANION_CONTAINER_PASS:' }
+    }
+    if ($env:POTIB_ROADMAP_PROBE -eq 'dungeon-follow' -and $env:POTIB_DUNGEON_ENTERPRISE_DIALOGUE -eq '1') { Assert-TownMarker 'PEOPLE_OF_THE_ILIAC_BAY_ENTERPRISE_DIALOGUE_PASS:' }
+    if ($env:POTIB_ROADMAP_PROBE -eq 'dungeon-follow' -and $env:POTIB_DUNGEON_MULTITHREAT -eq '1') { Assert-TownMarker 'PEOPLE_OF_THE_ILIAC_BAY_MULTITHREAT_PASS:' }
+    if ($env:POTIB_ROADMAP_PROBE -eq 'dungeon-follow' -and $env:POTIB_DUNGEON_AUTOMATIC_OBSTACLE -eq '1') {
+        Assert-TownMarker 'PEOPLE_OF_THE_ILIAC_BAY_COMPANION_AUTOMATIC_OBSTACLE_WAIT_PASS:'
+        Assert-TownMarker 'PEOPLE_OF_THE_ILIAC_BAY_COMPANION_AUTOMATIC_OBSTACLE_RESUME_PASS:'
+    }
+    if ($env:POTIB_ROADMAP_PROBE -eq 'dungeon-follow' -and $env:POTIB_DUNGEON_FOLLOW_FIXTURE) {
+        $dungeonFixture = $env:POTIB_DUNGEON_FOLLOW_FIXTURE | ConvertFrom-Json
+        if ($dungeonFixture.verifyLoot) { Assert-TownMarker 'PEOPLE_OF_THE_ILIAC_BAY_COMPANION_LOOT_PASS:' }
+    }
+    $roadmapMarkers['companion-interior-expiry']='FAST_TRAVEL_INTERIOR_EXPIRY_PASS'
     if ($roadmapMarkers.ContainsKey([string]$env:POTIB_ROADMAP_PROBE)) { Assert-TownMarker ('PEOPLE_OF_THE_ILIAC_BAY_'+$roadmapMarkers[$env:POTIB_ROADMAP_PROBE]+':') }
+    if ($env:POTIB_ROADMAP_PROBE -eq 'companion-interior-expiry' -and $env:POTIB_FAST_TRAVEL_INTERIOR_UNPAID -eq '1') {
+        Assert-ProbeReceipt $body 'PEOPLE_OF_THE_ILIAC_BAY_FAST_TRAVEL_INTERIOR_EXPIRY_PASS:' @{requiredUnpaid='True'; originalConsentEnded='true'; uniqueSameBody='true'; routineReturnNotExercised='true'}
+    }
+    if ($env:POTIB_ROADMAP_PROBE -eq 'companion-interior-expiry' -and $env:POTIB_FAST_TRAVEL_INTERIOR_EXIT -eq '1') {
+        Assert-ProbeReceipt $body 'PEOPLE_OF_THE_ILIAC_BAY_RETIRED_COMPANION_EXIT_PASS:' @{nativeExit='true'; noExteriorBody='true'; noRoadOwner='true'; actionRemainsEnded='true'; sameInventoryAndRelationship='true'}
+    }
     if ($env:POTIB_NAVMESH_INTERIOR -and $env:POTIB_NAVMESH_PRODUCTION -eq '1') { Assert-TownMarker 'PEOPLE_OF_THE_ILIAC_BAY_NAVMESH_INTERIOR_PASS:' }
     if ($env:POTIB_NAVMESH_TRIAL -eq '1' -and $env:POTIB_ROADMAP_PROBE -eq 'static-personal-trade') {
         foreach ($case in @('CANCEL','BUY','SELL')) { Assert-TownOnce ('PEOPLE_OF_THE_ILIAC_BAY_STATIC_PERSONAL_TRADE_'+$case+'_PASS:') }

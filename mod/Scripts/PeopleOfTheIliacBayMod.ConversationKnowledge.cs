@@ -90,12 +90,14 @@ namespace PeopleOfTheIliacBay.DFU
             var actor = person ? person.GetComponent<ResidentActor>() : null;
             if (!actor || actor.Resident == null || !actor.Resident.IsAlive) return true;
             string id = actor.Resident.Id;
+            bool reporting = streets && streets.HasDialogueComplaint(id);
             if (!CanApproachNpcAfterBoundary(id))
             {
-                DaggerfallUI.AddHUDText("They refuse to speak while seeking the guards.");
+                DaggerfallUI.AddHUDText(actor.DisplayName + (reporting
+                    ? " refuses to speak while seeking the guards."
+                    : " refuses to speak to you."));
                 return false;
             }
-            bool reporting = streets && streets.HasDialogueComplaint(id);
             bool alarmed = streets && streets.IsAlarmed(id);
             bool grudge = !saveFault && store.HoldsPartnerGrudge(actor.Resident,
                 DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
@@ -107,8 +109,8 @@ namespace PeopleOfTheIliacBay.DFU
                 DaggerfallUI.AddHUDText(actor.Person.NameNPC + " refuses to speak to you.");
                 return false;
             }
-            DaggerfallUI.AddHUDText(reporting ? "They hurry toward the guards and refuse to speak." :
-                "They keep their distance and refuse to speak.");
+            DaggerfallUI.AddHUDText(actor.DisplayName + (reporting ? " seeks the guards and refuses to speak." :
+                " keeps their distance and refuses to speak."));
             return false;
         }
 
@@ -119,7 +121,7 @@ namespace PeopleOfTheIliacBay.DFU
             string id = StaticConversationPersonId(person);
             if (!CanApproachNpcAfterBoundary(id))
             {
-                DaggerfallUI.AddHUDText(person.DisplayName + " refuses to speak while seeking the guards.");
+                DaggerfallUI.AddHUDText(person.DisplayName + " refuses to speak to you.");
                 return false;
             }
             bool terminalHostility = HasTerminalConversationHostility(id);
@@ -147,14 +149,14 @@ namespace PeopleOfTheIliacBay.DFU
             }
             ConversationContextSnapshot requestSnapshot;
             try { requestSnapshot=CaptureConversationContext(window,playerText,checked(conversationContextRequestRevision+1)); }
-            catch(InvalidOperationException)
+            catch(InvalidOperationException error)
             {
+                Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_DIALOGUE_CAPTURE_REJECTED: "+error.Message);
                 AppendRememberedDialoguePair(window,playerText,"I lost my train of thought. Please say that again.","unavailable");
                 return;
             }
             if (!TryBindConversationSpeech(requestSnapshot, window, playerText)) return;
             CaptureConversationCommandTurn(requestSnapshot, playerText);
-            ObserveDecisionShadow(requestSnapshot, window, playerText);
             double submittedAt=requestSnapshot.CapturedGameTime;
             ConversationLocationSnapshot submittedLocation=requestSnapshot.PlayerLocationAtSubmission;
             conversationBusy = true;
@@ -198,7 +200,6 @@ namespace PeopleOfTheIliacBay.DFU
                 candidates.Add(topic); length += size;
             }
             string history = ReadConversationHistory(window);
-            string decisionRoute = null;
             NpcSpeechActClassification foregroundSpeech = null;
             object foregroundSpeechSource = null;
             string prompt = ConversationContextFormatter.ForRouting(requestSnapshot,2048)+"\n"+
@@ -302,37 +303,23 @@ namespace PeopleOfTheIliacBay.DFU
                         verifiedFallback:"I'm not sure what you mean. Could you clarify?",snapshot:requestSnapshot);
                     return;
                 }
-                // A coarse action route is not proof that this turn requests an action.
-                // A confirmed ordinary-social correction must not consume an offer,
-                // change a commitment, or replace the offer with a new proposal.
-                if (LocalDecisionDialogueRoute.IsOrdinarySocialDowngrade(decisionRoute, choice))
-                {
-                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DECISION_ROUTING_SOCIAL_CORRECTION: route=" + decisionRoute +
-                        "; nativeDispatch=false; pendingOfferInterpretation=false; newProposal=false");
-                    SubmitOrdinarySocialText(window, playerText, history, requestSnapshot);
-                    return;
-                }
                 // Semantic routing uses the original submitted turn. Native
                 // adapters validate real targets before any saved commitment.
                 if(!busyDeparture && choice.SocialIntent!="family_threat" && choice.Intent=="guide" &&
                     TryGuideConversation(window,playerText,history,all,candidates,native,requestSnapshot))return;
                 if(!busyDeparture && choice.SocialIntent!="family_threat" &&
-                    (decisionRoute==null || decisionRoute=="OFFER_RESPONSE") &&
                     (choice.Intent=="social" || choice.Intent=="action") &&
                     TryPendingSemanticOfferConversation(window,playerText,history,requestSnapshot))return;
                 if(choice.Intent=="action")
                 {
-                    if(decisionRoute=="ACTION_REQUEST" || decisionRoute=="COMMITMENT_UPDATE")
-                    {
-                        // A new instruction supersedes an unaccepted offer. Do
-                        // not let nested action interpreters reclassify it as assent.
-                        pendingConversationAction=null;
-                        pendingConversationActionHistory=null;
-                    }
                     if(TrySemanticActionConversation(window,playerText,history,requestSnapshot)) return;
                 }
                 if(choice.Intent=="appointment"&&TryAppointmentConversation(window,playerText,history,submittedLocation,snapshot:requestSnapshot)) return;
                 if(choice.Intent=="home"&&TrySemanticHomeConversation(window,playerText,history,snapshot:requestSnapshot)) return;
+                if(choice.Intent=="biography")
+                {SubmitBiographicalSocialText(window,playerText,history,requestSnapshot);return;}
+                if(choice.Intent=="enterprise")
+                {SubmitCompanionEnterpriseConversation(window,playerText,history,requestSnapshot);return;}
                 // Ordinary dialogue may still yield a concrete NPC offer. It
                 // cannot execute until a separately interpreted player assent.
                 if(!busyDeparture&&choice.Intent=="social"&&!foregroundSpeech.IsDirectHostility&&
@@ -444,13 +431,11 @@ namespace PeopleOfTheIliacBay.DFU
                     classificationTrace:SemanticActionModelCaptureProbe.ForStage("native-topic-binding")))
                     HandleRejectedConversationStage(requestSnapshot,window,topicStage,playerText);
             };
-            Action<string> refineDecisionRoute=selectedDecisionRoute=>
             {
-                decisionRoute=selectedDecisionRoute;
                 long routeStage=BeginConversationContextStage(requestSnapshot,window);
                 if (routeStage==0)
                 {HandleRejectedConversationStage(requestSnapshot,window,routeStage,playerText);return;}
-                if (!localDialogue.Classify(NewDialogueConnection(), prompt+LocalDecisionDialogueRoute.RefinePrompt(decisionRoute), history, output =>
+                if (!localDialogue.Classify(NewDialogueConnection(), prompt, history, output =>
                 {
                     if (!CurrentMemorySession(window,requestSession)) return;
                     if(conversationPersonId!=requestPerson)
@@ -467,7 +452,7 @@ namespace PeopleOfTheIliacBay.DFU
                         return;
                     }
                     var choice=ConversationKnowledge.ParseRouting(output);
-                    if(choice==null || !LocalDecisionDialogueRoute.Allows(decisionRoute,choice))
+                    if(choice==null)
                     {
                         conversationBusy=false;
                         AppendRememberedDialoguePair(window,playerText,DialogueReplyFallback.UnavailableReply,"unavailable");
@@ -499,15 +484,13 @@ namespace PeopleOfTheIliacBay.DFU
                     },SocialEffectScope.Grammar,classificationTrace:
                         SemanticActionModelCaptureProbe.ForStage("social-effect-scope")))
                         HandleRejectedConversationStage(requestSnapshot,window,scopeStage,playerText);
-                },LocalDecisionDialogueRoute.Grammar(decisionRoute),classificationTrace:
+                },ConversationKnowledge.RoutingGrammar(),classificationTrace:
                     SemanticActionModelCaptureProbe.ForStage("route-intent")))
                 {
                     if(HandleRejectedConversationStage(requestSnapshot,window,routeStage,playerText))
                         DaggerfallUI.AddHUDText("Waiting for the current reply.");
                 }
-            };
-            if(!TryBeginDecisionRouting(requestSnapshot,window,playerText,refineDecisionRoute))
-                refineDecisionRoute(null);
+            }
         }
 
         // Retrieval terms only rank offered native topics. They never choose an intent or game effect.

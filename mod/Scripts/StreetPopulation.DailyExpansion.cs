@@ -37,6 +37,8 @@ namespace PeopleOfTheIliacBay.DFU
             // Completed slots do not run retroactively. The recurring next day
             // still needs admission when today's occurrence has already passed.
             if(day+ends<=now)day+=86400;
+            if(!HouseholdDayPlanner.RequiresChildcare(worldStore.WorldSeed,population.SettlementId,
+                household,(int)(day/86400)))return true;
             double from=day+starts,until=day+ends;
             Func<Resident,DailySchedule> actual=other=>
             {
@@ -78,8 +80,8 @@ namespace PeopleOfTheIliacBay.DFU
             return true;
         }
 
-        // Source legs are already personal. Survey a bounded chain graph for
-        // additions and prepare lanes only for those additions, never twice for
+        // Source legs are already personal. Survey each selected destination on
+        // demand and prepare lanes only for additions, never twice for
         // the old executable routes. Publication remains a separate home gate.
         private IEnumerator ExpandAdultDailyOutings(Plan plan,ResidentRoutine source,PreparedOutdoorRoutine result,
             Func<bool> valid,int wake,int sleep)
@@ -127,28 +129,17 @@ namespace PeopleOfTheIliacBay.DFU
                 }
                 if(chosen!=null)chosen.Options.Add(option);
             }
-            var keys=new List<DailyRouteKey>();var unique=new HashSet<DailyRouteKey>();
+            var expanded=source;int surveyedLegs=0;
             foreach(var slot in slots)
-            {
-                int previous=resident.HomeKey;
-                foreach(var option in slot.Options)
-                {
-                    var outward=new DailyRouteKey{From=resident.HomeKey,To=option.BuildingKey};
-                    if(unique.Add(outward))keys.Add(outward);
-                    if(previous!=resident.HomeKey)
-                    {var link=new DailyRouteKey{From=previous,To=option.BuildingKey};if(unique.Add(link))keys.Add(link);}
-                    previous=option.BuildingKey;
-                }
-            }
-            var legs=new List<AdultDailyItineraryLeg>();
-            foreach(var key in keys)
+            foreach(var option in slot.Options)
             {
                 if(!valid())yield break;
-                var route=GetDailyRoute(key.From,key.To);
+                int from=resident.HomeKey,to=option.BuildingKey;
+                var route=GetDailyRoute(from,to);
                 if(route==null)
                 {
                     var survey=new TownGeometry.RouteResult();
-                    var work=geometry.ReadRouteSteps(geometry.Entrances[key.From],geometry.Entrances[key.To],survey,valid);
+                    var work=geometry.ReadRouteSteps(geometry.Entrances[from],geometry.Entrances[to],survey,valid);
                     try
                     {
                         while(valid())
@@ -160,21 +151,26 @@ namespace PeopleOfTheIliacBay.DFU
                     }
                     finally{(work as IDisposable)?.Dispose();}
                     if(!valid())yield break;
-                    route=SurveyDailyRoute(key.From,key.To,survey.Points);
+                    route=SurveyDailyRoute(from,to,survey.Points);surveyedLegs++;
                 }
                 if(route.Points.Count<2 || route.WalkSeconds<=0)continue;
                 double walk=route.WalkSeconds*ResidentMovement.WalkSpeed/ResidentMovement.WalkSpeedFor(resident.AppearanceSeed);
-                legs.Add(new AdultDailyItineraryLeg{FromBuildingKey=key.From,ToBuildingKey=key.To,WalkSeconds=walk,Route=route.Points});
-                if(key.From==resident.HomeKey)
-                {var reverse=new List<SavedRoutePoint>(route.Points);reverse.Reverse();
-                    legs.Add(new AdultDailyItineraryLeg{FromBuildingKey=key.To,ToBuildingKey=key.From,WalkSeconds=walk,Route=reverse});}
+                var reverse=new List<SavedRoutePoint>(route.Points);reverse.Reverse();
+                var legs=new List<AdultDailyItineraryLeg>{
+                    new AdultDailyItineraryLeg{FromBuildingKey=from,ToBuildingKey=to,WalkSeconds=walk,Route=route.Points},
+                    new AdultDailyItineraryLeg{FromBuildingKey=to,ToBuildingKey=from,WalkSeconds=walk,Route=reverse}};
+                ResidentRoutine candidate;bool planned;
+                try{planned=AdultDailyRoutinePlanner.TryCreate(new AdultDailyRoutineRequest{HomeBuildingKey=resident.HomeKey,
+                    Seed=resident.AppearanceSeed,Source=expanded,
+                    Slots=new List<AdultDailyOutingSlot>{new AdultDailyOutingSlot{DepartureAt=slot.DepartureAt,
+                        LatestHomeAt=slot.LatestHomeAt,Options=new List<AdultDailyItineraryOption>{option}}},Routes=legs,
+                    IsOutingAllowed=(start,end)=>FamilyAllowsOptionalOuting(resident,start,end)},out candidate);}
+                catch(ArgumentException error){Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_DAILY_EXPANSION_DEFERRED: "+resident.Id+"; "+error.Message);continue;}
+                if(!planned)continue;
+                expanded=candidate;
+                break;
             }
-            ResidentRoutine expanded;bool planned;
-            try{planned=AdultDailyRoutinePlanner.TryCreate(new AdultDailyRoutineRequest{HomeBuildingKey=resident.HomeKey,
-                Seed=resident.AppearanceSeed,Source=source,Slots=slots,Routes=legs,
-                IsOutingAllowed=(start,end)=>FamilyAllowsOptionalOuting(resident,start,end)},out expanded);}
-            catch(ArgumentException error){Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_DAILY_EXPANSION_DEFERRED: "+resident.Id+"; "+error.Message);yield break;}
-            if(!planned)yield break;
+            if(ReferenceEquals(expanded,source))yield break;
             var all=ResidentRoutineDay.CopyOutings(expanded);var personal=new List<List<SavedRoutePoint>>();
             for(int i=0;i<all.Count;i++)
             {
@@ -195,7 +191,7 @@ namespace PeopleOfTheIliacBay.DFU
             if(!FamilyAllowsAddedOutings(plan,expanded))yield break;
             result.Routine=expanded;
             Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DAILY_EXPANSION_PREPARED: resident="+resident.Id+"; before="+old.Count+
-                "; after="+all.Count+"; surveyedLegs="+keys.Count+"; graphLegs="+legs.Count+"; publication=pending-home");
+                "; after="+all.Count+"; surveyedLegs="+surveyedLegs+"; publication=pending-home");
         }
     }
 }

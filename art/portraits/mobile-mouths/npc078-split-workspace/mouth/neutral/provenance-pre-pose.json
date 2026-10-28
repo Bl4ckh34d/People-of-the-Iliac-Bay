@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "portrait": {
+    "record": 78,
+    "bank": "TFAC00I0.RCI",
+    "originalPath": "original.png",
+    "originalSha256": "4cfab5dce8d40ff0246728c2c28922d9b5627cec9549f9b5252f2f601e4978ce"
+  },
+  "assetType": "neutral mouth 3x3 A-H/X speech atlas",
+  "generation": {
+    "tool": "built-in image_gen",
+    "callCount": 1,
+    "referencePath": "mouth-reference-grid.png",
+    "referenceSha256": "723a29c0e82dc6a0b811139c36f110100a031876b51ea7eea10984dd1a3e9f45",
+    "prompt": "Use case: stylized-concept\nAsset type: native-scale Daggerfall Unity NPC portrait neutral speech-mouth atlas\nPrimary request: Create one 3x3 sheet of the same lower-face portrait shown in the reference, with row-major mouth cues A, B, C / D, E, F / G, H, X. The reference is NPC 078's original repeated lower face; use it for identity, framing, palette, lip scale, and low-resolution finish.\nStyle/medium: Preserve the reference's muted warm skin and hair palette, soft painted-pixel portrait texture, restrained shading, and original native-scale lip proportions.\nComposition/framing: Exactly nine equal cells in a seamless 3 columns by 3 rows atlas, aligned to the reference's cell framing. No labels, gutters, borders, extra margins, text, or watermark.\nConstraints: Change only the lips and the tiny mouth opening immediately inside them. Keep the nose, cheeks, jaw, chin, neck, hair, and background identical in every cell. Keep the mouth centered and at the same original scale; no face reshaping or whole-cell resizing/distortion. A and X are the same gently closed neutral resting mouth. B is softly pressed closed; C a slight open; D a natural mid-open; E a lightly spread vowel; F a rounded vowel; G a wider open vowel; H a small rounded/narrow sh/ch mouth. Make B through H distinct but moderate and natural. Retain the source's soft palette and avoid hard vector edges, blur, smearing, dramatic teeth, exaggerated jaw, extra teeth detail, or high contrast.",
+    "promptSha256Utf8": "03b9f055512fd27db88c2e1def87cc88262127f85f7fb928bea19af32c6c14f7",
+    "rawPath": "mouth/neutral/raw.png",
+    "rawSha256": "d169b13e22e1eaa0f717cf5fb77c122e0eb639a21896e8e2daee7a407cc64d38",
+    "rawBytes": 1307866,
+    "dimensions": {
+      "width": 1863,
+      "height": 844,
+      "mode": "RGB",
+      "format": "PNG"
+    }
+  },
+  "qualityLimits": [
+    "Generated atlas is 1863x844 RGB; width divides by three but height does not divide evenly into three pixel rows. Do not infer native cell bounds from nominal layout.",
+    "Visible horizontal seams and texture drift may occur; the image model may change pixels outside the lips despite the prompt.",
+    "A/X are generated closed-mouth poses, not exact copies of the original; replace/verify per the portrait workflow before production use.",
+    "Cue mouth silhouettes and native lip scale have not been sliced or checked at 64x29; no original-outside-mask comparison was performed."
+  ],
+  "status": "raw generation only; not native-sliced, composited, corrected, or pixel-verified"
+}

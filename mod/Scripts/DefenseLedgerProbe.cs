@@ -147,7 +147,7 @@ namespace PeopleOfTheIliacBay.DFU
         private static IEnumerator VerifySavedLoot(PeopleOfTheIliacBayMod mod,string victim,ulong corpseId,ulong itemId)
         {
             var game=GameManager.Instance;
-            if(!game.PlayerEntity.Name.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal))
+            if(!NativeProbeText.IsTestCharacter(game.PlayerEntity.Name))
                 throw new InvalidOperationException("Defense save probe requires dedicated test character.");
             const string name="People of the Iliac Bay - lawful defense loot";
             bool saved=false,loaded=false;

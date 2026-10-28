@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T15:33:12.4858951Z",
+    "portraitRecord":  91,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "guarded",
+    "prompt":  "Create one pixel-art eye atlas for the SAME original 64x35 upper-face crop shown in the sole reference image. Reference role: exact prepared source eye grid, repeated source crop for alignment and palette. Intended use: Daggerfall Unity portrait eye atlas, native pixel-art pixels, not a painted or vector reinterpretation.\n\nCanvas layout: exactly 2 columns by 2 rows, four equal 64x35 cells, total aspect ratio 64:35, no gutters, labels, borders or extra rows. Row-major cells: OPEN, HALF CLOSED, FULLY CLOSED, OPEN REPEAT. Each cell shows the complete identical upper 64x35 crop at source scale.\n\nExpression: guarded and skeptical, clearly distinct from neutral. Make the VIEWER-LEFT eyebrow distinctly higher and gently arched; make the VIEWER-RIGHT eyebrow distinctly lower and almost flat. Keep both brow lines continuous, complete and soft brown, with their outer ends intact and inside the source hairline. Eyes feel appraising and questioning; narrow the right eye slightly. Avoid symmetric arches, matching inner peaks, angry V brows, worried two-high brows, fragmented brow marks, heavy black outlines, makeup, or angry scowl.\n\nPreserve source woman\u0027s face, hair, skin tone, eye spacing, original crop, soft muted pixel palette, compact warm-brown/olive irises and tiny natural highlights. Keep each iris compact and stationary in all phases. Do not enlarge pupils or expose broad white sclera. Maintain narrow source-like eye openings. HALF CLOSED uses upper lids that visibly descend over the upper portion of both irises; both irises stay at exactly the OPEN position. FULLY CLOSED hides both irises and sclera completely. OPEN REPEAT must match OPEN expression and anatomy. Keep eyebrows identical across all four cells; only eyelids/iris visibility change.\n\nKeep calibrated brow boundary at inclusive source row 22. Keep cheek row 29 original-exact; do not shift eyes, move brows outside their mask, alter nose bridge, hair, cheeks, skin or pixels outside the eye regions. No eye jump during blink. Native pixel clusters and original muted shading only.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-e0752442-3932-4a3b-bc97-05a1e638b64c.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-e0752442-3932-4a3b-bc97-05a1e638b64c.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "428f65da65c68b7c50b7cefcf4fde03aa83505c54de6ccbb2ac3ab018f8a5c51",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "4bc32091eba9e8ef44f76a0ec4c1fe6c6b26be1c59c3ec999c9bd3709e281c2f",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-e0752442-3932-4a3b-bc97-05a1e638b64c.png",
+                      "sha256":  "c8a8938259a8b887c6d4569289450ad46b92204d21b34df13ea51bcd585828b3",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/guarded/raw.png",
+                "sha256":  "c8a8938259a8b887c6d4569289450ad46b92204d21b34df13ea51bcd585828b3",
+                "width":  1695,
+                "height":  928
+            }
+}

@@ -288,10 +288,12 @@ namespace PeopleOfTheIliacBay.DFU
         {
             private Action<bool> completed;
             private bool accepted;
-            public PersonalCommerceConfirmBox(string offer, Action<bool> completion) : base(DaggerfallUI.UIManager)
+            public PersonalCommerceConfirmBox(string offer, Action<bool> completion) : this(new[]{offer},completion)
+            { }
+            public PersonalCommerceConfirmBox(string[] rows, Action<bool> completion) : base(DaggerfallUI.UIManager,wrapText:true)
             {
                 completed = completion;
-                SetText(new[] { offer });
+                SetText(rows);
                 AddButton(MessageBoxButtons.Yes);
                 AddButton(MessageBoxButtons.No, true);
                 OnButtonClick += (sender, button) => { accepted = button == MessageBoxButtons.Yes; CloseWindow(); };

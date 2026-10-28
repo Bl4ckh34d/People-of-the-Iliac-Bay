@@ -1,0 +1,29 @@
+{
+  "portraitRecord": 78,
+  "emotion": "guarded / skeptical",
+  "generator": "built-in image_gen",
+  "status": "prototype; user-review-pending; not installed",
+  "basePortrait": {
+    "dimensions": "64x64",
+    "sha256": "4CFAB5DCE8D40FF0246728C2C28922D9B5627CEC9549F9B5252F2F601E4978CE",
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\tfac-078-original.png"
+  },
+  "generationInput": {
+    "role": "edit-target",
+    "dimensions": "1536x696",
+    "sha256": "723A29C0E82DC6A0B811139C36F110100A031876B51EA7EEA10984DD1A3E9F45",
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc078-split-workspace\\mouth-reference-grid.png"
+  },
+  "generatedOriginal": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-626e-7471-95f3-109617bb3581\\exec-dd0531e0-23b5-4ab6-ae71-475f1c4dc519.png",
+  "output": {
+    "dimensions": "1863x844",
+    "aspectRatio": "2.20735",
+    "sha256": "678F0AD1D34F9ED5480F804874175BB1E89B266E326716F8F0EE794FAF308DC1",
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc078-split-workspace\\mouth\\guarded\\raw.png"
+  },
+  "prompt": "Edit this exact record-78 3x3 lower-half mouth-reference grid into one GUARDED / SKEPTICAL speech-mouth atlas. Preserve the complete 3x3 grid, each lower-half portrait crop, face/jaw/nose/chin/neck/hair/background geometry, native scale, anchors, original soft muted pixel-art palette, shading and contrast. Keep mouths inside native lip area; do not enlarge or move them. No pout, no exaggerated frown, no anger, no hard dark outlines, no added details or high contrast. Emotional tone should be subtly reserved and skeptical: slight lip-corner restraint/asymmetry where compatible with each phoneme, with X as a quiet closed-lip skeptical rest pose. Row-major mouth poses must be A B C / D E F / G H X: A fully lip-closed M/B/P; B narrow consonant opening with slight teeth; C medium EH; D moderately open AH, not a yawn; E rounded OH; F small OO/W; G upper teeth touching lower lip for F/V; H subtle raised tongue behind upper teeth for L, never tongue sticking out; X closed lips, subtly guarded. Preserve all lower-face crop boundaries and body/background. Do not generate full heads, eyes, or new hair. No labels, text, borders, gutters, extra cells, or cropping. Return one complete 3x3 lower-half atlas matching the target aspect ratio and cell alignment.",
+  "gridOrder": "A B C / D E F / G H X",
+  "generationCount": 1,
+  "visibleDeviations": "Mouth scale and expression look restrained at full-sheet view; H tongue cue is subtle and should be checked at native 64x29 sampling.",
+  "nativeQualityLimits": "Generated sheet is 1863x844 vs 1536x696 target; aspect is close but cell alignment and mouth anchors need parent verification before masking."
+}

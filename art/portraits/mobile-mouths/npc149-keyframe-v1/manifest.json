@@ -1,0 +1,909 @@
+{
+  "schemaVersion": 2,
+  "portraitRecord": 149,
+  "bank": "TFAC00I0.RCI",
+  "width": 64,
+  "height": 64,
+  "splitY": 35,
+  "original": "original.png",
+  "originalUpper": "source-upper.png",
+  "originalLower": "source-lower.png",
+  "status": "native-and-controlled-motion-reviewed",
+  "visualAcceptance": "parent-reviewed-user-acceptance-pending",
+  "eyeSets": [
+    {
+      "id": "neutral",
+      "label": "Neutral",
+      "phases": {
+        "open": {
+          "file": "eyes/neutral/front/open.png",
+          "difference": "eyes/neutral/front/open-diff.png",
+          "changedPixels": 0,
+          "sha256": "a0806a1eaccd3be1c5b22ebbb724b0e7a2f06e30c65b1f142387b105ee43087c"
+        },
+        "half": {
+          "file": "eyes/neutral/front/half.png",
+          "difference": "eyes/neutral/front/half-diff.png",
+          "changedPixels": 84,
+          "sha256": "32c0adfb6c0cd274bdbaa61103cd839b56b3889a247166faaa6fbe30560da08a"
+        },
+        "closed": {
+          "file": "eyes/neutral/front/closed.png",
+          "difference": "eyes/neutral/front/closed-diff.png",
+          "changedPixels": 104,
+          "sha256": "142bbe81d742ff394deeda01620ad87a165d7e7e82648bc9d326c1e05587c98d"
+        }
+      }
+    },
+    {
+      "id": "happy",
+      "label": "Fröhlich",
+      "phases": {
+        "open": {
+          "file": "eyes/happy/front/open.png",
+          "difference": "eyes/happy/front/open-diff.png",
+          "changedPixels": 419,
+          "sha256": "7fa44d6f4e1d6ecc23d901df167bad6a3d30011e4d3bf26c42f1939135d93d2e"
+        },
+        "half": {
+          "file": "eyes/happy/front/half.png",
+          "difference": "eyes/happy/front/half-diff.png",
+          "changedPixels": 419,
+          "sha256": "c188c1e60c9a97d6efa274f7bfea39cbba03720555551d3476d6d0e2b2211d72"
+        },
+        "closed": {
+          "file": "eyes/happy/front/closed.png",
+          "difference": "eyes/happy/front/closed-diff.png",
+          "changedPixels": 419,
+          "sha256": "06d640288e1b3bb248f4e4fabccbd92a75b7dfd95e91932b641b92ace9f470a9"
+        }
+      }
+    },
+    {
+      "id": "angry",
+      "label": "Wütend",
+      "phases": {
+        "open": {
+          "file": "eyes/angry/front/open.png",
+          "difference": "eyes/angry/front/open-diff.png",
+          "changedPixels": 405,
+          "sha256": "3dfc6319f1af94181eb593638382dbed6a7b0d15a87507a86337f933c1c04224"
+        },
+        "half": {
+          "file": "eyes/angry/front/half.png",
+          "difference": "eyes/angry/front/half-diff.png",
+          "changedPixels": 406,
+          "sha256": "e8f317cae637151f865ba10631db8457301080c6b88d59303089f2171171969e"
+        },
+        "closed": {
+          "file": "eyes/angry/front/closed.png",
+          "difference": "eyes/angry/front/closed-diff.png",
+          "changedPixels": 406,
+          "sha256": "023438f805f3f2519887af29a2ee4f3cc94bdfbb32f20b3d49c1c0d1ae0a1bd9"
+        }
+      }
+    },
+    {
+      "id": "sad",
+      "label": "Traurig",
+      "phases": {
+        "open": {
+          "file": "eyes/sad/front/open.png",
+          "difference": "eyes/sad/front/open-diff.png",
+          "changedPixels": 416,
+          "sha256": "6740eb5c669a4545eab6f7195fcdd6a2b2c56a911ac668f1691f33f11a2fd372"
+        },
+        "half": {
+          "file": "eyes/sad/front/half.png",
+          "difference": "eyes/sad/front/half-diff.png",
+          "changedPixels": 417,
+          "sha256": "66c8aa74901c84ec0948f77e06b456b0100be75842ec00fe4d72579fa66735a0"
+        },
+        "closed": {
+          "file": "eyes/sad/front/closed.png",
+          "difference": "eyes/sad/front/closed-diff.png",
+          "changedPixels": 417,
+          "sha256": "1344615d4a567a8d454356feff4d5f31777e657a7379ba41167124f7e0a99d04"
+        }
+      }
+    },
+    {
+      "id": "afraid",
+      "label": "Ängstlich",
+      "phases": {
+        "open": {
+          "file": "eyes/afraid/front/open.png",
+          "difference": "eyes/afraid/front/open-diff.png",
+          "changedPixels": 419,
+          "sha256": "b655948baf3d1a324e49aea9eadce12211dc72c5ab64690c3e72e379125e36f4"
+        },
+        "half": {
+          "file": "eyes/afraid/front/half.png",
+          "difference": "eyes/afraid/front/half-diff.png",
+          "changedPixels": 419,
+          "sha256": "d42f7d7900da3da158f8f248f5f32ed5ec33e44b8c7a5925f55e6424d4db491d"
+        },
+        "closed": {
+          "file": "eyes/afraid/front/closed.png",
+          "difference": "eyes/afraid/front/closed-diff.png",
+          "changedPixels": 420,
+          "sha256": "7bb6ef17b2152d4a8f9304fa6e13d497afe65f7e86ef9e567f306422e5ff2bc7"
+        }
+      }
+    },
+    {
+      "id": "guarded",
+      "label": "Skeptisch",
+      "phases": {
+        "open": {
+          "file": "eyes/guarded/front/open.png",
+          "difference": "eyes/guarded/front/open-diff.png",
+          "changedPixels": 410,
+          "sha256": "dc1cf9d9473d595c962e3cba25ae795a84c934dac360a5a5c044ba9ab6f83754"
+        },
+        "half": {
+          "file": "eyes/guarded/front/half.png",
+          "difference": "eyes/guarded/front/half-diff.png",
+          "changedPixels": 411,
+          "sha256": "10a486086e3cabd931e5e8c5bd7c3e9e45d2de78a509b257dda3ebc560776470"
+        },
+        "closed": {
+          "file": "eyes/guarded/front/closed.png",
+          "difference": "eyes/guarded/front/closed-diff.png",
+          "changedPixels": 412,
+          "sha256": "00613d6492c77553371e5aebb459cdd1af177372a53844399f3e6f01252775a9"
+        }
+      }
+    }
+  ],
+  "mouthSets": [
+    {
+      "id": "neutral",
+      "label": "Neutral",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "mouth/neutral/A.png",
+          "difference": "mouth/neutral/A-diff.png",
+          "changedPixels": 0,
+          "sha256": "e595aa3073409f19a53edc65dd87a8249c382cda07d5af1b251b6410db2457d7"
+        },
+        {
+          "shape": "B",
+          "file": "mouth/neutral/B.png",
+          "difference": "mouth/neutral/B-diff.png",
+          "changedPixels": 249,
+          "sha256": "5e4be1733cfc90e6a78417f439963a7e810e3fa14bd94da67c0908bf9ab63aaa"
+        },
+        {
+          "shape": "C",
+          "file": "mouth/neutral/C.png",
+          "difference": "mouth/neutral/C-diff.png",
+          "changedPixels": 244,
+          "sha256": "2df2c9bd49386639f534747fb7f3cfb3f087795f4c3e4e1e2dabeb77ada06c0b"
+        },
+        {
+          "shape": "D",
+          "file": "mouth/neutral/D.png",
+          "difference": "mouth/neutral/D-diff.png",
+          "changedPixels": 239,
+          "sha256": "5e06ba13b57ba191ce271186f1ab13ecbb2ff24a29104cd66dacbc4aa3ab0ccb"
+        },
+        {
+          "shape": "E",
+          "file": "mouth/neutral/E.png",
+          "difference": "mouth/neutral/E-diff.png",
+          "changedPixels": 241,
+          "sha256": "45e8ec2bee017ceb68223eef1399bbbce349a6279c97f9c5889d1b1fcd015911"
+        },
+        {
+          "shape": "F",
+          "file": "mouth/neutral/F.png",
+          "difference": "mouth/neutral/F-diff.png",
+          "changedPixels": 239,
+          "sha256": "53d87f23612eaf1d768f2e4a69be59088e0deda20de564ee3fffcf92b3222225"
+        },
+        {
+          "shape": "G",
+          "file": "mouth/neutral/G.png",
+          "difference": "mouth/neutral/G-diff.png",
+          "changedPixels": 237,
+          "sha256": "133f5f06d55610db4c1e3ce58654eaeb1e6beab42321bb6d4ae7cceffe133e1e"
+        },
+        {
+          "shape": "H",
+          "file": "mouth/neutral/H.png",
+          "difference": "mouth/neutral/H-diff.png",
+          "changedPixels": 247,
+          "sha256": "303178c6bf570bb9a5e7310c5166fa1bcad89e0189a2a1ddd7ad3a653098b10f"
+        },
+        {
+          "shape": "X",
+          "file": "mouth/neutral/X.png",
+          "difference": "mouth/neutral/X-diff.png",
+          "changedPixels": 0,
+          "sha256": "e595aa3073409f19a53edc65dd87a8249c382cda07d5af1b251b6410db2457d7"
+        }
+      ]
+    },
+    {
+      "id": "happy",
+      "label": "Fröhlich",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "mouth/happy/A.png",
+          "difference": "mouth/happy/A-diff.png",
+          "changedPixels": 232,
+          "sha256": "5730d9da772a790c6c28b8e52c5fd8f19577368b584cb5d2720787f56b4b49a7"
+        },
+        {
+          "shape": "B",
+          "file": "mouth/happy/B.png",
+          "difference": "mouth/happy/B-diff.png",
+          "changedPixels": 229,
+          "sha256": "edf53d75e7fd97598790f201ea5cd8bf9819385a9110743fb770ff7f265a4866"
+        },
+        {
+          "shape": "C",
+          "file": "mouth/happy/C.png",
+          "difference": "mouth/happy/C-diff.png",
+          "changedPixels": 249,
+          "sha256": "a9c6b4c340797ece0f4a68787482097057ceb95666d3ced77dd51a4edc27fde9"
+        },
+        {
+          "shape": "D",
+          "file": "mouth/happy/D.png",
+          "difference": "mouth/happy/D-diff.png",
+          "changedPixels": 226,
+          "sha256": "3f6024f5abc6189c84fa57119182965f89df6f891175a9ed830401fb5ad61413"
+        },
+        {
+          "shape": "E",
+          "file": "mouth/happy/E.png",
+          "difference": "mouth/happy/E-diff.png",
+          "changedPixels": 229,
+          "sha256": "cccc172e2fe8f9f0f45e8ced17b42c18069ed770a8b3b4c4d8173737fd8998d1"
+        },
+        {
+          "shape": "F",
+          "file": "mouth/happy/F.png",
+          "difference": "mouth/happy/F-diff.png",
+          "changedPixels": 220,
+          "sha256": "317cee41080070d552165bfce3ef0b640b40bfb1ea58a0ae4d9a16b4f7db691e"
+        },
+        {
+          "shape": "G",
+          "file": "mouth/happy/G.png",
+          "difference": "mouth/happy/G-diff.png",
+          "changedPixels": 234,
+          "sha256": "0e3fe32956a7b6b9de65b0565f877b944586baa21f91c093e791dc2575fcd3c5"
+        },
+        {
+          "shape": "H",
+          "file": "mouth/happy/H.png",
+          "difference": "mouth/happy/H-diff.png",
+          "changedPixels": 241,
+          "sha256": "7fbe6e21220b339d7339bfd1d09339817a6b8c9d2252a2a473798c8b2c303998"
+        },
+        {
+          "shape": "X",
+          "file": "mouth/happy/X.png",
+          "difference": "mouth/happy/X-diff.png",
+          "changedPixels": 241,
+          "sha256": "a8e91f2bbb6aa4e4d968781e2696c400796ed46d437ddf2f8a52bdf0e524e12b"
+        }
+      ]
+    },
+    {
+      "id": "angry",
+      "label": "Wütend",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "mouth/angry/A.png",
+          "difference": "mouth/angry/A-diff.png",
+          "changedPixels": 247,
+          "sha256": "4229e0a5752ef97e9c4f7ea1336f8de4d2464d6f988498eebe9e119e142167f1"
+        },
+        {
+          "shape": "B",
+          "file": "mouth/angry/B.png",
+          "difference": "mouth/angry/B-diff.png",
+          "changedPixels": 236,
+          "sha256": "c4a2f6ed478c3610db2ce7fe3720724a41f3b35ccdcb5684eb366fee43c7e1c3"
+        },
+        {
+          "shape": "C",
+          "file": "mouth/angry/C.png",
+          "difference": "mouth/angry/C-diff.png",
+          "changedPixels": 246,
+          "sha256": "2ca3eddbcdf0486c04a1b1659d3a080de3b31d04fc91641be896f028f01e0521"
+        },
+        {
+          "shape": "D",
+          "file": "mouth/angry/D.png",
+          "difference": "mouth/angry/D-diff.png",
+          "changedPixels": 237,
+          "sha256": "f88e539e5f471b7f2a67e3901bf1a8b091e1f3423d19c6ee3cb147435e64799d"
+        },
+        {
+          "shape": "E",
+          "file": "mouth/angry/E.png",
+          "difference": "mouth/angry/E-diff.png",
+          "changedPixels": 241,
+          "sha256": "2de5ef3e23fab52feac98f93bb0b2fd2e6d306492bff8429ecfd3afa50000af7"
+        },
+        {
+          "shape": "F",
+          "file": "mouth/angry/F.png",
+          "difference": "mouth/angry/F-diff.png",
+          "changedPixels": 249,
+          "sha256": "4fbf84166c848845643ef22eda1b203f2c2012740c099cf4dff6f72346f9e557"
+        },
+        {
+          "shape": "G",
+          "file": "mouth/angry/G.png",
+          "difference": "mouth/angry/G-diff.png",
+          "changedPixels": 245,
+          "sha256": "381c4e546c1dea6d99113d3dd12ed03f1ab960fd3f2753236250c178e5782d83"
+        },
+        {
+          "shape": "H",
+          "file": "mouth/angry/H.png",
+          "difference": "mouth/angry/H-diff.png",
+          "changedPixels": 243,
+          "sha256": "6d54567aa083dc59f3b28ef3e1a864ee418d82e2d7930e21ee5d204c148232ee"
+        },
+        {
+          "shape": "X",
+          "file": "mouth/angry/X.png",
+          "difference": "mouth/angry/X-diff.png",
+          "changedPixels": 239,
+          "sha256": "af0219b48ca277555f43b52c735f8bd0021effe5367e264603c545b2f4c3f278"
+        }
+      ]
+    },
+    {
+      "id": "sad",
+      "label": "Traurig",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "mouth/sad/A.png",
+          "difference": "mouth/sad/A-diff.png",
+          "changedPixels": 234,
+          "sha256": "bbdfe7df1af4819f5c2883cd1cc536a9adcaf08e45094399b2c34b45c3ddbe51"
+        },
+        {
+          "shape": "B",
+          "file": "mouth/sad/B.png",
+          "difference": "mouth/sad/B-diff.png",
+          "changedPixels": 241,
+          "sha256": "0b53ddd91dca83b25e053035ab3d1a878c9d922b74705191dcee1ec06fb5dc2c"
+        },
+        {
+          "shape": "C",
+          "file": "mouth/sad/C.png",
+          "difference": "mouth/sad/C-diff.png",
+          "changedPixels": 249,
+          "sha256": "3e26039339fa7d1c033cb2a1a71a1dcd6a2d47aea1189c20f38cc67757b15a85"
+        },
+        {
+          "shape": "D",
+          "file": "mouth/sad/D.png",
+          "difference": "mouth/sad/D-diff.png",
+          "changedPixels": 239,
+          "sha256": "2d38486061968414fe7f992ac8e33af249cf7a48d5bbfb6b936a9ad2db5662df"
+        },
+        {
+          "shape": "E",
+          "file": "mouth/sad/E.png",
+          "difference": "mouth/sad/E-diff.png",
+          "changedPixels": 248,
+          "sha256": "1e48e71ca3b9f964f2065ec17fe244d6ca4a973b06b37140d5a31bc6f8984c00"
+        },
+        {
+          "shape": "F",
+          "file": "mouth/sad/F.png",
+          "difference": "mouth/sad/F-diff.png",
+          "changedPixels": 227,
+          "sha256": "01cf8a193775b6966d44d37f65a16bacd3e65e3a3c261194470bb445acda01ca"
+        },
+        {
+          "shape": "G",
+          "file": "mouth/sad/G.png",
+          "difference": "mouth/sad/G-diff.png",
+          "changedPixels": 232,
+          "sha256": "538b6e703d0a3b1e743051142188126ab90f0de0b4a2bfcbcdb2eda172f58a4b"
+        },
+        {
+          "shape": "H",
+          "file": "mouth/sad/H.png",
+          "difference": "mouth/sad/H-diff.png",
+          "changedPixels": 248,
+          "sha256": "1de270fc691ae4ab1af99d2dc51da0ce0b310554103ef885e0163a65b7b398a8"
+        },
+        {
+          "shape": "X",
+          "file": "mouth/sad/X.png",
+          "difference": "mouth/sad/X-diff.png",
+          "changedPixels": 238,
+          "sha256": "a9367a520ae83fa0391632ceec7b944386a9ea51486e69e3bfbdfe5358834352"
+        }
+      ]
+    },
+    {
+      "id": "afraid",
+      "label": "Ängstlich",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "mouth/afraid/A.png",
+          "difference": "mouth/afraid/A-diff.png",
+          "changedPixels": 226,
+          "sha256": "827fa77d523f8842d8ccbdb4d6fdd50404006994685bfa4b46f3e41054d99b79"
+        },
+        {
+          "shape": "B",
+          "file": "mouth/afraid/B.png",
+          "difference": "mouth/afraid/B-diff.png",
+          "changedPixels": 235,
+          "sha256": "d6e3f3db5ba4f6c54d7c30fa0a7ce5152f2b928166e2b701f12b58a265e2b7ea"
+        },
+        {
+          "shape": "C",
+          "file": "mouth/afraid/C.png",
+          "difference": "mouth/afraid/C-diff.png",
+          "changedPixels": 232,
+          "sha256": "2598b1c2249b298fd292deb4810b5128c3e0f6ce7771f751932f094d7bb0e9a3"
+        },
+        {
+          "shape": "D",
+          "file": "mouth/afraid/D.png",
+          "difference": "mouth/afraid/D-diff.png",
+          "changedPixels": 250,
+          "sha256": "9b346ba6c5d960fbcb1e77aa513d47bb3236d71f75f17b383ca94af8751afc5f"
+        },
+        {
+          "shape": "E",
+          "file": "mouth/afraid/E.png",
+          "difference": "mouth/afraid/E-diff.png",
+          "changedPixels": 244,
+          "sha256": "5fe4091324c3b3b5d52882a02f332ff8c623080799fccff785e64d171fd1f819"
+        },
+        {
+          "shape": "F",
+          "file": "mouth/afraid/F.png",
+          "difference": "mouth/afraid/F-diff.png",
+          "changedPixels": 248,
+          "sha256": "d6aa2dd37105bcf94763845cd61b07bd012fdd0bae2a8c9fa0363df6c7eed718"
+        },
+        {
+          "shape": "G",
+          "file": "mouth/afraid/G.png",
+          "difference": "mouth/afraid/G-diff.png",
+          "changedPixels": 224,
+          "sha256": "68433703b44f5e7e71ed336702f63831017e89d8c4c2282c29d1fbd7eb6518af"
+        },
+        {
+          "shape": "H",
+          "file": "mouth/afraid/H.png",
+          "difference": "mouth/afraid/H-diff.png",
+          "changedPixels": 234,
+          "sha256": "ba34ce50e33e696b28a19ec3c8d36389af1dc6359c07130356a4b36168c11637"
+        },
+        {
+          "shape": "X",
+          "file": "mouth/afraid/X.png",
+          "difference": "mouth/afraid/X-diff.png",
+          "changedPixels": 234,
+          "sha256": "af8b3493192f2f8a1a181ce5aae65fdd82db2e0d88ca2564a044fe43be4877ca"
+        }
+      ]
+    },
+    {
+      "id": "guarded",
+      "label": "Skeptisch",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "mouth/guarded/A.png",
+          "difference": "mouth/guarded/A-diff.png",
+          "changedPixels": 234,
+          "sha256": "370156b90ec760028e4e592ad636793f6997bbf3caaaa7c160e720680f4c4e92"
+        },
+        {
+          "shape": "B",
+          "file": "mouth/guarded/B.png",
+          "difference": "mouth/guarded/B-diff.png",
+          "changedPixels": 235,
+          "sha256": "c050f4c2579518ff96ddfc439437cdb80ec2f79bf7943e1815c01c36ef110d77"
+        },
+        {
+          "shape": "C",
+          "file": "mouth/guarded/C.png",
+          "difference": "mouth/guarded/C-diff.png",
+          "changedPixels": 236,
+          "sha256": "2ac8cb50dad1ff7907cf4dd664eae48d6ea718e2f02b7231d5302764b1c92e85"
+        },
+        {
+          "shape": "D",
+          "file": "mouth/guarded/D.png",
+          "difference": "mouth/guarded/D-diff.png",
+          "changedPixels": 240,
+          "sha256": "bbe750173df924908ed549787d8ff55e9e7afb3122b3bd60459c2d5b567dd46d"
+        },
+        {
+          "shape": "E",
+          "file": "mouth/guarded/E.png",
+          "difference": "mouth/guarded/E-diff.png",
+          "changedPixels": 233,
+          "sha256": "d69652f2d40d621566d39d349a4d0128973f078ce05fd8eb3e008d819a582322"
+        },
+        {
+          "shape": "F",
+          "file": "mouth/guarded/F.png",
+          "difference": "mouth/guarded/F-diff.png",
+          "changedPixels": 234,
+          "sha256": "4b154cc8f8350da83d41f6c8b40d515470689b90dccc6399ff14df86f3385100"
+        },
+        {
+          "shape": "G",
+          "file": "mouth/guarded/G.png",
+          "difference": "mouth/guarded/G-diff.png",
+          "changedPixels": 250,
+          "sha256": "a352bba7a60be555fac8c3086e758bb09cf74f8ec266ff1d66bda3bd958874b0"
+        },
+        {
+          "shape": "H",
+          "file": "mouth/guarded/H.png",
+          "difference": "mouth/guarded/H-diff.png",
+          "changedPixels": 249,
+          "sha256": "aa3dcfb2dc62eb2d967f569ae05eb25d68e8006139626e133dd1616925d0bb14"
+        },
+        {
+          "shape": "X",
+          "file": "mouth/guarded/X.png",
+          "difference": "mouth/guarded/X-diff.png",
+          "changedPixels": 235,
+          "sha256": "85425209a358ab195a06dac98ea242b4bddcb2764b8650f96bf952b72848dbe2"
+        }
+      ]
+    }
+  ],
+  "thinkingEyeSetsByEmotion": {
+    "neutral": [
+      {
+        "id": "left",
+        "label": "Links",
+        "phases": {
+          "open": {
+            "file": "eyes/neutral/left/open.png",
+            "difference": "eyes/neutral/left/open-diff.png",
+            "changedPixels": 104,
+            "sha256": "d4cdf885be9bbe76e8d8a03ad0025e9443d48e8af839e0875158040068492fd9"
+          },
+          "half": {
+            "file": "eyes/neutral/left/half.png",
+            "difference": "eyes/neutral/left/half-diff.png",
+            "changedPixels": 104,
+            "sha256": "aba4cd8adda8a8f34914c251d7579ca3c5a0cc1c0501101754393173d1f58688"
+          },
+          "closed": {
+            "file": "eyes/neutral/left/closed.png",
+            "difference": "eyes/neutral/left/closed-diff.png",
+            "changedPixels": 104,
+            "sha256": "142bbe81d742ff394deeda01620ad87a165d7e7e82648bc9d326c1e05587c98d"
+          }
+        }
+      },
+      {
+        "id": "right",
+        "label": "Rechts",
+        "phases": {
+          "open": {
+            "file": "eyes/neutral/right/open.png",
+            "difference": "eyes/neutral/right/open-diff.png",
+            "changedPixels": 104,
+            "sha256": "23b2707fa23974be87265eac8da2e4be039a54ba8757f963ffaf8416f64e4b83"
+          },
+          "half": {
+            "file": "eyes/neutral/right/half.png",
+            "difference": "eyes/neutral/right/half-diff.png",
+            "changedPixels": 104,
+            "sha256": "84bd995294d6b293b2eddaa7ca07f075fcc81cb11c8ab410fe6ccc56df3185a1"
+          },
+          "closed": {
+            "file": "eyes/neutral/right/closed.png",
+            "difference": "eyes/neutral/right/closed-diff.png",
+            "changedPixels": 104,
+            "sha256": "142bbe81d742ff394deeda01620ad87a165d7e7e82648bc9d326c1e05587c98d"
+          }
+        }
+      }
+    ],
+    "happy": [
+      {
+        "id": "left",
+        "label": "Links",
+        "phases": {
+          "open": {
+            "file": "eyes/happy/left/open.png",
+            "difference": "eyes/happy/left/open-diff.png",
+            "changedPixels": 419,
+            "sha256": "8c6b5d20a3f065a302488fcceab9b9832c78159797c2f53b3cfba5df3c6ab65b"
+          },
+          "half": {
+            "file": "eyes/happy/left/half.png",
+            "difference": "eyes/happy/left/half-diff.png",
+            "changedPixels": 419,
+            "sha256": "fa896ccbb63a1b61925a9733cf5b252b14fb172fbcaf8de259e0ea38e3bf2fb8"
+          },
+          "closed": {
+            "file": "eyes/happy/left/closed.png",
+            "difference": "eyes/happy/left/closed-diff.png",
+            "changedPixels": 419,
+            "sha256": "06d640288e1b3bb248f4e4fabccbd92a75b7dfd95e91932b641b92ace9f470a9"
+          }
+        }
+      },
+      {
+        "id": "right",
+        "label": "Rechts",
+        "phases": {
+          "open": {
+            "file": "eyes/happy/right/open.png",
+            "difference": "eyes/happy/right/open-diff.png",
+            "changedPixels": 419,
+            "sha256": "0a4eb90bab6884c4eebf4e26a20a16455349bcb3057ed93ff8849327c18e4795"
+          },
+          "half": {
+            "file": "eyes/happy/right/half.png",
+            "difference": "eyes/happy/right/half-diff.png",
+            "changedPixels": 418,
+            "sha256": "a2f87ca3f70de4d6e820a3e41232d86f27462146d999d24ec1a7d7e9b5f587fb"
+          },
+          "closed": {
+            "file": "eyes/happy/right/closed.png",
+            "difference": "eyes/happy/right/closed-diff.png",
+            "changedPixels": 419,
+            "sha256": "06d640288e1b3bb248f4e4fabccbd92a75b7dfd95e91932b641b92ace9f470a9"
+          }
+        }
+      }
+    ],
+    "angry": [
+      {
+        "id": "left",
+        "label": "Links",
+        "phases": {
+          "open": {
+            "file": "eyes/angry/left/open.png",
+            "difference": "eyes/angry/left/open-diff.png",
+            "changedPixels": 406,
+            "sha256": "1aceff5b1ffca5fbc1ed5be6d28f13960216335827868ae6ed02f874d75e6e65"
+          },
+          "half": {
+            "file": "eyes/angry/left/half.png",
+            "difference": "eyes/angry/left/half-diff.png",
+            "changedPixels": 406,
+            "sha256": "b0304026af7cb42fe75313331a4db10796b9415b86d2a11bb7ce32e41de76604"
+          },
+          "closed": {
+            "file": "eyes/angry/left/closed.png",
+            "difference": "eyes/angry/left/closed-diff.png",
+            "changedPixels": 406,
+            "sha256": "023438f805f3f2519887af29a2ee4f3cc94bdfbb32f20b3d49c1c0d1ae0a1bd9"
+          }
+        }
+      },
+      {
+        "id": "right",
+        "label": "Rechts",
+        "phases": {
+          "open": {
+            "file": "eyes/angry/right/open.png",
+            "difference": "eyes/angry/right/open-diff.png",
+            "changedPixels": 406,
+            "sha256": "642e626c8c7fcfecad9e1d7b3bbc4c7d6923e68c6feb7b60cc01bbbbef207800"
+          },
+          "half": {
+            "file": "eyes/angry/right/half.png",
+            "difference": "eyes/angry/right/half-diff.png",
+            "changedPixels": 406,
+            "sha256": "505ac952a6e1d776a04a448173c7042ef283becdde88e961ec3de290685bf9c0"
+          },
+          "closed": {
+            "file": "eyes/angry/right/closed.png",
+            "difference": "eyes/angry/right/closed-diff.png",
+            "changedPixels": 406,
+            "sha256": "023438f805f3f2519887af29a2ee4f3cc94bdfbb32f20b3d49c1c0d1ae0a1bd9"
+          }
+        }
+      }
+    ],
+    "sad": [
+      {
+        "id": "left",
+        "label": "Links",
+        "phases": {
+          "open": {
+            "file": "eyes/sad/left/open.png",
+            "difference": "eyes/sad/left/open-diff.png",
+            "changedPixels": 417,
+            "sha256": "e18aa2940f5c33469c596b5b6d7c7b82b695f74dab6d7d86a9b74a133dc82ef3"
+          },
+          "half": {
+            "file": "eyes/sad/left/half.png",
+            "difference": "eyes/sad/left/half-diff.png",
+            "changedPixels": 417,
+            "sha256": "69fd6a7603f1fbad2640e6f51dbaafeac4786789c6da6233613bcab9598aff16"
+          },
+          "closed": {
+            "file": "eyes/sad/left/closed.png",
+            "difference": "eyes/sad/left/closed-diff.png",
+            "changedPixels": 417,
+            "sha256": "1344615d4a567a8d454356feff4d5f31777e657a7379ba41167124f7e0a99d04"
+          }
+        }
+      },
+      {
+        "id": "right",
+        "label": "Rechts",
+        "phases": {
+          "open": {
+            "file": "eyes/sad/right/open.png",
+            "difference": "eyes/sad/right/open-diff.png",
+            "changedPixels": 417,
+            "sha256": "16f85b0f788714c02804436da5a9a11586c3ab29b9f9686fa61c08e70c9c5182"
+          },
+          "half": {
+            "file": "eyes/sad/right/half.png",
+            "difference": "eyes/sad/right/half-diff.png",
+            "changedPixels": 417,
+            "sha256": "75b76099f9087899fded766e7e96312b9e382bec5e5da2dc4b0e5b6d6d47018d"
+          },
+          "closed": {
+            "file": "eyes/sad/right/closed.png",
+            "difference": "eyes/sad/right/closed-diff.png",
+            "changedPixels": 417,
+            "sha256": "1344615d4a567a8d454356feff4d5f31777e657a7379ba41167124f7e0a99d04"
+          }
+        }
+      }
+    ],
+    "afraid": [
+      {
+        "id": "left",
+        "label": "Links",
+        "phases": {
+          "open": {
+            "file": "eyes/afraid/left/open.png",
+            "difference": "eyes/afraid/left/open-diff.png",
+            "changedPixels": 420,
+            "sha256": "9cc4df99c47bd138e4ded0b463f5f8f5846b1e837766e6ac3cac44039ff4f75a"
+          },
+          "half": {
+            "file": "eyes/afraid/left/half.png",
+            "difference": "eyes/afraid/left/half-diff.png",
+            "changedPixels": 420,
+            "sha256": "12c78f0ca3658d57cc14b3a95f31a3408847ce4d2fa641fd2c2e824aa14fe8bd"
+          },
+          "closed": {
+            "file": "eyes/afraid/left/closed.png",
+            "difference": "eyes/afraid/left/closed-diff.png",
+            "changedPixels": 420,
+            "sha256": "7bb6ef17b2152d4a8f9304fa6e13d497afe65f7e86ef9e567f306422e5ff2bc7"
+          }
+        }
+      },
+      {
+        "id": "right",
+        "label": "Rechts",
+        "phases": {
+          "open": {
+            "file": "eyes/afraid/right/open.png",
+            "difference": "eyes/afraid/right/open-diff.png",
+            "changedPixels": 420,
+            "sha256": "8cd5f941a99597ea4c61bf9cfda3f1408a8452e5e873fbd8fb7b07fb5da7a373"
+          },
+          "half": {
+            "file": "eyes/afraid/right/half.png",
+            "difference": "eyes/afraid/right/half-diff.png",
+            "changedPixels": 420,
+            "sha256": "32a85227b50033cfa109f3efe4a097b4aea3116eb638bcd7d9918c4f59131179"
+          },
+          "closed": {
+            "file": "eyes/afraid/right/closed.png",
+            "difference": "eyes/afraid/right/closed-diff.png",
+            "changedPixels": 420,
+            "sha256": "7bb6ef17b2152d4a8f9304fa6e13d497afe65f7e86ef9e567f306422e5ff2bc7"
+          }
+        }
+      }
+    ],
+    "guarded": [
+      {
+        "id": "left",
+        "label": "Links",
+        "phases": {
+          "open": {
+            "file": "eyes/guarded/left/open.png",
+            "difference": "eyes/guarded/left/open-diff.png",
+            "changedPixels": 412,
+            "sha256": "36862fc615eeb9fc48c35ae7bdac3dd8eb316cdeb06b8da9373fa4bb37594b00"
+          },
+          "half": {
+            "file": "eyes/guarded/left/half.png",
+            "difference": "eyes/guarded/left/half-diff.png",
+            "changedPixels": 412,
+            "sha256": "f33f7af931f9513b88fcb0161716447f9bb5b09c93298cd03b71460ce715f58a"
+          },
+          "closed": {
+            "file": "eyes/guarded/left/closed.png",
+            "difference": "eyes/guarded/left/closed-diff.png",
+            "changedPixels": 412,
+            "sha256": "00613d6492c77553371e5aebb459cdd1af177372a53844399f3e6f01252775a9"
+          }
+        }
+      },
+      {
+        "id": "right",
+        "label": "Rechts",
+        "phases": {
+          "open": {
+            "file": "eyes/guarded/right/open.png",
+            "difference": "eyes/guarded/right/open-diff.png",
+            "changedPixels": 412,
+            "sha256": "9cf496f2af938b48b4a86a30917f9e539946b9ec4a362de9accb175bdec46d0b"
+          },
+          "half": {
+            "file": "eyes/guarded/right/half.png",
+            "difference": "eyes/guarded/right/half-diff.png",
+            "changedPixels": 412,
+            "sha256": "0f6e37b85c09914ecd2d257dd3b392ab4d57a5d04c0dbb3f06250ab7bee53c5c"
+          },
+          "closed": {
+            "file": "eyes/guarded/right/closed.png",
+            "difference": "eyes/guarded/right/closed-diff.png",
+            "changedPixels": 412,
+            "sha256": "00613d6492c77553371e5aebb459cdd1af177372a53844399f3e6f01252775a9"
+          }
+        }
+      }
+    ]
+  },
+  "eyeRegions": [
+    {
+      "x": 13,
+      "y": 17,
+      "width": 17,
+      "height": 10
+    },
+    {
+      "x": 15,
+      "y": 26,
+      "width": 14,
+      "height": 4
+    },
+    {
+      "x": 33,
+      "y": 17,
+      "width": 18,
+      "height": 10
+    },
+    {
+      "x": 36,
+      "y": 26,
+      "width": 14,
+      "height": 4
+    }
+  ],
+  "generationProvider": "built-in image_gen",
+  "reviewLimitations": [
+    "Native parts and normal/slowed controlled browser motion reviewed; bounded visual judgment, not a perfection guarantee.",
+    "Generated warm glints have small RGB differences from source; source-exact RGB is guaranteed only for neutral FRONT OPEN and neutral A/X.",
+    "Full renewed audio listening, native game verification and user acceptance are not claimed."
+  ]
+}

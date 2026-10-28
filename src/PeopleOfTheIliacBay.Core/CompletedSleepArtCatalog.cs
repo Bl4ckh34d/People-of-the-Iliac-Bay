@@ -1,0 +1,75 @@
+using System.Collections.Generic;
+namespace PeopleOfTheIliacBay.Core {
+internal static class CompletedSleepArtCatalog {
+internal static void AddTo(Dictionary<string,SleepArtCatalog.Entry> entries) {
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10015:1",new SleepArtCatalog.Entry(10015,1,"npc-complete-det-10015-1-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10015:2",new SleepArtCatalog.Entry(10015,2,"npc-complete-det-10015-2-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10015:3",new SleepArtCatalog.Entry(10015,3,"npc-complete-det-10015-3-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10015:4",new SleepArtCatalog.Entry(10015,4,"npc-complete-det-10015-4-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10011:0",new SleepArtCatalog.Entry(10011,0,"npc-complete-det-10011-0-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10011:1",new SleepArtCatalog.Entry(10011,1,"npc-complete-det-10011-1-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10011:2",new SleepArtCatalog.Entry(10011,2,"npc-complete-det-10011-2-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10011:3",new SleepArtCatalog.Entry(10011,3,"npc-complete-det-10011-3-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10011:4",new SleepArtCatalog.Entry(10011,4,"npc-complete-det-10011-4-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10011:5",new SleepArtCatalog.Entry(10011,5,"npc-complete-det-10011-5-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10011:6",new SleepArtCatalog.Entry(10011,6,"npc-complete-det-10011-6-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10011:7",new SleepArtCatalog.Entry(10011,7,"npc-complete-det-10011-7-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10012:0",new SleepArtCatalog.Entry(10012,0,"npc-complete-det-10012-0-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10012:1",new SleepArtCatalog.Entry(10012,1,"npc-complete-det-10012-1-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10012:3",new SleepArtCatalog.Entry(10012,3,"npc-complete-det-10012-3-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10012:4",new SleepArtCatalog.Entry(10012,4,"npc-complete-det-10012-4-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10012:6",new SleepArtCatalog.Entry(10012,6,"npc-complete-det-10012-6-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10012:7",new SleepArtCatalog.Entry(10012,7,"npc-complete-det-10012-7-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10012:8",new SleepArtCatalog.Entry(10012,8,"npc-complete-det-10012-8-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10012:9",new SleepArtCatalog.Entry(10012,9,"npc-complete-det-10012-9-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10012:10",new SleepArtCatalog.Entry(10012,10,"npc-complete-det-10012-10-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10012:11",new SleepArtCatalog.Entry(10012,11,"npc-complete-det-10012-11-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10012:12",new SleepArtCatalog.Entry(10012,12,"npc-complete-det-10012-12-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10012:13",new SleepArtCatalog.Entry(10012,13,"npc-complete-det-10012-13-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10012:14",new SleepArtCatalog.Entry(10012,14,"npc-complete-det-10012-14-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10012:15",new SleepArtCatalog.Entry(10012,15,"npc-complete-det-10012-15-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10012:16",new SleepArtCatalog.Entry(10012,16,"npc-complete-det-10012-16-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10012:17",new SleepArtCatalog.Entry(10012,17,"npc-complete-det-10012-17-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10012:18",new SleepArtCatalog.Entry(10012,18,"npc-complete-det-10012-18-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10012:19",new SleepArtCatalog.Entry(10012,19,"npc-complete-det-10012-19-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10012:20",new SleepArtCatalog.Entry(10012,20,"npc-complete-det-10012-20-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10013:1",new SleepArtCatalog.Entry(10013,1,"npc-complete-det-10013-1-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10013:2",new SleepArtCatalog.Entry(10013,2,"npc-complete-det-10013-2-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10013:3",new SleepArtCatalog.Entry(10013,3,"npc-complete-det-10013-3-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10016:0",new SleepArtCatalog.Entry(10016,0,"npc-complete-det-10016-0-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10016:1",new SleepArtCatalog.Entry(10016,1,"npc-complete-det-10016-1-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10016:2",new SleepArtCatalog.Entry(10016,2,"npc-complete-det-10016-2-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10016:3",new SleepArtCatalog.Entry(10016,3,"npc-complete-det-10016-3-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10016:4",new SleepArtCatalog.Entry(10016,4,"npc-complete-det-10016-4-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10014:0",new SleepArtCatalog.Entry(10014,0,"npc-complete-det-10014-0-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10014:2",new SleepArtCatalog.Entry(10014,2,"npc-complete-det-10014-2-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10014:5",new SleepArtCatalog.Entry(10014,5,"npc-complete-det-10014-5-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10014:6",new SleepArtCatalog.Entry(10014,6,"npc-complete-det-10014-6-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10014:8",new SleepArtCatalog.Entry(10014,8,"npc-complete-det-10014-8-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10014:9",new SleepArtCatalog.Entry(10014,9,"npc-complete-det-10014-9-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10014:10",new SleepArtCatalog.Entry(10014,10,"npc-complete-det-10014-10-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10014:11",new SleepArtCatalog.Entry(10014,11,"npc-complete-det-10014-11-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10014:12",new SleepArtCatalog.Entry(10014,12,"npc-complete-det-10014-12-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10018:0",new SleepArtCatalog.Entry(10018,0,"npc-complete-det-10018-0-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10018:1",new SleepArtCatalog.Entry(10018,1,"npc-complete-det-10018-1-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10018:2",new SleepArtCatalog.Entry(10018,2,"npc-complete-det-10018-2-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10018:3",new SleepArtCatalog.Entry(10018,3,"npc-complete-det-10018-3-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10017:0",new SleepArtCatalog.Entry(10017,0,"npc-complete-det-10017-0-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10017:1",new SleepArtCatalog.Entry(10017,1,"npc-complete-det-10017-1-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10017:2",new SleepArtCatalog.Entry(10017,2,"npc-complete-det-10017-2-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10017:3",new SleepArtCatalog.Entry(10017,3,"npc-complete-det-10017-3-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10017:4",new SleepArtCatalog.Entry(10017,4,"npc-complete-det-10017-4-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10017:5",new SleepArtCatalog.Entry(10017,5,"npc-complete-det-10017-5-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10017:6",new SleepArtCatalog.Entry(10017,6,"npc-complete-det-10017-6-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10017:7",new SleepArtCatalog.Entry(10017,7,"npc-complete-det-10017-7-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10018:4",new SleepArtCatalog.Entry(10018,4,"npc-complete-det-10018-4-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10020:0",new SleepArtCatalog.Entry(10020,0,"npc-complete-det-10020-0-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10020:2",new SleepArtCatalog.Entry(10020,2,"npc-complete-det-10020-2-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10020:3",new SleepArtCatalog.Entry(10020,3,"npc-complete-det-10020-3-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10020:4",new SleepArtCatalog.Entry(10020,4,"npc-complete-det-10020-4-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10020:5",new SleepArtCatalog.Entry(10020,5,"npc-complete-det-10020-5-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10020:6",new SleepArtCatalog.Entry(10020,6,"npc-complete-det-10020-6-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+entries.Add("00272292-acc6-4e51-ba4c-3a3e89199609:10020:7",new SleepArtCatalog.Entry(10020,7,"npc-complete-det-10020-7-sleep.png.bytes",-1,"00272292-acc6-4e51-ba4c-3a3e89199609"));
+}
+}
+}

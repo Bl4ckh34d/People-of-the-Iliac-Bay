@@ -14,6 +14,16 @@ namespace PeopleOfTheIliacBay.DFU
         private BuildingDirectory travelerDemandDirectory;
         private int travelerDemandDay=-1,travelerDemandNextInn;
         private float nextTravelerDemandAt;
+        private Coroutine travelerOriginPreparation;
+        private System.Collections.IEnumerator PrepareTravelerOrigins(int town,BuildingDirectory owner,WorldStateStore store,object epoch)
+        {
+            try
+            {
+                yield return TravelerIdentityAdapter.PrepareOrigins(town,()=>this && directory==owner &&
+                    ReferenceEquals(worldStore,store) && store.IsNpcVitalsWriteEpochCurrent(epoch));
+            }
+            finally {travelerOriginPreparation=null;}
+        }
         private readonly List<int> travelerDemandInns=new List<int>();
         private readonly HashSet<int> travelerDemandCompleted=new HashSet<int>();
         private readonly Dictionary<int,List<TownGeometry.TravelerAccess>> travelerDemandRoutes=
@@ -68,6 +78,12 @@ namespace PeopleOfTheIliacBay.DFU
                 travelerDemandInns.Sort();
             }
             int day=(int)Math.Floor(seconds/86400d);
+            if(!TravelerIdentityAdapter.OriginsReady(population.SettlementId))
+            {
+                if(travelerOriginPreparation==null)
+                    travelerOriginPreparation=StartCoroutine(PrepareTravelerOrigins(population.SettlementId,directory,worldStore,travelerDemandEpoch));
+                return;
+            }
             if(travelerDemandDay!=day)
             {travelerDemandDay=day;travelerDemandCompleted.Clear();travelerDemandNextInn=0;}
             if(travelerDemandInns.Count==0 || travelerDemandCompleted.Count==travelerDemandInns.Count)return;
@@ -91,7 +107,7 @@ namespace PeopleOfTheIliacBay.DFU
             {
                 TravelerDemand.EnsureInnTravelers(worldStore,population.SettlementId,key,day,(arrivalDay,slot)=>
                     TravelerIdentityAdapter.Create(worldStore.WorldSeed,population.SettlementId,key,arrivalDay,slot,
-                        routes[(int)(StableSeed.Combine(worldStore.WorldSeed,(uint)key,(uint)arrivalDay,(uint)slot)%(uint)routes.Count)]));
+                        routes[(int)(StableSeed.Combine(worldStore.WorldSeed,(uint)key,(uint)arrivalDay,(uint)slot)%(uint)routes.Count)],worldStore));
                 travelerDemandCompleted.Add(key);
             }
             catch(Exception error)

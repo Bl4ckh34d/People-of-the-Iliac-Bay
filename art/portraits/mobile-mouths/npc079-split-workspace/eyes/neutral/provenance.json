@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 79,
+  "bank": "TFAC00I0.RCI",
+  "emotion": "neutral",
+  "assetType": "eyes atlas",
+  "tool": "built-in image_gen",
+  "generationMode": "one edit call; generated PNG copied byte-for-byte; no resize, processing, or reroll",
+  "sourceOriginal": {
+    "path": "art/portraits/mobile-mouths/npc079-split-workspace/original.png",
+    "sha256": "70b1b52df73159543afd5776eae7565bfd3619fd31bc5fd90af674e42520d460",
+    "dimensionsPx": [
+      64,
+      64
+    ]
+  },
+  "sourceReferences": [
+    {
+      "path": "art/portraits/mobile-mouths/npc079-split-workspace/eyes-reference-grid.png",
+      "sha256": "81737009a51fbafd2ca540f49ed88457428fda5bfa128c4cefd0b03debb867da",
+      "dimensionsPx": [
+        1024,
+        560
+      ]
+    },
+    {
+      "path": "art/portraits/mobile-mouths/npc079-split-workspace/original.png",
+      "sha256": "70b1b52df73159543afd5776eae7565bfd3619fd31bc5fd90af674e42520d460",
+      "dimensionsPx": [
+        64,
+        64
+      ]
+    }
+  ],
+  "prompt": "Image 1 is the complete 2x2 upper-face eye reference grid for NPC079; Image 2 is the original NPC079 portrait for exact identity, geometry, eye spacing, brow shape, soft muted palette, and pixel texture. Return one complete 2x2 sprite atlas only, with four equal whole upper-half cells in row-major order: OPEN, HALF BLINK, FULLY CLOSED BLINK, REPEATED OPEN. Each cell represents the same native 64x35 pixel upper-half crop; preserve the reference framing and cell geometry with no margins, labels, gutters, borders, or extra cells.\n\nMake only neutral eye-lid phase changes. Preserve the exact original neutral eyebrow shape, height, position, and expression in every cell. Preserve the original compact golden-brown irises and narrow pupils: same size, width, color, gaze direction, and horizontal/vertical position in open and half-blink. The half-blink is formed only by lowering the upper lids over the stationary eyeballs to cover about half the iris; do not shrink, shift, enlarge, round, or redraw either iris or pupil. The fully closed blink closes both eyes with the same natural lid geometry, fully hiding all iris and pupil; brows stay exactly the same. The repeated open cell should match the first open in neutral gaze and expression.\n\nKeep NPC079's original eye spacing, skin shading, hair, forehead, nose region, composition, soft low-contrast palette, and native-scale pixel clusters. No makeup, eyeliner, wrinkles, expression change, bright sclera flash, blur, smudging, new details, text, or background changes. Keep both full eyes and brows visible inside each original upper-half cell.",
+  "promptSha256Utf8": "e47a9bae2058b6ccf6fca04f5e6da6a30bcf0ab3dd528ea466078dbf61c1e6d0",
+  "grid": {
+    "rows": 2,
+    "columns": 2,
+    "rowMajorOrder": [
+      "open",
+      "half",
+      "closed",
+      "repeat-open"
+    ],
+    "nativeCellDimensionsPx": [
+      64,
+      35
+    ],
+    "completeHalfCells": true,
+    "cellSemantics": "Open, half blink, fully closed blink, repeated open; neutral eyebrows and stationary compact irises requested.",
+    "generatedCanvasDimensionsPx": [
+      1695,
+      928
+    ],
+    "equalIntegerCellDivisionPossible": false,
+    "samplingLimitation": "Generated canvas dimensions are not divisible by the requested row/column grid; cell boundaries require parent review before sampling. This raw atlas was not resized or altered."
+  },
+  "generatedOutput": {
+    "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-5744-7b43-9b03-e8cced819bb7\\exec-640a24ae-691f-4585-a386-b2cf391bea49.png",
+    "sha256": "d06ca366d3a1dd83b6c9a578ff991f987f7ae2ae0b1e2b38e435a83904aba45e",
+    "dimensionsPx": [
+      1695,
+      928
+    ],
+    "mode": "RGB"
+  },
+  "savedRaw": {
+    "path": "art/portraits/mobile-mouths/npc079-split-workspace/eyes/neutral/raw.png",
+    "sha256": "d06ca366d3a1dd83b6c9a578ff991f987f7ae2ae0b1e2b38e435a83904aba45e",
+    "dimensionsPx": [
+      1695,
+      928
+    ],
+    "mode": "RGB",
+    "bytewiseSameAsGenerated": true
+  },
+  "rawReview": {
+    "status": "generated raw; parent review pending",
+    "notes": "One raw 2x2 edit was generated. Four cells are present with visible open, half-lid, closed, and repeated-open phases. At the displayed atlas scale the iris remains compact and the half-lid covers it without obvious horizontal displacement. Minor brow shape/weight differences between cells and exact native-pixel iris consistency still need parent review. No reroll or resampling performed. Generated canvas is 1695x928; exact equal integer division by 2 columns and 2 rows is False. Parent should confirm cell boundaries before native sampling.",
+    "nativeScaleOrMaskAcceptance": false,
+    "generatedCellDivisionExact": false
+  }
+}

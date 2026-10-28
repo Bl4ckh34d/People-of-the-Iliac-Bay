@@ -9,7 +9,7 @@ namespace PeopleOfTheIliacBay.Tests
     {
         public static void Add(List<(string Name, Action Body)> tests)
         {
-            tests.Add(("Routine recovery plan survives exact save restore and schema 29 migrates empty", SaveRestoreAndLegacy));
+            tests.Add(("Routine recovery plan survives exact save restore", SaveRestore));
             tests.Add(("Routine recovery store returns detached plans", MutationIsolation));
             tests.Add(("Routine recovery lookup rejects stale day and fingerprints", StaleLookup));
             tests.Add(("Routine recovery save replaces resident slot", Replace));
@@ -19,6 +19,28 @@ namespace PeopleOfTheIliacBay.Tests
             tests.Add(("Routine recovery routes must retain saved edge provenance", RouteProvenance));
             tests.Add(("Changed routine leaves historical recovery inert without blocking restore", ChangedRoutineHistory));
             tests.Add(("Large saved multi-edge recovery path survives provenance validation", LargeSavedRoute));
+            tests.Add(("Late physical home return survives current-format JSON restore across midnight", LateReturnRoundTrip));
+        }
+
+        private static void LateReturnRoundTrip()
+        {
+            var store=Fixture(out var resident,out var routine);
+            var ordinary=DailySchedule.ItineraryDay(resident.HomeKey,routine.Itinerary,routine.ItineraryDepartureSeconds,360,1320);
+            double now=2*86400-10;
+            Check.True(RoutineRecoveryPlanner.TryCreate(31,resident,routine,ordinary,null,1,now,31,now,360,1320,1,
+                out var plan,out var reason,true),reason);
+            Check.True(plan.EndsAt>2*86400);
+            store.SaveRoutineRecovery(plan);
+            var options=new JsonSerializerOptions{IncludeFields=true};var restored=new WorldStateStore(0);
+            restored.Restore(JsonSerializer.Deserialize<WorldState>(JsonSerializer.Serialize(store.Snapshot(),options),options));
+            var read=restored.GetRoutineRecovery(resident.Id,1,plan.RoutineFingerprint,plan.AppointmentFingerprint);
+            Check.True(read!=null);Check.Near(plan.EndsAt,read.EndsAt);
+            var schedule=DailySchedule.ContinueDay(ordinary,read);
+            Check.Equal(Activity.Travel,schedule.EvaluateSeconds(2*86400).Activity);
+            Check.True(!schedule.IsHomeThroughout(now,plan.EndsAt));
+            Check.Equal(Activity.Sleep,schedule.EvaluateSeconds(plan.EndsAt).Activity);
+            Check.Near(0,schedule.HomeSleepSeconds(now,plan.EndsAt));
+            Check.Near(60,schedule.HomeSleepSeconds(plan.EndsAt,plan.EndsAt+60));
         }
 
         private static WorldStateStore Fixture(out Resident resident, out ResidentRoutine routine)
@@ -88,7 +110,7 @@ namespace PeopleOfTheIliacBay.Tests
             };
         }
 
-        private static void SaveRestoreAndLegacy()
+        private static void SaveRestore()
         {
             var store = Fixture(out var resident, out var routine);
             var plan = Plan(resident, routine);
@@ -104,12 +126,6 @@ namespace PeopleOfTheIliacBay.Tests
             Check.Equal(plan.Legs[0].BuildingKey, found.Legs[0].BuildingKey);
             Check.Near(plan.Legs[0].Route[1].X, found.Legs[0].Route[1].X);
 
-            var legacy = restored.Snapshot();
-            legacy.Version = 29;
-            legacy.RoutineRecoveries = null;
-            var migrated = new WorldStateStore(0);
-            migrated.Restore(legacy);
-            Check.Equal(null, migrated.GetRoutineRecovery(resident.Id, 1, plan.RoutineFingerprint, plan.AppointmentFingerprint));
         }
 
         private static void OriginOutsideRoundTrip()

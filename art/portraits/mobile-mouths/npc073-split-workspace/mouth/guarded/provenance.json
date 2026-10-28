@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T10:12:51.3625720Z",
+    "portraitRecord":  73,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "guarded",
+    "prompt":  "Create one production sprite atlas for NPC073\u0027s guarded/skeptical speech mouths, using the supplied exact 3×3 repeated-original-lower-half grid as the only reference image.\n\nUse case: stylized-concept\nAsset type: native pixel-art portrait mouth atlas\nPrimary request: Create nine subtle, believable guarded visemes. Mouth tension is restrained and appraising, not angry and not smiling.\nComposition: Exactly three equal columns and rows, each a complete lower 64×29 crop; whole atlas has 64:29 cell proportions. Row-major A B C / D E F / G H X. No labels, gutters, borders, extra panels, full-face views, or independent mouth closeups.\nSubject and style: Preserve NPC073 identity, original muted skin and nose, hair, blue wand at left, chin/neck, framing, and lip scale. Preserve source\u0027s soft pink/terracotta lip color. Crisp native pixel art with low contrast.\nPose details:\nA: pressured closed P/B/M.\nB: narrow opening, teeth nearly together, consonants/EE.\nC: medium unrounded EH/AE.\nD: wide AA.\nE: slightly rounded AO/ER, no wider than C.\nF: puckered UW/OW/W.\nG: upper teeth touching lower lip, F/V.\nH: tongue raised behind upper teeth for L, opening between C and D.\nX: relaxed closed idle.\nKeep guarded tension subtle in corners and lip shape without erasing each phoneme pose. Gray-ivory teeth must read distinct from skin; use modest cavity contrast and no tooth gaps. Only show teeth for poses that require them.\nAvoid: lipstick-red lips, skin-colored teeth, bright shiny white flashes, pure white teeth, oversized mouths, black outlines, exaggerated smirk or downturned corners, giant skin patches, changed nose/jaw/hair/neck, blur or smoothing.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-490f93d1-332f-4e4d-b347-36113900a9ac.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-490f93d1-332f-4e4d-b347-36113900a9ac.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "8505d9e9fde3c536cf08958e97076aba44aa5d60e2e76ba6fc3fdb1384b8d643",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "9de10294b0248c194428d55abb5ba8cd5db8e0fc0f5225856c816e765b076f52",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-490f93d1-332f-4e4d-b347-36113900a9ac.png",
+                      "sha256":  "839a6080c5ef424fc13022ea61c12d274aca5b1e5f4a6aa93a16d8d19d033ebd",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/guarded/raw.png",
+                "sha256":  "839a6080c5ef424fc13022ea61c12d274aca5b1e5f4a6aa93a16d8d19d033ebd",
+                "width":  1863,
+                "height":  844
+            }
+}

@@ -27,6 +27,22 @@ namespace PeopleOfTheIliacBay.DFU
             HouseholdPropertyKeyItem.Register();var key=new HouseholdPropertyKeyItem(15,10);items.AddItem(key,noStack:true);
             Require(store.InitializeNpcInventory(person,81,NativeNpcInventoryBridge.CaptureItems(items)),"fixture inventory initialization failed");
             string expected=SaveLoadManager.Serialize(typeof(NpcInventoryState),store.ReadNpcInventory(person),false);
+            // Native save captures the allocator before mod inventory capture.
+            // Reproduce that order against the real native ItemBuilder.
+            ulong previousNext=DaggerfallUnity.CurrentUID;
+            try
+            {
+                var restored=new WorldStateStore(0);restored.Restore(store.Snapshot());
+                DaggerfallUnity.CurrentUID=first.UID;
+                DaggerfallUnity.CurrentUID=restored.NextAvailableNpcItemUid(DaggerfallUnity.CurrentUID);
+                var newlyAllocated=ItemBuilder.CreateItem(ItemGroups.Weapons,(int)Weapons.Dagger);
+                Require(newlyAllocated.UID>key.UID && restored.NpcInventoryItemOwner(newlyAllocated.UID)==null,
+                    "native allocator reused a saved NPC item UID after restore");
+                Require(SaveLoadManager.Serialize(typeof(NpcInventoryState),restored.ReadNpcInventory(person),false)==expected,
+                    "reserving saved native UIDs changed inventory state");
+            }
+            finally {DaggerfallUnity.CurrentUID=Math.Max(previousNext,DaggerfallUnity.CurrentUID);}
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_NPC_UID_RESTORE_PASS: actualNativeAllocator=true; savedItemsUnchanged=true; newItemDistinct=true");
             // Exercise real Bind, not the bridge alone. DFU's Items setter clones
             // source items and allocates new UIDs; this regression must catch that.
             for(int branch=0;branch<2;branch++)

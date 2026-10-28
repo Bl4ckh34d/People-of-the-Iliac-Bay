@@ -9,12 +9,14 @@ namespace PeopleOfTheIliacBay.Core
             var plan=GuardRefugeJourney.CopyValidated(journey);
             var preview=CopyValidated(this); var position=preview.Position(id,now);
             var guard=preview.Find(id);
-            Require(guard.IsAlive && (guard.Duty==GuardDuty.Posted || guard.Duty==GuardDuty.Engaged) && guard.Refuge==null &&
+            Require(guard.IsAlive && (guard.Duty==GuardDuty.Posted || guard.Duty==GuardDuty.Engaged ||
+                plan.HauntingShelter && (guard.Duty==GuardDuty.Responding || guard.Duty==GuardDuty.Searching || guard.Duty==GuardDuty.Returning)) && guard.Refuge==null &&
                 guard.Interior==null && plan.StartsAt==now && !plan.ReleasedAt.HasValue &&
                 Distance(position,new SavedRoutePoint { X=plan.Exterior[0].X,Z=plan.Exterior[0].Z })<0.05,
                 "Refuge departure requires an available guard and a matching surveyed route.");
-            var home=guard.Duty==GuardDuty.Engaged ? CopyRoute(surveyedHome) : preview.PatrolReturn(id,now);
-            if(guard.Duty==GuardDuty.Engaged)
+            bool displaced=guard.Duty!=GuardDuty.Posted;
+            var home=displaced ? CopyRoute(surveyedHome) : preview.PatrolReturn(id,now);
+            if(displaced)
                 Require(home.Count>=2 && Distance(home[0],position)<0.05 && Distance(home[home.Count-1],guard.Post)<0.05,
                     "Combat refuge requires a surveyed return from current position to post.");
             plan.ReturnExterior=plan.Exterior.ConvertAll(p=>new GuardPoint3 { X=p.X,Y=p.Y,Z=p.Z });
@@ -24,16 +26,21 @@ namespace PeopleOfTheIliacBay.Core
             var last=plan.ReturnExterior[plan.ReturnExterior.Count-1];
             Require(Distance(guard.Post,new SavedRoutePoint { X=last.X,Z=last.Z })<0.05,"Refuge return must reach the post.");
             plan=GuardRefugeJourney.CopyValidated(plan);
-            var destination=plan.Interior[plan.Interior.Count-1];
+            var destination=plan.RestPending ? null : plan.WallRoute==null ? plan.Interior[plan.Interior.Count-1] : plan.WallRoute[plan.WallRoute.Count-1];
             foreach (var other in preview.Guards)
             {
-                if (other.Id==id || other.Refuge==null || other.Refuge.BuildingKey!=plan.BuildingKey) continue;
+                if (destination==null || other.Id==id || other.Refuge==null || other.Refuge.RestPending || other.Refuge.BuildingKey!=plan.BuildingKey) continue;
+                // Wall posts use city-local exterior coordinates; indoor beds
+                // use building-local coordinates. A shared stair exit is transit,
+                // not a reserved standing destination for every wall archer.
+                if((plan.WallRoute==null)!=(other.Refuge.WallRoute==null))continue;
                 var state=other.Refuge.Evaluate(other.IsAlive ? now : other.DiedAt);
                 GuardPoint3 occupied;
                 if (other.IsAlive)
                 {
                     if (state.Phase==RefugePhase.Returning || state.Phase==RefugePhase.Complete) continue;
-                    occupied=other.Refuge.Interior[other.Refuge.Interior.Count-1];
+                    occupied=other.Refuge.WallRoute==null ? other.Refuge.Interior[other.Refuge.Interior.Count-1] :
+                        other.Refuge.WallRoute[other.Refuge.WallRoute.Count-1];
                 }
                 else
                 {
@@ -58,7 +65,8 @@ namespace PeopleOfTheIliacBay.Core
         private static SavedRoutePoint RefugeExteriorPosition(GuardRecord guard,double now)
         {
             var state=guard.Refuge.Evaluate(now);
-            bool outside=state.Phase==RefugePhase.Approaching || state.Phase==RefugePhase.Returning || state.Phase==RefugePhase.Complete;
+            bool outside=state.Phase==RefugePhase.Approaching || state.Phase==RefugePhase.Returning || state.Phase==RefugePhase.Complete ||
+                state.Phase==RefugePhase.WallApproaching || state.Phase==RefugePhase.WallPosted || state.Phase==RefugePhase.WallReturning;
             var point=outside ? state.Position : guard.Refuge.Exterior[guard.Refuge.Exterior.Count-1];
             return new SavedRoutePoint { X=point.X,Z=point.Z };
         }

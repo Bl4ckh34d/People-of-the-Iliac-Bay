@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T10:17:35.0674179Z",
+    "portraitRecord":  73,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "afraid",
+    "prompt":  "Use case: stylized-concept\nAsset type: native pixel-art afraid eye atlas for an NPC portrait\nInput images: the single attached local candidate eye reference grid. It is the exact original upper-half face crop, face identity and palette reference.\n\nCreate one exact 2×2 atlas. Each cell is the same complete 64:35 upper-half crop, with no labels, borders, gutters, margins, text, extra panels or decoration. Required row-major order: top-left OPEN; top-right HALF-CLOSED; bottom-left FULLY-CLOSED; bottom-right OPEN REPEAT. Preserve identical framing and pixel registration in every cell.\n\nExpression: NPC073 afraid, with tense lifted inner brows and alert lids. The face must read fearful rather than neutral or merely round surprised. Keep both brows visibly tense and raised, but restrained and consistent across all four cells. Preserve the original face, eye spacing, nose bridge, hair/silhouette and warm muted palette.\n\nKeep each olive-brown iris and pupil compact, natural and fully inside the source eye aperture. Do not make round surprised disks, enlarge or stretch irises, expose broad white sclera, move the pupils outside their lids, or add bright glints. Open phases are alert but controlled. The half-closed phase follows the open iris placement and geometry under naturally lowered lids; no fixed slit detached from the eyes. The fully closed phase has continuous opaque lids covering iris and sclera while retaining the same fearful brow expression. OPEN REPEAT should match the top-left open pose.\n\nKeep soft native pixel clusters, original muted skin/hair tones, full upper-half crop and exact image scale. No face-shape or hair changes, blur, smoothing, antialiasing, vector circles, gradients, harsh dark outlines, oversized eyes or new background details.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-6ada568d-8f56-4b85-bb8c-6fea0cf65284.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-6ada568d-8f56-4b85-bb8c-6fea0cf65284.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "8505d9e9fde3c536cf08958e97076aba44aa5d60e2e76ba6fc3fdb1384b8d643",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "c6d813083b72162535d946fdab92c8327e91b20edef562492001ed6bf5d023ce",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-6ada568d-8f56-4b85-bb8c-6fea0cf65284.png",
+                      "sha256":  "f5821dfa9b8743445e377d6e672a57063e3156fe79708486c059f2b89f7fe74a",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/afraid/raw.png",
+                "sha256":  "f5821dfa9b8743445e377d6e672a57063e3156fe79708486c059f2b89f7fe74a",
+                "width":  1695,
+                "height":  928
+            }
+}

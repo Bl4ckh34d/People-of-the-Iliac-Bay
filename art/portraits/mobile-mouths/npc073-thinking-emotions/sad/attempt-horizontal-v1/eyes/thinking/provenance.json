@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T10:24:24.2305839Z",
+    "portraitRecord":  73,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Use case: stylized-concept\nAsset type: pixel-art NPC horizontal thinking-gaze sprite atlas\nPrimary request: Create one exact 2-by-2 atlas of the same sad portrait\u0027s eyes. The single input is a nearest-neighbor reference grid: top row shows the original sad open eyes in two repeated cells; bottom row shows the original sad half-lidded eyes in two repeated cells. Output top-left = LEFT open gaze, top-right = RIGHT open gaze, bottom-left = LEFT half-lidded gaze, bottom-right = RIGHT half-lidded gaze, in that order.\nInput image: Use the provided exact 2x2 reference grid as the only visual reference for this face, its hair/skin, pixel scale, eye spacing, sad brows, lid shapes, iris and colors.\nSubject: The existing small eyes of this same brown-haired, blue-wand-holding fantasy NPC. Preserve the face identity and sad expression.\nStyle/medium: Crisp, restrained 1990s pixel-art portrait matching the reference\u0027s native pixel clusters. Use clean hard pixel edges and the same palette; no smoothing or painterly reinterpretation.\nComposition/framing: The whole image is exactly a 2x2 grid, each equal cell has the same 64:35 landscape aspect as the reference cells. Keep identical crop, face scale, eye spacing, and all non-eye content in every cell. No borders or gaps.\nConstraints: Make only a subtle roughly one-native-pixel horizontal eye glance. In each LEFT cell, both compact irises/pupils look together toward the viewer\u0027s left; in each RIGHT cell, both look together toward the viewer\u0027s right. Keep the source\u0027s narrow open-eye and half-lid apertures and the source\u0027s exact sad brow shape and height. Preserve the compact muted amber/brown iris clusters and dark pupils at source size, with only tiny subdued existing-style glints. The half-lidded row must retain the source half-lid coverage and contours. Match source skin, hair, wand, background, lighting, and palette. Do not change mouth, nose, face outline, hair, brows, head position, or any pixels away from the eyes. No broad white sclera, eye widening, raised brows, enlarged or round irises, alert expression, new highlights, extra details, text, labels, watermark, or antialiasing.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-48e1278e-5d69-41d9-9857-eb00fdca5606.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-48e1278e-5d69-41d9-9857-eb00fdca5606.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "8505d9e9fde3c536cf08958e97076aba44aa5d60e2e76ba6fc3fdb1384b8d643",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "0ac5e8c81a310605d6b7166c5574707afc82f05d88c38abf488bfd26c7529b2f",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-48e1278e-5d69-41d9-9857-eb00fdca5606.png",
+                      "sha256":  "5efd70a2bae21241bfcfdaf9c439c9d6a32354cf83bde9b3f8bf669188872690",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "5efd70a2bae21241bfcfdaf9c439c9d6a32354cf83bde9b3f8bf669188872690",
+                "width":  1695,
+                "height":  928
+            }
+}

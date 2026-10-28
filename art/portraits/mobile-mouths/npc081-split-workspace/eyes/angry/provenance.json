@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 81,
+  "emotion": "angry",
+  "assetType": "2x2 eye atlas",
+  "imageTool": "built-in image_gen",
+  "sourceReferences": [
+    {
+      "sha256": "ec8e562898b5c269e5484294666940fd3d06392155fc32134d53d585209636f5",
+      "file": "../../eyes-reference-grid.png"
+    },
+    {
+      "sha256": "eb0f7dcd1d390a6ff58d1bc0bba7a3855b5930ee824aa54e2f749211721e8ba0",
+      "file": "../../original.png"
+    }
+  ],
+  "prompt": "Use case: restrained pixel-art angry eye atlas for Daggerfall Unity NPC 081.\nImage 1 is the exact 2x2 repeated-original eye grid and layout reference. Image 2 is the complete original portrait and binding source for identity, eye geometry and palette.\nCreate one 2x2 atlas in exact row-major order: angry open, angry half-closed, angry closed, repeated angry open. Keep four equal complete upper-half cells with identical crop, scale, alignment and framing.\nShow clear controlled anger with focused, narrowed eyes. Lower and draw inward both inner brow ends toward the nose bridge; lift outer ends slightly for a restrained tense V. Keep the original brow color, pixel width and soft shading. No thick black V markers, hard eyeliner or dark smudges. Keep the expression within existing brow and lid regions.\nPreserve the exact face, hair, forehead and skin palette. Keep compact original irises and pupils stationary, same width, color, position and forward gaze in open and half-closed phases. Half-closed means upper lid covers the same iris; closed means natural shut lids. Repeat open matches first open. Keep brows identical across all phases.\nNo circular eye forms outside lids, no iris drift, eye enlargement, white flashes, orange skin, lipstick-red palette, increased contrast, blur, text, labels, borders, gutters or watermark.",
+  "rawFile": "raw.png",
+  "rawSha256": "5c2ca56dde0b7e39868ee7616b15dac994b75853270ff2ca8c31fc4845a941ed",
+  "dimensions": {
+    "width": 1695,
+    "height": 928
+  },
+  "visibleIssues": [
+    "Angry V is clear. Brows appear darker/heavier than the reference at enlarged view; compare native color and thickness. Skin shading may be warmer; no reroll."
+  ],
+  "generatedOutput": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-bfa3-7821-8c10-1973507e5744\\exec-e43ece47-f88d-4851-986f-496fa930353c.png"
+}

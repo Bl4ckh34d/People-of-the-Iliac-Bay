@@ -26,7 +26,7 @@ namespace PeopleOfTheIliacBay.DFU
                 !blockName.EndsWith(".RMB",StringComparison.OrdinalIgnoreCase) || recordIndex<0 ||
                 !dfu || !dfu.IsReady || !game || !game.PlayerGPS || !game.PlayerGPS.HasCurrentLocation ||
                 game.PlayerEntity==null ||
-                !game.PlayerEntity.Name.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal))
+                !NativeProbeText.IsTestCharacter(game.PlayerEntity.Name))
                 throw new InvalidOperationException("Interior template export requires an RMB, subrecord, and owned native test fixture.");
 
             // Use the same location-resolved block that native DoLayout used.
@@ -54,7 +54,7 @@ namespace PeopleOfTheIliacBay.DFU
             if(string.IsNullOrWhiteSpace(folder) || !dfu || !dfu.IsReady || !game ||
                 !game.PlayerGPS || !game.PlayerGPS.HasCurrentLocation || !game.StreamingWorld ||
                 game.PlayerEntity==null ||
-                !game.PlayerEntity.Name.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal))
+                !NativeProbeText.IsTestCharacter(game.PlayerEntity.Name))
                 throw new InvalidOperationException("Interior location export requires an owned native test fixture and loaded location.");
             var directory=game.StreamingWorld.GetCurrentBuildingDirectory();
             if(!directory || directory.MapID!=game.PlayerGPS.CurrentLocation.MapTableData.MapId)

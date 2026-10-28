@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T06:33:26.4289717Z",
+    "portraitRecord":  77,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Use case: precise-object-edit. Edit the supplied 3x3 reference atlas of this same Daggerfall pixel-art woman\u0027s upper face into nine natural gaze directions. Preserve her identity, head shape, hair, palette, framing, and clearly sad vulnerable expression. Keep her characteristic raised inner brow shapes and softened downward brow tension exactly as in the reference. Do not neutralize her face or make her look afraid. Do not neutralize her face or make her look afraid. Each cell remains the complete upper portrait, 64:35 aspect, no gutters, borders, labels or text. Return only the 3x3 atlas.\n\nRow-major directions, as viewed on the picture: TOP-LEFT, UP, TOP-RIGHT / LEFT, STRAIGHT AHEAD, RIGHT / BOTTOM-LEFT, DOWN, BOTTOM-RIGHT. The two pupils must point together. The diagonals must visibly include the vertical component, rather than repeat the horizontal glance.\n\nCRITICAL ANATOMY: render each iris, pupil, eye opening and eyelids as one coherent eye. Looking UP naturally raises the UPPER EYELID and opens the eyes somewhat more, making actual room inside the eyeball opening for the elevated iris and pupil. Keep the pupil visibly INSIDE that opening, never stamped on top of the lid or skin. Small natural lower-lid adjustments are allowed. Looking DOWN lowers the gaze within a naturally lowered upper lid, with the iris correctly occluded by lids. Do not keep the old narrow opening fixed while pushing pupils through it. Do not shift the whole eye socket or eyebrows to simulate gaze. Keep eye corners and eye spacing stable, permit the lid contour to follow the gaze. Keep a continuous anatomically believable lid outline, no severed iris and no pupil embedded in eyelid.\n\nThe original is low-resolution softly shaded pixel art: retain compact muted violet-gray irises, tiny restrained highlights, warm subdued whites and the original brown/skin palette. Keep the original square pixel lattice, no round vector pupils, no new bright-white crescent or huge doll eyes. UP raises each upper lid only enough to make natural pupil space. Keep the eyes compact and sad, not startled. In every gaze, keep irises compact and muted, and show only tiny subdued warm-gray sclera slivers around them. Do not add broad bright-white crescents or enlarge the eyeballs. The middle-center cell matches the reference exactly. Keep brows and all skin/hair/background outside the eye features unchanged. Prioritize natural readable gaze over a forced exact one-pixel movement or a fixed iris bounding rectangle.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-b9c1dcc5-7d4d-491e-ae7f-7d96acfdef4e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-b9c1dcc5-7d4d-491e-ae7f-7d96acfdef4e.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "84149e015f8c3e809035900d460f87fb677050154d66ecf375ab60af044e4d26",
+                          "width":  1536,
+                          "height":  840
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-b9c1dcc5-7d4d-491e-ae7f-7d96acfdef4e.png",
+                      "sha256":  "1b81115f8033d8667b692f5f53c23a919379534ef61eb5ec645f7b88ef3abcd0",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "1b81115f8033d8667b692f5f53c23a919379534ef61eb5ec645f7b88ef3abcd0",
+                "width":  1695,
+                "height":  928
+            }
+}

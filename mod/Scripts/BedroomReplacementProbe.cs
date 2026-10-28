@@ -48,7 +48,7 @@ namespace PeopleOfTheIliacBay.DFU
                 foreach(var npc in room.GetComponentsInChildren<StaticNPC>(true))
                 {
                     var person=store.NativePeopleFor(directory.MapID).Find(p=>p.WorkKey==entry.Value.buildingKey && p.NativeHash==npc.Data.hash);
-                    bool bedroom=inn && rentals.BedroomFor(room,npc.Data.hash)!=null;
+                    bool bedroom=inn && rentals.BedFor(room,npc.Data.hash)!=null;
                     if(inn && !bedroom)
                     {
                         if(person!=null && person.RetiredBedroomFlat) throw new InvalidOperationException("Main-hall person was retired.");

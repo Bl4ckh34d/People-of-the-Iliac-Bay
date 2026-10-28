@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T01:16:28.0869804Z",
+    "portraitRecord":  86,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "angry",
+    "prompt":  "Edit this NPC 086 lower-face reference grid into one ANGRY speech atlas. Keep exact 3x3 layout and row-major cells A B C / D E F / G H X. Change only mouth features inside cells. Preserve original face, nose, skin, cheeks, chin, jaw, neck, hair, background, framing and soft pixel-art clusters. Match original warm tan skin, muted brown lips, brown/olive shadows and soft contrast. No lipstick red, orange surrounding skin, harsh contrast, white flashes, oversized lips or changed face width.\n\nShow anger with compressed tense lips, tightened corners and subtle downward corners. Do not smile. Emotion changes tension only; each phonetic shape remains distinct and anatomically scaled. Use these exact Rhubarb definitions:\nA: Closed lips with light pressure, for P/B/M.\nB: Slightly open, nearly together teeth; narrow horizontal opening, for most consonants and EE.\nC: Medium open mouth with relaxed unrounded lips, for EH/AE.\nD: Wide vertical opening for an open vowel, larger than C, for AA.\nE: Slightly rounded lips; opening no wider than C, for AO/ER.\nF: Puckered rounded lips with a small forward opening, not a tooth bite, for UW/OW/W.\nG: Upper teeth touch the lower lip; not a wide open vowel, for F/V.\nH: Tongue raised behind upper teeth, opening between C and D; tongue may be invisible at native scale, for long L.\nX: Closed relaxed idle lips, for silence.\n\nKeep A pressed closed; B narrow with teeth nearly together; C medium and unrounded; D visibly wider vertically than C; E rounded and no wider than C; F a small forward pucker without tooth contact; G upper teeth touching lower lip; H a modest L opening between C and D; X relaxed closed. Keep original lip scale and render only restrained warm tooth pixels when required by the pose. No text, labels, extra panels or alterations outside the mouth region. Return only the edited atlas.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-cafd-70e1-800c-efd1106f663d as C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-cafd-70e1-800c-efd1106f663d\\exec-20f3ed28-532c-4463-9d31-f875aed63195.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-cafd-70e1-800c-efd1106f663d\\exec-20f3ed28-532c-4463-9d31-f875aed63195.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "685cd0cb922554bb245a0431ee5f141aadbb8c740df7fb81d5a9cb03c888e99d",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "67207d201c495e1ff342be6fafe55a20b846284c25cbd2914db1b685218c37b0",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c6-cafd-70e1-800c-efd1106f663d\\exec-20f3ed28-532c-4463-9d31-f875aed63195.png",
+                      "sha256":  "030a3dcce281f9f22d1a542acb7b058225a79168c1325ec0ee9cdd08f91dcb8f",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/angry/raw.png",
+                "sha256":  "030a3dcce281f9f22d1a542acb7b058225a79168c1325ec0ee9cdd08f91dcb8f",
+                "width":  1863,
+                "height":  844
+            }
+}

@@ -41,9 +41,9 @@ namespace PeopleOfTheIliacBay.NpcFactorEvaluation
             sourceHashes = new Dictionary<string, string>(StringComparer.Ordinal);
             var sources = Directory.GetFiles(Path.Combine(repo, "src/PeopleOfTheIliacBay.Core"), "*.cs")
                 .Concat(Directory.GetFiles(Path.Combine(repo, "tools/NpcFactorEvaluation"), "*.cs"))
-                .Concat(new[] { suite, Path.Combine(repo, "mod/Scripts/LocalDecisionWire.cs"),
-                    Path.Combine(repo, "mod/Scripts/LocalSpeechActWire.cs"),
-                    Path.Combine(repo, "mod/Scripts/LocalDecisionWillingness.cs"),
+                .Concat(new[] { suite, Path.Combine(repo, "tools/archived/DecisionDiagnostics/LocalDecisionWire.cs"),
+                    Path.Combine(repo, "tools/archived/DecisionDiagnostics/LocalSpeechActWire.cs"),
+                    Path.Combine(repo, "mod/Scripts/LocalActionWillingness.cs"),
                     Path.Combine(repo, "tools/NpcFactorEvaluation/NpcFactorEvaluation.csproj"),
                     Path.Combine(repo, "tools/NpcFactorEvaluation/run_selected_capture_evaluation.py") });
             foreach (string path in sources.Distinct(StringComparer.OrdinalIgnoreCase))

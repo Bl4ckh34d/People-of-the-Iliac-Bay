@@ -217,18 +217,6 @@ namespace PeopleOfTheIliacBay.Tests
                 var reader=new WorldStateStore(1,root); reader.Restore(last);
                 Check.True(reader.RecallConversation("alice","First meeting",100,2000).Contains("First meeting"));
             })));
-            cases.Add(("Legacy inline memories migrate without changing the old snapshot or duplicating repeated imports", () => InDirectory(root => {
-                var old=new WorldStateStore(42); Say(old,"alice","My horse is Copper.");
-                var legacy=old.Snapshot(); legacy.Version=22;
-                var migrated=new WorldStateStore(1,root); migrated.Restore(legacy);
-                var save=migrated.SnapshotForSave();
-                Check.Equal(1,legacy.ConversationMemories.Count); Check.Equal(0,save.ConversationMemories.Count);
-                int count=Directory.GetFiles(root,"*.pim",SearchOption.AllDirectories).Length;
-                var again=new WorldStateStore(2,root); again.Restore(legacy); var second=again.SnapshotForSave();
-                Check.Equal(save.ConversationArchive.Head,second.ConversationArchive.Head);
-                Check.Equal(count,Directory.GetFiles(root,"*.pim",SearchOption.AllDirectories).Length);
-                Check.True(Recall(again,"alice").Contains("Copper"));
-            })));
             cases.Add(("Missing or damaged memory ancestry fails restore without replacing live memories", () => InDirectory(root => {
                 var store=new WorldStateStore(42,root); Say(store,"alice","Keep this memory."); var saved=store.SnapshotForSave();
                 Say(store,"alice","Pending survives failure.");
@@ -337,7 +325,7 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.True(recallA.Contains("A real exchange")&&!recallA.Contains("B real exchange"));
                 Check.True(recallB.Contains("B real exchange")&&!recallB.Contains("A real exchange"));
             })));
-            cases.Add(("Restore recalculates legacy unavailable-only counts but preserves aggregates without a journal",()=>{
+            cases.Add(("Restore recalculates unavailable-only counts but preserves aggregates without a journal",()=>{
                 var unavailable=new WorldStateStore(9);
                 unavailable.RememberConversation("alice",10,"day 1","inn","Only failed turn.","I cannot settle that right now.","unavailable");
                 var legacy=unavailable.Snapshot();
@@ -348,7 +336,7 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.Equal(0,reconciled.SharedExchangeCount);
                 Check.Equal(2,reconciled.Offset);Check.Equal(4,reconciled.EncounterCount);
 
-                var noJournal=new WorldState {Version=30,WorldSeed=9};
+                var noJournal=new WorldState {WorldSeed=9};
                 noJournal.ConversationAttitudes.Add(new ConversationAttitude {PersonId="orphan",SharedExchangeCount=7});
                 var preserved=new WorldStateStore(11);preserved.Restore(noJournal);
                 Check.Equal(7,preserved.Snapshot().ConversationAttitudes.Single(item=>item.PersonId=="orphan").SharedExchangeCount);

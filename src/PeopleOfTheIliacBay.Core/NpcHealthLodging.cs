@@ -49,16 +49,16 @@ namespace PeopleOfTheIliacBay.Core
     /// <summary>Exact, quoted booking request made only after a health task is accepted and bound.</summary>
     public sealed class NpcHealthLodgingReservationRequest
     {
-        public string ResidentId,CareEpisodeId,TaskId,RoomId,BedId;
+        public string ResidentId,CareEpisodeId,TaskId,BedId;
         public long ExpectedCareRevision,ExpectedInventoryRevision;
         public int SettlementId,BuildingKey,Nights,Price;
         public double StartsAt;
     }
 
-    /// <summary>Detached evidence for a paid room reserved for one care episode.</summary>
+    /// <summary>Detached evidence for paid lodging reserved for one care episode.</summary>
     public sealed class NpcHealthLodgingReservation
     {
-        public string ResidentId,CareEpisodeId,TaskId,RoomId,BedId,PaymentTransactionId;
+        public string ResidentId,CareEpisodeId,TaskId,BedId,PaymentTransactionId;
         public int SettlementId,BuildingKey,Nights,Price;
         public double StartsAt,EndsAt;
 
@@ -66,7 +66,7 @@ namespace PeopleOfTheIliacBay.Core
         {
             if(booking==null)return null;
             return new NpcHealthLodgingReservation {ResidentId=booking.GuestId,CareEpisodeId=booking.HealthCareId,
-                TaskId=booking.HealthCareTaskId,RoomId=booking.RoomId,BedId=booking.BedId,
+                TaskId=booking.HealthCareTaskId,BedId=booking.BedId,
                 PaymentTransactionId=booking.PaymentTransactionId,SettlementId=town,BuildingKey=building,
                 Nights=booking.PaidNights,Price=booking.PaidPrice,StartsAt=booking.StartsAt,EndsAt=booking.EndsAt};
         }
@@ -168,7 +168,7 @@ namespace PeopleOfTheIliacBay.Core
         }
 
         /// <summary>
-        /// Atomically saves a rented Inn room and debits the resident's wallet.
+        /// Atomically saves a rented Inn bed and debits the resident's wallet.
         /// The request must match the currently accepted, care-bound RestToHeal task.
         /// </summary>
         public bool TryReserveNpcHealthRestLodging(NpcHealthLodgingReservationRequest request,
@@ -176,7 +176,7 @@ namespace PeopleOfTheIliacBay.Core
         {
             reservation=null;
             if(request==null || !ValidId(request.ResidentId) || !NpcHealthCare.ValidEpisodeId(request.CareEpisodeId) ||
-                !ValidId(request.TaskId) || !ValidId(request.RoomId) || !ValidId(request.BedId) ||
+                !ValidId(request.TaskId) || !ValidId(request.BedId) ||
                 request.SettlementId<0 || request.BuildingKey<0 || request.ExpectedCareRevision<1 ||
                 request.ExpectedInventoryRevision<0 || request.Nights<1 || request.Nights>MaximumHealthLodgingNights ||
                 request.Price<0 || request.Price>NpcInventoryLimits.MaximumWalletGold || !DefenseTime(request.StartsAt))return false;
@@ -199,8 +199,7 @@ namespace PeopleOfTheIliacBay.Core
 
             TavernLodging tavern=state.Lodgings.Find(value=>value.SettlementId==request.SettlementId && value.BuildingKey==request.BuildingKey);
             if(tavern==null)return false;
-            LodgingRoom room=tavern.Rooms.Find(value=>value.Id==request.RoomId && !value.NonRentable && value.Beds.Contains(request.BedId));
-            if(room==null || room.Beds.Count<1)return false;
+            if(!tavern.Beds.Exists(value=>value.Id==request.BedId))return false;
 
             string bookingId=HealthLodgingBookingId(request.TaskId);
             string paymentId=HealthLodgingPaymentId(request.TaskId);
@@ -219,12 +218,13 @@ namespace PeopleOfTheIliacBay.Core
             if(existing!=null)
             {
                 if(existing.SettlementId!=request.SettlementId || existing.BuildingKey!=request.BuildingKey ||
-                    existing.RoomId!=request.RoomId || existing.BedId!=request.BedId || existing.EndsAt<endsAt)return false;
+                    existing.BedId!=request.BedId || existing.EndsAt<endsAt)return false;
                 reservation=existing;
                 return true;
             }
 
-            if(OccupiedRoom(tavern,room,endsAt) || tavern.Bookings.Exists(value=>value.RoomId==room.Id && Overlap(request.StartsAt,endsAt,value)))return false;
+            if(tavern.Occupants.Exists(value=>value.BedId==request.BedId && value.StartsAt<endsAt) ||
+                tavern.Bookings.Exists(value=>value.BedIds.Contains(request.BedId) && Overlap(request.StartsAt,endsAt,value)))return false;
             foreach(TavernLodging other in state.Lodgings)
                 foreach(LodgingBooking prior in other.Bookings)
                     if(prior.GuestId==request.ResidentId && (prior.Player || Overlap(request.StartsAt,endsAt,prior)))return false;
@@ -244,9 +244,9 @@ namespace PeopleOfTheIliacBay.Core
             catch(ArgumentException) {return false;}
 
             var candidate=new TavernLodging {SettlementId=tavern.SettlementId,BuildingKey=tavern.BuildingKey,
-                Rooms=tavern.Rooms,Occupants=tavern.Occupants,Bookings=new List<LodgingBooking>(tavern.Bookings)};
+                Beds=tavern.Beds,Occupants=tavern.Occupants,Bookings=new List<LodgingBooking>(tavern.Bookings)};
             candidate.Bookings.Add(new LodgingBooking {Id=bookingId,GuestId=request.ResidentId,
-                HomeSettlement=request.SettlementId,Player=false,PartySize=1,RoomId=request.RoomId,
+                HomeSettlement=request.SettlementId,Player=false,PartySize=1,BedIds=new List<string>{request.BedId},
                 StartsAt=request.StartsAt,EndsAt=endsAt,Purpose=LodgingBookingPurpose.NpcHealthRest,
                 HealthCareId=request.CareEpisodeId,HealthCareTaskId=request.TaskId,BedId=request.BedId,
                 PaymentTransactionId=paymentId,PaidPrice=request.Price,PaidNights=request.Nights});
@@ -290,7 +290,7 @@ namespace PeopleOfTheIliacBay.Core
             return booking.Purpose==LodgingBookingPurpose.NpcHealthRest && booking.Id==id &&
                 booking.GuestId==request.ResidentId && booking.HealthCareId==request.CareEpisodeId &&
                 booking.HealthCareTaskId==request.TaskId && booking.HomeSettlement==request.SettlementId &&
-                !booking.Player && booking.PartySize==1 && booking.RoomId==request.RoomId &&
+                !booking.Player && booking.PartySize==1 && booking.BedIds.Count==1 && booking.BedIds[0]==request.BedId &&
                 booking.BedId==request.BedId && booking.StartsAt==request.StartsAt && booking.EndsAt==endsAt &&
                 booking.PaidNights==request.Nights && booking.PaidPrice==request.Price &&
                 booking.PaymentTransactionId==paymentId;
@@ -319,7 +319,8 @@ namespace PeopleOfTheIliacBay.Core
                 booking.PaidNights>MaximumHealthLodgingNights || booking.PaymentTransactionId!=HealthLodgingPaymentId(booking.HealthCareTaskId) ||
                 booking.Id!=HealthLodgingBookingId(booking.HealthCareTaskId) ||
                 booking.EndsAt-booking.StartsAt!=booking.PaidNights*HealthLodgingSecondsPerNight ||
-                !inn.Rooms.Exists(room=>room.Id==booking.RoomId && !room.NonRentable && room.Beds.Contains(booking.BedId)))return false;
+                booking.BedIds==null || booking.BedIds.Count!=1 || booking.BedIds[0]!=booking.BedId ||
+                !inn.Beds.Exists(value=>value.Id==booking.BedId))return false;
             string taskPrefix="npc-health-care:"+booking.HealthCareId+":attempt:";
             if(!booking.HealthCareTaskId.StartsWith(taskPrefix,StringComparison.Ordinal))return false;
             string revisionText=booking.HealthCareTaskId.Substring(taskPrefix.Length);long revision;

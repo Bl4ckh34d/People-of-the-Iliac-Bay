@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 1,
+  "status": "isolated-proposal-no-live-writes",
+  "currentManifest": {
+    "path": "art/portraits/mobile-mouths/npc079-split-workspace/manifest.json",
+    "sha256": "4ade6f812adf748818e036821db39079d85ca6bb16bde75ecd8d9d6c59046753"
+  },
+  "currentLayout": {
+    "path": "art/portraits/mobile-mouths/npc079-split-workspace/layout.json",
+    "sha256": "40d302557203c133d0f097677c0221e81b8c4017c0162caf3ee07219e0218f70"
+  },
+  "selectedSources": {
+    "neutralC": {
+      "file": "work/portrait079-neutral-C-parent-v2/candidate-native-v1/mouth/neutral/raw.png",
+      "sha256": "c9f5954bcc5435926e0009ddb5e6bbdbf2931ff9c43c8961f5c7b60cc691197b",
+      "provenance": "work/portrait079-neutral-C-parent-v2/candidate-native-v1/mouth/neutral/provenance.json",
+      "provenanceSha256": "87663af4fc31ca83d45838a4b0f9ba92d38c6ca1ec88f4cc24496301e84ae24f",
+      "generatedSingleCell": "work/portrait079-neutral-C-parent-v2/mouth/neutral/raw.png",
+      "generatedSingleCellSha256": "542c295be269abb5bec5c57d7c43a0e242e045cc3eb28c38a29294179f4cf266",
+      "sourceAtlas": "art/portraits/mobile-mouths/npc079-split-workspace/mouth/neutral/raw.png",
+      "sourceAtlasSha256": "ed4c44e9b16755d9a8b7338bd48001c5f680c3d2d3b642ba307ca220be1eeda2",
+      "nativeSampler": "GDI+ NearestNeighbor with PixelOffsetMode.Half; 64x29 cell normalized; only C replaced in native 3x3 atlas"
+    },
+    "frontEyes": {
+      "angry": {
+        "path": "work/portrait079-three-mood-eyes-high-v1/candidate/native-review-v4/eyes/angry/raw-existing-v1.png",
+        "sha256": "63ef2e7bf829ccd3b222f98ef7f3891c8c88ddeb958d62394101dc61f25113c6",
+        "provenancePath": "work/portrait079-three-mood-eyes-high-v1/candidate/native-review-v4/eyes/angry/provenance-existing-v1.json",
+        "provenanceSha256": "9d46b38d8d1f6885ccb9b7d41107d6d0d89e8e8bd78e128e008cc23194fb27d3"
+      },
+      "afraid": {
+        "path": "work/portrait079-three-mood-eyes-high-v1/candidate/native-review-v4/eyes/afraid/raw-parent-v3.png",
+        "sha256": "39a8edad0fe64f0cc831f697f8430c6bfa766b0b08c5ad65f3ffe521f78c4a28",
+        "provenancePath": "work/portrait079-three-mood-eyes-high-v1/candidate/native-review-v4/eyes/afraid/provenance-parent-v3.json",
+        "provenanceSha256": "a2eb6a355f3df564651e5b77914df9ad427a52046b7c0c658fccf568735a8309"
+      },
+      "guarded": {
+        "path": "work/portrait079-three-mood-eyes-high-v1/candidate/native-review-v4/eyes/guarded/raw-parent-edit-v3.png",
+        "sha256": "d2068cc552136238e9c72d0a593f3bab658b9d9dbf8a35782f5041a1f3f5e953",
+        "provenancePath": "work/portrait079-three-mood-eyes-high-v1/candidate/native-review-v4/eyes/guarded/provenance-parent-edit-v3.json",
+        "provenanceSha256": "fd749b11b863b6b3fbee4ea136f68d7b010bf4fb9fde972f76618b8d96654a28"
+      },
+      "sad": {
+        "path": "work/portrait079-sad-eyes-parent-v2/eyes/sad/raw.png",
+        "sha256": "ab7607a16e28afa427f9dab6f23a9b2c32b6cf6da0682c2d9d9e6739f0563dfa",
+        "provenancePath": "work/portrait079-sad-eyes-parent-v2/eyes/sad/provenance.json",
+        "provenanceSha256": "c29ef57007470faaaca6c447b5788a79770a604a28401ce3ea460d22066392f0"
+      }
+    },
+    "lateralEyes": {
+      "angry": {
+        "raw": {
+          "path": "work/portrait079-three-mood-eyes-high-v1/candidate/native-review-v4/gazes/angry/eyes/thinking/raw.png",
+          "sha256": "015b8a59788f3594617c6578bc578c57286678c685d819e630d6de1023564873",
+          "provenancePath": "work/portrait079-three-mood-eyes-high-v1/candidate/native-review-v4/gazes/angry/eyes/thinking/provenance.json",
+          "provenanceSha256": "6a137990d87fdc4cfe05daed51bc1d8b841c4e207f372e516ac0f8f64e771d2f"
+        },
+        "layout": {
+          "path": "work/portrait079-three-mood-eyes-high-v1/candidate/native-review-v4/gazes/angry/layout.json",
+          "sha256": "401ea064dae259c7c514a00d71f947d21c7c0428358ae07e6b789b2679cbe2cb"
+        },
+        "thinkingLayout": {
+          "path": "work/portrait079-three-mood-eyes-high-v1/candidate/native-review-v4/gazes/angry/thinking-layout.json",
+          "sha256": "4c9e477886f31f445f39eed4c21a7ee87d12b9bf708cc82a01439aa89adefdca"
+        },
+        "candidateSidecar": {
+          "path": "work/portrait079-three-mood-eyes-high-v1/candidate/native-review-v4/gazes/angry/thinking-eye-sets.json",
+          "sha256": "12026334bf0c46ccf0e5099b32ae9672c860f712bc7a963c94fe318327b5b1d4"
+        },
+        "candidateFramesReceipt": {
+          "path": "work/portrait079-three-mood-eyes-high-v1/review/candidate-native-v4-three-mood-27-phase.json",
+          "sha256": "093ad7986b6e3149e4005261abc101b54a57d0dd809b6095d42119e8782bf042"
+        }
+      },
+      "afraid": {
+        "raw": {
+          "path": "work/portrait079-three-mood-eyes-high-v1/candidate/native-review-v4/gazes/afraid/eyes/thinking/raw.png",
+          "sha256": "0c80bc5423e55e0f75d82c373e869d1d5974045be82aa1ebdc9882263799b18f",
+          "provenancePath": "work/portrait079-three-mood-eyes-high-v1/candidate/native-review-v4/gazes/afraid/eyes/thinking/provenance.json",
+          "provenanceSha256": "5e3cada0cf451bec233ebf4c7e477d0a07e94c419ac2614d22bfcdd110c9fe32"
+        },
+        "layout": {
+          "path": "work/portrait079-three-mood-eyes-high-v1/candidate/native-review-v4/gazes/afraid/layout.json",
+          "sha256": "401ea064dae259c7c514a00d71f947d21c7c0428358ae07e6b789b2679cbe2cb"
+        },
+        "thinkingLayout": {
+          "path": "work/portrait079-three-mood-eyes-high-v1/candidate/native-review-v4/gazes/afraid/thinking-layout.json",
+          "sha256": "0841155f4024e1134ddae2835adac267069a6b95a31c9d072200575db2cec05f"
+        },
+        "candidateSidecar": {
+          "path": "work/portrait079-three-mood-eyes-high-v1/candidate/native-review-v4/gazes/afraid/thinking-eye-sets.json",
+          "sha256": "8313a1d8bd194fbe0f35a5f836940a8da9e8745c21519a56083b5574472886a8"
+        },
+        "candidateFramesReceipt": {
+          "path": "work/portrait079-three-mood-eyes-high-v1/review/candidate-native-v4-three-mood-27-phase.json",
+          "sha256": "093ad7986b6e3149e4005261abc101b54a57d0dd809b6095d42119e8782bf042"
+        }
+      },
+      "guarded": {
+        "raw": {
+          "path": "work/portrait079-three-mood-eyes-high-v1/candidate/native-review-v4/gazes/guarded/eyes/thinking/raw.png",
+          "sha256": "8573f535668ff1f67749d97e7dfbed9996791ff0b0d434ed7898b54fd4a9f37a",
+          "provenancePath": "work/portrait079-three-mood-eyes-high-v1/candidate/native-review-v4/gazes/guarded/eyes/thinking/provenance.json",
+          "provenanceSha256": "c34ca33f8a0172eda5a3ecdc1975ba8c5d855fadba5b49407360dde121f3137f"
+        },
+        "layout": {
+          "path": "work/portrait079-three-mood-eyes-high-v1/candidate/native-review-v4/gazes/guarded/layout.json",
+          "sha256": "401ea064dae259c7c514a00d71f947d21c7c0428358ae07e6b789b2679cbe2cb"
+        },
+        "thinkingLayout": {
+          "path": "work/portrait079-three-mood-eyes-high-v1/candidate/native-review-v4/gazes/guarded/thinking-layout.json",
+          "sha256": "163c089fb9dde1211b9e646621e487719e607b4b4f5588c10eda10af5a92c142"
+        },
+        "candidateSidecar": {
+          "path": "work/portrait079-three-mood-eyes-high-v1/candidate/native-review-v4/gazes/guarded/thinking-eye-sets.json",
+          "sha256": "4747216a9ac71625aac03236a713d024f6c65071580d3ebe8693f4a21dc4961b"
+        },
+        "candidateFramesReceipt": {
+          "path": "work/portrait079-three-mood-eyes-high-v1/review/candidate-native-v4-three-mood-27-phase.json",
+          "sha256": "093ad7986b6e3149e4005261abc101b54a57d0dd809b6095d42119e8782bf042"
+        }
+      },
+      "sad": {
+        "raw": {
+          "path": "art/portraits/mobile-mouths/npc079-thinking-emotions/sad/attempt-horizontal-v1/eyes/thinking/raw.png",
+          "sha256": "af1f3b76246221a329b4ab8124abe97913fa61365746d7d0ea737b47dc2246f3",
+          "provenancePath": "art/portraits/mobile-mouths/npc079-thinking-emotions/sad/attempt-horizontal-v1/eyes/thinking/provenance.json",
+          "provenanceSha256": "9c69dbb7d9c7a5bf1d5135526e9d6109b539eba75d6817d04445c02e8e299d03"
+        },
+        "layout": {
+          "path": "work/portrait079-sad-eyes-parent-v2/candidate-native-v1/layout.json",
+          "sha256": "cdc0e38434628a37c894cdc755f4ffc92406b8cabf9473a268fc5d4adcdd191e"
+        },
+        "thinkingLayout": {
+          "path": "work/portrait079-sad-eyes-parent-v2/candidate-native-v1/thinking-layout.json",
+          "sha256": "bc377732e3259d52281ea3ddf079bed15a6fa2b89e6fc39fdd75a82e0df73f5b"
+        },
+        "candidateSidecar": {
+          "path": "work/portrait079-sad-eyes-parent-v2/candidate-native-v1/thinking-eye-sets.json",
+          "sha256": "234a482524b31771cd0d46c32d6498f678c3e2d68af96df98f2aadbe2a11aac2"
+        },
+        "candidateReceipt": {
+          "path": "work/portrait079-sad-eyes-parent-v2/candidate-native-v1/sad-nine-phase-contact-receipt.json",
+          "sha256": "5f63bed7dd8967c7a696ade92e0b3463229add3f053d0bc54c774b3d9f439ed3"
+        }
+      }
+    }
+  },
+  "builders": [
+    {
+      "path": "tools/BuildSplitNeutralMouths.ps1",
+      "sha256": "e3606494cda5f145de39174e49a6f0b953b1feaae7a82de9d37be3edd7a7dd55",
+      "runCount": 1,
+      "output": "isolated neutral C/D/H candidate"
+    },
+    {
+      "path": "tools/BuildSplitPortraitPrototype.ps1",
+      "sha256": "0ca0049e70b8dd2d98f18b4418ba5ed8cd92dfbd61d541dd8b9f0c5ae70a04bb",
+      "runCount": 0,
+      "usedFor": "front-eye sampler and original-relative diff semantics reference"
+    },
+    {
+      "path": "tools/BuildSplitPortraitThinking.ps1",
+      "sha256": "388f791b632631131785c7197dfb05f52bc89bae24f8917cdeaf295be6e3ba1b",
+      "runCount": 1,
+      "output": "isolated SAD lateral 6 phases"
+    },
+    {
+      "path": "work/portrait079-sad-eyes-parent-v2/candidate-native-v1/BuildSadEyeCandidate.ps1",
+      "sha256": "246ff8423dda18535435af509e1e6b8c4fce2e043b7802dc8df69df09c6c426b",
+      "runCount": 1,
+      "output": "isolated SAD front 3 phases"
+    }
+  ]
+}

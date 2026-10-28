@@ -7,21 +7,27 @@
       "IsAdvanced": false,
       "Keys": [
         {
-          "Min": 0, "Max": 100, "Value": 60,
+          "Min": 0,
+          "Max": 100,
+          "Value": 60,
           "Name": "NearbyOriginWeight",
           "Description": "Weight for nearby settlements in the same political region.",
           "$version": "v1",
           "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
         },
         {
-          "Min": 0, "Max": 100, "Value": 35,
+          "Min": 0,
+          "Max": 100,
+          "Value": 35,
           "Name": "DistantOriginWeight",
           "Description": "Weight for other settlements in the same region, outside the nearby group.",
           "$version": "v1",
           "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
         },
         {
-          "Min": 0, "Max": 100, "Value": 5,
+          "Min": 0,
+          "Max": 100,
+          "Value": 5,
           "Name": "ForeignOriginWeight",
           "Description": "Weight for origins in another political region. Race follows the hometown independently. A connected road route is required.",
           "$version": "v1",
@@ -118,8 +124,15 @@
         },
         {
           "Value": true,
+          "Name": "DayPatrols",
+          "Description": "Pairs from the day shift walk surveyed street circuits between 06:00 and 18:00. Turning this off sends patrols physically back to their posts.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+        },
+        {
+          "Value": true,
           "Name": "NightPatrols",
-          "Description": "Pairs of finite guards walk surveyed street circuits at night. Turning this off sends patrols physically back to their posts. Wall patrols remain in development.",
+          "Description": "Pairs from the night shift walk surveyed street circuits between 18:00 and 06:00. Turning this off sends patrols physically back to their posts.",
           "$version": "v1",
           "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
         },
@@ -131,21 +144,27 @@
           "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
         },
         {
-          "Min": 0, "Max": 4, "Value": 2,
+          "Min": 0,
+          "Max": 16,
+          "Value": 8,
           "Name": "MaximumPatrolPairs",
-          "Description": "Maximum two-person night patrols. At least four available guards stay at stationary posts. Zero disables patrols; unusable circuits leave guards posted.",
+          "Description": "Cap on two-person patrols per active shift. About one third of ordinary staff patrol; a tiny village uses one pair and one fixed post. Gate staff are additional. Zero disables patrols; unusable circuits leave guards posted.",
           "$version": "v1",
           "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
         },
         {
-          "Min": 0, "Max": 16, "Value": 8,
+          "Min": 0,
+          "Max": 16,
+          "Value": 8,
           "Name": "TorchLightLimit",
           "Description": "Maximum nearest guard torches emitting real light within 48 metres. Zero keeps visible flames without dynamic lighting. Lights cast no shadows.",
           "$version": "v1",
           "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
         },
         {
-          "Min": 3, "Max": 12, "Value": 8,
+          "Min": 3,
+          "Max": 12,
+          "Value": 8,
           "Name": "TorchRange",
           "Description": "Guard torch light radius in metres.",
           "$version": "v1",
@@ -218,13 +237,6 @@
           "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
         },
         {
-          "Value": false,
-          "Name": "EnableDecisionPlanner",
-          "Description": "Optional additional decision server. Leave disabled for Gemma + Breeze. Restart the game after changing this setting.",
-          "$version": "v1",
-          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
-        },
-        {
           "Value": true,
           "Name": "PrewarmModel",
           "Description": "After game starts, load local model on background worker. Gameplay never waits for this request.",
@@ -255,7 +267,7 @@
         {
           "Value": true,
           "Name": "ConversationDisposition",
-          "Description": "Enable native disposition changes from eligible conversation tone outcomes. Insults reduce disposition by 10 the first time and 25 on later insults; rude tone reduces it by 2. Distinct polite lines earn gradual goodwill, capped at 5 per encounter; repeated lines do not count again. Credit accrues on nominal 24/30/36-hour stages with a stable person-specific 85â€“115% rate factor and a 36-hour actual-interval cap.",
+          "Description": "Enable native disposition changes from eligible conversation tone outcomes. Insults reduce disposition by 10 the first time and 25 on later insults; rude tone reduces it by 2. Distinct polite lines earn gradual goodwill, capped at 5 per encounter; repeated lines do not count again. Credit accrues on nominal 24/30/36-hour stages with a stable person-specific 85–115% rate factor and a 36-hour actual-interval cap.",
           "$version": "v1",
           "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
         },
@@ -274,7 +286,9 @@
           "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
         },
         {
-          "Min": 100, "Max": 300000, "Value": 120000,
+          "Min": 100,
+          "Max": 300000,
+          "Value": 120000,
           "Name": "TimeoutMilliseconds",
           "Description": "Maximum wait for each local-model HTTP stage in milliseconds. CPU inference can need much longer than the GPU default; failure or timeout shows a safe non-factual fallback.",
           "$version": "v1",

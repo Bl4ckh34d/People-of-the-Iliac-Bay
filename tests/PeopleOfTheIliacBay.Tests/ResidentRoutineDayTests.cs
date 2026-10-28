@@ -72,7 +72,7 @@ namespace PeopleOfTheIliacBay.Tests
                     out var schedule,out var reason),"inconsistent building anchors must not invent a connector");
                 Check.True(schedule==null);
             }));
-            cases.Add(("Later-outing recovery keeps cumulative stop identities and exact saved route provenance",()=>{
+            cases.Add(("Recovery skips later optional stops with cumulative identities and retains home-route provenance",()=>{
                 var store=new WorldStateStore(7);var resident=store.GetOrCreateFamilies(10,new[]{new HomeProfile(20,3,220)}).Households[0].Residents[0];
                 var routine=Routine(resident.Id);var first=routine.Itinerary;
                 first.Stops.Add(new ResidentVisitStop{BuildingKey=23,Purpose=ResidentVisitPurpose.Shop,OpenMinute=0,CloseMinute=1439,
@@ -83,8 +83,10 @@ namespace PeopleOfTheIliacBay.Tests
                 var ordinary=ResidentRoutineDay.Schedule(20,routine,360,1380);
                 Check.True(RoutineRecoveryPlanner.TryCreate(10,resident,routine,ordinary,new AppointmentRecord[0],0,17*3600,20,
                     17*3600,360,1380,1,out var plan,out var reason),reason);
-                Check.Equal(2,plan.Legs[0].OriginalStopIndex);
-                Check.True(plan.SkippedStopIndices.Contains(0) && plan.SkippedStopIndices.Contains(1));
+                Check.Equal(1,plan.Legs.Count);Check.True(plan.Legs[0].ReturnsHome);
+                Check.Equal(20,plan.Legs[0].BuildingKey);Check.Equal(-1,plan.Legs[0].OriginalStopIndex);
+                Check.True(plan.SkippedStopIndices.Contains(0) && plan.SkippedStopIndices.Contains(1) &&
+                    plan.SkippedStopIndices.Contains(2));
                 store.SaveRoutineRecovery(plan);store.Restore(store.Snapshot());
                 Check.True(store.HasRoutineRecovery(resident.Id));
                 plan.Legs[0].Route[0].Z=3;
@@ -111,14 +113,15 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.Equal(Activity.Travel,schedule.EvaluateSeconds(18*3600+60).Activity);
                 Check.Equal(Activity.Home,schedule.EvaluateSeconds(13*3600).Activity);
             }));
-            cases.Add(("Recovery uses later outing routes and skips completed morning visits",()=>{
+            cases.Add(("Recovery skips completed morning and later optional visits before returning home",()=>{
                 var resident=new Resident{Id="person",HomeKey=20,IsAlive=true,AgeGroup=ResidentAgeGroup.Adult};
                 var routine=Routine(resident.Id);var ordinary=ResidentRoutineDay.Schedule(20,routine,360,1380);
                 Check.True(RoutineRecoveryPlanner.TryCreate(10,resident,routine,ordinary,new AppointmentRecord[0],0,17*3600,20,
                     17*3600,360,1380,1,out var plan,out var reason),reason);
-                Check.Equal(2,plan.Legs.Count);Check.Equal(22,plan.Legs[0].BuildingKey);
-                Check.Equal(1,plan.Legs[0].OriginalStopIndex);Check.True(plan.SkippedStopIndices.Contains(0));
-                Check.True(plan.Legs[1].ReturnsHome);
+                Check.Equal(1,plan.Legs.Count);Check.Equal(20,plan.Legs[0].BuildingKey);
+                Check.Equal(-1,plan.Legs[0].OriginalStopIndex);
+                Check.True(plan.SkippedStopIndices.Contains(0) && plan.SkippedStopIndices.Contains(1));
+                Check.True(plan.Legs[0].ReturnsHome);
             }));
             cases.Add(("Personal route rebuild requires every outing leg and retains every departure",()=>{
                 var routine=Routine("person");var routes=new List<List<SavedRoutePoint>>{
@@ -154,14 +157,6 @@ namespace PeopleOfTheIliacBay.Tests
                 string before=RoutineRecoveryIdentity.Fingerprint(routine,20,360,1380);
                 routine.AdditionalOutings[0].DepartureSeconds+=60;
                 Check.True(before!=RoutineRecoveryIdentity.Fingerprint(routine,20,360,1380),"later activity changes must invalidate old recovery sources");
-            }));
-            cases.Add(("Genuine gated legacy days still restore without invented additional outings",()=>{
-                var store=new WorldStateStore(7);var population=store.GetOrCreate(10,new[]{20},1);
-                var routine=Routine(population.Households[0].Residents[0].Id);routine.AdditionalOutings.Clear();
-                routine.Itinerary.Walled=true;
-                store.SetRoutines(new TownRoutineState{SettlementId=10,ItineraryVersion=1,Residents=new List<ResidentRoutine>{routine}});
-                var old=store.Snapshot();old.Version=61;store.Restore(old);
-                Check.True(store.GetRoutines(10).Residents[0].Itinerary.Walled);
             }));
             cases.Add(("Service-hour refresh and legacy retiming cannot discard later outings",()=>{
                 var source=Routine("person");
@@ -217,15 +212,6 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.Throws<ArgumentException>(()=>ResidentRoutineDay.CopyOutings(routine));
                 routine=Routine("person");
                 Check.Throws<ArgumentException>(()=>ResidentRoutineDay.Schedule(20,routine,360,1080));
-            }));
-            cases.Add(("A genuine legacy routine remains one outing without invented future activity",()=>{
-                var store=new WorldStateStore(7);var population=store.GetOrCreate(10,new[]{20},1);
-                string id=population.Households[0].Residents[0].Id;
-                var routine=Routine(id);routine.AdditionalOutings.Clear();
-                store.SetRoutines(new TownRoutineState{SettlementId=10,ItineraryVersion=1,Residents=new List<ResidentRoutine>{routine}});
-                var old=store.Snapshot();old.Version=61;store.Restore(old);
-                Check.Equal(0,store.GetRoutines(10).Residents[0].AdditionalOutings.Count);
-                Check.Equal(1,ResidentRoutineDay.CopyOutings(store.GetRoutines(10).Residents[0]).Count);
             }));
         }
         private static ResidentRoutine Routine(string id)

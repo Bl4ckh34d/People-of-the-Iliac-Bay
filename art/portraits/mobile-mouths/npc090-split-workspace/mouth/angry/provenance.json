@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T04:12:51.3526871Z",
+    "portraitRecord":  90,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "angry",
+    "prompt":  "Use case: precise-object-edit\nAsset type: 3x3 angry speech-mouth atlas for an existing 64x64 Daggerfall Unity pixel-art portrait\nInput image: Image 1 is the inspected local mouth-reference-grid.png. It contains repeated lower64x29 halves enlarged8x; use it as sole reference.\nPrimary request: Return a complete 3x3 atlas with nine full lower-face cells in exact row-major order A B C / D E F / G H X. Each cell has lower-half aspect 64:29, same original portrait scale and pixel lattice. Preserve face identity and mouth placement.\nIdentity and palette: same woman, original nose base, cheeks, jaw, chin, neck, hair edges and background. Keep muted tan/brown skin with soft low contrast. Keep lips at original small pixel scale and dark brown, never red or pink lipstick. Angry expression: firm tense mouth with gently tightened lip corners, consistent across all nine poses. Do not change nose, jaw, head scale or skin texture. Change only lips and the minimal mouth interior needed by the pose.\nExact Rhubarb meanings:\nA: closed pressured P/B/M lips, firm brown lips held together.\nB: narrow opening with teeth nearly together for consonants and EE.\nC: medium unrounded opening for EH/AE.\nD: wide opening for AA, anatomically plausible but still original mouth scale.\nE: slightly rounded AO/ER opening, no wider than C.\nF: puckered UW/OW/W lips.\nG: upper teeth touching lower lip for F/V.\nH: tongue raised behind upper teeth for L, opening between C and D.\nX: relaxed closed idle pose; for this angry set, keep lips fully closed while retaining same restrained tense angry mouth expression.\nPalette and detail: dark brown lips, subdued original skin colors, low contrast, natural pixel-art shading. Add only small soft ivory teeth and a restrained dark oral cavity where that pose needs them.\nComposition: exact 3x3 grid, complete edge-to-edge cells, no extra margins.\nAvoid: full faces, eye region, labels, borders, grid lines, padding, extra cells, red lipstick, pink lipstick, orange skin, enlarged cartoon lips, oversized teeth, harsh black outline, smoothing, blur, antialiasing, color grading, changes to nose/jaw/hair/neck/background, missing or partial cells.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161cc-6659-7f93-8489-68be4ca31301 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161cc-6659-7f93-8489-68be4ca31301\\exec-4ca38786-3bef-48a0-a3ab-09dabca5c502.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161cc-6659-7f93-8489-68be4ca31301\\exec-4ca38786-3bef-48a0-a3ab-09dabca5c502.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "b8b0a0da8a68fea050774dbe95633fcb561aa0d4a4b316a787b9831b46247489",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "6d0e071a4214165c5ddd1c2776549d45f2ec9da101b32701771a203ab73c1de2",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161cc-6659-7f93-8489-68be4ca31301\\exec-4ca38786-3bef-48a0-a3ab-09dabca5c502.png",
+                      "sha256":  "8bf5475ddacdd6475b8097ef597e110a69b83aa4dc24a55fe23a203b530979e4",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/angry/raw.png",
+                "sha256":  "8bf5475ddacdd6475b8097ef597e110a69b83aa4dc24a55fe23a203b530979e4",
+                "width":  1863,
+                "height":  844
+            }
+}

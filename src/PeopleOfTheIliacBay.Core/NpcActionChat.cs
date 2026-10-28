@@ -17,7 +17,7 @@ namespace PeopleOfTheIliacBay.Core
         // Zero preserves an exact legacy quantity. Positive values describe a transient, splittable native stack.
         public int MaximumQuantity;
     }
-    public sealed class NpcActionDecision {public NpcActionOption Option;public int DurationSeconds;}
+    public sealed class NpcActionDecision {public NpcActionOption Option;public int DurationSeconds;public bool ContinueAfterFailure;}
     public sealed class NpcActionOffer
     {
         private readonly string personId;
@@ -30,7 +30,7 @@ namespace PeopleOfTheIliacBay.Core
             if(string.IsNullOrWhiteSpace(personId) || decision==null || decision.Option==null || double.IsNaN(createdAt) || double.IsInfinity(createdAt))
                 throw new ArgumentException("Invalid conversational action offer.");
             this.personId=personId;this.session=session;this.createdAt=createdAt;
-            this.decision=new NpcActionDecision {DurationSeconds=decision.DurationSeconds,Option=new NpcActionOption {Id=decision.Option.Id,
+            this.decision=new NpcActionDecision {DurationSeconds=decision.DurationSeconds,ContinueAfterFailure=decision.ContinueAfterFailure,Option=new NpcActionOption {Id=decision.Option.Id,
                 Kind=decision.Option.Kind,Label=decision.Option.Label,Target=NpcActionExecutor.CopyTarget(decision.Option.Target),
                 ItemSourceStep=decision.Option.ItemSourceStep,MaximumQuantity=decision.Option.MaximumQuantity,
                 PaidCompanion=decision.Option.PaidCompanion,
@@ -62,7 +62,7 @@ namespace PeopleOfTheIliacBay.Core
         }
         private static NpcActionDecision CopyDecision(NpcActionDecision source)
         {
-            return new NpcActionDecision {DurationSeconds=source.DurationSeconds,Option=CopyOption(source.Option)};
+            return new NpcActionDecision {DurationSeconds=source.DurationSeconds,ContinueAfterFailure=source.ContinueAfterFailure,Option=CopyOption(source.Option)};
         }
         private static NpcActionOption CopyOption(NpcActionOption source)
         {

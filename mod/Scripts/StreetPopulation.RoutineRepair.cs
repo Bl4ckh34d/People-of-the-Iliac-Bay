@@ -47,7 +47,7 @@ namespace PeopleOfTheIliacBay.DFU
                 double walk=route.WalkSeconds*ResidentMovement.WalkSpeed/ResidentMovement.WalkSpeedFor(resident.AppearanceSeed);
                 var request=new AdultDailyItineraryRequest {HomeBuildingKey=resident.HomeKey,
                     DepartureAt=DailyDepartureSeconds(resident,wake,sleep),LatestHomeAt=DailyReturnDeadline(sleep),
-                    MinimumAwaySeconds=20*60,MinimumStops=1,MaximumStops=1,Seed=resident.AppearanceSeed,
+                    Seed=resident.AppearanceSeed,
                     Options=new List<AdultDailyItineraryOption>{option},Routes=new List<AdultDailyItineraryLeg>{
                         new AdultDailyItineraryLeg {FromBuildingKey=resident.HomeKey,ToBuildingKey=option.BuildingKey,WalkSeconds=walk,Route=route.Points},
                         new AdultDailyItineraryLeg {FromBuildingKey=option.BuildingKey,ToBuildingKey=resident.HomeKey,WalkSeconds=walk,Route=reverse}}};

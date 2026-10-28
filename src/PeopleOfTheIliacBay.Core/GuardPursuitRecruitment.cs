@@ -15,6 +15,11 @@ namespace PeopleOfTheIliacBay.Core
         { return 8 + Find(id).AppearanceSeed % 4001 / 1000.0; }
 
         public bool CanRecruitPursuit(string callerId,string candidateId,double now,double distance)
+        { return CanRecruitPursuit(callerId,candidateId,now,distance,false); }
+
+        // Seeing an actual player pursuit is sufficient. Close guard contact
+        // remains necessary only when passing along the earlier sighting.
+        public bool CanRecruitPursuit(string callerId,string candidateId,double now,double distance,bool observedPlayerPursuit)
         {
             Require(Time(now) && Finite(distance) && distance>=0,"Invalid pursuit contact.");
             var caller=Find(callerId); var candidate=Find(candidateId);
@@ -23,7 +28,8 @@ namespace PeopleOfTheIliacBay.Core
                 caller.SearchUntil>now && caller.Interior==null && caller.Refuge==null &&
                 report!=null && report.ThreatId==null &&
                 candidate.IsAlive && candidate.Duty==GuardDuty.Posted &&
-                candidate.Interior==null && candidate.Refuge==null && distance<=PursuitRecruitmentRadius(candidateId);
+                candidate.Interior==null && candidate.Refuge==null &&
+                (observedPlayerPursuit || distance<=PursuitRecruitmentRadius(candidateId));
         }
     }
 }

@@ -25,7 +25,7 @@ namespace PeopleOfTheIliacBay.DFU
     public static class NativeNpcPoisonAppraisalProbe
     {
         public const string Flag = "-peopleoftheiliacbay-native-poison-appraisal-probe";
-        private const string OwnedCharacter = "PeopleOfTheIliacBayTest-9a5f197b";
+        private const string OwnedCharacter = "Hakon Ironhand";
         private const string BaselineSave = "People - Gothway Garden";
         private const BindingFlags Members = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 

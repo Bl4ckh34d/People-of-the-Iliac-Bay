@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 80,
+  "emotion": "sad",
+  "asset": "eyes/sad/raw.png",
+  "tool": "built-in image_gen",
+  "prompt": "Create exactly one SAD eye-expression sprite atlas for DFU portrait record 80, using the supplied original portrait and inspected eyes-reference grid. Output a 2-column × 2-row atlas, row-major: OPEN, HALF-CLOSED, CLOSED, repeated OPEN. Each tile must preserve the complete same original 64×35 upper portrait half, with identical face, hair, background, nose bridge, framing, native pixel scale, and soft original palette. Keep both compact green irises and pupils stationary, same width, height, spacing, color, gaze, and small native shape in every visible phase. Open and repeated-open should match. Sadness is low-energy and tired: slightly downcast gaze, drooping/heavy upper lids, gently raised inner brow ends. Do not make the eyes wide or alarmed. Half/closed phases must cover the same eyes vertically; do not shrink, shift, recolor, or redraw the irises. Closed should be a calm natural lid closure, no white flash pixels. Brows should remain soft, narrow and native-colored, never thick black strokes. Preserve original skin hue and shading. No tears, objects, captions, labels, grid lines, dramatic contrast, bright whites, saturated colors, face drift, or added details. Return the complete 2×2 atlas only.",
+  "promptSha256": "8d8ff9feae6ea20f30bcb2a40913cbfd5f78df25c8c387cea201ebf338dc876c",
+  "references": [
+    {
+      "path": "original.png",
+      "sha256": "4ea9b975047475ae696146fbd02a9b005b16c4baab7e1c1e1c3651ee287f4b0b"
+    },
+    {
+      "path": "eyes-reference-grid.png",
+      "sha256": "68275f3a970329cd449c3a75313210237ae84fe4ade1b0a18e6be6b93e7ee842"
+    }
+  ],
+  "generationOutputPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-fb9b-7322-8190-74bf6fb54c9d\\exec-8951d5c1-d6ac-4240-b883-ce882919658c.png",
+  "resultSha256": "b0412505e2ecd468babafb5fc883174e43be33c0947598e22eb502749eeedb45",
+  "dimensions": {
+    "width": 1695,
+    "height": 928
+  },
+  "rawCopiedUnchanged": true,
+  "visibleDefects": [
+    "Open and repeated-open phases differ, including eye highlight/iris detail.",
+    "Open phase still reads somewhat alert; downcast sadness is clearest in the heavy-lidded half phase.",
+    "Some brow/eyelid strokes are coarse at enlarged view; inspect native sampling before selection."
+  ]
+}

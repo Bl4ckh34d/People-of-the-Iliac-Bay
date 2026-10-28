@@ -1,0 +1,78 @@
+{
+  "emotion": "guarded",
+  "description": "skeptical sideward attention; subtle asymmetric brows; narrowed crisp eyes; suspicion rather than angry symmetrical scowl; no head rotation",
+  "generator": "built-in image_gen",
+  "status": "revision2-prototype-user-review-pending-not-installed",
+  "phase_order": [
+    "open",
+    "half",
+    "closed"
+  ],
+  "viseme_order": "A B C / D E F / G H X",
+  "dimensions": "1254x1254",
+  "source": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\tfac-077-full-frame-v5.png",
+    "sha256": "D2BD017E7773336DE704BF3E4C935AB1EF7D0FC84DD4BBC551A61E22AF322223"
+  },
+  "outputs": [
+    {
+      "sha256": "2C487AB4D1E8BD0C368C9A71976147FE93C1731637CEE60CEB3DD1A9F7210943",
+      "input": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\tfac-077-full-frame-v5.png",
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\guarded-open.png",
+      "phase": "open"
+    },
+    {
+      "sha256": "40708DB0AF79D195DA93091F5C4DA5924C7728EEA22CF39C2922089818A9EE89",
+      "input": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\guarded-open.png",
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\guarded-half.png",
+      "phase": "half"
+    },
+    {
+      "sha256": "2950A784E8E0A3F1547148AF3C61905E3C33B7E1D161F56CC5E9F1D716A25E7A",
+      "input": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\guarded-open.png",
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\guarded-closed.png",
+      "phase": "closed"
+    }
+  ],
+  "rejected": [
+    {
+      "sha256": "81D33B9D9113FE2AE922074994E4F6F0776EB6479D84DD27948A998EAA9F7028",
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\guarded-open-rejected-v1.png",
+      "phase": "open-initial-v1",
+      "reason": "Brows remained too symmetrical and eyes retained smoky shadow; corrected once"
+    }
+  ],
+  "generations": [
+    {
+      "generated_original": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-626e-7471-95f3-109617bb3581\\exec-cf018fe0-0339-448a-8457-a539ff04a3c1.png",
+      "prompt": "Create one fresh complete 3x3 atlas edit from this approved portrait sheet. Emotion: GUARDED, skeptical, suspicious. Keep same woman, exact head angle with no rotation, same head size, framing, brown wavy hair, skin tone, muted game palette, pixel-art structure, lighting and background. Preserve exact equal 3x3 grid and all nine distinct source visemes in row-major order A B C / D E F / G H X: A closed M/B/P; B narrow consonant with slight teeth; C medium EH; D moderately open AH; E rounded OH; F small OO/W; G upper teeth on lower lip F/V; H subtle tongue behind teeth for L; X relaxed closed mouth. Keep every mouth modest and aligned to source; X has tight closed-lip corners expressing suspicion, while speaking mouths remain useful and correctly shaped. Do not enlarge lips or paste a mouth crop. Face attention clearly sideward: keep head and nose facing same way as reference, shift both eyes subtly toward her left (viewer’s right) as if watching someone from the corner of her eye. Give brows only mild asymmetric tension, one slightly raised and one nearly level, not pulled down symmetrically. Eyes narrowed but crisp and alert, with clearly readable iris and pupil. Use deliberate clean pixel clusters, crisp eyelid outline and brows, restrained small sclera highlights. Avoid smoky dark eye shadow, soft airbrushed shading over iris, blurry eyes, extra painted detail, angry symmetrical scowl, overt rage, grin, tears, yawning, giant teeth, tongue sticking out, added objects, text, labels, border or gutters. Preserve original coarse pixel-art style; no smooth high-resolution painting. Full-frame portraits in all cells, open eyes.",
+      "input": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\tfac-077-full-frame-v5.png",
+      "phase": "open-initial-v1",
+      "saved_output": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\guarded-open-rejected-v1.png"
+    },
+    {
+      "generated_original": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-626e-7471-95f3-109617bb3581\\exec-389e892b-cb6a-4c7d-a0cf-bc9be4a3859e.png",
+      "prompt": "Make one targeted correction to this full 3x3 portrait atlas. Preserve grid, framing, woman, hair, colors, face angle, all nine mouth shapes and exact row-major viseme order A B C / D E F / G H X. Retain the clear sideward glance toward viewer’s right without turning her head. Correct the expression: current brows are too symmetrical and furrowed. Give her subtle asymmetry: viewer-left brow sits nearly level and relaxed; viewer-right brow is only slightly raised, with faint tension. Do not angle both brows sharply down toward center. Keep expression reserved and suspicious, skeptical rather than angry. Clean eyes for native 64x64 display: crisp small pixel clusters, clear visible purple iris and dark pupil in each eye, restrained tiny sclera highlight, crisp eyelid line. Reduce diffuse smoky dark shadow over the irises; retain only defined pixel-art eyeliner. Do not blur or airbrush eyes. Keep eyes slightly narrowed and alert. Keep all mouths modest, useful and unchanged; X has tight closed lips. No anger scowl, no rage, no grin, no head rotation, no enlarged features, no crop, no text or layout changes. Full complete atlas.",
+      "input": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\guarded-open-rejected-v1.png",
+      "phase": "open-correction-v1",
+      "saved_output": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\guarded-open.png"
+    },
+    {
+      "generated_original": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-626e-7471-95f3-109617bb3581\\exec-905f1834-8c33-4307-ac09-b0620e569000.png",
+      "prompt": "Create the HALF blink phase from this completed guarded v2 open-eye 3x3 atlas. In every cell, change eyelids only: upper lids cover approximately half of each iris; pupils remain visibly readable. Preserve the exact complete square 3x3 grid, all nine mouth poses and their row-major order A B C / D E F / G H X, the suspicious sideward gaze, subtle asymmetric brows, sharp pixel-cluster eyes, face angle, identity, framing, hair, palette, pixel-art style and background. Do not alter brows, eye direction, nose, cheeks or any mouth. Keep the full frame in every cell and preserve each matching speech viseme, including open mouths. No crop, overlays, missing row, reordering, labels or text.",
+      "input": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\guarded-open.png",
+      "phase": "half",
+      "saved_output": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\guarded-half.png"
+    },
+    {
+      "generated_original": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-626e-7471-95f3-109617bb3581\\exec-33af7276-b824-48fb-9139-2aa5dddf077d.png",
+      "prompt": "Create the CLOSED blink phase from this completed guarded v2 open-eye 3x3 atlas. In every cell, change eyelids only: both lids fully shut with no iris or sclera visible. Preserve the exact complete square 3x3 grid, all nine mouth poses and their row-major order A B C / D E F / G H X, the suspicious sideward gaze implied by brow and face, subtle asymmetric brows, crisp pixel-art eye details, face angle, identity, framing, hair, palette, pixel-art style and background. Do not alter brows, eye direction, nose, cheeks or any mouth. Keep the full frame in every cell and preserve each matching speech viseme, including open mouths. No crop, overlays, missing row, reordering, labels or text.",
+      "input": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\guarded-open.png",
+      "phase": "closed",
+      "saved_output": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc077-emotions\\v2\\guarded-closed.png"
+    }
+  ],
+  "generation_count": 4,
+  "visible_deviations": "Defined dark pixel-art eyeliner remains somewhat strong; sideward iris direction and subtle brow asymmetry are visible. No head rotation or material viseme mismatch observed.",
+  "native_64x64_review": "Open eyes show distinct purple irises and dark pupils with restrained highlights; half lids cover about half the iris; closed lids hide iris and sclera. Mouth order and shapes remain legible."
+}

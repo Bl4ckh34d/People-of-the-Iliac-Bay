@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T07:54:40.3185625Z",
+    "portraitRecord":  80,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Use case: precise-object-edit\nEdit target: supplied exact2x2 Daggerfall NPC080 angry upper-face reference grid. Make gentle lateral thinking glances while preserving her current angry brow shape, face identity, soft original brown palette, pixel grid and crop. All cells remain native64x35 framing, whole atlas aspect64:35.\nStrict2x2 order: TOP LEFT both eyes look toward IMAGE LEFT with eyes open; TOP RIGHT both eyes look IMAGE RIGHT open; BOTTOM LEFT same LEFT glance with half-closed upper lids; BOTTOM RIGHT same RIGHT glance with half-closed upper lids. Bottom references already show matching half closure. Keep brows and eye sockets stable across all4cells; only natural iris position and lid coverage change. Never move the whole eyeball or socket to fake a direction. Half blink occludes same iris with lowered upper lid.\nKeep irises compact, shaded olive-brown like reference, small irregular stepped pixel clusters with dark pupil and a tiny subdued warm glint; no flat rectangle, smooth round disk or bright white sparkle. Continuous upper/lower eyelids and corners must contain both irises in both phases. Restrained muted sclera, no wider eyes or surprise expression. Preserve all hair/forehead/nose/background and skin outside eye features. No global sharpening, contrast or hue shift, no vertical/diagonal gaze. One2x2atlas without labels,text,gutters,border,watermark.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb as C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-11bb4949-3b18-474c-a276-67aad52e2b00.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-11bb4949-3b18-474c-a276-67aad52e2b00.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "4ea9b975047475ae696146fbd02a9b005b16c4baab7e1c1e1c3651ee287f4b0b",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "d8600c9d6297e26f5e42fb85fc0d4cb6e574fefaa233eb461d1557ab888c7b69",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-11bb4949-3b18-474c-a276-67aad52e2b00.png",
+                      "sha256":  "2448ff00af5f49b093ceb88b8185af8c2dbcd2f6482cb74e49296d02bceb2258",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "2448ff00af5f49b093ceb88b8185af8c2dbcd2f6482cb74e49296d02bceb2258",
+                "width":  1695,
+                "height":  928
+            }
+}

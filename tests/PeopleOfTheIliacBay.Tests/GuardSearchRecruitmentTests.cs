@@ -70,15 +70,6 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.Equal(1,report.GuardIds.Count);Check.Equal(GuardDuty.Posted,candidate.Duty);
                 store.Restore(store.Snapshot());
             })));
-            cases.Add(("Legacy schema64 small cases do not silently acquire recruitment behavior",(Action)(()=>{
-                CivilianIncident alarm;GuardRecord caller;var store=Create(out alarm,out caller);
-                var legacy=store.Snapshot();legacy.Version=64;legacy.Garrisons[0].Reports[0].CorpseSearchVersion=0;
-                var restored=new WorldStateStore(0);restored.Restore(legacy);var roster=restored.GetGuards(1);
-                Check.True(!roster.CanRecruitCorpseSearchGuard(caller.Id,roster.Guards[1].Id,200,5,true));
-                Check.True(!Join(roster,caller.Id,roster.Guards[1].Id,200));
-                Check.Equal(1,roster.Reports[0].GuardIds.Count);Check.Equal(0,roster.Reports[0].CorpseSearchVersion);
-                restored.Restore(restored.Snapshot());
-            })));
             cases.Add(("Corpse search chains share one case and six total participants without renewing its deadline",(Action)(()=>{
                 CivilianIncident alarm;GuardRecord caller;var store=Create(out alarm,out caller);var roster=store.GetGuards(1);
                 var ids=new List<string>();foreach(var guard in roster.Guards)ids.Add(guard.Id);
@@ -162,24 +153,6 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.True(Join(roster,caller.Id,candidate.Id,200,join:path,entry:entry));
                 path[0].X=99;entry[0].X=99;Check.Near(5,candidate.Route[0].X);
                 var old=store.Snapshot();old.Version=64;Check.Throws<ArgumentException>(()=>new WorldStateStore(0).Restore(old));
-            })));
-            cases.Add(("Legacy schema64 cases keep their original members without recruiting beyond six",(Action)(()=>{
-                var posts=new List<SavedRoutePoint>();for(int i=0;i<9;i++)posts.Add(new SavedRoutePoint{X=i*3});
-                CivilianIncident alarm;GuardRecord caller;var store=Create(out alarm,out caller,9,posts,initial:8);
-                var legacy=store.Snapshot();legacy.Version=64;var report=legacy.Garrisons[0].Reports[0];report.CorpseSearchVersion=0;
-                for(int i=6;i<8;i++)
-                {
-                    var guard=legacy.Garrisons[0].Guards[i];
-                    guard.IncidentId=report.Id;guard.Route=new List<SavedRoutePoint>{guard.Post,new SavedRoutePoint()};
-                    guard.ResponseOrigin=new SavedRoutePoint{X=guard.Post.X};
-                    guard.ReturnPath=new List<SavedRoutePoint>{new SavedRoutePoint(),guard.Post};guard.ReturnRate=1;
-                    guard.DepartedAt=200;guard.ArrivesAt=200+guard.Post.X;guard.SearchUntil=2000;guard.Duty=GuardDuty.Responding;
-                    report.GuardIds.Add(guard.Id);report.Arrivals.Add(new GuardArrivalEvidence{GuardId=guard.Id,ScheduledAt=guard.ArrivesAt});
-                }
-                var restored=new WorldStateStore(0);restored.Restore(legacy);var roster=restored.GetGuards(1);
-                Check.Equal(8,roster.Reports[0].GuardIds.Count);Check.Equal(0,roster.Reports[0].CorpseSearchVersion);
-                Check.True(!Join(roster,caller.Id,roster.Guards[8].Id,200));restored.Restore(restored.Snapshot());
-                Check.Equal(8,restored.GetGuards(1).Reports[0].GuardIds.Count);
             })));
         }
     }

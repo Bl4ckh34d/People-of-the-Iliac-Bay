@@ -257,7 +257,6 @@ namespace PeopleOfTheIliacBay.Core
         private static List<NpcMagicCareTask> CopyNpcMagicCareTasks(WorldState source,WorldState validated)
         {
             var result=new List<NpcMagicCareTask>();
-            if(source.Version<57)return result;
             if(source.NpcMagicCareTasks==null || source.NpcMagicCareTasks.Count>100000)
                 throw new ArgumentException("Invalid NPC magic-care ledger.");
             var ids=new HashSet<string>(StringComparer.Ordinal);

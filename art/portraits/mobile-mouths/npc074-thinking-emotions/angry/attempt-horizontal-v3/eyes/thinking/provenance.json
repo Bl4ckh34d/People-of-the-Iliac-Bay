@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T11:42:43.0961881Z",
+    "portraitRecord":  74,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Create a clean 2-by-2 pixel-art atlas from the single supplied reference grid. Each cell must preserve the full original 64x35 upper portrait crop and its exact framing. Layout: top-left = LEFT OPEN, top-right = RIGHT OPEN, bottom-left = LEFT HALF, bottom-right = RIGHT HALF. These are four consecutive frames for the same NPC\u0027s angry expression.\n\nCritical gaze direction in image/canvas coordinates: for LEFT, move BOTH irises/pupils toward the LEFT EDGE of the image (same direction for both eyes). Do not move either pupil toward the nose bridge; do not create inward convergence or cross-eyed alignment. For RIGHT, move BOTH irises/pupils toward the RIGHT EDGE (same direction for both eyes). Keep both eyes aligned and looking together. Make the direction subtle, about one native pixel, while clearly consistent between the pair of eyes.\n\nPreserve the selected angry brow expression exactly and keep brow shapes stable across all four cells. Preserve the compact blue-gray source irises, their stepped pixel clusters, and the original narrow eye apertures. Use only restrained muted glints. Do not enlarge the eyes, reveal broad white bands, make round/vector-like irises, or redraw the eyelids. The lower row must keep the selected half-closed aperture with the upper lid occluding the iris to the source-like slit; do not expose a full iris. Keep original palette, hair, ornament, shading, pixel-art character, and composition unchanged. Do not add text, borders, separators, or any extra panels. Output only the exact 2x2 atlas at 128x70 pixels total (each cell 64x35).",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-9c70c499-b36f-4693-b5f9-f1256a959c91.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-9c70c499-b36f-4693-b5f9-f1256a959c91.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "274533de9275c8ac9bd14d62f32c20220dfcc5802135aff0d38528849c4f7ccb",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-9c70c499-b36f-4693-b5f9-f1256a959c91.png",
+                      "sha256":  "c6b995edd78ee8e3f363c4e2cc0bf74bf1fd6916ec59d4a9001d64a7068202b0",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "c6b995edd78ee8e3f363c4e2cc0bf74bf1fd6916ec59d4a9001d64a7068202b0",
+                "width":  1695,
+                "height":  928
+            }
+}

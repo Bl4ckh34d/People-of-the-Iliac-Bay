@@ -107,7 +107,7 @@ namespace PeopleOfTheIliacBay.DFU
                     var record=new NativeBarterMove { Proposed=line,Original=original,Source=source,
                         Destination=destination,OriginalCount=count };
                     moves.Add(record);
-                    var moved=line.Quantity==count?original:source.SplitStack(original,line.Quantity);
+                    var moved=line.Quantity==count?original:SplitExactStack(source,original,line.Quantity);
                     record.Moved=moved;
                     if(moved==null || moved.UID==0 || moved.stackCount!=line.Quantity ||
                         !ReferenceEquals(source.GetItem(moved.UID),moved))throw new InvalidOperationException("Native item split changed basket identity.");

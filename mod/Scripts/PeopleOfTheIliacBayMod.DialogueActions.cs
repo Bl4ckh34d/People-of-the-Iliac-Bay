@@ -70,6 +70,13 @@ namespace PeopleOfTheIliacBay.DFU
             var task=store.ActiveNpcTask(conversationPersonId);
             if(task!=null)text+="Agreed ordered task: step "+(task.CurrentStepIndex+1)+" of "+task.Steps.Count+
                 "; task phase="+task.Phase+". Later steps have not happened and will be revalidated before execution. ";
+            if(task!=null && task.FailureReason!=null)
+            {
+                int confirmed=0,blocked=0;foreach(var step in task.Steps)
+                {if(step.CompletedEffectId!=null)confirmed++;if(step.Blocked)blocked++;}
+                text+="Partial task: "+confirmed+" actual completed effect(s), "+blocked+" blocked unattempted step(s). Earlier failure: "+
+                    task.FailureReason+" Only independently permitted remaining steps may run. Do not claim the whole task succeeded. ";
+            }
             if(!NpcActionExecutor.IsTerminal(job)) text+="This is accepted intent still in progress. Do not claim arrival, completed movement, payment or effects unless observed below. ";
             if(job.ServiceCode=="tavern-beer") text+="Drink service payment/return stage="+job.ServiceStep+" (0=not paid, 1=NPC wallet paid; player effect requires Completed). ";
             if(job.ServiceCode==NpcShopCommerce.ServiceCode) text+="Shop purchase: "+job.Target.Quantity+" unit(s), exact native stock UID "+job.Target.ItemId+
@@ -85,11 +92,6 @@ namespace PeopleOfTheIliacBay.DFU
             if(snapshot==null || !IsCurrentConversationContext(snapshot,window))return false;
             if(TryPendingSemanticOfferConversation(window,text,history,snapshot))return true;
             bool active=HasActiveSemanticCommitment(snapshot);
-            if(!active && decisionPlannerEnabled && !DecisionWillingnessEnabled)
-            {
-                SubmitUnconfirmedWillingness(window,text,history,snapshot,null);
-                return true;
-            }
             if(!active && GoalExtractionEnabled)
                 return TryBeginGoalActionConversation(window,text,history,snapshot);
             if(NpcActionRouting.Choose("action",false,active)==NpcActionConversationRoute.Single)
@@ -151,16 +153,25 @@ namespace PeopleOfTheIliacBay.DFU
             if(options==null) options=new List<NpcActionOption>();
             // An active commitment still needs the cancellation interpreter even without a new target category.
             bool active=HasActiveSemanticCommitment(snapshot);
+            bool paidTravel=active && store.ReadPaidFollowForTravelTask(person,ConversationActionTime())!=null;
             if(selectedOptions==null && options.Count>0 && !active)
             {SelectSemanticActionCandidates(window,text,history,options,chosen=>TrySemanticActionSingleConversation(window,text,history,snapshot,chosen),snapshot);return true;}
-            if(selectedOptions==null && active)options=new List<NpcActionOption>();
+            if(selectedOptions==null && active)
+            {
+                var travelOptions=new List<NpcActionOption>();
+                if(paidTravel)foreach(var option in options)
+                    if(option.Kind==NpcActionKind.MoveTo || option.Kind==NpcActionKind.Wait)travelOptions.Add(option);
+                options=travelOptions;
+            }
             string proposalId="dialogue:"+Guid.NewGuid().ToString("N");
             string context=ConversationContextFormatter.ForSemanticClassifier(snapshot,2048);
             if(options.Count==0 && !active) context+=" No verified local action target is currently available; do not accept a physical action.";
-            bool separateWillingness=DecisionWillingnessEnabled || QwenWillingnessEnabled;
+            bool separateWillingness=true;
+            string interpretation=NpcActionChat.PromptSemantic(text,context,options,active,separateWillingness);
+            if(paidTravel)interpretation+="\nExisting paid travel service continuation: evaluate cancellation first as above. For a current direct request for one or several MoveTo/Wait travel-guidance steps, output NEW_REQUEST instead of DIRECT or the several-actions NONE rule. This only forwards the complete unchanged request for ordered goal extraction and ordinary willingness; it accepts nothing. Unsupported work remains NONE. Never output NEW_REQUEST for quoted, reported, negated, hypothetical or conditional requests.";
             long stageToken=BeginConversationContextStage(snapshot,window);
             if(stageToken<=0){HandleRejectedConversationStage(snapshot,window,stageToken,text,"No new action was accepted.");return true;}
-            if(!localDialogue.Classify(NewDialogueConnection(),NpcActionChat.PromptSemantic(text,context,options,active,separateWillingness),history,output=>
+            if(!localDialogue.Classify(NewDialogueConnection(),interpretation,history,output=>
             {
                 if(!CurrentMemorySession(window,session)) return;
                 if(conversationPersonId!=person)
@@ -169,6 +180,8 @@ namespace PeopleOfTheIliacBay.DFU
                 {HandleRejectedConversationStage(snapshot,window,stageToken,text,"No new action was accepted.");return;}
                 if(output==LocalDialogueClient.Unavailable || output==LocalDialogueClient.ContextLimit)
                 {ReportActionDialogueUnavailable(window,text,"Local dialogue unavailable. No action was accepted.");return;}
+                if(paidTravel && output!=null && output.Trim()=="NEW_REQUEST")
+                {TryBeginGoalActionConversation(window,text,history,snapshot);return;}
                 if(output!=null && output.Trim()=="NONE")
                 {
                     // A coarse action classification can be corrected by the
@@ -196,7 +209,9 @@ namespace PeopleOfTheIliacBay.DFU
                 var reply=ConversationActionReply.NoChange();
                 if(decision!=null)
                 {
-                    ResolveProposedActionWillingness(actor,window,text,history,snapshot,separateWillingness,
+                    if(paidTravel && (decision.Option.Kind==NpcActionKind.MoveTo || decision.Option.Kind==NpcActionKind.Wait))
+                    {TryBeginGoalActionConversation(window,text,history,snapshot);return;}
+                    ResolveProposedActionWillingness(actor,window,text,history,snapshot,
                         new List<NpcActionDecision>{decision},agreed=>
                     {
                     var accepted=agreed[0];
@@ -224,7 +239,7 @@ namespace PeopleOfTheIliacBay.DFU
                     result+=" The NPC did not accept an action; explain naturally in your own voice.";
                 conversationResponseCue+=" "+result;
                 SubmitConversationActionReply(window,text,snapshot,reply);
-            },NpcActionChat.GrammarSemantic(options,active),classificationTrace:SemanticActionModelCaptureProbe.ForStage("action-single")))
+            },paidTravel?NpcActionChat.GrammarOfferResponse(options,snapshot.Commitments):NpcActionChat.GrammarSemantic(options,active),classificationTrace:SemanticActionModelCaptureProbe.ForStage("action-single")))
             {if(!TryConsumeConversationContextStage(snapshot,window,stageToken)){HandleRejectedConversationStage(snapshot,window,stageToken,text,"No new action was accepted.");return true;}ReportActionDialogueUnavailable(window,text,"Waiting for the current reply. No action was accepted.");}
             return true;
         }
@@ -239,7 +254,7 @@ namespace PeopleOfTheIliacBay.DFU
             string context=ConversationContextFormatter.ForSemanticClassifier(snapshot,2048)+
                 " A verified NPC offer is awaiting the player's response: "+offered.Label+"; exact duration "+
                 offeredDuration.ToString(System.Globalization.CultureInfo.InvariantCulture)+" seconds. This offer has not been accepted or executed.";
-            bool separateWillingness=DecisionWillingnessEnabled || QwenWillingnessEnabled;
+            bool separateWillingness=true;
             long stageToken=BeginConversationContextStage(snapshot,window);
             if(stageToken<=0){HandleRejectedConversationStage(snapshot,window,stageToken,text,"The offered action remains unaccepted.");return true;}
             if(!localDialogue.Classify(NewDialogueConnection(),NpcActionChat.PromptPendingOfferResponse(text,context,offered,offeredDuration,separateWillingness),history,output=>
@@ -268,7 +283,7 @@ namespace PeopleOfTheIliacBay.DFU
                 {TrySemanticActionConversation(window,text,history,snapshot);return;}
                 if(consumed)
                 {
-                    ResolveProposedActionWillingness(actor,window,text,history,snapshot,separateWillingness,
+                    ResolveProposedActionWillingness(actor,window,text,history,snapshot,
                         new List<NpcActionDecision>{accepted},agreed=>
                     {
                     var agreedAction=agreed[0];

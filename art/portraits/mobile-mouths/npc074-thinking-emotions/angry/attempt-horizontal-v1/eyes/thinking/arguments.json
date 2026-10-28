@@ -1,0 +1,7 @@
+{
+  "prompt": "Create one pixel-art sprite atlas using the attached reference grid as the exact source. The grid is a 2x2 sheet of the same angry NPC eye area: top-left open eyes looking straight ahead, top-right repeated reference, bottom-left half-closed eyes, bottom-right repeated half-closed reference. Output a 2x2 atlas with cells in this exact order: LEFT OPEN, RIGHT OPEN / LEFT HALF, RIGHT HALF. Each cell must match one original upper crop in framing and scale. Preserve this woman's angry brow angle and tension, forehead, hair, face shading, blue-gray eye color, small compact iris shapes, subdued highlights, narrow eye apertures, and native low-resolution pixel clusters. Change gaze only left versus right, moving both irises together by a very small lateral amount, about one native pixel. Keep iris shape irregular and source-like, not circular or vector-smooth. Keep the bottom row half-closed with the same narrow aperture as the reference lower row. Keep brow shape and position identical across all four cells. Do not enlarge eyes, expose broad white sclera, add bright white glints, alter expression, add text, borders, guides, or extra cells. Do not alter background, hair, ornament, crop, palette, or pixel style. Use no transparency.",
+  "referenced_image_paths": [
+    "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc074-thinking-emotions\\angry\\attempt-horizontal-v1\\thinking-reference-grid.png"
+  ],
+  "transparent_background": false
+}

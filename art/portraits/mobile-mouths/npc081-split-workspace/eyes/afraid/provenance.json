@@ -1,0 +1,23 @@
+{
+  "portraitRecord": 81,
+  "emotion": "afraid",
+  "asset": "eye-blink-atlas",
+  "generationMode": "built-in image_gen edit",
+  "layout": "2x2 row-major open / half-closed / closed / repeated-open",
+  "sourcePortrait": "art/portraits/mobile-mouths/npc081-split-workspace/original.png",
+  "sourcePortraitSha256": "eb0f7dcd1d390a6ff58d1bc0bba7a3855b5930ee824aa54e2f749211721e8ba0",
+  "reference": "art/portraits/mobile-mouths/npc081-split-workspace/eyes-reference-grid.png",
+  "referenceSha256": "ec8e562898b5c269e5484294666940fd3d06392155fc32134d53d585209636f5",
+  "referenceSize": "1024x560",
+  "generatedSourcePath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-2ede-7fc1-b24a-9d18707baa51\\exec-0184b57e-9277-4cfc-a834-ed43c80634c3.png",
+  "output": "art/portraits/mobile-mouths/npc081-split-workspace/eyes/afraid/raw.png",
+  "outputDimensions": "1695x928",
+  "outputSha256": "e3c2f48aa719b7299b8ae21d355eb9d0a7a6ed05fb128ad2dbabcea05ecea099",
+  "recoveryStatus": "Recovered from confirmed task session folder by filename, timestamp, and visual content; first-call output_hint was not retained. Exact toolresult-path association is not claimed. Parent visual review pending.",
+  "prompt": "Use case: precise-object-edit. Asset type: pixel-art NPC portrait eye animation atlas for Daggerfall Unity. Input image: Image 1 is the exact 2x2 eye-region reference grid made from NPC081's original native 64x35 upper half, enlarged nearest-neighbor; it is the identity, palette, framing, and geometry source. Create a four-cell 2x2 sheet with the same four repeated upper-face crops, in row-major order: top-left open, top-right half-closed, bottom-left fully closed, bottom-right repeat-open. Preserve original pixel-art rendering, pixel edges, eye spacing, face/hair/background framing, and muted original skin/hair palette. Change only eye lids, gaze expression, and restrained brow tension. Expression: clearly afraid/alarmed and watchful, with lifted but tense inner brows and alert, slightly widened openings; fear must read from brow/lid tension, not giant cartoon eyes. Keep the original compact stepped iris/pupil width and exact gaze location in both eyes; pupils same direction, remain fully within the iris and below/behind the upper and lower lids. Iris centers and horizontal width must stay stationary through all four cells; blink changes lid coverage only. Keep the same expressive brow master shape in all phases, including the repeated open. Fully closed cell has no visible white eye flash. Keep eyebrows complete and uncut, within the same native brow bounds. Maintain identical portrait identity, face geometry, hair, nose bridge, ears, lighting, background, colors, scale and 2x2 panel layout. No new objects, no tears, sweat, props, text, outlines, gradients, photorealism, bright white flashes, black heavy outlines, or palette shifts.",
+  "visibleQaIssues": [
+    "Atlas visibly preserves NPC081 identity and requested open/half/closed/repeat-open 2x2 order.",
+    "Pupils appear compact and stationary, but this is a visual sheet review rather than pixel-registered native-frame proof.",
+    "Expression is mild worried/neutral rather than clearly alarmed; parent visual review pending. No retry or correction made."
+  ]
+}

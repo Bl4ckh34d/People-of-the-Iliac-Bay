@@ -1,0 +1,19 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Gwen closed-eye localized proof — review only</title>
+<style>
+body{font:15px system-ui;background:#181a1d;color:#eee;margin:2rem}main{display:flex;gap:2rem;align-items:flex-start;flex-wrap:wrap}canvas{width:512px;height:512px;image-rendering:pixelated;border:1px solid #777;background:#222}p{max-width:64rem;color:#bbb}.warning{color:#ffd27a}
+</style>
+<h1>Gwen closed-eye proof — review only</h1>
+<p class="warning">This is a preview-only composite. The full-frame edit was generated from face 76, then only two bounded eye-opening rectangles are sampled onto the original 64×64 face. All pixels outside those rectangles come directly from the original. The asset is not packaged or active.</p>
+<main>
+  <section><h2>Original face 76</h2><canvas id="original" width="64" height="64"></canvas></section>
+  <section><h2>Eye-only composite</h2><canvas id="composite" width="64" height="64"></canvas></section>
+</main>
+<script>
+const source=new Image(),edit=new Image();
+source.src='../../../work/breeze-tts-20261021/gwen-portrait-candidates/tfac00i0-rci-076.png';
+edit.src='gwen-closed-eyes-in-place-edit-v1.png';
+source.onload=edit.onload=render;
+function render(){if(!source.naturalWidth||!edit.naturalWidth)return;const original=document.querySelector('#original').getContext('2d'),out=document.querySelector('#composite').getContext('2d');for(const ctx of [original,out])ctx.imageSmoothingEnabled=false;original.clearRect(0,0,64,64);original.drawImage(source,0,0,64,64);out.clearRect(0,0,64,64);out.drawImage(source,0,0,64,64);const scratch=document.createElement('canvas');scratch.width=scratch.height=64;const editCtx=scratch.getContext('2d');editCtx.imageSmoothingEnabled=false;editCtx.drawImage(edit,0,0,64,64);for(const r of [{x:16,y:21,w:14,h:7},{x:34,y:21,w:14,h:7}])out.drawImage(scratch,r.x,r.y,r.w,r.h,r.x,r.y,r.w,r.h)}
+</script>

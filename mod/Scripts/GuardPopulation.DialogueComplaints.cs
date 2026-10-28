@@ -16,6 +16,23 @@ namespace PeopleOfTheIliacBay.DFU
 
     public sealed partial class GuardPopulation
     {
+        private sealed class BoundaryReportConversation
+        {
+            public string ReceiptId, GuardId;
+            public ResidentActor Witness;
+            public GuardActor Listener;
+            public float CompletesAt;
+        }
+        private readonly Dictionary<string,BoundaryReportConversation> boundaryReportConversations =
+            new Dictionary<string,BoundaryReportConversation>();
+        private void CancelBoundaryReportConversation(string personId)
+        {
+            if(string.IsNullOrEmpty(personId))return;
+            BoundaryReportConversation contact;
+            if(!boundaryReportConversations.TryGetValue(personId,out contact))return;
+            if(contact.Listener)contact.Listener.EndReportConversation();
+            boundaryReportConversations.Remove(personId);
+        }
         public bool TryFindNearestComplaintGuard(Vector3 origin, out string guardId, out Vector3 position,
             out List<SavedRoutePoint> route)
         {
@@ -41,7 +58,8 @@ namespace PeopleOfTheIliacBay.DFU
                 if (distance >= nearest) continue;
                 var reachable = geometry.RouteBetweenPoints(new SavedRoutePoint { X = localOrigin.x, Z = localOrigin.z },
                     new SavedRoutePoint { X = point.X, Z = point.Z });
-                if ((reachable == null || reachable.Count < 2) && distance > 2.25f * 2.25f) continue;
+                if ((reachable == null || reachable.Count < 2) &&
+                    (distance > 2.25f * 2.25f || !CivilianResponses.Sees(origin+Vector3.up,candidate+Vector3.up,5))) continue;
                 if (reachable == null || reachable.Count < 2)
                     reachable = new List<SavedRoutePoint> { new SavedRoutePoint { X = localOrigin.x, Z = localOrigin.z },
                         new SavedRoutePoint { X = point.X, Z = point.Z } };
@@ -58,7 +76,7 @@ namespace PeopleOfTheIliacBay.DFU
             position = Vector3.zero;
             if (!OwnsTown() || geometry == null || Roster == null || string.IsNullOrEmpty(guardId)) return false;
             var guard = Roster.Guards.Find(candidate => candidate.Id == guardId);
-            if (guard == null || !guard.IsAlive || guard.Duty != GuardDuty.Posted || guard.Interior != null || guard.Refuge != null)
+                if (guard == null || !guard.IsAlive || guard.Duty != GuardDuty.Posted || guard.Interior != null || guard.Refuge != null)
                 return false;
             double now = Now();
             var point = Roster.Position(guardId, now);
@@ -80,8 +98,62 @@ namespace PeopleOfTheIliacBay.DFU
             Vector3? rememberedPosition)
         { return TryReportConversationBoundaryAt(receiptId, personId, rememberedPosition, null); }
 
+        public bool TryReportConversationBoundaryAtGuard(string receiptId,string personId,Vector3 rememberedPosition,
+            string receiver,ResidentActor witness)
+        {
+            Vector3 point;
+            if(!witness || witness.Resident==null || witness.Resident.Id!=personId || !witness.Resident.IsAlive ||
+                !TryGetComplaintGuardPosition(receiver,out point) ||
+                Vector3.Distance(witness.GroundPosition,point)>2.25f ||
+                !CivilianResponses.Sees(witness.transform.position,point+Vector3.up,5))
+            {CancelBoundaryReportConversation(personId);return false;}
+            BoundaryReportConversation contact;
+            if(boundaryReportConversations.TryGetValue(personId,out contact))
+            {
+                if(contact.ReceiptId!=receiptId || contact.GuardId!=receiver || contact.Witness!=witness || !contact.Listener)
+                {
+                    if(contact.Listener)contact.Listener.EndReportConversation();
+                    boundaryReportConversations.Remove(personId);
+                    return false;
+                }
+                bool holding=contact.Listener.HoldReportConversation();
+                if(Time.time<contact.CompletesAt)
+                {
+                    if(!holding)boundaryReportConversations.Remove(personId);
+                    return false;
+                }
+                boundaryReportConversations.Remove(personId);
+                // A combat interruption, death or lost contact cannot deliver a report.
+                if(!witness.Resident.IsAlive || !TryGetComplaintGuardPosition(receiver,out point) ||
+                    Vector3.Distance(witness.GroundPosition,point)>2.25f ||
+                    !CivilianResponses.Sees(witness.transform.position,point+Vector3.up,5))return false;
+                return TryReportConversationBoundaryAt(receiptId,personId,rememberedPosition,null,receiver);
+            }
+            var boundary=worldStore==null?null:worldStore.ReadNpcConversationBoundary(personId,Now());
+            if(boundary==null || boundary.ReceiptId!=receiptId ||
+                boundary.SpeechKind!=NpcExperienceSpeechActKind.DirectThreat ||
+                boundary.Action!=ConversationSpeechBoundaryAction.EndAndReport ||
+                boundary.ReportStatus!=NpcConversationBoundaryReportStatus.Started)return false;
+            var guard=Roster.Guards.Find(g=>g.Id==receiver);
+            if(guard==null)return false;
+            var actor=View(guard,Now());
+            if(!actor || actor.CombatReady || actor.DefenseTarget || actor.IsSleeping)return false;
+            foreach(var pending in boundaryReportConversations.Values)
+                if(pending.GuardId==receiver)return false;
+            float seconds=UnityEngine.Random.Range(2f,5f);
+            actor.gameObject.SetActive(true);
+            actor.BeginReportConversation(witness,seconds);
+            if(!actor.HoldReportConversation())return false;
+            boundaryReportConversations[personId]=new BoundaryReportConversation {
+                ReceiptId=receiptId,GuardId=receiver,Witness=witness,Listener=actor,CompletesAt=Time.time+seconds };
+            DaggerfallUI.AddHUDText(witness.DisplayName+": I was threatened.",3f);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_REPORT_CONVERSATION_STARTED: witness="+personId+
+                "; guard="+receiver+"; realSeconds="+seconds+"; beforeDispatch=true");
+            return false;
+        }
+
         private bool TryReportConversationBoundaryAt(string receiptId, string personId,
-            Vector3? rememberedPosition, int? savedBuildingKey)
+            Vector3? rememberedPosition, int? savedBuildingKey,string receivingGuard=null)
         {
             if (worldStore == null ||
                 string.IsNullOrWhiteSpace(receiptId) || string.IsNullOrWhiteSpace(personId) ||
@@ -135,6 +207,7 @@ namespace PeopleOfTheIliacBay.DFU
                     foreach (var guard in Roster.Guards)
                     {
                         if (!guard.IsAlive || guard.Duty != GuardDuty.Posted) continue;
+                        if(receivingGuard!=null && guard.Id!=receivingGuard)continue;
                         var route = geometry.RouteBetweenPoints(Roster.Position(guard.Id, now), target);
                         if (route != null && route.Count >= 2) routes.Add(guard.Id, route);
                     }

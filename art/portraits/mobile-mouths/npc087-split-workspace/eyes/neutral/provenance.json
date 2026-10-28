@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T01:37:58.0968793Z",
+    "portraitRecord":  87,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Use case: precise-object-edit\nAsset type: Daggerfall Unity NPC 087 neutral eye animation atlas\nPrimary request: Correct the supplied reference grid into one exact 2x2 eye atlas. The input image is only a reference grid: it has exactly TWO columns and TWO rows of repeated upper-face tiles. Output exactly TWO columns and TWO rows, row-major phases OPEN / HALF-CLOSED / CLOSED / repeated OPEN.\nComposition/framing: Overall image aspect ratio exactly 64:35, target raster 128x70 pixels. Each of the four equal tiles is exactly 64x35 pixels. Two columns only. Two rows only. No third column, no third row, no full-face tiles. Preserve identical tile boundaries and alignment. Return atlas only, with no labels, borders, captions, whitespace, or padding.\nSubject/style: Use only the upper 64x35 face halves already shown in the supplied image. Preserve the same asymmetric face, pixel-art texture, subdued warm tan skin, olive-brown eye shadows, brown irises, soft low-contrast shading, and original eye spacing. Do not mirror, symmetrize, redraw, zoom out, or show the complete face.\nPhase details: top-left open neutral eyes; top-right same eyes half closed by lids moving vertically; bottom-left same eyes fully closed with iris and sclera concealed; bottom-right repeated open eyes. Keep pupils, gaze, iris width, glints, brows, and stationary creases fixed across blink phases. Lids cover vertically; never move or shrink the irises, shift pupils or glints, round eyes, or expose white flashes. Neutral relaxed brows match reference.\nConstraints: Change eyelid phase only within eye region. Keep original pixel-grid alignment and palette. Preserve all visible face pixels, asymmetry, brows, hair edge, and shadows from reference. No mouth, nose, lower face, full head, third column, extra panels, orange skin, bright sclera, makeup, thick black brows, vector smoothing, or new details.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a16140-537a-7e92-b9ba-3429a3ac5ba1 as C:\\Users\\Daniel\\.codex\\generated_images\\01a16140-537a-7e92-b9ba-3429a3ac5ba1\\exec-3c4b41b5-b3df-4c2c-b87c-e2060f7ea0bb.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a16140-537a-7e92-b9ba-3429a3ac5ba1\\exec-3c4b41b5-b3df-4c2c-b87c-e2060f7ea0bb.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "b8851f9df69ee15e297ab3aa7e70025710d27bd2e84dd0ed46d7ff7e94ab7717",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "e5eced47ef4d478fbdb37db34c991b62c22a3fe4a06d13ec0545bf27e0b32e7c",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a16140-537a-7e92-b9ba-3429a3ac5ba1\\exec-3c4b41b5-b3df-4c2c-b87c-e2060f7ea0bb.png",
+                      "sha256":  "f2b9b3b231aea6426b6c04f7049868ad86995940bdb4569a342dd7d58d9a7a28",
+                      "width":  1696,
+                      "height":  927
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "f2b9b3b231aea6426b6c04f7049868ad86995940bdb4569a342dd7d58d9a7a28",
+                "width":  1696,
+                "height":  927
+            }
+}

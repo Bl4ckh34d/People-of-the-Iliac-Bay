@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "createdUtc": "2026-10-22T02:32:37.0483790Z",
+  "portraitRecord": 89,
+  "bank": "TFAC00I0.RCI",
+  "part": "eyes",
+  "emotion": "angry",
+  "prompt": "Use case: stylized-concept\nAsset type: 2x2 pixel-art eye atlas for an existing 64x64 Daggerfall portrait\nPrimary request: Create one precise 2x2 atlas using the exact repeated eye-and-upper-face crop shown in the single reference image. Each cell is the same 64x35 upper portrait half enlarged 8x; keep a clean 2-column by 2-row grid, no gutters or labels. Row-major: open angry eyes; half-closed blink of the same angry eyes; fully closed blink; repeat the open angry eyes exactly in pose and gaze. Change only brows and eyelids needed for a restrained angry expression. Use tense, slightly lowered inner brows with natural moderate thickness, following the existing brow shape; do not make heavy black strokes or a dramatic V. Keep both eyes, pupil cores, gray-violet iris width, iris placement, gaze, and tiny glints at exactly the same horizontal positions and widths in every phase. During blink, lids cover the eyeballs vertically; never shift the iris or glints, shrink or round the iris, or let the iris cross below the lower lid. Fully closed cell conceals all iris and sclera. Preserve the same face identity, eye spacing, nose bridge, hair, skin, shadows, crop boundaries and soft pixel-art shading. Retain a subdued warm tan skin palette, olive-brown eye shadows, muted gray-violet irises, and softly blended contrast. Stay faithful to the reference's native pixel scale after 8x enlargement: square-edged pixel art, no smooth vector shapes, no circles, no anti-aliased edges.\nInput images: Image 1 is the only visual reference and exact atlas layout; do not use other images.\nComposition/framing: Fill all four equal cells edge to edge with their matching upper-half crop; maintain the original 64:35 cell aspect ratio and alignment.\nConstraints: One atlas only. Preserve angry expression through blink. Make open row 1 and repeated open row 2 match. No motion or gaze changes.\nAvoid: thick near-black brows, red or orange color cast, orange skin patches, harsh contrast, white flashes, moved glints, changed iris geometry, altered face/hair, added features, captions, borders, gutters, full portrait, photorealism.",
+  "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a16171-d8b9-7501-ae55-cf8bfac295df as C:\\Users\\Daniel\\.codex\\generated_images\\01a16171-d8b9-7501-ae55-cf8bfac295df\\exec-23574fc7-4935-49e0-a000-bf7c866c47f3.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+  "generatedPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a16171-d8b9-7501-ae55-cf8bfac295df\\exec-23574fc7-4935-49e0-a000-bf7c866c47f3.png",
+  "sourceOriginal": {
+    "path": "original.png",
+    "sha256": "ff6db931146aa84fe2260b0daba0269a20455b1dcbb61e232e011a87291b4b5f",
+    "width": 64,
+    "height": 64
+  },
+  "referenceGrid": {
+    "path": "eyes-reference-grid.png",
+    "sha256": "008e6c201b9ae39befd93d7ab0602009398521c5c3577624bfd81db4e9d2a249",
+    "width": 1024,
+    "height": 560
+  },
+  "generator": {
+    "path": "C:\\Users\\Daniel\\.codex\\generated_images\\01a16171-d8b9-7501-ae55-cf8bfac295df\\exec-23574fc7-4935-49e0-a000-bf7c866c47f3.png",
+    "sha256": "b051ef539a2fab64aabc13648ab6aec3e0016321855d1a52ac9a195455f7994b",
+    "width": 1695,
+    "height": 928
+  },
+  "raw": {
+    "path": "eyes/angry/raw.png",
+    "sha256": "b051ef539a2fab64aabc13648ab6aec3e0016321855d1a52ac9a195455f7994b",
+    "width": 1695,
+    "height": 928
+  }
+}

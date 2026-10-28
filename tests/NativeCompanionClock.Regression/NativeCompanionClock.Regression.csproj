@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><TreatWarningsAsErrors>true</TreatWarningsAsErrors></PropertyGroup>
+  <ItemGroup><Compile Include="../../mod/Scripts/ResidentActor.CompanionTraversal.cs" Link="Runtime/ResidentActor.CompanionTraversal.cs" />
+    <Compile Include="../../mod/Scripts/NativeDungeonSceneReadiness.cs" Link="Runtime/NativeDungeonSceneReadiness.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="../../mod/Scripts/NativeDungeonObserverGround.cs" Link="Runtime/NativeDungeonObserverGround.cs" /></ItemGroup>
+</Project>

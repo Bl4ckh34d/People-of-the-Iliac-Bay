@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "profileId": "common-092-voice-race-04",
+  "portraitId": "common-092",
+  "seed": 1652222093,
+  "attributes": {
+    "pitch": "a lower alto register",
+    "timbre": "warm and slightly dark, with balanced natural resonance",
+    "roughness": "mostly clear with a little natural texture",
+    "breathiness": "with a softly airy edge",
+    "vocalFry": "with minimal habitual creak",
+    "pace": "a normal unhurried conversational pace"
+  },
+  "latentZ": {
+    "pitch": -1.577768973585715,
+    "brightness": -1.1050023941403306,
+    "resonance": 0.4305599872797481,
+    "roughness": 0.9501940618536281,
+    "breathiness": 1.146503913640468,
+    "vocalFry": -0.8784581654160174,
+    "pace": 0.8286880412472994
+  },
+  "raceCandidates": [
+    "Breton",
+    "Nord"
+  ],
+  "accentLabel": "Southern English",
+  "accentEvidence": "tools/BreezeTtsTrial/accent_voice_corpus_v2.json",
+  "raceAssignment": "Breton/Nord shared art: existing Breton gallery preview baseline; actual runtime race separate",
+  "stableInstruction": "An adult woman speaking British English with a neutral southern English accent. Her individual voice has a lower alto register. Its timbre is warm and slightly dark, with balanced natural resonance; it is mostly clear with a little natural texture, with a softly airy edge, with minimal habitual creak. Use a normal unhurried conversational pace. Maintain this individual vocal identity. Speak naturally without caricature, shouting, or added vocal events.",
+  "guidanceScale": 4.0,
+  "scope": "gallery voice review; no runtime assignment"
+}

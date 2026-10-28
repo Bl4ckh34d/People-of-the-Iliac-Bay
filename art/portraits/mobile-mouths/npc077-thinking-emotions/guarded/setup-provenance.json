@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Current-byte emotional thinking input copy; no generated atlas or historical setup is claimed.",
+  "createdUtc": "2026-10-22T05:51:38.051735+00:00",
+  "preparationMethod": "copied approved current source files and manifest-selected emotion phases by bytes",
+  "portraitRecord": 77,
+  "bank": "TFAC00I0.RCI",
+  "sourceWorkspace": "art/portraits/mobile-mouths/split-mask-prototype",
+  "emotionId": "guarded",
+  "sourcePath": "original.png",
+  "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+  "sourceWidth": 64,
+  "sourceHeight": 64,
+  "splitY": 35,
+  "browLockEndY": 22,
+  "parentComponentHashes": {
+    "open": {
+      "file": "eyes/guarded/open.png",
+      "sha256": "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6"
+    },
+    "half": {
+      "file": "eyes/guarded/half.png",
+      "sha256": "dbf3cfa3ac0e98c8d744ce18ad0fd6bfff11a6008c39b7433423fd57a2dab086"
+    },
+    "closed": {
+      "file": "eyes/guarded/closed.png",
+      "sha256": "2a1b02936dae4ef0bf7498b36cad0b974ab928907d7ca0560b5a78de5be41fb5"
+    }
+  },
+  "parentManifestSha256": "ac89fa4f794a139cb0d3c761db8181967091da308cc823cf845106b949b40364",
+  "copiedInputs": {
+    "original.png": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+    "source-upper.png": "1ac0547d22fdefb5dda5874acd21aef2069bc8d55d05513b7724211ff9187db4",
+    "source-lower.png": "727ddb78360be5114c9c1296de4ceb023726055cf58b66d984bbe82061f30367",
+    "layout.json": "2b54678470e2778b95bda1524b157cd89b3cf477d226da07ee0c203d9500adc5",
+    "eyes/guarded/open.png": "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6",
+    "eyes/guarded/half.png": "dbf3cfa3ac0e98c8d744ce18ad0fd6bfff11a6008c39b7433423fd57a2dab086",
+    "eyes/guarded/closed.png": "2a1b02936dae4ef0bf7498b36cad0b974ab928907d7ca0560b5a78de5be41fb5"
+  },
+  "note": "No generated raw atlas, reference grid, or staging provenance exists yet; the updated emotional-input helper will create and bind the new grid later."
+}

@@ -6,7 +6,7 @@ namespace PeopleOfTheIliacBay.Core
     [Serializable]
     public sealed class WorldState
     {
-        public const int CurrentVersion = 82;
+        public const int CurrentVersion = 85;
         public int Version = CurrentVersion;
         public string NpcFrameworkScopeId = Guid.NewGuid().ToString("N");
         public List<NpcMotivationState> NpcMotivations = new List<NpcMotivationState>();
@@ -31,6 +31,7 @@ namespace PeopleOfTheIliacBay.Core
         public List<ConversationMood> ConversationMoods = new List<ConversationMood>();
         public List<NpcConversationMemory> ConversationMemories = new List<NpcConversationMemory>();
         public List<NpcSceneMemory> SceneMemories = new List<NpcSceneMemory>();
+        public List<NpcSceneMemorySummary> SceneMemorySummaries = new List<NpcSceneMemorySummary>();
         public List<ClosedShopVisit> ClosedShopVisits = new List<ClosedShopVisit>();
         public ConversationArchiveCheckpoint ConversationArchive;
         public ConversationCueArchiveCheckpoint ConversationCueArchive;
@@ -46,6 +47,7 @@ namespace PeopleOfTheIliacBay.Core
         public List<CivilianIncident> AlarmIncidents = new List<CivilianIncident>();
         public long NextIncidentSerial = 1;
         public List<GuardRoster> Garrisons = new List<GuardRoster>();
+        public List<NpcCustodyRecord> NpcCustodies = new List<NpcCustodyRecord>();
         public List<EntryReport> EntryReports = new List<EntryReport>();
         public List<NativePerson> NativePeople = new List<NativePerson>();
         public List<InnLodgerHomeReservation> InnLodgerHomes = new List<InnLodgerHomeReservation>();
@@ -75,8 +77,8 @@ namespace PeopleOfTheIliacBay.Core
         public List<NpcTreatmentOutcomeHistory> NpcTreatmentOutcomeHistories = new List<NpcTreatmentOutcomeHistory>();
         public List<NpcHealthCareRecord> NpcHealthCares = new List<NpcHealthCareRecord>();
         public List<NpcMagicCareTask> NpcMagicCareTasks = new List<NpcMagicCareTask>();
-        public List<NpcGuildPotionStockState> NpcGuildPotionStocks = new List<NpcGuildPotionStockState>();
         public List<NpcPersonalityProfile> NpcPersonalities = new List<NpcPersonalityProfile>();
+        public List<NpcBiographyRecord> NpcBiographies = new List<NpcBiographyRecord>();
         public List<NpcAcuteFearState> NpcAcuteFears = new List<NpcAcuteFearState>();
         public List<NpcRoleState> NpcRoles = new List<NpcRoleState>();
         public NpcRelationshipLedger NpcRelationships = NpcRelationshipLedger.Create();
@@ -252,7 +254,7 @@ namespace PeopleOfTheIliacBay.Core
             state.Routines.RemoveAll(r=>r.SettlementId==settlementId);
             foreach(var native in state.NativePeople)
             {
-                var liveHome=state.Settlements[townIndex].Households.Find(h=>h.HeadId==native.Id);
+                var liveHome=state.Settlements[townIndex].Households.Find(h=>h.Residents.Exists(r=>r.Id==native.Id));
                 if(liveHome!=null) liveHome.Residents.Find(r=>r.Id==native.Id).NativeIdentity=native;
             }
             TravelerVisitRevision++;
@@ -263,18 +265,6 @@ namespace PeopleOfTheIliacBay.Core
         private void RestoreCore(WorldState incoming, double? loadedGameTime)
         {
             var candidate = CopyValidated(incoming);
-            if (loadedGameTime.HasValue && incoming.Version < 22) MigrateClockRate(candidate, loadedGameTime.Value);
-            if (loadedGameTime.HasValue && incoming.Version <= 32)
-            {
-                Require(Finite(loadedGameTime.Value) && loadedGameTime.Value >= 0, "Invalid game time for mood migration.");
-                foreach (var mood in candidate.ConversationMoods)
-                    if (!mood.HasTimeAnchor)
-                    {
-                        mood.HasTimeAnchor = true;
-                        mood.UpdatedAt = loadedGameTime.Value;
-                    }
-            }
-            if (loadedGameTime.HasValue) RepairCachedMovementClock(candidate,2);
             candidate = CopyValidated(candidate);
             var restoredMemories=PrepareMemoryIndex(candidate);
             // Shared-exchange aggregates predate source-aware replies. Rebuild them
@@ -314,8 +304,7 @@ namespace PeopleOfTheIliacBay.Core
         }
         public TownRoutineState GetRoutines(int settlementId)
         {
-            Require(state.Version >= 1 && state.Version <= WorldState.CurrentVersion, "Unsupported save schema.");
-            if (state.Version == 1) return null;
+            Require(state.Version == WorldState.CurrentVersion, "Unsupported save schema. Start with fresh mod data.");
             Require(state.Settlements != null, "Missing settlements.");
             Require(state.Routines != null, "Missing routine cache.");
             TownRoutineState found = null;
@@ -357,7 +346,7 @@ namespace PeopleOfTheIliacBay.Core
         public void SetRoutines(TownRoutineState routines)
         {
             if (routines == null) throw new ArgumentNullException(nameof(routines));
-            Require(state.Version >= 1 && state.Version <= WorldState.CurrentVersion, "Unsupported save schema.");
+            Require(state.Version == WorldState.CurrentVersion, "Unsupported save schema. Start with fresh mod data.");
             Require(state.Settlements != null, "Missing settlements.");
             Require(state.Routines != null, "Missing routine cache.");
             var settlement = FindRoutineSettlement(state, routines.SettlementId);
@@ -436,16 +425,14 @@ namespace PeopleOfTheIliacBay.Core
                 }
             }
             var cachedResidents = new HashSet<string>(StringComparer.Ordinal);
-            int itineraryVersion = source.Version >= 18 ? town.ItineraryVersion : 0;
-            Require(itineraryVersion >= 0 && itineraryVersion <= 2 && (source.Version>=62 || itineraryVersion<=1), "Unsupported routine itinerary version.");
+            int itineraryVersion = town.ItineraryVersion;
+            Require(itineraryVersion >= 0 && itineraryVersion <= 2, "Unsupported routine itinerary version.");
             var townCopy = new TownRoutineState { SettlementId = town.SettlementId, ItineraryVersion = itineraryVersion };
             foreach (var routine in town.Residents)
             {
                 Require(routine != null && routine.ResidentId != null && residents.ContainsKey(routine.ResidentId) &&
                     cachedResidents.Add(routine.ResidentId), "Invalid or duplicate resident routine.");
                 Require(routine.Route != null && routine.Route.Count <= 10000, "Invalid route points.");
-                Require(source.Version>=62 || routine.AdditionalOutings==null || routine.AdditionalOutings.Count==0,
-                    "Legacy routine contains future daily outings.");
                 Require(itineraryVersion>=2 || routine.AdditionalOutings==null || routine.AdditionalOutings.Count==0,
                     "Additional outings require the multi-outing format.");
                 Require(routine.RouteGeometryVersion>=0 && routine.RouteGeometryVersion<=OutdoorRoutineMigration.CurrentVersion,
@@ -462,7 +449,7 @@ namespace PeopleOfTheIliacBay.Core
                         routine.Route.Count >= 2, "Invalid visit routine.");
                 ResidentDestination itinerary = null;
                 double departureSeconds = 0;
-                if (source.Version >= 18 && routine.Itinerary != null)
+                if (routine.Itinerary != null)
                 {
                     var resident = residents[routine.ResidentId];
                     Require(itineraryVersion >= 1 && resident.AgeGroup == ResidentAgeGroup.Adult,
@@ -481,7 +468,7 @@ namespace PeopleOfTheIliacBay.Core
                     var journey = ResidentVisitJourney.Create(departureSeconds, itinerary);
                     Require(journey.EndsAt < 86400, "Daily itinerary must return before the next day.");
                 }
-                else if (source.Version >= 18)
+                else
                     Require(routine.ItineraryDepartureSeconds == 0,
                         "Missing itinerary for saved departure time.");
                 Require(itineraryVersion >= 1 || itinerary == null,
@@ -515,65 +502,32 @@ namespace PeopleOfTheIliacBay.Core
         private static WorldState CopyValidated(WorldState source)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
-            Require(source.Version >= 1 && source.Version <= WorldState.CurrentVersion, "Unsupported save schema.");
-            if(source.Version<68 && source.RoutineRecoveries!=null)foreach(var recovery in source.RoutineRecoveries)
-                Require(recovery==null || recovery.HouseholdDayId==null && recovery.HouseholdDayFingerprint==null &&
-                    recovery.OtherParentAppointmentFingerprint==null && !recovery.HouseholdJointSkipped &&
-                    (recovery.Legs==null || !recovery.Legs.Exists(l=>l!=null && l.HouseholdJoint)),
-                    "Older save schema contains future household recovery fields.");
-            Require(source.Version>=66 || source.HouseholdDays==null || source.HouseholdDays.Count==0,
-                "Older save schema contains future household day fields.");
-            Require(source.Version>=69 || source.HouseholdJointProgress==null || source.HouseholdJointProgress.Count==0,
-                "Older save schema contains future shared household progress.");
-            Require(source.Version>=72 || source.HouseholdJointSimulations==null || source.HouseholdJointSimulations.Count==0,
-                "Older save schema contains future household simulation.");
-            Require(source.Version>=73 || source.NpcInnServiceCatalogs==null || source.NpcInnServiceCatalogs.Count==0,
-                "Older save schema contains future Inn service catalogs.");
-            Require(source.Version>=74 || source.HouseholdInnServices==null || source.HouseholdInnServices.Count==0,
-                "Older save schema contains future household Inn service admissions.");
+            Require(source.Version == WorldState.CurrentVersion, "Unsupported save schema. Start with fresh mod data.");
             Require(source.Settlements != null, "Missing settlements.");
             var copy = new WorldState { WorldSeed = source.WorldSeed };
-            if (source.Version >= 38)
-            {
-                Guid frameworkScope;
-                Require(Guid.TryParseExact(source.NpcFrameworkScopeId, "N", out frameworkScope), "Invalid NPC framework save scope.");
-                copy.NpcFrameworkScopeId = source.NpcFrameworkScopeId;
-            }
-            copy.PlayerItemProvenance = source.Version >= 56
-                ? PlayerItemProvenanceLedger.CopyValidated(source.PlayerItemProvenance, copy.NpcFrameworkScopeId)
-                : PlayerItemProvenanceLedger.Create(copy.NpcFrameworkScopeId);
-            Require(source.Version < 58 || PlayerCommerceReceiptLedger.Validate(source.PlayerCommerceReceipts,
+            Guid frameworkScope;
+            Require(Guid.TryParseExact(source.NpcFrameworkScopeId, "N", out frameworkScope), "Invalid NPC framework save scope.");
+            copy.NpcFrameworkScopeId = source.NpcFrameworkScopeId;
+            copy.PlayerItemProvenance = PlayerItemProvenanceLedger.CopyValidated(source.PlayerItemProvenance, copy.NpcFrameworkScopeId);
+            Require(PlayerCommerceReceiptLedger.Validate(source.PlayerCommerceReceipts,
                 copy.NpcFrameworkScopeId), "Invalid player commerce receipt ledger.");
-            copy.PlayerCommerceReceipts = source.Version >= 58
-                ? source.PlayerCommerceReceipts.Copy()
-                : new PlayerCommerceReceiptLedger(copy.NpcFrameworkScopeId).Snapshot();
-            Require(source.Version < 81 || PersonalBarterReceiptLedger.Validate(source.PersonalBarterReceipts,
+            copy.PlayerCommerceReceipts = source.PlayerCommerceReceipts.Copy();
+            Require(PersonalBarterReceiptLedger.Validate(source.PersonalBarterReceipts,
                 copy.NpcFrameworkScopeId), "Invalid personal barter receipt ledger.");
-            copy.PersonalBarterReceipts = source.Version >= 81
-                ? source.PersonalBarterReceipts.Copy()
-                : new PersonalBarterReceiptLedger(copy.NpcFrameworkScopeId).Snapshot();
+            copy.PersonalBarterReceipts = source.PersonalBarterReceipts.Copy();
             copy.NpcServiceContracts = NpcServiceContractLedger.Create().ToSaveState(copy.NpcFrameworkScopeId);
             copy.ConversationAttitudes = CopyConversationAttitudes(source);
             copy.ConversationMoods = CopyConversationMoods(source);
             copy.ConversationMemories = CopyConversationMemories(source);
             copy.SceneMemories = CopySceneMemories(source);
+            copy.SceneMemorySummaries = CopySceneMemorySummaries(source);
             copy.ClosedShopVisits = CopyClosedShopVisits(source);
             copy.ConversationArchive = ConversationArchiveCheckpoint.CopyValidated(source.ConversationArchive);
-            if (source.Version < 54)
-            {
-                Require(source.ConversationCueArchive == null,
-                    "Legacy save contains a future conversation cue checkpoint.");
-                copy.ConversationCueArchive = copy.ConversationArchive == null ? null :
-                    new ConversationCueArchiveCheckpoint { ArchiveId = copy.ConversationArchive.ArchiveId };
-            }
-            else
-            {
-                copy.ConversationCueArchive = ConversationCueArchiveCheckpoint.CopyValidated(source.ConversationCueArchive);
-                Require((copy.ConversationArchive == null) == (copy.ConversationCueArchive == null) &&
-                    (copy.ConversationArchive == null ||
-                     copy.ConversationArchive.ArchiveId == copy.ConversationCueArchive.ArchiveId),
-                    "Conversation cue checkpoint must match its memory archive namespace.");
-            }
+            copy.ConversationCueArchive = ConversationCueArchiveCheckpoint.CopyValidated(source.ConversationCueArchive);
+            Require((copy.ConversationArchive == null) == (copy.ConversationCueArchive == null) &&
+                (copy.ConversationArchive == null ||
+                 copy.ConversationArchive.ArchiveId == copy.ConversationCueArchive.ArchiveId),
+                "Conversation cue checkpoint must match its memory archive namespace.");
             if(source.HauntingDay!=null)
             {
                 double day=source.HauntingDay.Day;
@@ -593,17 +547,16 @@ namespace PeopleOfTheIliacBay.Core
                 {
                     Require(home != null, "Null household.");
                     Require(home.BuildingKey >= 0 && homes.Add(home.BuildingKey), "Invalid or duplicate household.");
-                    int bedCapacity = source.Version < 5 ? -1 : home.BedCapacity;
+                    int bedCapacity = home.BedCapacity;
                     Require(home.Generation >= 0 && bedCapacity >= -1 && (home.Generation == 0 || bedCapacity > 0),
                         "Invalid saved household generation or bed capacity.");
                     Require(home.Residents != null && home.Residents.Count <=
-                        (source.Version < 3 ? 3 : bedCapacity >= 0 ? bedCapacity : 5), "Missing or overcrowded household residents.");
+                        (bedCapacity >= 0 ? bedCapacity : 5), "Missing or overcrowded household residents.");
                     var homeCopy = new Household { BuildingKey = home.BuildingKey,
-                        Generation = source.Version >= 20 ? home.Generation : 0,
+                        Generation = home.Generation,
                         HeadId = home.HeadId, Surname = home.Surname,
                         BedCapacity = bedCapacity,
-                        SurnameSeed = source.Version < 3 ? StableSeed.Combine(source.WorldSeed, (uint)town.SettlementId,
-                            (uint)home.BuildingKey, 0xfffffffe) : home.SurnameSeed };
+                        SurnameSeed = home.SurnameSeed };
                     foreach (Resident resident in home.Residents)
                     {
                         Require(resident != null, "Null resident.");
@@ -613,18 +566,16 @@ namespace PeopleOfTheIliacBay.Core
                         homeCopy.Residents.Add(new Resident { Id = resident.Id, HomeKey = resident.HomeKey,
                             FullName = resident.FullName, Race = resident.Race, BedSlot = resident.BedSlot,
                             AppearanceSeed = resident.AppearanceSeed, IsAlive = resident.IsAlive, IsQuestProtected = resident.IsQuestProtected,
-                            AgeGroup = source.Version < 3 ? ResidentAgeGroup.Adult : resident.AgeGroup,
-                            Sex = source.Version < 3 ? ((resident.AppearanceSeed & 1) == 0 ? ResidentSex.Male : ResidentSex.Female) : resident.Sex,
-                            PartnerId = source.Version < 3 ? null : resident.PartnerId,
-                            MotherId = source.Version < 3 ? null : resident.MotherId,
-                            FatherId = source.Version < 3 ? null : resident.FatherId });
+                            AgeGroup = resident.AgeGroup, Sex = resident.Sex,
+                            GuildIdentityKnown = resident.GuildIdentityKnown, GuildFactionId = resident.GuildFactionId,
+                            GuildRank = resident.GuildRank, GuildHomeKey = resident.GuildHomeKey,
+                            PartnerId = resident.PartnerId, MotherId = resident.MotherId, FatherId = resident.FatherId });
                     }
                     ValidateFamily(homeCopy);
                     townCopy.Households.Add(homeCopy);
                 }
                 copy.Settlements.Add(townCopy);
             }
-            if (source.Version >= 20)
             {
                 Require(source.HouseholdHistory != null, "Missing household history.");
                 var historyKeys = new HashSet<string>(StringComparer.Ordinal);
@@ -639,7 +590,7 @@ namespace PeopleOfTheIliacBay.Core
                         historyKeys.Add(HistoryKey(retired.SettlementId, retired.Household.BuildingKey, retired.Household.Generation)),
                         "Invalid or duplicate retired household generation.");
                     var archived = CopyHousehold(source, retired.SettlementId, retired.Household, identities);
-                    bool hasLodger=source.Version>=24 && source.InnLodgerHomes!=null && source.InnLodgerHomes.Exists(r=>r!=null &&
+                    bool hasLodger=source.InnLodgerHomes!=null && source.InnLodgerHomes.Exists(r=>r!=null &&
                         r.HomeSettlement==retired.SettlementId && r.HomeKey==archived.BuildingKey && r.Generation==archived.Generation &&
                         source.NativePeople!=null && source.NativePeople.Exists(p=>p.Id==r.PersonId && !p.IsAlive));
                     Require((archived.Residents.Count > 0 || hasLodger) && archived.Residents.TrueForAll(r => !r.IsAlive),
@@ -653,7 +604,6 @@ namespace PeopleOfTheIliacBay.Core
                         Require(historyKeys.Contains(HistoryKey(town.SettlementId, home.BuildingKey, generation)),
                             "Household history has a missing prior generation.");
             }
-            if (source.Version == 1) return copy;
             Require(source.Routines != null, "Missing routine cache.");
             var cachedTowns = new HashSet<int>();
             foreach (var town in source.Routines)
@@ -662,44 +612,27 @@ namespace PeopleOfTheIliacBay.Core
                 var settlement = copy.Settlements.Find(item => item.SettlementId == town.SettlementId);
                 copy.Routines.Add(CopyValidatedRoutineTown(source, town, settlement));
             }
-            if (source.Version >= 4)
             {
                 copy.QuestBindings = source.QuestBindings;
                 copy.QuestBindings = CopyQuestBindings(copy);
             }
-            if (source.Version >= 5) copy.AlarmIncidents = CopyAlarms(source);
-            if (source.Version >= 47)
+            copy.AlarmIncidents = CopyAlarms(source);
             {
                 Require(source.NextIncidentSerial > 0 && source.NextIncidentSerial < long.MaxValue &&
                     copy.AlarmIncidents.TrueForAll(x => x.GenerationSerial < source.NextIncidentSerial),
                     "Invalid next incident generation serial.");
                 copy.NextIncidentSerial = source.NextIncidentSerial;
             }
-            else
-            {
-                // Legacy incidents have no generation cursor. Assign stable serials to retained incidents only.
-                var orderedIncidents = new List<CivilianIncident>(copy.AlarmIncidents);
-                orderedIncidents.Sort((a, b) => { int order = a.StartedAt.CompareTo(b.StartedAt);
-                    return order != 0 ? order : string.CompareOrdinal(a.Id, b.Id); });
-                foreach (var incident in orderedIncidents) incident.GenerationSerial = copy.NextIncidentSerial++;
-            }
-            if (source.Version >= 6)
             {
                 Require(source.Garrisons != null, "Missing garrison ledger.");
                 var garrisons = new HashSet<int>();
                 foreach (var garrison in source.Garrisons)
                 {
                     Require(garrison != null && settlements.Contains(garrison.SettlementId) && garrisons.Add(garrison.SettlementId), "Unknown or duplicate garrison settlement.");
-                    Require(garrison.Reports!=null && (source.Version>=64 || garrison.Reports.TrueForAll(report=>
-                        report!=null && !report.HasCorpseInquiryWindow && report.CorpseInquiryStartedAt==0)),
-                        "Legacy garrison contains a future corpse inquiry window.");
-                    Require(source.Version>=65 || garrison.Reports.TrueForAll(report=>report!=null && report.CorpseSearchVersion==0),
-                        "Legacy garrison contains a future bounded search case.");
-                    Require(source.Version>=65 || garrison.Reports.TrueForAll(report=>report!=null &&
-                        report.CorpseSuspect==null && report.SuspectSighting==null),"Legacy garrison contains future suspect evidence.");
                     copy.Garrisons.Add(GuardRoster.CopyValidated(garrison));
                 }
             }
+            copy.NpcCustodies=CopyNpcCustodies(source,copy);
             ValidateOutdoorCorpseInquiryWindows(copy);
             ValidateCorpseSuspectEvidence(copy);
             foreach (var alarm in copy.AlarmIncidents)
@@ -713,16 +646,19 @@ namespace PeopleOfTheIliacBay.Core
                 }
             copy.EntryReports = CopyEntries(source);
             copy.NativePeople = CopyNativePeople(source);
-            copy.DefenseCombatants = CopyDefense(source,copy);
             copy.Lodgings = CopyLodgings(source,copy);
             copy.InnLodgerHomes=CopyInnLodgerHomes(source,copy);
             CopyTravelers(source,copy,identities);
+            // Corpse/defense witnesses can be actual visitors with an origin
+            // household, so validate their visit identity before their evidence.
+            copy.DefenseCombatants = CopyDefense(source,copy);
             copy.VisitDepartures=CopyVisitDepartures(source);
-            if(source.Version>=19) copy.ObservedVisits=CopyObservedVisits(source);
+            copy.ObservedVisits=CopyObservedVisits(source);
             copy.ShelterLocks=CopyShelterLocks(source);
             copy.ResidentTrips=CopyResidentTrips(source,copy);
             copy.HouseholdRecoveries=CopyHouseholdRecoveries(source,copy);
             copy.NpcPersonalities=CopyNpcPersonalities(source,copy);
+            copy.NpcBiographies=CopyNpcBiographies(source,copy);
             copy.NpcAcuteFears=CopyNpcAcuteFears(source,copy);
             copy.NpcRelationships=CopyNpcRelationships(source,copy);
             copy.NpcExperienceInbox=CopyNpcExperienceInbox(source,copy);
@@ -732,7 +668,6 @@ namespace PeopleOfTheIliacBay.Core
             copy.NpcVerbalCharge=CopyNpcVerbalCharge(source,copy);
             copy.NpcPoisonOnsets=CopyNpcPoisonOnsets(source,copy);
             copy.NpcMotivations=CopyNpcMotivations(source,copy);
-            if (source.Version >= 47)
             {
                 Require(source.NpcConversationCommandCursors != null, "Missing NPC conversation command cursors.");
                 var commandOwners = new HashSet<string>(StringComparer.Ordinal);
@@ -754,8 +689,8 @@ namespace PeopleOfTheIliacBay.Core
             };
             copy.NpcServiceEvidence = CopyNpcServiceNativeEvidence(source, copy, knownServiceActor);
             copy.NpcServiceContracts = CopyNpcServiceContracts(source, copy, copy.NpcServiceEvidence, knownServiceActor);
-            if (source.Version >= 21) copy.DialogueComplaints=CopyDialogueComplaints(source);
-            if (source.Version >= 26) copy.Appointments=CopyAppointments(source,copy);
+            copy.DialogueComplaints=CopyDialogueComplaints(source);
+            copy.Appointments=CopyAppointments(source,copy);
             copy.RecentProactiveContacts=CopyProactiveContacts(source,copy);
             copy.ActiveProactiveContactId=source.ActiveProactiveContactId;
             copy.LastProactiveContactId=source.LastProactiveContactId;
@@ -764,7 +699,7 @@ namespace PeopleOfTheIliacBay.Core
                 "Invalid proactive-contact suppression time.");
             copy.PlayerProactiveContactBlockedUntil=source.PlayerProactiveContactBlockedUntil;
             ValidateProactiveContactPointers(copy);
-            if (source.Version >= 27) copy.NpcActors=CopyNpcActors(source,copy);
+            copy.NpcActors=CopyNpcActors(source,copy);
             foreach (var motivation in copy.NpcMotivations)
             {
                 var actor = copy.NpcActors.Find(x => x.PersonId == motivation.OwnerPersonId);
@@ -774,7 +709,7 @@ namespace PeopleOfTheIliacBay.Core
                     motivation.LastStartedSafetySerial < copy.NextIncidentSerial,
                     "Native motivation cursor exceeds its saved source.");
             }
-            if (source.Version >= 28) copy.NpcInventories=CopyNpcInventories(source,copy);
+            copy.NpcInventories=CopyNpcInventories(source,copy);
             foreach (var receipt in copy.PlayerCommerceReceipts.Entries)
             {
                 var owner = copy.NpcInventories.Find(x => x.PersonId == receipt.NpcId);
@@ -793,17 +728,16 @@ namespace PeopleOfTheIliacBay.Core
                     "Personal barter receipt exceeds its saved NPC inventory source.");
             }
             copy.NpcInnConsumptionCursors=CopyNpcInnConsumptionCursors(source,copy);
-            if (source.Version >= 28) copy.NpcActions=CopyNpcActions(source,copy);
-            if (source.Version >= 29) copy.NpcTasks=CopyNpcTasks(source,copy);
+            copy.NpcActions=CopyNpcActions(source,copy);
+            copy.NpcTasks=CopyNpcTasks(source,copy);
             copy.NpcTreatmentOutcomeHistories=CopyNpcTreatmentOutcomeHistories(source,copy);
             copy.NpcHealthCares=CopyNpcHealthCareRecords(source,copy);
             copy.NpcMagicCareTasks=CopyNpcMagicCareTasks(source,copy);
-            ValidateNpcOperationAdmissions(copy,source.Version);
-            copy.NpcGuildPotionStocks=CopyNpcGuildPotionStocks(source,copy);
+            ValidateNpcOperationAdmissions(copy);
             foreach (var native in copy.NativePeople)
             {
                 if(native.NativeLayoutKey!=null)continue; // Layout-only NPCs never head a simulated household.
-                var home = copy.Settlements.Find(t => t.SettlementId == native.SettlementId).Households.Find(h => h.HeadId == native.Id);
+                var home = copy.Settlements.Find(t => t.SettlementId == native.SettlementId).Households.Find(h => h.Residents.Exists(r => r.Id == native.Id));
                 if (home != null) home.Residents.Find(r => r.Id == native.Id).NativeIdentity = native;
             }
             copy.HouseholdDays=CopyHouseholdDays(source,copy);
@@ -816,43 +750,17 @@ namespace PeopleOfTheIliacBay.Core
             copy.RoutineRecoveries=CopyRoutineRecoveries(source,copy);
             return copy;
         }
-        private static void MigrateClockRate(WorldState world, double now)
-        {
-            Require(Finite(now) && now >= 0, "Invalid game time for clock migration.");
-            foreach (var alarm in world.AlarmIncidents)
-                foreach (var person in alarm.People)
-                    if (person.Escape != null)
-                    {
-                        person.Escape.MigrateClockScale(now, 12, 2);
-                        if (person.EscapeAdvancedAt > 0)
-                            person.EscapeAdvancedAt = Math.Max(person.EscapeAdvancedAt,
-                                Math.Max(person.Escape.StartedAt, person.Escape.RedirectedAt));
-                    }
-            foreach (var report in world.EntryReports)
-                if (report.Messenger != null) report.Messenger.MigrateClockScale(now, 12, 2);
-            foreach (var departure in world.VisitDepartures)
-                departure.Motion.MigrateClockScale(now, 12, 2);
-            foreach (var visit in world.ObservedVisits)
-                visit.MigrateClockRate(now, 12, 2);
-            foreach (var roster in world.Garrisons)
-            {
-                GuardRoster.MigrateInteriorClock(roster, now, 12, 2);
-                GuardRoster.MigrateTravelClock(roster, now, 12, 2);
-                GuardRoster.MigratePatrolAndRefugeClock(roster, now, 12, 2);
-            }
-        }
         private static string HistoryKey(int settlementId, int buildingKey, int generation)
         { return settlementId + ":" + buildingKey + ":" + generation; }
         private static Household CopyHousehold(WorldState source, int settlementId, Household home, HashSet<string> identities)
         {
             Require(home != null && home.BuildingKey >= 0 && home.Generation >= 0, "Invalid household generation.");
-            int bedCapacity = source.Version < 5 ? -1 : home.BedCapacity;
+            int bedCapacity = home.BedCapacity;
             Require(bedCapacity >= -1 && (home.Generation == 0 || bedCapacity > 0) && home.Residents != null && home.Residents.Count <=
-                (source.Version < 3 ? 3 : bedCapacity >= 0 ? bedCapacity : 5), "Missing or overcrowded household residents.");
-            var result = new Household { BuildingKey = home.BuildingKey, Generation = source.Version >= 20 ? home.Generation : 0,
+                (bedCapacity >= 0 ? bedCapacity : 5), "Missing or overcrowded household residents.");
+            var result = new Household { BuildingKey = home.BuildingKey, Generation = home.Generation,
                 HeadId = home.HeadId, Surname = home.Surname, BedCapacity = bedCapacity,
-                SurnameSeed = source.Version < 3 ? StableSeed.Combine(source.WorldSeed, (uint)settlementId,
-                    (uint)home.BuildingKey, 0xfffffffe) : home.SurnameSeed };
+                SurnameSeed = home.SurnameSeed };
             foreach (var resident in home.Residents)
             {
                 Require(resident != null && !string.IsNullOrWhiteSpace(resident.Id) && identities.Add(resident.Id) &&
@@ -861,11 +769,10 @@ namespace PeopleOfTheIliacBay.Core
                 result.Residents.Add(new Resident { Id = resident.Id, HomeKey = resident.HomeKey, FullName = resident.FullName,
                     Race = resident.Race, BedSlot = resident.BedSlot, AppearanceSeed = resident.AppearanceSeed,
                     IsAlive = resident.IsAlive, IsQuestProtected = resident.IsQuestProtected,
-                    AgeGroup = source.Version < 3 ? ResidentAgeGroup.Adult : resident.AgeGroup,
-                    Sex = source.Version < 3 ? ((resident.AppearanceSeed & 1) == 0 ? ResidentSex.Male : ResidentSex.Female) : resident.Sex,
-                    PartnerId = source.Version < 3 ? null : resident.PartnerId,
-                    MotherId = source.Version < 3 ? null : resident.MotherId,
-                    FatherId = source.Version < 3 ? null : resident.FatherId });
+                    AgeGroup = resident.AgeGroup, Sex = resident.Sex,
+                    GuildIdentityKnown = resident.GuildIdentityKnown, GuildFactionId = resident.GuildFactionId,
+                    GuildRank = resident.GuildRank, GuildHomeKey = resident.GuildHomeKey,
+                    PartnerId = resident.PartnerId, MotherId = resident.MotherId, FatherId = resident.FatherId });
             }
             ValidateFamily(result);
             return result;
@@ -879,12 +786,11 @@ namespace PeopleOfTheIliacBay.Core
             foreach (var retired in world.HouseholdHistory)
                 if (retired.SettlementId == settlementId)
                 { var resident = retired.Household.Residents.Find(r => r.Id == residentId); if (resident != null) return resident; }
-            // A registered visitor has the same managed action/health boundary,
-            // but no household or permanent home. TravelerPerson remains the
-            // authoritative life record; every lookup projects its current state.
+            // A bound visitor is the actual origin resident. Standalone native
+            // fixtures still use a detached projection without a household.
             var traveler=world.Travelers.Find(p=>p.Id==residentId);
             if(traveler!=null && world.TravelerVisits.Exists(v=>v.PersonId==residentId && v.SettlementId==settlementId))
-                return TravelerAlarmResident(traveler);
+                return OriginResident(world,traveler) ?? TravelerAlarmResident(traveler);
             return null;
         }
         private static void ValidateItineraryPoints(List<SavedRoutePoint> points)
@@ -900,6 +806,7 @@ namespace PeopleOfTheIliacBay.Core
             Require(home.HeadId == null || home.Surname != null && home.Residents.Exists(r => r.Id == home.HeadId && r.AgeGroup == ResidentAgeGroup.Adult), "Invalid household head.");
             foreach (var person in home.Residents)
             {
+                NpcGuildMembership.Validate(person);
                 Require(person.Race >= -1 && person.Race <= 255 && (person.FullName == null || !string.IsNullOrWhiteSpace(person.FullName) && person.FullName.Length <= 256 &&
                     (home.Surname == null || person.FullName.EndsWith(" " + home.Surname, StringComparison.Ordinal))), "Invalid resident identity metadata.");
                 Require(person.BedSlot >= -1 && (person.BedSlot < 0 || home.BedCapacity >= 0 && person.BedSlot < home.BedCapacity), "Invalid explicit resident bed.");

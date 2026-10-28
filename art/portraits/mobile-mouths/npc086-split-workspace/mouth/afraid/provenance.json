@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T01:17:49.6381461Z",
+    "portraitRecord":  86,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "afraid",
+    "prompt":  "Use case: stylized-concept\nAsset type: NPC086 pixel-art facial speech atlas for a game portrait.\nPrimary request: Edit Image 3, the exact 3x3 mouth atlas grid. Create a subtle AFRAID mouth expression with gently tense worried corners while preserving each Rhubarb phonetic pose. Use Image 1 only as original identity, scale, and color reference. Ignore Image 2.\nInput images: Image 1 = original native 64x64 portrait, identity/palette reference. Image 2 = eyes-reference-grid, ignore. Image 3 = mouth-reference-grid, exact 3x3 repeated lower 64x29 portrait halves, use as edit target and framing guide.\nComposition/framing: One borderless 3-column by 3-row atlas, exact 64:29 aspect ratio. Every cell is the full same lower 64x29 portrait half, aligned identically to Image 3. Row-major cells A B C / D E F / G H X. No labels, gutters, panel borders, added crop, or resized face.\nStyle/medium: Preserve the original soft-contrast pixel-art raster and native pixel grid. Keep muted warm tan skin, natural brown skin shadows, small soft brown lips, original nose/jaw/chin/neck/hair/background and face width. Do not smooth into vector shapes.\nExact Rhubarb meanings, preserve visibly different pose families:\nA: lips fully closed with light pressure for P/B/M.\nB: slightly open narrow horizontal opening, teeth nearly together, consonants/EE.\nC: medium-open relaxed unrounded EH/AE.\nD: wide vertical AA opening; clearly larger and taller than C.\nE: slightly rounded AO/ER opening, not wider than C.\nF: small forward pucker for UW/OW/W; not a bite and not a tooth shape.\nG: upper teeth touch the lower lip for F/V; not a wide vowel or pucker.\nH: tongue raised behind upper teeth for L; opening between C and D; tongue can be tiny or invisible at native size.\nX: relaxed fully closed idle mouth.\nFear expression: keep corners mildly tense or worried without changing the defining phonetic shape. Do not make every pose pinched or closed. Keep original small mouth scale. Preserve D\u0027s vertical AA, E\u0027s small rounding, F\u0027s forward pucker, and G\u0027s teeth-to-lower-lip contact. Teeth, when needed, are tiny warm muted beige pixels, never bright white blocks. Lip color stays soft brown, not lipstick red.\nConstraints: Change only lips and the minimal mouth interior inside each original mouth region; preserve all other source pixels and full framing. No orange skin halo, no red lipstick, no white flash, no larger jaw or mouth, no stretching face, no text or watermark.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a160c7-2947-7951-a025-d361fa65da49 as C:\\Users\\Daniel\\.codex\\generated_images\\01a160c7-2947-7951-a025-d361fa65da49\\exec-30ae2de3-aa38-4b50-ada9-0dc18f624b29.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c7-2947-7951-a025-d361fa65da49\\exec-30ae2de3-aa38-4b50-ada9-0dc18f624b29.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "685cd0cb922554bb245a0431ee5f141aadbb8c740df7fb81d5a9cb03c888e99d",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "67207d201c495e1ff342be6fafe55a20b846284c25cbd2914db1b685218c37b0",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a160c7-2947-7951-a025-d361fa65da49\\exec-30ae2de3-aa38-4b50-ada9-0dc18f624b29.png",
+                      "sha256":  "1125e42ebf82286cd2b0d64c0b74603c2e5ace3867f33a79c09679fa57d5b486",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/afraid/raw.png",
+                "sha256":  "1125e42ebf82286cd2b0d64c0b74603c2e5ace3867f33a79c09679fa57d5b486",
+                "width":  1863,
+                "height":  844
+            }
+}

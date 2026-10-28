@@ -41,14 +41,6 @@ namespace PeopleOfTheIliacBay.Core
         { double x = b.X - a.X, z = b.Z - a.Z; return Math.Sqrt(x * x + z * z); }
         private static bool Finite(double value) { return !double.IsNaN(value) && !double.IsInfinity(value); }
         private double EffectiveTimeScale { get { return TimeScale == 0 ? 12 : TimeScale; } }
-        public void MigrateClockScale(double now, double previousRate, double currentRate)
-        {
-            if (EffectiveTimeScale == currentRate) return;
-            double oldRate = previousRate;
-            var interval = ClockRateMigration.RescaleInterval(StartedAt, ArrivesAt, now, oldRate, currentRate);
-            StartedAt = interval.Start;
-            TimeScale = currentRate;
-        }
         internal static EntryMessenger Copy(EntryMessenger source)
         {
             if (source == null) return null;

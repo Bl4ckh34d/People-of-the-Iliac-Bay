@@ -129,3 +129,9 @@ at readiness before dungeon entry. Root Core2162/2162, RuntimeCompile and the fu
 Unity package pass. Dungeon entry/movement/return acceptance remains open.
 The current staging probe uses the actual level-based wage; earlier120g setup
 descriptions above describe its historical fixed-price version.
+
+## Later retry04 and static navigation repair
+
+The later package `934D6E533BC7FB753F47CA2532A61293F57FE0920C342F48DC4A4DC2A33086B6` includes a corrected loaded-dungeon arrival rule and excludes non-physical triggers from static navigation fingerprints. A fresh forced-module run verifies five actual Privateer's Hold RDB modules and eight links after recapture/bake. A real-floor jump survey finds no disconnected capable pair and does not force a jump. Those source changes and boundaries are documented in [the later audit](2026-10-26-dungeon-follow-arrival-and-jump.md).
+
+`native-dungeon-follow-04` reruns the existing exact SAVE18/Inn197386 preparation. Traveler routes now work: 19/19 Inns have routes, four for the target, with no empty route, and the real Mage exists. Admission nevertheless remains Pending with no bed for 180 seconds. The actual Inn197386 survey fails with `Lodging bed disconnected from its own floor.` No hire, staging, dungeon entry or round-trip pass occurs. Thus the earlier empty-route explanation is superseded for this run by a specific lodging prerequisite. No identity, booking or bed is invented. Inn263174's separately successful admission does not accept this different layout. Evidence: `work/native-dungeon-follow-04-player.log` and launch log. The owned Player exits; full dungeon Follow acceptance remains open.

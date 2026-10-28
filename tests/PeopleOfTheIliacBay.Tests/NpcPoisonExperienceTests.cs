@@ -9,7 +9,7 @@ namespace PeopleOfTheIliacBay.Tests
         public static void Add(List<(string Name, Action Body)> cases)
         {
             cases.Add(("poison status impact validates type key sequence and event kind", TypedStatusValidation));
-            cases.Add(("legacy inbox v1 and v2 status rows remain unclassified", LegacyStatusRowsRemainUnknown));
+            cases.Add(("Current inbox status rows without typed impact remain unclassified", CurrentStatusRowsRemainUnknown));
             cases.Add(("poison onset sequence appends atomically with unknown cause and survives restore", AtomicSequenceAndUnknownCause));
             cases.Add(("unclassified poison onset claim cannot mint native evidence", UnclassifiedOnsetClaimIsRejected));
             cases.Add(("poison onset rejects stale epoch and invalid observer without partial append", RejectedCaptureDoesNotMutate));
@@ -63,11 +63,11 @@ namespace PeopleOfTheIliacBay.Tests
             Check.Throws<ArgumentException>(() => NpcExperienceInboxEntry.CopyValidated(eventRow));
         }
 
-        private static void LegacyStatusRowsRemainUnknown()
+        private static void CurrentStatusRowsRemainUnknown()
         {
             string observer;
             NpcExperienceCommitTests.Create(out observer);
-            foreach (int version in new[] { 1, 2 })
+            foreach (int version in new[] { NpcExperienceInbox.VersionCurrent })
             {
                 var evidence = NpcExperienceEvent.FromNativeOutcome(observer, observer,
                     "receipt:legacy-status:" + version, "episode:legacy-status:" + version,
@@ -82,7 +82,7 @@ namespace PeopleOfTheIliacBay.Tests
                         NpcExperienceInboxEntry.FromNativeEvent(evidence)
                     }
                 };
-
+                inbox.Entries[0].EnqueueOrdinal = 1;
                 var migrated = NpcExperienceInbox.CopyValidated(inbox, id => id == observer);
                 Check.Equal(NpcExperienceInbox.VersionCurrent, migrated.Version);
                 Check.Equal(NpcExperienceEventKind.StatusOnset, migrated.Entries[0].EventKind);
@@ -219,7 +219,7 @@ namespace PeopleOfTheIliacBay.Tests
                 NpcExperienceEventKind.StatusOnset, 10, NpcResponsibleActorAttribution.Unknown);
             save.NpcExperienceInbox = new NpcExperienceInbox
             {
-                Version = 2,
+                Version = NpcExperienceInbox.VersionCurrent,
                 Revision = 3,
                 Entries = new List<NpcExperienceInboxEntry>
                 {
@@ -228,6 +228,8 @@ namespace PeopleOfTheIliacBay.Tests
                     NpcExperienceInboxEntry.FromNativeEvent(legacyStatus)
                 }
             };
+            for (int index = 0; index < save.NpcExperienceInbox.Entries.Count; index++)
+                save.NpcExperienceInbox.Entries[index].EnqueueOrdinal = index + 1;
             var restored = new WorldStateStore(0);
             restored.Restore(save);
             var entries = restored.Snapshot().NpcExperienceInbox.Entries;
@@ -314,10 +316,13 @@ namespace PeopleOfTheIliacBay.Tests
                 WithSourceSequence(first.OutcomeId, long.MaxValue),
                 NpcExperienceEventKind.StatusOnset, 10, NpcResponsibleActorAttribution.Unknown, null,
                 NpcExperienceImpactDetails.ForStatusOnset(NpcExperienceStatusKind.Poison, "poison:classic", long.MaxValue));
-            HistoricalNpcExperienceFixture.PrepareLegacyEnvelope(legacy, 49);
-            legacy.NpcPoisonOnsets.Clear();
+            legacy.NpcPoisonOnsets[0].LastIssuedSequence = long.MaxValue;
+            legacy.NpcPoisonOnsets[0].LastProjectedSequence = long.MaxValue;
             legacy.NpcExperienceInbox.Entries.Clear();
-            legacy.NpcExperienceInbox.Entries.Add(NpcExperienceInboxEntry.FromNativeEvent(overflow));
+            var row = NpcExperienceInboxEntry.FromNativeEvent(overflow);
+            row.EnqueueOrdinal = 1;
+            row.SourceKind = NpcExperienceSourceKind.Poison;
+            legacy.NpcExperienceInbox.Entries.Add(row);
             legacy.NpcExperienceInbox.Revision = 1;
             store.Restore(legacy);
             var before = store.Snapshot().NpcExperienceInbox;

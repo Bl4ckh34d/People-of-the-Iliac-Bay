@@ -358,7 +358,7 @@ namespace PeopleOfTheIliacBay.Core
                         row.PersonId, old.Ordinal, entry.ObservedTurnText, entry.ObservedGameTime);
                     if (entry.Origin != NpcExperienceEventOrigin.AttributedSpeech ||
                         entry.Status != NpcExperienceInboxStatus.Pending || entry.Revision != 1 ||
-                        entry.ObservedGameTime > row.LastAcceptedObservedAt && world.Version >= 54 ||
+                        entry.ObservedGameTime > row.LastAcceptedObservedAt ||
                         entry.Appraisal != null || entry.UpdatedAt != entry.ObservedGameTime ||
                         entry.ObserverId != row.PersonId || entry.ReceiptId != expected.Evidence.ReceiptId ||
                         entry.EpisodeId != expected.Evidence.EpisodeId ||
@@ -380,24 +380,7 @@ namespace PeopleOfTheIliacBay.Core
         private static List<NpcObservedSpeechSourceState> CopyNpcObservedSpeechSources(
             WorldState source, WorldState validated)
         {
-            if (source.Version < 51)
-            {
-                Require(source.NpcObservedSpeechSources == null || source.NpcObservedSpeechSources.Count == 0,
-                    "Legacy save contains future observed speech source state.");
-                return new List<NpcObservedSpeechSourceState>();
-            }
-            if (source.Version < 54 && source.NpcObservedSpeechSources != null &&
-                source.NpcObservedSpeechSources.Exists(x => x != null && x.LastAcceptedObservedAt != 0))
-                throw new ArgumentException("Legacy save contains a future observed-speech time frontier.");
             var result = CopyObservedSpeechSources(source.NpcObservedSpeechSources, validated);
-            if (source.Version < 54)
-                foreach (var entry in validated.NpcExperienceInbox.Entries)
-                    if (entry.Origin == NpcExperienceEventOrigin.AttributedSpeech)
-                    {
-                        var owner = result.Find(x => x.PersonId == entry.ObserverId);
-                        if (owner != null)
-                            owner.LastAcceptedObservedAt = Math.Max(owner.LastAcceptedObservedAt, entry.ObservedGameTime);
-                    }
             const string v2Prefix = "native-heard-v2-";
             foreach (var entry in validated.NpcExperienceInbox.Entries)
             {

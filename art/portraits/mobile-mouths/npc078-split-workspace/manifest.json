@@ -1,0 +1,6010 @@
+{
+  "schemaVersion": 2,
+  "portraitRecord": 78,
+  "bank": "TFAC00I0.RCI",
+  "status": "masked-half-prototype-visual-review-pending-not-installed",
+  "width": 64,
+  "height": 64,
+  "splitY": 35,
+  "original": "original.png",
+  "originalUpper": "source-upper.png",
+  "originalLower": "source-lower.png",
+  "eyeSets": [
+    {
+      "id": "neutral",
+      "label": "Neutral",
+      "phases": {
+        "open": {
+          "file": "eyes/neutral/open.png",
+          "difference": "eyes/neutral/open-diff.png",
+          "changedPixels": 0
+        },
+        "half": {
+          "file": "eyes/neutral/half.png",
+          "difference": "eyes/neutral/half-diff.png",
+          "changedPixels": 308
+        },
+        "closed": {
+          "file": "eyes/neutral/closed.png",
+          "difference": "eyes/neutral/closed-diff.png",
+          "changedPixels": 313
+        }
+      }
+    },
+    {
+      "id": "happy",
+      "label": "Fröhlich",
+      "phases": {
+        "open": {
+          "file": "eyes/happy/open.png",
+          "difference": "eyes/happy/open-diff.png",
+          "changedPixels": 591,
+          "sha256": "2d88deb018f03abd9ce23b3c61e5a52f9a063453bec53e4ac320b30b56b04670",
+          "reviewedRepair20261023": {
+            "candidateSha256": "2d88deb018f03abd9ce23b3c61e5a52f9a063453bec53e4ac320b30b56b04670",
+            "previousSha256": "227ad84d4510983628706d51c9e1e7924a5ad446f4abab08f1217abaa3e5945d",
+            "masterSha256": "227ad84d4510983628706d51c9e1e7924a5ad446f4abab08f1217abaa3e5945d",
+            "allowedSourceChangeRegions": [
+              [
+                17,
+                19,
+                18,
+                20
+              ],
+              [
+                18,
+                19,
+                19,
+                20
+              ],
+              [
+                19,
+                19,
+                20,
+                20
+              ],
+              [
+                21,
+                19,
+                22,
+                20
+              ],
+              [
+                22,
+                19,
+                23,
+                20
+              ],
+              [
+                23,
+                19,
+                24,
+                20
+              ],
+              [
+                24,
+                19,
+                25,
+                20
+              ],
+              [
+                25,
+                19,
+                26,
+                20
+              ],
+              [
+                38,
+                19,
+                39,
+                20
+              ],
+              [
+                39,
+                19,
+                40,
+                20
+              ],
+              [
+                40,
+                19,
+                41,
+                20
+              ],
+              [
+                41,
+                19,
+                42,
+                20
+              ],
+              [
+                42,
+                19,
+                43,
+                20
+              ],
+              [
+                43,
+                19,
+                44,
+                20
+              ],
+              [
+                44,
+                19,
+                45,
+                20
+              ],
+              [
+                46,
+                19,
+                47,
+                20
+              ],
+              [
+                16,
+                20,
+                17,
+                21
+              ],
+              [
+                17,
+                20,
+                18,
+                21
+              ],
+              [
+                18,
+                20,
+                19,
+                21
+              ],
+              [
+                19,
+                20,
+                20,
+                21
+              ],
+              [
+                20,
+                20,
+                21,
+                21
+              ],
+              [
+                21,
+                20,
+                22,
+                21
+              ],
+              [
+                22,
+                20,
+                23,
+                21
+              ],
+              [
+                23,
+                20,
+                24,
+                21
+              ],
+              [
+                24,
+                20,
+                25,
+                21
+              ],
+              [
+                25,
+                20,
+                26,
+                21
+              ],
+              [
+                26,
+                20,
+                27,
+                21
+              ],
+              [
+                37,
+                20,
+                38,
+                21
+              ],
+              [
+                38,
+                20,
+                39,
+                21
+              ],
+              [
+                39,
+                20,
+                40,
+                21
+              ],
+              [
+                40,
+                20,
+                41,
+                21
+              ],
+              [
+                41,
+                20,
+                42,
+                21
+              ],
+              [
+                42,
+                20,
+                43,
+                21
+              ],
+              [
+                43,
+                20,
+                44,
+                21
+              ],
+              [
+                44,
+                20,
+                45,
+                21
+              ],
+              [
+                45,
+                20,
+                46,
+                21
+              ],
+              [
+                46,
+                20,
+                47,
+                21
+              ],
+              [
+                16,
+                21,
+                17,
+                22
+              ],
+              [
+                17,
+                21,
+                18,
+                22
+              ],
+              [
+                18,
+                21,
+                19,
+                22
+              ],
+              [
+                20,
+                21,
+                21,
+                22
+              ],
+              [
+                21,
+                21,
+                22,
+                22
+              ],
+              [
+                22,
+                21,
+                23,
+                22
+              ],
+              [
+                23,
+                21,
+                24,
+                22
+              ],
+              [
+                24,
+                21,
+                25,
+                22
+              ],
+              [
+                25,
+                21,
+                26,
+                22
+              ],
+              [
+                26,
+                21,
+                27,
+                22
+              ],
+              [
+                36,
+                21,
+                37,
+                22
+              ],
+              [
+                37,
+                21,
+                38,
+                22
+              ],
+              [
+                38,
+                21,
+                39,
+                22
+              ],
+              [
+                39,
+                21,
+                40,
+                22
+              ],
+              [
+                40,
+                21,
+                41,
+                22
+              ],
+              [
+                41,
+                21,
+                42,
+                22
+              ],
+              [
+                42,
+                21,
+                43,
+                22
+              ],
+              [
+                43,
+                21,
+                44,
+                22
+              ],
+              [
+                44,
+                21,
+                45,
+                22
+              ],
+              [
+                45,
+                21,
+                46,
+                22
+              ],
+              [
+                46,
+                21,
+                47,
+                22
+              ],
+              [
+                47,
+                21,
+                48,
+                22
+              ],
+              [
+                16,
+                22,
+                17,
+                23
+              ],
+              [
+                17,
+                22,
+                18,
+                23
+              ],
+              [
+                18,
+                22,
+                19,
+                23
+              ],
+              [
+                19,
+                22,
+                20,
+                23
+              ],
+              [
+                21,
+                22,
+                22,
+                23
+              ],
+              [
+                22,
+                22,
+                23,
+                23
+              ],
+              [
+                23,
+                22,
+                24,
+                23
+              ],
+              [
+                24,
+                22,
+                25,
+                23
+              ],
+              [
+                25,
+                22,
+                26,
+                23
+              ],
+              [
+                26,
+                22,
+                27,
+                23
+              ],
+              [
+                36,
+                22,
+                37,
+                23
+              ],
+              [
+                37,
+                22,
+                38,
+                23
+              ],
+              [
+                38,
+                22,
+                39,
+                23
+              ],
+              [
+                39,
+                22,
+                40,
+                23
+              ],
+              [
+                40,
+                22,
+                41,
+                23
+              ],
+              [
+                41,
+                22,
+                42,
+                23
+              ],
+              [
+                44,
+                22,
+                45,
+                23
+              ],
+              [
+                45,
+                22,
+                46,
+                23
+              ],
+              [
+                46,
+                22,
+                47,
+                23
+              ],
+              [
+                36,
+                23,
+                37,
+                24
+              ],
+              [
+                37,
+                23,
+                38,
+                24
+              ],
+              [
+                38,
+                23,
+                39,
+                24
+              ],
+              [
+                39,
+                23,
+                40,
+                24
+              ],
+              [
+                40,
+                23,
+                41,
+                24
+              ],
+              [
+                41,
+                23,
+                42,
+                24
+              ],
+              [
+                42,
+                23,
+                43,
+                24
+              ],
+              [
+                45,
+                23,
+                46,
+                24
+              ],
+              [
+                46,
+                23,
+                47,
+                24
+              ]
+            ],
+            "method": "Registered generated brow strokes restricted to native brow envelope, with source-backed removal of orphan original tip (47,21); eye anatomy unchanged."
+          }
+        },
+        "half": {
+          "file": "eyes/happy/half.png",
+          "difference": "eyes/happy/half-diff.png",
+          "changedPixels": 591,
+          "sha256": "abe5b6c6dcb94796972ddeb54aa4c73b812d9f8a618bb70f225a5f7b68bc7bd9",
+          "reviewedRepair20261023": {
+            "candidateSha256": "abe5b6c6dcb94796972ddeb54aa4c73b812d9f8a618bb70f225a5f7b68bc7bd9",
+            "previousSha256": "95611a1e97ff93ad804d62e041f2c405e2c7fb453579133ebf8cc0dc2de59f7a",
+            "masterSha256": "227ad84d4510983628706d51c9e1e7924a5ad446f4abab08f1217abaa3e5945d",
+            "allowedSourceChangeRegions": [
+              [
+                17,
+                19,
+                18,
+                20
+              ],
+              [
+                18,
+                19,
+                19,
+                20
+              ],
+              [
+                19,
+                19,
+                20,
+                20
+              ],
+              [
+                21,
+                19,
+                22,
+                20
+              ],
+              [
+                22,
+                19,
+                23,
+                20
+              ],
+              [
+                23,
+                19,
+                24,
+                20
+              ],
+              [
+                24,
+                19,
+                25,
+                20
+              ],
+              [
+                25,
+                19,
+                26,
+                20
+              ],
+              [
+                38,
+                19,
+                39,
+                20
+              ],
+              [
+                39,
+                19,
+                40,
+                20
+              ],
+              [
+                40,
+                19,
+                41,
+                20
+              ],
+              [
+                41,
+                19,
+                42,
+                20
+              ],
+              [
+                42,
+                19,
+                43,
+                20
+              ],
+              [
+                43,
+                19,
+                44,
+                20
+              ],
+              [
+                44,
+                19,
+                45,
+                20
+              ],
+              [
+                46,
+                19,
+                47,
+                20
+              ],
+              [
+                16,
+                20,
+                17,
+                21
+              ],
+              [
+                17,
+                20,
+                18,
+                21
+              ],
+              [
+                18,
+                20,
+                19,
+                21
+              ],
+              [
+                19,
+                20,
+                20,
+                21
+              ],
+              [
+                20,
+                20,
+                21,
+                21
+              ],
+              [
+                21,
+                20,
+                22,
+                21
+              ],
+              [
+                22,
+                20,
+                23,
+                21
+              ],
+              [
+                23,
+                20,
+                24,
+                21
+              ],
+              [
+                24,
+                20,
+                25,
+                21
+              ],
+              [
+                25,
+                20,
+                26,
+                21
+              ],
+              [
+                26,
+                20,
+                27,
+                21
+              ],
+              [
+                37,
+                20,
+                38,
+                21
+              ],
+              [
+                38,
+                20,
+                39,
+                21
+              ],
+              [
+                39,
+                20,
+                40,
+                21
+              ],
+              [
+                40,
+                20,
+                41,
+                21
+              ],
+              [
+                41,
+                20,
+                42,
+                21
+              ],
+              [
+                42,
+                20,
+                43,
+                21
+              ],
+              [
+                43,
+                20,
+                44,
+                21
+              ],
+              [
+                44,
+                20,
+                45,
+                21
+              ],
+              [
+                45,
+                20,
+                46,
+                21
+              ],
+              [
+                46,
+                20,
+                47,
+                21
+              ],
+              [
+                16,
+                21,
+                17,
+                22
+              ],
+              [
+                17,
+                21,
+                18,
+                22
+              ],
+              [
+                18,
+                21,
+                19,
+                22
+              ],
+              [
+                20,
+                21,
+                21,
+                22
+              ],
+              [
+                21,
+                21,
+                22,
+                22
+              ],
+              [
+                22,
+                21,
+                23,
+                22
+              ],
+              [
+                23,
+                21,
+                24,
+                22
+              ],
+              [
+                24,
+                21,
+                25,
+                22
+              ],
+              [
+                25,
+                21,
+                26,
+                22
+              ],
+              [
+                26,
+                21,
+                27,
+                22
+              ],
+              [
+                36,
+                21,
+                37,
+                22
+              ],
+              [
+                37,
+                21,
+                38,
+                22
+              ],
+              [
+                38,
+                21,
+                39,
+                22
+              ],
+              [
+                39,
+                21,
+                40,
+                22
+              ],
+              [
+                40,
+                21,
+                41,
+                22
+              ],
+              [
+                41,
+                21,
+                42,
+                22
+              ],
+              [
+                42,
+                21,
+                43,
+                22
+              ],
+              [
+                43,
+                21,
+                44,
+                22
+              ],
+              [
+                44,
+                21,
+                45,
+                22
+              ],
+              [
+                45,
+                21,
+                46,
+                22
+              ],
+              [
+                46,
+                21,
+                47,
+                22
+              ],
+              [
+                47,
+                21,
+                48,
+                22
+              ],
+              [
+                16,
+                22,
+                17,
+                23
+              ],
+              [
+                17,
+                22,
+                18,
+                23
+              ],
+              [
+                18,
+                22,
+                19,
+                23
+              ],
+              [
+                19,
+                22,
+                20,
+                23
+              ],
+              [
+                21,
+                22,
+                22,
+                23
+              ],
+              [
+                22,
+                22,
+                23,
+                23
+              ],
+              [
+                23,
+                22,
+                24,
+                23
+              ],
+              [
+                24,
+                22,
+                25,
+                23
+              ],
+              [
+                25,
+                22,
+                26,
+                23
+              ],
+              [
+                26,
+                22,
+                27,
+                23
+              ],
+              [
+                36,
+                22,
+                37,
+                23
+              ],
+              [
+                37,
+                22,
+                38,
+                23
+              ],
+              [
+                38,
+                22,
+                39,
+                23
+              ],
+              [
+                39,
+                22,
+                40,
+                23
+              ],
+              [
+                40,
+                22,
+                41,
+                23
+              ],
+              [
+                41,
+                22,
+                42,
+                23
+              ],
+              [
+                44,
+                22,
+                45,
+                23
+              ],
+              [
+                45,
+                22,
+                46,
+                23
+              ],
+              [
+                46,
+                22,
+                47,
+                23
+              ],
+              [
+                37,
+                23,
+                38,
+                24
+              ],
+              [
+                38,
+                23,
+                39,
+                24
+              ],
+              [
+                39,
+                23,
+                40,
+                24
+              ],
+              [
+                40,
+                23,
+                41,
+                24
+              ],
+              [
+                41,
+                23,
+                42,
+                24
+              ],
+              [
+                42,
+                23,
+                43,
+                24
+              ],
+              [
+                45,
+                23,
+                46,
+                24
+              ],
+              [
+                46,
+                23,
+                47,
+                24
+              ]
+            ],
+            "method": "Registered generated brow strokes restricted to native brow envelope, with source-backed removal of orphan original tip (47,21); eye anatomy unchanged."
+          }
+        },
+        "closed": {
+          "file": "eyes/happy/closed.png",
+          "difference": "eyes/happy/closed-diff.png",
+          "changedPixels": 591,
+          "sha256": "460317b2a05a5f9c2a1c64cc4794803985f9b131398766fcf3dde90f598a7c52",
+          "reviewedRepair20261023": {
+            "candidateSha256": "460317b2a05a5f9c2a1c64cc4794803985f9b131398766fcf3dde90f598a7c52",
+            "previousSha256": "58e97500e00ff6c66f486dd373e2153a13e8b17f0d6c4753adffdfe2d1cd744d",
+            "masterSha256": "227ad84d4510983628706d51c9e1e7924a5ad446f4abab08f1217abaa3e5945d",
+            "allowedSourceChangeRegions": [
+              [
+                17,
+                19,
+                18,
+                20
+              ],
+              [
+                18,
+                19,
+                19,
+                20
+              ],
+              [
+                19,
+                19,
+                20,
+                20
+              ],
+              [
+                21,
+                19,
+                22,
+                20
+              ],
+              [
+                22,
+                19,
+                23,
+                20
+              ],
+              [
+                23,
+                19,
+                24,
+                20
+              ],
+              [
+                24,
+                19,
+                25,
+                20
+              ],
+              [
+                25,
+                19,
+                26,
+                20
+              ],
+              [
+                38,
+                19,
+                39,
+                20
+              ],
+              [
+                39,
+                19,
+                40,
+                20
+              ],
+              [
+                40,
+                19,
+                41,
+                20
+              ],
+              [
+                41,
+                19,
+                42,
+                20
+              ],
+              [
+                42,
+                19,
+                43,
+                20
+              ],
+              [
+                43,
+                19,
+                44,
+                20
+              ],
+              [
+                44,
+                19,
+                45,
+                20
+              ],
+              [
+                46,
+                19,
+                47,
+                20
+              ],
+              [
+                16,
+                20,
+                17,
+                21
+              ],
+              [
+                17,
+                20,
+                18,
+                21
+              ],
+              [
+                18,
+                20,
+                19,
+                21
+              ],
+              [
+                19,
+                20,
+                20,
+                21
+              ],
+              [
+                20,
+                20,
+                21,
+                21
+              ],
+              [
+                21,
+                20,
+                22,
+                21
+              ],
+              [
+                22,
+                20,
+                23,
+                21
+              ],
+              [
+                23,
+                20,
+                24,
+                21
+              ],
+              [
+                24,
+                20,
+                25,
+                21
+              ],
+              [
+                25,
+                20,
+                26,
+                21
+              ],
+              [
+                26,
+                20,
+                27,
+                21
+              ],
+              [
+                37,
+                20,
+                38,
+                21
+              ],
+              [
+                38,
+                20,
+                39,
+                21
+              ],
+              [
+                39,
+                20,
+                40,
+                21
+              ],
+              [
+                40,
+                20,
+                41,
+                21
+              ],
+              [
+                41,
+                20,
+                42,
+                21
+              ],
+              [
+                42,
+                20,
+                43,
+                21
+              ],
+              [
+                43,
+                20,
+                44,
+                21
+              ],
+              [
+                44,
+                20,
+                45,
+                21
+              ],
+              [
+                45,
+                20,
+                46,
+                21
+              ],
+              [
+                46,
+                20,
+                47,
+                21
+              ],
+              [
+                16,
+                21,
+                17,
+                22
+              ],
+              [
+                17,
+                21,
+                18,
+                22
+              ],
+              [
+                18,
+                21,
+                19,
+                22
+              ],
+              [
+                20,
+                21,
+                21,
+                22
+              ],
+              [
+                21,
+                21,
+                22,
+                22
+              ],
+              [
+                22,
+                21,
+                23,
+                22
+              ],
+              [
+                23,
+                21,
+                24,
+                22
+              ],
+              [
+                24,
+                21,
+                25,
+                22
+              ],
+              [
+                25,
+                21,
+                26,
+                22
+              ],
+              [
+                26,
+                21,
+                27,
+                22
+              ],
+              [
+                36,
+                21,
+                37,
+                22
+              ],
+              [
+                37,
+                21,
+                38,
+                22
+              ],
+              [
+                38,
+                21,
+                39,
+                22
+              ],
+              [
+                39,
+                21,
+                40,
+                22
+              ],
+              [
+                40,
+                21,
+                41,
+                22
+              ],
+              [
+                41,
+                21,
+                42,
+                22
+              ],
+              [
+                42,
+                21,
+                43,
+                22
+              ],
+              [
+                43,
+                21,
+                44,
+                22
+              ],
+              [
+                44,
+                21,
+                45,
+                22
+              ],
+              [
+                45,
+                21,
+                46,
+                22
+              ],
+              [
+                46,
+                21,
+                47,
+                22
+              ],
+              [
+                47,
+                21,
+                48,
+                22
+              ],
+              [
+                16,
+                22,
+                17,
+                23
+              ],
+              [
+                17,
+                22,
+                18,
+                23
+              ],
+              [
+                18,
+                22,
+                19,
+                23
+              ],
+              [
+                19,
+                22,
+                20,
+                23
+              ],
+              [
+                21,
+                22,
+                22,
+                23
+              ],
+              [
+                22,
+                22,
+                23,
+                23
+              ],
+              [
+                23,
+                22,
+                24,
+                23
+              ],
+              [
+                24,
+                22,
+                25,
+                23
+              ],
+              [
+                25,
+                22,
+                26,
+                23
+              ],
+              [
+                26,
+                22,
+                27,
+                23
+              ],
+              [
+                36,
+                22,
+                37,
+                23
+              ],
+              [
+                37,
+                22,
+                38,
+                23
+              ],
+              [
+                38,
+                22,
+                39,
+                23
+              ],
+              [
+                39,
+                22,
+                40,
+                23
+              ],
+              [
+                40,
+                22,
+                41,
+                23
+              ],
+              [
+                41,
+                22,
+                42,
+                23
+              ],
+              [
+                43,
+                22,
+                44,
+                23
+              ],
+              [
+                44,
+                22,
+                45,
+                23
+              ],
+              [
+                45,
+                22,
+                46,
+                23
+              ],
+              [
+                46,
+                22,
+                47,
+                23
+              ],
+              [
+                36,
+                23,
+                37,
+                24
+              ],
+              [
+                38,
+                23,
+                39,
+                24
+              ],
+              [
+                39,
+                23,
+                40,
+                24
+              ],
+              [
+                40,
+                23,
+                41,
+                24
+              ],
+              [
+                41,
+                23,
+                42,
+                24
+              ],
+              [
+                42,
+                23,
+                43,
+                24
+              ],
+              [
+                43,
+                23,
+                44,
+                24
+              ],
+              [
+                45,
+                23,
+                46,
+                24
+              ],
+              [
+                46,
+                23,
+                47,
+                24
+              ]
+            ],
+            "method": "Registered generated brow strokes restricted to native brow envelope, with source-backed removal of orphan original tip (47,21); eye anatomy unchanged."
+          }
+        }
+      }
+    },
+    {
+      "id": "angry",
+      "label": "Wütend",
+      "phases": {
+        "open": {
+          "file": "eyes/angry/open.png",
+          "difference": "eyes/angry/open-diff.png",
+          "changedPixels": 592
+        },
+        "half": {
+          "file": "eyes/angry/half.png",
+          "difference": "eyes/angry/half-diff.png",
+          "changedPixels": 592
+        },
+        "closed": {
+          "file": "eyes/angry/closed.png",
+          "difference": "eyes/angry/closed-diff.png",
+          "changedPixels": 592
+        }
+      }
+    },
+    {
+      "id": "sad",
+      "label": "Traurig",
+      "phases": {
+        "open": {
+          "file": "eyes/sad/open.png",
+          "difference": "eyes/sad/open-diff.png",
+          "changedPixels": 589
+        },
+        "half": {
+          "file": "eyes/sad/half.png",
+          "difference": "eyes/sad/half-diff.png",
+          "changedPixels": 586
+        },
+        "closed": {
+          "file": "eyes/sad/closed.png",
+          "difference": "eyes/sad/closed-diff.png",
+          "changedPixels": 590
+        }
+      }
+    },
+    {
+      "id": "afraid",
+      "label": "Ängstlich",
+      "phases": {
+        "open": {
+          "file": "eyes/afraid/open.png",
+          "difference": "eyes/afraid/open-diff.png",
+          "changedPixels": 441
+        },
+        "half": {
+          "file": "eyes/afraid/half.png",
+          "difference": "eyes/afraid/half-diff.png",
+          "changedPixels": 594
+        },
+        "closed": {
+          "file": "eyes/afraid/closed.png",
+          "difference": "eyes/afraid/closed-diff.png",
+          "changedPixels": 594
+        }
+      }
+    },
+    {
+      "id": "guarded",
+      "label": "Skeptisch",
+      "phases": {
+        "open": {
+          "file": "eyes/guarded/open.png",
+          "difference": "eyes/guarded/open-diff.png",
+          "changedPixels": 591
+        },
+        "half": {
+          "file": "eyes/guarded/half.png",
+          "difference": "eyes/guarded/half-diff.png",
+          "changedPixels": 587
+        },
+        "closed": {
+          "file": "eyes/guarded/closed.png",
+          "difference": "eyes/guarded/closed-diff.png",
+          "changedPixels": 592
+        }
+      }
+    }
+  ],
+  "mouths": [
+    {
+      "shape": "A",
+      "file": "mouth/A.png",
+      "difference": "mouth/A-diff.png",
+      "changedPixels": 0
+    },
+    {
+      "shape": "B",
+      "file": "mouth/B.png",
+      "difference": "mouth/B-diff.png",
+      "changedPixels": 257
+    },
+    {
+      "shape": "C",
+      "file": "mouth/C.png",
+      "difference": "mouth/C-diff.png",
+      "changedPixels": 257
+    },
+    {
+      "shape": "D",
+      "file": "mouth/D.png",
+      "difference": "mouth/D-diff.png",
+      "changedPixels": 259
+    },
+    {
+      "shape": "E",
+      "file": "mouth/E.png",
+      "difference": "mouth/E-diff.png",
+      "changedPixels": 259
+    },
+    {
+      "shape": "F",
+      "file": "mouth/F.png",
+      "difference": "mouth/F-diff.png",
+      "changedPixels": 256
+    },
+    {
+      "shape": "G",
+      "file": "mouth/G.png",
+      "difference": "mouth/G-diff.png",
+      "changedPixels": 260
+    },
+    {
+      "shape": "H",
+      "file": "mouth/H.png",
+      "difference": "mouth/H-diff.png",
+      "changedPixels": 255
+    },
+    {
+      "shape": "X",
+      "file": "mouth/X.png",
+      "difference": "mouth/X-diff.png",
+      "changedPixels": 0
+    }
+  ],
+  "mouthSets": [
+    {
+      "id": "neutral",
+      "label": "Neutral",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "mouth/neutral/A.png",
+          "difference": "mouth/neutral/A-diff.png",
+          "changedPixels": 0,
+          "sha256": "b4198907de03ee1af39b9100f862f1d01d4b9525d203845831ecbaa69bdc185e"
+        },
+        {
+          "shape": "B",
+          "file": "mouth/neutral/B.png",
+          "difference": "mouth/neutral/B-diff.png",
+          "changedPixels": 257,
+          "sha256": "fa4260459978803134d682c8d93abfc428f165c91ce30f7ca1bf08b43c3d4efa"
+        },
+        {
+          "shape": "C",
+          "file": "mouth/neutral/C.png",
+          "difference": "mouth/neutral/C-diff.png",
+          "changedPixels": 257,
+          "sha256": "9690fdb8ed321074e14dc0378805cd08b6f4b097e131b1924e92fc53c999b56e"
+        },
+        {
+          "shape": "D",
+          "file": "mouth/neutral/D.png",
+          "difference": "mouth/neutral/D-diff.png",
+          "changedPixels": 259,
+          "sha256": "844677a5bd738262d3b13b36b162e2e0f683a3e162250029dfd853d37210f79e"
+        },
+        {
+          "shape": "E",
+          "file": "mouth/neutral/E.png",
+          "difference": "mouth/neutral/E-diff.png",
+          "changedPixels": 259,
+          "sha256": "e28e969f662ce7243ba90138b5f35687fc8d458545fc7751f9e9b8011476b646"
+        },
+        {
+          "shape": "F",
+          "file": "mouth/neutral/F.png",
+          "difference": "mouth/neutral/F-diff.png",
+          "changedPixels": 256,
+          "sha256": "e31a357580cbe6628401ef718ce6522640c2e263238eb2b0b29c05c647789f24"
+        },
+        {
+          "shape": "G",
+          "file": "mouth/neutral/G.png",
+          "difference": "mouth/neutral/G-diff.png",
+          "changedPixels": 260,
+          "sha256": "829a64597e5a412251061e46dabb76fec9e867d9b5023f84fd82c3084f9d25db"
+        },
+        {
+          "shape": "H",
+          "file": "mouth/neutral/H.png",
+          "difference": "mouth/neutral/H-diff.png",
+          "changedPixels": 255,
+          "sha256": "ce51898831e0078ec5309d18f4768dcd3870c7b99315cb3bbc167f607c6ac604"
+        },
+        {
+          "shape": "X",
+          "file": "mouth/neutral/X.png",
+          "difference": "mouth/neutral/X-diff.png",
+          "changedPixels": 0,
+          "sha256": "b4198907de03ee1af39b9100f862f1d01d4b9525d203845831ecbaa69bdc185e"
+        }
+      ]
+    },
+    {
+      "id": "happy",
+      "label": "Fröhlich",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "mouth/happy/A.png",
+          "difference": "mouth/happy/A-diff.png",
+          "changedPixels": 249,
+          "sha256": "fe785c986aeb693ec0d546a3e003098f856deb5cc13216145c3d483591e4a9d2"
+        },
+        {
+          "shape": "B",
+          "file": "mouth/happy/B.png",
+          "difference": "mouth/happy/B-diff.png",
+          "changedPixels": 249,
+          "sha256": "37d579ff7f6a69b77003da3f0a2f3a584877d36593b68b2bbd2576909231f97b"
+        },
+        {
+          "shape": "C",
+          "file": "mouth/happy/C.png",
+          "difference": "mouth/happy/C-diff.png",
+          "changedPixels": 253,
+          "sha256": "067429e6f0716cefeb6e7f5fb39f883ed31190060895530993fb8c7549f6330c"
+        },
+        {
+          "shape": "D",
+          "file": "mouth/happy/D.png",
+          "difference": "mouth/happy/D-diff.png",
+          "changedPixels": 246,
+          "sha256": "dc25a4d73216aeb2c508ef5a2774ec9d0d4331acc4720d95570bab04352cf3cb"
+        },
+        {
+          "shape": "E",
+          "file": "mouth/happy/E.png",
+          "difference": "mouth/happy/E-diff.png",
+          "changedPixels": 250,
+          "sha256": "c06ebb594f2b58baf8cfe9aaa401bb4f178d3d02ab1b0e0ebb1fb455d89dc561"
+        },
+        {
+          "shape": "F",
+          "file": "mouth/happy/F.png",
+          "difference": "mouth/happy/F-diff.png",
+          "changedPixels": 244,
+          "sha256": "f3da6c96220e552ab063d7adcab4b4f1df3357fc3243ac1011f6b2a2cb2811b0"
+        },
+        {
+          "shape": "G",
+          "file": "mouth/happy/G.png",
+          "difference": "mouth/happy/G-diff.png",
+          "changedPixels": 249,
+          "sha256": "07665358823b7f7192a743b0642a614c8bffb71d657e91d9c3fea4e9a1d4bd63"
+        },
+        {
+          "shape": "H",
+          "file": "mouth/happy/H.png",
+          "difference": "mouth/happy/H-diff.png",
+          "changedPixels": 251,
+          "sha256": "aa84e376d8104f3741b293f2dfccd5b349ca455d69af72139aecac83ca7e2fba"
+        },
+        {
+          "shape": "X",
+          "file": "mouth/happy/X.png",
+          "difference": "mouth/happy/X-diff.png",
+          "changedPixels": 246,
+          "sha256": "db045d43108f76744bc3d10695150fb6da787212dedc7f0c60b5eddd6d773201"
+        }
+      ]
+    },
+    {
+      "id": "angry",
+      "label": "Wütend",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "mouth/angry/A.png",
+          "difference": "mouth/angry/A-diff.png",
+          "changedPixels": 252,
+          "sha256": "a94a3f7f0355b5f89dbbf434104fe6e1eaeb3052c74907d3943abcc5e8e86041"
+        },
+        {
+          "shape": "B",
+          "file": "mouth/angry/B.png",
+          "difference": "mouth/angry/B-diff.png",
+          "changedPixels": 251,
+          "sha256": "5a8407c379420b596093206cbc5e35874f8f4d70f77ecd9db94c90cde2dcf40f"
+        },
+        {
+          "shape": "C",
+          "file": "mouth/angry/C.png",
+          "difference": "mouth/angry/C-diff.png",
+          "changedPixels": 255,
+          "sha256": "05784a80c24b55435c899b1783287f6504a9ae0462408fac8840ca6e4f6d003e"
+        },
+        {
+          "shape": "D",
+          "file": "mouth/angry/D.png",
+          "difference": "mouth/angry/D-diff.png",
+          "changedPixels": 253,
+          "sha256": "13bae4ea8822ffcd64c72af5efa2007144f9902415ba256b52fdd600c4431435"
+        },
+        {
+          "shape": "E",
+          "file": "mouth/angry/E.png",
+          "difference": "mouth/angry/E-diff.png",
+          "changedPixels": 257,
+          "sha256": "9649da261cbe55e8afe15d51a9e1353151941ddb08f170331189c3f86624b740"
+        },
+        {
+          "shape": "F",
+          "file": "mouth/angry/F.png",
+          "difference": "mouth/angry/F-diff.png",
+          "changedPixels": 257,
+          "sha256": "f3f60e27b42607968028df1aad80e4594f929d5fe0c91195417120206ce22592"
+        },
+        {
+          "shape": "G",
+          "file": "mouth/angry/G.png",
+          "difference": "mouth/angry/G-diff.png",
+          "changedPixels": 251,
+          "sha256": "6127659885e410045f52ee4088a6f063eea4daee5640e30bffc5273a046cdc24"
+        },
+        {
+          "shape": "H",
+          "file": "mouth/angry/H.png",
+          "difference": "mouth/angry/H-diff.png",
+          "changedPixels": 255,
+          "sha256": "4398dd8718f0f08ab4aefd5c78fad282ca6248af0fc4cac6663669137898087b"
+        },
+        {
+          "shape": "X",
+          "file": "mouth/angry/X.png",
+          "difference": "mouth/angry/X-diff.png",
+          "changedPixels": 255,
+          "sha256": "926c680c74ae987ab228b646cc894b6057dcd316810bb65b661fcb2644738fd4"
+        }
+      ]
+    },
+    {
+      "id": "sad",
+      "label": "Traurig",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "mouth/sad/A.png",
+          "difference": "mouth/sad/A-diff.png",
+          "changedPixels": 260,
+          "sha256": "dfe1f81d8ee33cb93d7ece2d81b81594dd92a670e1177e63e0e7ea2c772e03c4"
+        },
+        {
+          "shape": "B",
+          "file": "mouth/sad/B.png",
+          "difference": "mouth/sad/B-diff.png",
+          "changedPixels": 260,
+          "sha256": "f7c6c89dee2e1a4d8eaa09ec8fef7a77fe57ee8e2b21b2300e71c147fa37bc75"
+        },
+        {
+          "shape": "C",
+          "file": "mouth/sad/C.png",
+          "difference": "mouth/sad/C-diff.png",
+          "changedPixels": 260,
+          "sha256": "a16677bd347d578fd4368e59e4bddf99cf3afa30d525c39c571444efac62b6ec"
+        },
+        {
+          "shape": "D",
+          "file": "mouth/sad/D.png",
+          "difference": "mouth/sad/D-diff.png",
+          "changedPixels": 260,
+          "sha256": "767b4f300ab2d540180a3c4ebed3396ca380cefc4261e1cc07ad1d5a9df2457d",
+          "reviewedRepair20261023": {
+            "method": "Generated native whole-cell mouth composition with bounded mask",
+            "previousSha256": "b78997c859aa268648a61456a678ad60b54c6b8b3eb34dacea1e1a9a79458f4b",
+            "evidence": [
+              "mouth-six-playback-0..29.png",
+              "../npc078-mouth-review/staged-candidates/repair-candidates-contact.png",
+              "../npc078-mouth-review/staged-candidates/sad-H-crop-diagnostic.png"
+            ]
+          }
+        },
+        {
+          "shape": "E",
+          "file": "mouth/sad/E.png",
+          "difference": "mouth/sad/E-diff.png",
+          "changedPixels": 260,
+          "sha256": "ad2ec641c85469c30aca80b09562175691d0e09d655e208881fbbfe76e47e468"
+        },
+        {
+          "shape": "F",
+          "file": "mouth/sad/F.png",
+          "difference": "mouth/sad/F-diff.png",
+          "changedPixels": 260,
+          "sha256": "b78997c859aa268648a61456a678ad60b54c6b8b3eb34dacea1e1a9a79458f4b",
+          "reviewedRepair20261023": {
+            "method": "Remap previously mislabeled sad D pucker to F; preserve exact processed PNG without recomposition",
+            "previousSha256": "d3637ee98c8c3deb14ab83b6bdcba8a79922b52babb8224827c5717c315a6c85",
+            "evidence": [
+              "mouth-six-playback-0..29.png",
+              "../npc078-mouth-review/staged-candidates/repair-candidates-contact.png",
+              "../npc078-mouth-review/staged-candidates/sad-H-crop-diagnostic.png"
+            ]
+          }
+        },
+        {
+          "shape": "G",
+          "file": "mouth/sad/G.png",
+          "difference": "mouth/sad/G-diff.png",
+          "changedPixels": 260,
+          "sha256": "48bba145ccd09d485710dec4f4c95e1a91c676ed825420df9c8dcfbbb76eabfa",
+          "reviewedRepair20261023": {
+            "method": "Generated native whole-cell mouth composition with bounded mask",
+            "previousSha256": "e4235122c10423829155f44389a2d0d39cfeb5597cab1db9ea93b2a5f0d05269",
+            "evidence": [
+              "mouth-six-playback-0..29.png",
+              "../npc078-mouth-review/staged-candidates/repair-candidates-contact.png",
+              "../npc078-mouth-review/staged-candidates/sad-H-crop-diagnostic.png"
+            ]
+          }
+        },
+        {
+          "shape": "H",
+          "file": "mouth/sad/H.png",
+          "difference": "mouth/sad/H-diff.png",
+          "changedPixels": 260,
+          "sha256": "3ed3c3ccc15b38d5fab3cafc519792cd61a7a832eff3832157151c926d3bbadb",
+          "reviewedRepair20261023": {
+            "method": "Generated native whole-cell mouth composition with bounded mask",
+            "previousSha256": "ccdee201b9be6571ec75602fc2fd744a21e62eaaed32df27dfb74243705b835c",
+            "evidence": [
+              "mouth-six-playback-0..29.png",
+              "../npc078-mouth-review/staged-candidates/repair-candidates-contact.png",
+              "../npc078-mouth-review/staged-candidates/sad-H-crop-diagnostic.png"
+            ]
+          }
+        },
+        {
+          "shape": "X",
+          "file": "mouth/sad/X.png",
+          "difference": "mouth/sad/X-diff.png",
+          "changedPixels": 260,
+          "sha256": "d64e6757f63433680b0722332eec51d61229b87af9472be152cf60700c638824"
+        }
+      ]
+    },
+    {
+      "id": "afraid",
+      "label": "Ängstlich",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "mouth/afraid/A.png",
+          "difference": "mouth/afraid/A-diff.png",
+          "changedPixels": 260,
+          "sha256": "22fdd83451efe02334e0e42e110af7ea0c28e3a17f4b3e930026c06794dc76ca"
+        },
+        {
+          "shape": "B",
+          "file": "mouth/afraid/B.png",
+          "difference": "mouth/afraid/B-diff.png",
+          "changedPixels": 260,
+          "sha256": "4888465b8b46138ae8fc8a425631d1d74d1e6bc8a6ed857fce2b260f06e7f811"
+        },
+        {
+          "shape": "C",
+          "file": "mouth/afraid/C.png",
+          "difference": "mouth/afraid/C-diff.png",
+          "changedPixels": 260,
+          "sha256": "c0cb642b407e72746c02afd62a47373620e671b7ab68f1faadb01d9dfa022ac9"
+        },
+        {
+          "shape": "D",
+          "file": "mouth/afraid/D.png",
+          "difference": "mouth/afraid/D-diff.png",
+          "changedPixels": 260,
+          "sha256": "1a9d8944a80db715ed5dfd189d44f6a7d40dda817b5eeed6d50a7ec9bfd9b5b2",
+          "reviewedRepair20261023": {
+            "method": "Generated native whole-cell mouth composition with bounded mask",
+            "previousSha256": "0d8460e5c10462d46f27111a7ea95000b7ac4e1c6229e5edd8dec52282fd9ebd",
+            "evidence": [
+              "mouth-six-playback-0..29.png",
+              "../npc078-mouth-review/staged-candidates/repair-candidates-contact.png",
+              "../npc078-mouth-review/staged-candidates/sad-H-crop-diagnostic.png"
+            ]
+          }
+        },
+        {
+          "shape": "E",
+          "file": "mouth/afraid/E.png",
+          "difference": "mouth/afraid/E-diff.png",
+          "changedPixels": 260,
+          "sha256": "bb8522ba43f13f28aee3c979ed38fcd5f704ad76d6ce17772c71585086eb8be3"
+        },
+        {
+          "shape": "F",
+          "file": "mouth/afraid/F.png",
+          "difference": "mouth/afraid/F-diff.png",
+          "changedPixels": 260,
+          "sha256": "5364a9b1543028a2aa6428d7d2788d01341b75d168c7821e3343cd5a8e6cebd6"
+        },
+        {
+          "shape": "G",
+          "file": "mouth/afraid/G.png",
+          "difference": "mouth/afraid/G-diff.png",
+          "changedPixels": 260,
+          "sha256": "2f46928b5592ace9ea8cfc0d62a2b26dbbd7f7066ac3bed642356b873c86b1ef"
+        },
+        {
+          "shape": "H",
+          "file": "mouth/afraid/H.png",
+          "difference": "mouth/afraid/H-diff.png",
+          "changedPixels": 260,
+          "sha256": "adaee1ea5ce1f3825325ab56f9b49cc9cb028bf48219c37e582be7352fea5dc6",
+          "reviewedRepair20261023": {
+            "method": "Generated native whole-cell mouth composition with bounded mask",
+            "previousSha256": "a9f5a9b9a42f47ef347772f41a952e22aff19b1e21b17eaac865f93374d2199e",
+            "evidence": [
+              "mouth-six-playback-0..29.png",
+              "../npc078-mouth-review/staged-candidates/repair-candidates-contact.png",
+              "../npc078-mouth-review/staged-candidates/sad-H-crop-diagnostic.png"
+            ]
+          }
+        },
+        {
+          "shape": "X",
+          "file": "mouth/afraid/X.png",
+          "difference": "mouth/afraid/X-diff.png",
+          "changedPixels": 260,
+          "sha256": "af5c35d8690da4db97f98171c3ac198c40eea44915e583e4fc661ce4c64f934a"
+        }
+      ]
+    },
+    {
+      "id": "guarded",
+      "label": "Skeptisch",
+      "frames": [
+        {
+          "shape": "A",
+          "file": "mouth/guarded/A.png",
+          "difference": "mouth/guarded/A-diff.png",
+          "changedPixels": 260,
+          "sha256": "3271e7edf6a93b249e128741da27852d3349890fbc9d1aa01f16d3a27e194238"
+        },
+        {
+          "shape": "B",
+          "file": "mouth/guarded/B.png",
+          "difference": "mouth/guarded/B-diff.png",
+          "changedPixels": 260,
+          "sha256": "dbbbb718b60d45d283d5c649d66aa62d3f685f00a9c91dedab924542f10f80c3"
+        },
+        {
+          "shape": "C",
+          "file": "mouth/guarded/C.png",
+          "difference": "mouth/guarded/C-diff.png",
+          "changedPixels": 260,
+          "sha256": "82ad48dbfe601d01b241937aefacc3724bda182fe080302f9d9aa4a64f79eee6"
+        },
+        {
+          "shape": "D",
+          "file": "mouth/guarded/D.png",
+          "difference": "mouth/guarded/D-diff.png",
+          "changedPixels": 260,
+          "sha256": "3ebd7f4be1501fb22404823499d08b1f39b8c9401dc1045bba02229a2a805ac7"
+        },
+        {
+          "shape": "E",
+          "file": "mouth/guarded/E.png",
+          "difference": "mouth/guarded/E-diff.png",
+          "changedPixels": 260,
+          "sha256": "7cd10ff08f4ae65c33bee81f09f2f1d05d0d6d8d22a757599668b3dcd787cbef"
+        },
+        {
+          "shape": "F",
+          "file": "mouth/guarded/F.png",
+          "difference": "mouth/guarded/F-diff.png",
+          "changedPixels": 36,
+          "sha256": "aecea56a3e94f41509c8680d856caee07c8d2686923855d28c18d9d06bf93d9f",
+          "reviewedRepair20261023": {
+            "method": "Generated small rounded pucker, whole-cell sampled and contour registered one row down; source lip palette and same-emotion E dark cavity; immutable original exterior",
+            "previousSha256": "ccf8c677aa8b6271fcc13448d500accabf96de946c3a28d2da11659fbd81b721",
+            "evidence": [
+              "guarded-F-playback-12..23.png",
+              "../npc078-eyes-review/guarded-F-candidate/candidate-pins.json"
+            ]
+          }
+        },
+        {
+          "shape": "G",
+          "file": "mouth/guarded/G.png",
+          "difference": "mouth/guarded/G-diff.png",
+          "changedPixels": 260,
+          "sha256": "c50c54319354396bd4f26ccb335c2c33ac8626b23d0f4ca20ddb46e5939f1c0f"
+        },
+        {
+          "shape": "H",
+          "file": "mouth/guarded/H.png",
+          "difference": "mouth/guarded/H-diff.png",
+          "changedPixels": 260,
+          "sha256": "60c85632c1b312f5e5a51a91721fd5d20f5120d3ef42194fcd1a7a93957b11ac"
+        },
+        {
+          "shape": "X",
+          "file": "mouth/guarded/X.png",
+          "difference": "mouth/guarded/X-diff.png",
+          "changedPixels": 260,
+          "sha256": "6aef315ce4a9fda7e37d540250331ac6092efc7714650ae8ba7f898375073398"
+        }
+      ]
+    }
+  ],
+  "audio": "../sample.wav",
+  "timing": "../sample.visemes.json",
+  "visualAcceptance": "pending",
+  "browLockRows": [
+    15,
+    22
+  ],
+  "eyeRegions": [
+    {
+      "x": 14,
+      "y": 15,
+      "width": 17,
+      "height": 17
+    },
+    {
+      "x": 33,
+      "y": 15,
+      "width": 18,
+      "height": 17
+    }
+  ],
+  "eyeFeatureLocks": [
+    {
+      "emotion": "afraid",
+      "phase": "open",
+      "x": 18,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "source-upper.png"
+    },
+    {
+      "emotion": "afraid",
+      "phase": "open",
+      "x": 36,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "source-upper.png"
+    },
+    {
+      "emotion": "afraid",
+      "phase": "half",
+      "x": 18,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "eyes/neutral/half.png"
+    },
+    {
+      "emotion": "afraid",
+      "phase": "half",
+      "x": 36,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "eyes/neutral/half.png"
+    },
+    {
+      "emotion": "afraid",
+      "phase": "closed",
+      "x": 18,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "eyes/neutral/closed.png"
+    },
+    {
+      "emotion": "afraid",
+      "phase": "closed",
+      "x": 36,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "eyes/neutral/closed.png"
+    },
+    {
+      "emotion": "angry",
+      "phase": "half",
+      "x": 16,
+      "y": 23,
+      "width": 14,
+      "height": 2
+    },
+    {
+      "emotion": "angry",
+      "phase": "half",
+      "x": 34,
+      "y": 23,
+      "width": 15,
+      "height": 2
+    },
+    {
+      "emotion": "angry",
+      "phase": "closed",
+      "x": 16,
+      "y": 23,
+      "width": 14,
+      "height": 2
+    },
+    {
+      "emotion": "angry",
+      "phase": "closed",
+      "x": 34,
+      "y": 23,
+      "width": 15,
+      "height": 2
+    },
+    {
+      "emotion": "happy",
+      "phase": "half",
+      "x": 18,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "eyes/neutral/half.png"
+    },
+    {
+      "emotion": "happy",
+      "phase": "half",
+      "x": 36,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "eyes/neutral/half.png"
+    },
+    {
+      "emotion": "happy",
+      "phase": "closed",
+      "x": 18,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "eyes/neutral/closed.png"
+    },
+    {
+      "emotion": "happy",
+      "phase": "closed",
+      "x": 36,
+      "y": 24,
+      "width": 11,
+      "height": 7,
+      "sourceFile": "eyes/neutral/closed.png"
+    }
+  ],
+  "useOriginalFeaturePalette": false,
+  "thinkingEyeSets": [
+    {
+      "id": "up-left",
+      "label": "Oben links",
+      "phases": {
+        "open": {
+          "file": "../npc078-thinking-workspace/eyes/thinking/up-left/open.png",
+          "sha256": "83002245d0e56bdd9277d4ad4dc384adfdc15a50703b7cfac7fcdc4f33f5e7dd"
+        },
+        "half": {
+          "file": "../npc078-thinking-workspace/eyes/thinking/up-left/half.png",
+          "sha256": "8619adb4c624fde8e426a07ae7c56a174faf123abb999050a3133d0b38e7f13f"
+        },
+        "closed": {
+          "file": "../npc078-thinking-workspace/eyes/thinking/up-left/closed.png",
+          "sha256": "2cb28312adac921a5ac54a80def83aada49e66018dd95cddc5b3b548caf09078"
+        }
+      }
+    },
+    {
+      "id": "up",
+      "label": "Oben",
+      "phases": {
+        "open": {
+          "file": "../npc078-thinking-workspace/eyes/thinking/up/open.png",
+          "sha256": "9e57c111287c0e3ca469dcb182297184463ad700da00e22217a0edba9654ac17"
+        },
+        "half": {
+          "file": "../npc078-thinking-workspace/eyes/thinking/up/half.png",
+          "sha256": "45eebd79da9886e03b1184ff8a33ff2537d3c253b7d03131a93ef9631fe12798"
+        },
+        "closed": {
+          "file": "../npc078-thinking-workspace/eyes/thinking/up/closed.png",
+          "sha256": "2cb28312adac921a5ac54a80def83aada49e66018dd95cddc5b3b548caf09078"
+        }
+      }
+    },
+    {
+      "id": "up-right",
+      "label": "Oben rechts",
+      "phases": {
+        "open": {
+          "file": "../npc078-thinking-workspace/eyes/thinking/up-right/open.png",
+          "sha256": "503766d79063d7a13718029da60bf617143d5b41bf2596861fd63f56d5ecffc0"
+        },
+        "half": {
+          "file": "../npc078-thinking-workspace/eyes/thinking/up-right/half.png",
+          "sha256": "6a881d124a6f3c28245a285c3987f128222b627f6cee39b8fe72e71f815c5c54"
+        },
+        "closed": {
+          "file": "../npc078-thinking-workspace/eyes/thinking/up-right/closed.png",
+          "sha256": "2cb28312adac921a5ac54a80def83aada49e66018dd95cddc5b3b548caf09078"
+        }
+      }
+    },
+    {
+      "id": "left",
+      "label": "Links",
+      "phases": {
+        "open": {
+          "file": "../npc078-thinking-workspace/eyes/thinking/left/open.png",
+          "sha256": "78be043423f77433fafb2cc7442ba76fd98b3382098875a33f7e4d49d6b8f1de"
+        },
+        "half": {
+          "file": "../npc078-thinking-workspace/eyes/thinking/left/half.png",
+          "sha256": "2d88c54ce99a6cede7e65c21766413586fe4d090eef887b39c77dcdd46610883"
+        },
+        "closed": {
+          "file": "../npc078-thinking-workspace/eyes/thinking/left/closed.png",
+          "sha256": "2cb28312adac921a5ac54a80def83aada49e66018dd95cddc5b3b548caf09078"
+        }
+      }
+    },
+    {
+      "id": "center",
+      "label": "Geradeaus",
+      "phases": {
+        "open": {
+          "file": "../npc078-thinking-workspace/eyes/thinking/center/open.png",
+          "sha256": "9379e8c9e4a1364b35ef7389d972869ce73221e9e2af236127e6365e6972a98f"
+        },
+        "half": {
+          "file": "../npc078-thinking-workspace/eyes/thinking/center/half.png",
+          "sha256": "960c819cdf0b85ffb814724e614c0f75acea347a3d5db61682f920f26a67ca2f"
+        },
+        "closed": {
+          "file": "../npc078-thinking-workspace/eyes/thinking/center/closed.png",
+          "sha256": "2cb28312adac921a5ac54a80def83aada49e66018dd95cddc5b3b548caf09078"
+        }
+      }
+    },
+    {
+      "id": "right",
+      "label": "Rechts",
+      "phases": {
+        "open": {
+          "file": "../npc078-thinking-workspace/eyes/thinking/right/open.png",
+          "sha256": "dd7d1c63dc5f1e2cae848e224e9a05ddf11a470c9201d08d2ba29cfaed6dc4c6"
+        },
+        "half": {
+          "file": "../npc078-thinking-workspace/eyes/thinking/right/half.png",
+          "sha256": "7b72226eb1b9f1db89fee2e5a1b7a20bdb2232c455e199a4f34b336e323a9066"
+        },
+        "closed": {
+          "file": "../npc078-thinking-workspace/eyes/thinking/right/closed.png",
+          "sha256": "2cb28312adac921a5ac54a80def83aada49e66018dd95cddc5b3b548caf09078"
+        }
+      }
+    },
+    {
+      "id": "down-left",
+      "label": "Unten links",
+      "phases": {
+        "open": {
+          "file": "../npc078-thinking-workspace/eyes/thinking/down-left/open.png",
+          "sha256": "2bd9df7859180f1fcb9f9a7f375e39d178c2ea2de3ab038cec349a53a9fafff1"
+        },
+        "half": {
+          "file": "../npc078-thinking-workspace/eyes/thinking/down-left/half.png",
+          "sha256": "2d7a905a276b3a6f8a12fd65fd9df14b334028c28f66a1278a558b0c47956eb0"
+        },
+        "closed": {
+          "file": "../npc078-thinking-workspace/eyes/thinking/down-left/closed.png",
+          "sha256": "2cb28312adac921a5ac54a80def83aada49e66018dd95cddc5b3b548caf09078"
+        }
+      }
+    },
+    {
+      "id": "down",
+      "label": "Unten",
+      "phases": {
+        "open": {
+          "file": "../npc078-thinking-workspace/eyes/thinking/down/open.png",
+          "sha256": "9401f0cab8d1194cc441154282f8617f9fbe97b528f369d83e9a77a4f05d38af"
+        },
+        "half": {
+          "file": "../npc078-thinking-workspace/eyes/thinking/down/half.png",
+          "sha256": "e91025c626abafc1cea0d9581103dd4a37dd4bf5d2d6610f31ea991db00a4968"
+        },
+        "closed": {
+          "file": "../npc078-thinking-workspace/eyes/thinking/down/closed.png",
+          "sha256": "2cb28312adac921a5ac54a80def83aada49e66018dd95cddc5b3b548caf09078"
+        }
+      }
+    },
+    {
+      "id": "down-right",
+      "label": "Unten rechts",
+      "phases": {
+        "open": {
+          "file": "../npc078-thinking-workspace/eyes/thinking/down-right/open.png",
+          "sha256": "79b7958cbd7dd4070083301ca3606dd4709e8ab0c182daa2812664c623e277ea"
+        },
+        "half": {
+          "file": "../npc078-thinking-workspace/eyes/thinking/down-right/half.png",
+          "sha256": "48828fd74a20f93abb516afc2ffd41da059ee9e6c1fc13cf14c21a57eb8bf273"
+        },
+        "closed": {
+          "file": "../npc078-thinking-workspace/eyes/thinking/down-right/closed.png",
+          "sha256": "2cb28312adac921a5ac54a80def83aada49e66018dd95cddc5b3b548caf09078"
+        }
+      }
+    }
+  ],
+  "thinkingVisualAcceptance": "parent-reviewed-user-review-pending",
+  "thinkingEyeSetsByEmotion": {
+    "neutral": [
+      {
+        "id": "left",
+        "label": "Links",
+        "phases": {
+          "open": {
+            "file": "../npc078-thinking-emotions/neutral/attempt-horizontal-v1/eyes/thinking/left/open.png",
+            "sha256": "f7039ed6de2923d0c49dd09c28b61a9becd188880a1c5fb1d4a13da9c4a9620c"
+          },
+          "half": {
+            "file": "../npc078-thinking-emotions/neutral/attempt-horizontal-v1/eyes/thinking/left/half.png",
+            "sha256": "abe145ecf46e5b490a5dee18f45e3e7aeed2d5ba32aa64f8e217aa87d05eeeda"
+          },
+          "closed": {
+            "file": "../npc078-thinking-emotions/neutral/attempt-horizontal-v1/eyes/thinking/left/closed.png",
+            "sha256": "00bfaba53d7ecf72168295d95d7a4b4f4edce332903824e0e63731816f73c096"
+          }
+        }
+      },
+      {
+        "id": "right",
+        "label": "Rechts",
+        "phases": {
+          "open": {
+            "file": "../npc078-thinking-emotions/neutral/attempt-horizontal-v1/eyes/thinking/right/open.png",
+            "sha256": "9c7b6ba0c47b9a3d3f227f602e70c73abf67d1e6382fc9289707ff42663b514c"
+          },
+          "half": {
+            "file": "../npc078-thinking-emotions/neutral/attempt-horizontal-v1/eyes/thinking/right/half.png",
+            "sha256": "74fae2e34a853d7fa93c1f86f4fe79cd093965c1cec5801b77e1e7126e273e19"
+          },
+          "closed": {
+            "file": "../npc078-thinking-emotions/neutral/attempt-horizontal-v1/eyes/thinking/right/closed.png",
+            "sha256": "00bfaba53d7ecf72168295d95d7a4b4f4edce332903824e0e63731816f73c096"
+          }
+        }
+      }
+    ],
+    "happy": [
+      {
+        "id": "left",
+        "label": "Links",
+        "phases": {
+          "open": {
+            "file": "../npc078-thinking-emotions/happy/attempt-horizontal-v1/eyes/thinking/left/open.png",
+            "sha256": "35f78663acc71fe9ae27cf5ea45b4c7b2288f435f18e86b22d48b5c589883f99",
+            "changedPixels": 592,
+            "reviewedRepair20261023": {
+              "candidateSha256": "35f78663acc71fe9ae27cf5ea45b4c7b2288f435f18e86b22d48b5c589883f99",
+              "previousSha256": "3b4ea73e057a742cedfc50de7d3197176c5f62c8ff70f20c6e88fc9fd932ac31",
+              "masterSha256": "227ad84d4510983628706d51c9e1e7924a5ad446f4abab08f1217abaa3e5945d",
+              "allowedSourceChangeRegions": [
+                [
+                  17,
+                  19,
+                  18,
+                  20
+                ],
+                [
+                  18,
+                  19,
+                  19,
+                  20
+                ],
+                [
+                  19,
+                  19,
+                  20,
+                  20
+                ],
+                [
+                  21,
+                  19,
+                  22,
+                  20
+                ],
+                [
+                  22,
+                  19,
+                  23,
+                  20
+                ],
+                [
+                  23,
+                  19,
+                  24,
+                  20
+                ],
+                [
+                  24,
+                  19,
+                  25,
+                  20
+                ],
+                [
+                  25,
+                  19,
+                  26,
+                  20
+                ],
+                [
+                  38,
+                  19,
+                  39,
+                  20
+                ],
+                [
+                  39,
+                  19,
+                  40,
+                  20
+                ],
+                [
+                  40,
+                  19,
+                  41,
+                  20
+                ],
+                [
+                  41,
+                  19,
+                  42,
+                  20
+                ],
+                [
+                  42,
+                  19,
+                  43,
+                  20
+                ],
+                [
+                  43,
+                  19,
+                  44,
+                  20
+                ],
+                [
+                  44,
+                  19,
+                  45,
+                  20
+                ],
+                [
+                  46,
+                  19,
+                  47,
+                  20
+                ],
+                [
+                  16,
+                  20,
+                  17,
+                  21
+                ],
+                [
+                  17,
+                  20,
+                  18,
+                  21
+                ],
+                [
+                  18,
+                  20,
+                  19,
+                  21
+                ],
+                [
+                  19,
+                  20,
+                  20,
+                  21
+                ],
+                [
+                  20,
+                  20,
+                  21,
+                  21
+                ],
+                [
+                  21,
+                  20,
+                  22,
+                  21
+                ],
+                [
+                  22,
+                  20,
+                  23,
+                  21
+                ],
+                [
+                  23,
+                  20,
+                  24,
+                  21
+                ],
+                [
+                  24,
+                  20,
+                  25,
+                  21
+                ],
+                [
+                  25,
+                  20,
+                  26,
+                  21
+                ],
+                [
+                  26,
+                  20,
+                  27,
+                  21
+                ],
+                [
+                  37,
+                  20,
+                  38,
+                  21
+                ],
+                [
+                  38,
+                  20,
+                  39,
+                  21
+                ],
+                [
+                  39,
+                  20,
+                  40,
+                  21
+                ],
+                [
+                  40,
+                  20,
+                  41,
+                  21
+                ],
+                [
+                  41,
+                  20,
+                  42,
+                  21
+                ],
+                [
+                  42,
+                  20,
+                  43,
+                  21
+                ],
+                [
+                  43,
+                  20,
+                  44,
+                  21
+                ],
+                [
+                  44,
+                  20,
+                  45,
+                  21
+                ],
+                [
+                  45,
+                  20,
+                  46,
+                  21
+                ],
+                [
+                  46,
+                  20,
+                  47,
+                  21
+                ],
+                [
+                  16,
+                  21,
+                  17,
+                  22
+                ],
+                [
+                  17,
+                  21,
+                  18,
+                  22
+                ],
+                [
+                  18,
+                  21,
+                  19,
+                  22
+                ],
+                [
+                  20,
+                  21,
+                  21,
+                  22
+                ],
+                [
+                  21,
+                  21,
+                  22,
+                  22
+                ],
+                [
+                  22,
+                  21,
+                  23,
+                  22
+                ],
+                [
+                  23,
+                  21,
+                  24,
+                  22
+                ],
+                [
+                  24,
+                  21,
+                  25,
+                  22
+                ],
+                [
+                  25,
+                  21,
+                  26,
+                  22
+                ],
+                [
+                  26,
+                  21,
+                  27,
+                  22
+                ],
+                [
+                  36,
+                  21,
+                  37,
+                  22
+                ],
+                [
+                  37,
+                  21,
+                  38,
+                  22
+                ],
+                [
+                  38,
+                  21,
+                  39,
+                  22
+                ],
+                [
+                  39,
+                  21,
+                  40,
+                  22
+                ],
+                [
+                  40,
+                  21,
+                  41,
+                  22
+                ],
+                [
+                  41,
+                  21,
+                  42,
+                  22
+                ],
+                [
+                  42,
+                  21,
+                  43,
+                  22
+                ],
+                [
+                  43,
+                  21,
+                  44,
+                  22
+                ],
+                [
+                  44,
+                  21,
+                  45,
+                  22
+                ],
+                [
+                  45,
+                  21,
+                  46,
+                  22
+                ],
+                [
+                  46,
+                  21,
+                  47,
+                  22
+                ],
+                [
+                  47,
+                  21,
+                  48,
+                  22
+                ],
+                [
+                  16,
+                  22,
+                  17,
+                  23
+                ],
+                [
+                  17,
+                  22,
+                  18,
+                  23
+                ],
+                [
+                  18,
+                  22,
+                  19,
+                  23
+                ],
+                [
+                  19,
+                  22,
+                  20,
+                  23
+                ],
+                [
+                  21,
+                  22,
+                  22,
+                  23
+                ],
+                [
+                  22,
+                  22,
+                  23,
+                  23
+                ],
+                [
+                  23,
+                  22,
+                  24,
+                  23
+                ],
+                [
+                  24,
+                  22,
+                  25,
+                  23
+                ],
+                [
+                  25,
+                  22,
+                  26,
+                  23
+                ],
+                [
+                  26,
+                  22,
+                  27,
+                  23
+                ],
+                [
+                  36,
+                  22,
+                  37,
+                  23
+                ],
+                [
+                  37,
+                  22,
+                  38,
+                  23
+                ],
+                [
+                  38,
+                  22,
+                  39,
+                  23
+                ],
+                [
+                  39,
+                  22,
+                  40,
+                  23
+                ],
+                [
+                  40,
+                  22,
+                  41,
+                  23
+                ],
+                [
+                  41,
+                  22,
+                  42,
+                  23
+                ],
+                [
+                  44,
+                  22,
+                  45,
+                  23
+                ],
+                [
+                  45,
+                  22,
+                  46,
+                  23
+                ],
+                [
+                  46,
+                  22,
+                  47,
+                  23
+                ],
+                [
+                  36,
+                  23,
+                  37,
+                  24
+                ],
+                [
+                  37,
+                  23,
+                  38,
+                  24
+                ],
+                [
+                  38,
+                  23,
+                  39,
+                  24
+                ],
+                [
+                  39,
+                  23,
+                  40,
+                  24
+                ],
+                [
+                  40,
+                  23,
+                  41,
+                  24
+                ],
+                [
+                  41,
+                  23,
+                  42,
+                  24
+                ],
+                [
+                  42,
+                  23,
+                  43,
+                  24
+                ],
+                [
+                  45,
+                  23,
+                  46,
+                  24
+                ],
+                [
+                  46,
+                  23,
+                  47,
+                  24
+                ]
+              ],
+              "method": "Registered generated brow strokes restricted to native brow envelope, with source-backed removal of orphan original tip (47,21); eye anatomy unchanged."
+            }
+          },
+          "half": {
+            "file": "../npc078-thinking-emotions/happy/attempt-horizontal-v1/eyes/thinking/left/half.png",
+            "sha256": "4d51b562b226c3d47c48b4aecf70767cadd9a754f4658131169ec432df052b62",
+            "changedPixels": 592,
+            "reviewedRepair20261023": {
+              "candidateSha256": "4d51b562b226c3d47c48b4aecf70767cadd9a754f4658131169ec432df052b62",
+              "previousSha256": "0f0dc76ba451e9ce4ce79ce5935314f6aa8a5611ed5915b658fdbcc23b8dbe1e",
+              "masterSha256": "227ad84d4510983628706d51c9e1e7924a5ad446f4abab08f1217abaa3e5945d",
+              "allowedSourceChangeRegions": [
+                [
+                  17,
+                  19,
+                  18,
+                  20
+                ],
+                [
+                  18,
+                  19,
+                  19,
+                  20
+                ],
+                [
+                  19,
+                  19,
+                  20,
+                  20
+                ],
+                [
+                  21,
+                  19,
+                  22,
+                  20
+                ],
+                [
+                  22,
+                  19,
+                  23,
+                  20
+                ],
+                [
+                  23,
+                  19,
+                  24,
+                  20
+                ],
+                [
+                  24,
+                  19,
+                  25,
+                  20
+                ],
+                [
+                  25,
+                  19,
+                  26,
+                  20
+                ],
+                [
+                  38,
+                  19,
+                  39,
+                  20
+                ],
+                [
+                  39,
+                  19,
+                  40,
+                  20
+                ],
+                [
+                  40,
+                  19,
+                  41,
+                  20
+                ],
+                [
+                  41,
+                  19,
+                  42,
+                  20
+                ],
+                [
+                  42,
+                  19,
+                  43,
+                  20
+                ],
+                [
+                  43,
+                  19,
+                  44,
+                  20
+                ],
+                [
+                  44,
+                  19,
+                  45,
+                  20
+                ],
+                [
+                  46,
+                  19,
+                  47,
+                  20
+                ],
+                [
+                  16,
+                  20,
+                  17,
+                  21
+                ],
+                [
+                  17,
+                  20,
+                  18,
+                  21
+                ],
+                [
+                  18,
+                  20,
+                  19,
+                  21
+                ],
+                [
+                  19,
+                  20,
+                  20,
+                  21
+                ],
+                [
+                  20,
+                  20,
+                  21,
+                  21
+                ],
+                [
+                  21,
+                  20,
+                  22,
+                  21
+                ],
+                [
+                  22,
+                  20,
+                  23,
+                  21
+                ],
+                [
+                  23,
+                  20,
+                  24,
+                  21
+                ],
+                [
+                  24,
+                  20,
+                  25,
+                  21
+                ],
+                [
+                  25,
+                  20,
+                  26,
+                  21
+                ],
+                [
+                  26,
+                  20,
+                  27,
+                  21
+                ],
+                [
+                  37,
+                  20,
+                  38,
+                  21
+                ],
+                [
+                  38,
+                  20,
+                  39,
+                  21
+                ],
+                [
+                  39,
+                  20,
+                  40,
+                  21
+                ],
+                [
+                  40,
+                  20,
+                  41,
+                  21
+                ],
+                [
+                  41,
+                  20,
+                  42,
+                  21
+                ],
+                [
+                  42,
+                  20,
+                  43,
+                  21
+                ],
+                [
+                  43,
+                  20,
+                  44,
+                  21
+                ],
+                [
+                  44,
+                  20,
+                  45,
+                  21
+                ],
+                [
+                  45,
+                  20,
+                  46,
+                  21
+                ],
+                [
+                  46,
+                  20,
+                  47,
+                  21
+                ],
+                [
+                  16,
+                  21,
+                  17,
+                  22
+                ],
+                [
+                  17,
+                  21,
+                  18,
+                  22
+                ],
+                [
+                  18,
+                  21,
+                  19,
+                  22
+                ],
+                [
+                  20,
+                  21,
+                  21,
+                  22
+                ],
+                [
+                  21,
+                  21,
+                  22,
+                  22
+                ],
+                [
+                  22,
+                  21,
+                  23,
+                  22
+                ],
+                [
+                  23,
+                  21,
+                  24,
+                  22
+                ],
+                [
+                  24,
+                  21,
+                  25,
+                  22
+                ],
+                [
+                  25,
+                  21,
+                  26,
+                  22
+                ],
+                [
+                  26,
+                  21,
+                  27,
+                  22
+                ],
+                [
+                  36,
+                  21,
+                  37,
+                  22
+                ],
+                [
+                  37,
+                  21,
+                  38,
+                  22
+                ],
+                [
+                  38,
+                  21,
+                  39,
+                  22
+                ],
+                [
+                  39,
+                  21,
+                  40,
+                  22
+                ],
+                [
+                  40,
+                  21,
+                  41,
+                  22
+                ],
+                [
+                  41,
+                  21,
+                  42,
+                  22
+                ],
+                [
+                  42,
+                  21,
+                  43,
+                  22
+                ],
+                [
+                  43,
+                  21,
+                  44,
+                  22
+                ],
+                [
+                  44,
+                  21,
+                  45,
+                  22
+                ],
+                [
+                  45,
+                  21,
+                  46,
+                  22
+                ],
+                [
+                  46,
+                  21,
+                  47,
+                  22
+                ],
+                [
+                  47,
+                  21,
+                  48,
+                  22
+                ],
+                [
+                  16,
+                  22,
+                  17,
+                  23
+                ],
+                [
+                  17,
+                  22,
+                  18,
+                  23
+                ],
+                [
+                  18,
+                  22,
+                  19,
+                  23
+                ],
+                [
+                  19,
+                  22,
+                  20,
+                  23
+                ],
+                [
+                  21,
+                  22,
+                  22,
+                  23
+                ],
+                [
+                  22,
+                  22,
+                  23,
+                  23
+                ],
+                [
+                  23,
+                  22,
+                  24,
+                  23
+                ],
+                [
+                  24,
+                  22,
+                  25,
+                  23
+                ],
+                [
+                  25,
+                  22,
+                  26,
+                  23
+                ],
+                [
+                  26,
+                  22,
+                  27,
+                  23
+                ],
+                [
+                  36,
+                  22,
+                  37,
+                  23
+                ],
+                [
+                  37,
+                  22,
+                  38,
+                  23
+                ],
+                [
+                  38,
+                  22,
+                  39,
+                  23
+                ],
+                [
+                  39,
+                  22,
+                  40,
+                  23
+                ],
+                [
+                  40,
+                  22,
+                  41,
+                  23
+                ],
+                [
+                  41,
+                  22,
+                  42,
+                  23
+                ],
+                [
+                  44,
+                  22,
+                  45,
+                  23
+                ],
+                [
+                  45,
+                  22,
+                  46,
+                  23
+                ],
+                [
+                  46,
+                  22,
+                  47,
+                  23
+                ],
+                [
+                  36,
+                  23,
+                  37,
+                  24
+                ],
+                [
+                  37,
+                  23,
+                  38,
+                  24
+                ],
+                [
+                  38,
+                  23,
+                  39,
+                  24
+                ],
+                [
+                  39,
+                  23,
+                  40,
+                  24
+                ],
+                [
+                  40,
+                  23,
+                  41,
+                  24
+                ],
+                [
+                  41,
+                  23,
+                  42,
+                  24
+                ],
+                [
+                  42,
+                  23,
+                  43,
+                  24
+                ],
+                [
+                  45,
+                  23,
+                  46,
+                  24
+                ],
+                [
+                  46,
+                  23,
+                  47,
+                  24
+                ]
+              ],
+              "method": "Registered generated brow strokes restricted to native brow envelope, with source-backed removal of orphan original tip (47,21); eye anatomy unchanged."
+            }
+          },
+          "closed": {
+            "file": "../npc078-thinking-emotions/happy/attempt-horizontal-v1/eyes/thinking/left/closed.png",
+            "sha256": "989ec069479352c985e3d3ff52db3aa7d8c1eece88afbd1648785d19fa745fdf",
+            "changedPixels": 591,
+            "reviewedRepair20261023": {
+              "candidateSha256": "989ec069479352c985e3d3ff52db3aa7d8c1eece88afbd1648785d19fa745fdf",
+              "previousSha256": "b2c527d93546d9b9e9cb20d8701992ffe74592b012a0e5219520cde121ae5b0a",
+              "masterSha256": "227ad84d4510983628706d51c9e1e7924a5ad446f4abab08f1217abaa3e5945d",
+              "allowedSourceChangeRegions": [
+                [
+                  17,
+                  19,
+                  18,
+                  20
+                ],
+                [
+                  18,
+                  19,
+                  19,
+                  20
+                ],
+                [
+                  19,
+                  19,
+                  20,
+                  20
+                ],
+                [
+                  21,
+                  19,
+                  22,
+                  20
+                ],
+                [
+                  22,
+                  19,
+                  23,
+                  20
+                ],
+                [
+                  23,
+                  19,
+                  24,
+                  20
+                ],
+                [
+                  24,
+                  19,
+                  25,
+                  20
+                ],
+                [
+                  25,
+                  19,
+                  26,
+                  20
+                ],
+                [
+                  38,
+                  19,
+                  39,
+                  20
+                ],
+                [
+                  39,
+                  19,
+                  40,
+                  20
+                ],
+                [
+                  40,
+                  19,
+                  41,
+                  20
+                ],
+                [
+                  41,
+                  19,
+                  42,
+                  20
+                ],
+                [
+                  42,
+                  19,
+                  43,
+                  20
+                ],
+                [
+                  43,
+                  19,
+                  44,
+                  20
+                ],
+                [
+                  44,
+                  19,
+                  45,
+                  20
+                ],
+                [
+                  46,
+                  19,
+                  47,
+                  20
+                ],
+                [
+                  16,
+                  20,
+                  17,
+                  21
+                ],
+                [
+                  17,
+                  20,
+                  18,
+                  21
+                ],
+                [
+                  18,
+                  20,
+                  19,
+                  21
+                ],
+                [
+                  19,
+                  20,
+                  20,
+                  21
+                ],
+                [
+                  20,
+                  20,
+                  21,
+                  21
+                ],
+                [
+                  21,
+                  20,
+                  22,
+                  21
+                ],
+                [
+                  22,
+                  20,
+                  23,
+                  21
+                ],
+                [
+                  23,
+                  20,
+                  24,
+                  21
+                ],
+                [
+                  24,
+                  20,
+                  25,
+                  21
+                ],
+                [
+                  25,
+                  20,
+                  26,
+                  21
+                ],
+                [
+                  26,
+                  20,
+                  27,
+                  21
+                ],
+                [
+                  37,
+                  20,
+                  38,
+                  21
+                ],
+                [
+                  38,
+                  20,
+                  39,
+                  21
+                ],
+                [
+                  39,
+                  20,
+                  40,
+                  21
+                ],
+                [
+                  40,
+                  20,
+                  41,
+                  21
+                ],
+                [
+                  41,
+                  20,
+                  42,
+                  21
+                ],
+                [
+                  42,
+                  20,
+                  43,
+                  21
+                ],
+                [
+                  43,
+                  20,
+                  44,
+                  21
+                ],
+                [
+                  44,
+                  20,
+                  45,
+                  21
+                ],
+                [
+                  45,
+                  20,
+                  46,
+                  21
+                ],
+                [
+                  46,
+                  20,
+                  47,
+                  21
+                ],
+                [
+                  16,
+                  21,
+                  17,
+                  22
+                ],
+                [
+                  17,
+                  21,
+                  18,
+                  22
+                ],
+                [
+                  18,
+                  21,
+                  19,
+                  22
+                ],
+                [
+                  20,
+                  21,
+                  21,
+                  22
+                ],
+                [
+                  21,
+                  21,
+                  22,
+                  22
+                ],
+                [
+                  22,
+                  21,
+                  23,
+                  22
+                ],
+                [
+                  23,
+                  21,
+                  24,
+                  22
+                ],
+                [
+                  24,
+                  21,
+                  25,
+                  22
+                ],
+                [
+                  25,
+                  21,
+                  26,
+                  22
+                ],
+                [
+                  26,
+                  21,
+                  27,
+                  22
+                ],
+                [
+                  36,
+                  21,
+                  37,
+                  22
+                ],
+                [
+                  37,
+                  21,
+                  38,
+                  22
+                ],
+                [
+                  38,
+                  21,
+                  39,
+                  22
+                ],
+                [
+                  39,
+                  21,
+                  40,
+                  22
+                ],
+                [
+                  40,
+                  21,
+                  41,
+                  22
+                ],
+                [
+                  41,
+                  21,
+                  42,
+                  22
+                ],
+                [
+                  42,
+                  21,
+                  43,
+                  22
+                ],
+                [
+                  43,
+                  21,
+                  44,
+                  22
+                ],
+                [
+                  44,
+                  21,
+                  45,
+                  22
+                ],
+                [
+                  45,
+                  21,
+                  46,
+                  22
+                ],
+                [
+                  46,
+                  21,
+                  47,
+                  22
+                ],
+                [
+                  47,
+                  21,
+                  48,
+                  22
+                ],
+                [
+                  16,
+                  22,
+                  17,
+                  23
+                ],
+                [
+                  17,
+                  22,
+                  18,
+                  23
+                ],
+                [
+                  18,
+                  22,
+                  19,
+                  23
+                ],
+                [
+                  19,
+                  22,
+                  20,
+                  23
+                ],
+                [
+                  21,
+                  22,
+                  22,
+                  23
+                ],
+                [
+                  22,
+                  22,
+                  23,
+                  23
+                ],
+                [
+                  23,
+                  22,
+                  24,
+                  23
+                ],
+                [
+                  24,
+                  22,
+                  25,
+                  23
+                ],
+                [
+                  25,
+                  22,
+                  26,
+                  23
+                ],
+                [
+                  26,
+                  22,
+                  27,
+                  23
+                ],
+                [
+                  36,
+                  22,
+                  37,
+                  23
+                ],
+                [
+                  37,
+                  22,
+                  38,
+                  23
+                ],
+                [
+                  38,
+                  22,
+                  39,
+                  23
+                ],
+                [
+                  39,
+                  22,
+                  40,
+                  23
+                ],
+                [
+                  40,
+                  22,
+                  41,
+                  23
+                ],
+                [
+                  41,
+                  22,
+                  42,
+                  23
+                ],
+                [
+                  44,
+                  22,
+                  45,
+                  23
+                ],
+                [
+                  45,
+                  22,
+                  46,
+                  23
+                ],
+                [
+                  46,
+                  22,
+                  47,
+                  23
+                ],
+                [
+                  36,
+                  23,
+                  37,
+                  24
+                ],
+                [
+                  37,
+                  23,
+                  38,
+                  24
+                ],
+                [
+                  38,
+                  23,
+                  39,
+                  24
+                ],
+                [
+                  39,
+                  23,
+                  40,
+                  24
+                ],
+                [
+                  40,
+                  23,
+                  41,
+                  24
+                ],
+                [
+                  41,
+                  23,
+                  42,
+                  24
+                ],
+                [
+                  42,
+                  23,
+                  43,
+                  24
+                ],
+                [
+                  45,
+                  23,
+                  46,
+                  24
+                ],
+                [
+                  46,
+                  23,
+                  47,
+                  24
+                ]
+              ],
+              "method": "Registered generated brow strokes restricted to native brow envelope, with source-backed removal of orphan original tip (47,21); eye anatomy unchanged."
+            }
+          }
+        }
+      },
+      {
+        "id": "right",
+        "label": "Rechts",
+        "phases": {
+          "open": {
+            "file": "../npc078-thinking-emotions/happy/attempt-horizontal-v1/eyes/thinking/right/open.png",
+            "sha256": "36f1c6b199fd5c33390830606c53b885bbf27d0ef02e84dc5bf7fba5fa3b77b0",
+            "changedPixels": 591,
+            "reviewedRepair20261023": {
+              "candidateSha256": "36f1c6b199fd5c33390830606c53b885bbf27d0ef02e84dc5bf7fba5fa3b77b0",
+              "previousSha256": "8e0ffe25afa4b5b63c86987c572a98d6a22c41f5db654206b38e8a769266872e",
+              "masterSha256": "227ad84d4510983628706d51c9e1e7924a5ad446f4abab08f1217abaa3e5945d",
+              "allowedSourceChangeRegions": [
+                [
+                  17,
+                  19,
+                  18,
+                  20
+                ],
+                [
+                  18,
+                  19,
+                  19,
+                  20
+                ],
+                [
+                  19,
+                  19,
+                  20,
+                  20
+                ],
+                [
+                  21,
+                  19,
+                  22,
+                  20
+                ],
+                [
+                  22,
+                  19,
+                  23,
+                  20
+                ],
+                [
+                  23,
+                  19,
+                  24,
+                  20
+                ],
+                [
+                  24,
+                  19,
+                  25,
+                  20
+                ],
+                [
+                  25,
+                  19,
+                  26,
+                  20
+                ],
+                [
+                  38,
+                  19,
+                  39,
+                  20
+                ],
+                [
+                  39,
+                  19,
+                  40,
+                  20
+                ],
+                [
+                  40,
+                  19,
+                  41,
+                  20
+                ],
+                [
+                  41,
+                  19,
+                  42,
+                  20
+                ],
+                [
+                  42,
+                  19,
+                  43,
+                  20
+                ],
+                [
+                  43,
+                  19,
+                  44,
+                  20
+                ],
+                [
+                  44,
+                  19,
+                  45,
+                  20
+                ],
+                [
+                  46,
+                  19,
+                  47,
+                  20
+                ],
+                [
+                  16,
+                  20,
+                  17,
+                  21
+                ],
+                [
+                  17,
+                  20,
+                  18,
+                  21
+                ],
+                [
+                  18,
+                  20,
+                  19,
+                  21
+                ],
+                [
+                  19,
+                  20,
+                  20,
+                  21
+                ],
+                [
+                  20,
+                  20,
+                  21,
+                  21
+                ],
+                [
+                  21,
+                  20,
+                  22,
+                  21
+                ],
+                [
+                  22,
+                  20,
+                  23,
+                  21
+                ],
+                [
+                  23,
+                  20,
+                  24,
+                  21
+                ],
+                [
+                  24,
+                  20,
+                  25,
+                  21
+                ],
+                [
+                  25,
+                  20,
+                  26,
+                  21
+                ],
+                [
+                  26,
+                  20,
+                  27,
+                  21
+                ],
+                [
+                  37,
+                  20,
+                  38,
+                  21
+                ],
+                [
+                  38,
+                  20,
+                  39,
+                  21
+                ],
+                [
+                  39,
+                  20,
+                  40,
+                  21
+                ],
+                [
+                  40,
+                  20,
+                  41,
+                  21
+                ],
+                [
+                  41,
+                  20,
+                  42,
+                  21
+                ],
+                [
+                  42,
+                  20,
+                  43,
+                  21
+                ],
+                [
+                  43,
+                  20,
+                  44,
+                  21
+                ],
+                [
+                  44,
+                  20,
+                  45,
+                  21
+                ],
+                [
+                  45,
+                  20,
+                  46,
+                  21
+                ],
+                [
+                  46,
+                  20,
+                  47,
+                  21
+                ],
+                [
+                  16,
+                  21,
+                  17,
+                  22
+                ],
+                [
+                  17,
+                  21,
+                  18,
+                  22
+                ],
+                [
+                  18,
+                  21,
+                  19,
+                  22
+                ],
+                [
+                  20,
+                  21,
+                  21,
+                  22
+                ],
+                [
+                  21,
+                  21,
+                  22,
+                  22
+                ],
+                [
+                  22,
+                  21,
+                  23,
+                  22
+                ],
+                [
+                  23,
+                  21,
+                  24,
+                  22
+                ],
+                [
+                  24,
+                  21,
+                  25,
+                  22
+                ],
+                [
+                  25,
+                  21,
+                  26,
+                  22
+                ],
+                [
+                  26,
+                  21,
+                  27,
+                  22
+                ],
+                [
+                  36,
+                  21,
+                  37,
+                  22
+                ],
+                [
+                  37,
+                  21,
+                  38,
+                  22
+                ],
+                [
+                  38,
+                  21,
+                  39,
+                  22
+                ],
+                [
+                  39,
+                  21,
+                  40,
+                  22
+                ],
+                [
+                  40,
+                  21,
+                  41,
+                  22
+                ],
+                [
+                  41,
+                  21,
+                  42,
+                  22
+                ],
+                [
+                  42,
+                  21,
+                  43,
+                  22
+                ],
+                [
+                  43,
+                  21,
+                  44,
+                  22
+                ],
+                [
+                  44,
+                  21,
+                  45,
+                  22
+                ],
+                [
+                  45,
+                  21,
+                  46,
+                  22
+                ],
+                [
+                  46,
+                  21,
+                  47,
+                  22
+                ],
+                [
+                  47,
+                  21,
+                  48,
+                  22
+                ],
+                [
+                  16,
+                  22,
+                  17,
+                  23
+                ],
+                [
+                  17,
+                  22,
+                  18,
+                  23
+                ],
+                [
+                  18,
+                  22,
+                  19,
+                  23
+                ],
+                [
+                  19,
+                  22,
+                  20,
+                  23
+                ],
+                [
+                  21,
+                  22,
+                  22,
+                  23
+                ],
+                [
+                  22,
+                  22,
+                  23,
+                  23
+                ],
+                [
+                  23,
+                  22,
+                  24,
+                  23
+                ],
+                [
+                  24,
+                  22,
+                  25,
+                  23
+                ],
+                [
+                  25,
+                  22,
+                  26,
+                  23
+                ],
+                [
+                  26,
+                  22,
+                  27,
+                  23
+                ],
+                [
+                  36,
+                  22,
+                  37,
+                  23
+                ],
+                [
+                  37,
+                  22,
+                  38,
+                  23
+                ],
+                [
+                  38,
+                  22,
+                  39,
+                  23
+                ],
+                [
+                  39,
+                  22,
+                  40,
+                  23
+                ],
+                [
+                  40,
+                  22,
+                  41,
+                  23
+                ],
+                [
+                  41,
+                  22,
+                  42,
+                  23
+                ],
+                [
+                  44,
+                  22,
+                  45,
+                  23
+                ],
+                [
+                  45,
+                  22,
+                  46,
+                  23
+                ],
+                [
+                  46,
+                  22,
+                  47,
+                  23
+                ],
+                [
+                  36,
+                  23,
+                  37,
+                  24
+                ],
+                [
+                  37,
+                  23,
+                  38,
+                  24
+                ],
+                [
+                  38,
+                  23,
+                  39,
+                  24
+                ],
+                [
+                  39,
+                  23,
+                  40,
+                  24
+                ],
+                [
+                  40,
+                  23,
+                  41,
+                  24
+                ],
+                [
+                  41,
+                  23,
+                  42,
+                  24
+                ],
+                [
+                  42,
+                  23,
+                  43,
+                  24
+                ],
+                [
+                  45,
+                  23,
+                  46,
+                  24
+                ],
+                [
+                  46,
+                  23,
+                  47,
+                  24
+                ]
+              ],
+              "method": "Registered generated brow strokes restricted to native brow envelope, with source-backed removal of orphan original tip (47,21); eye anatomy unchanged."
+            }
+          },
+          "half": {
+            "file": "../npc078-thinking-emotions/happy/attempt-horizontal-v1/eyes/thinking/right/half.png",
+            "sha256": "e02622b464202559237850bf57f76b4d62f1e6a71e6d60ffd0ac33235439c4ae",
+            "changedPixels": 592,
+            "reviewedRepair20261023": {
+              "candidateSha256": "e02622b464202559237850bf57f76b4d62f1e6a71e6d60ffd0ac33235439c4ae",
+              "previousSha256": "79bea314362cab986464d2503c3700018f2008b4482583ccee118dec739d58f0",
+              "masterSha256": "227ad84d4510983628706d51c9e1e7924a5ad446f4abab08f1217abaa3e5945d",
+              "allowedSourceChangeRegions": [
+                [
+                  17,
+                  19,
+                  18,
+                  20
+                ],
+                [
+                  18,
+                  19,
+                  19,
+                  20
+                ],
+                [
+                  19,
+                  19,
+                  20,
+                  20
+                ],
+                [
+                  21,
+                  19,
+                  22,
+                  20
+                ],
+                [
+                  22,
+                  19,
+                  23,
+                  20
+                ],
+                [
+                  23,
+                  19,
+                  24,
+                  20
+                ],
+                [
+                  24,
+                  19,
+                  25,
+                  20
+                ],
+                [
+                  25,
+                  19,
+                  26,
+                  20
+                ],
+                [
+                  38,
+                  19,
+                  39,
+                  20
+                ],
+                [
+                  39,
+                  19,
+                  40,
+                  20
+                ],
+                [
+                  40,
+                  19,
+                  41,
+                  20
+                ],
+                [
+                  41,
+                  19,
+                  42,
+                  20
+                ],
+                [
+                  42,
+                  19,
+                  43,
+                  20
+                ],
+                [
+                  43,
+                  19,
+                  44,
+                  20
+                ],
+                [
+                  44,
+                  19,
+                  45,
+                  20
+                ],
+                [
+                  46,
+                  19,
+                  47,
+                  20
+                ],
+                [
+                  16,
+                  20,
+                  17,
+                  21
+                ],
+                [
+                  17,
+                  20,
+                  18,
+                  21
+                ],
+                [
+                  18,
+                  20,
+                  19,
+                  21
+                ],
+                [
+                  19,
+                  20,
+                  20,
+                  21
+                ],
+                [
+                  20,
+                  20,
+                  21,
+                  21
+                ],
+                [
+                  21,
+                  20,
+                  22,
+                  21
+                ],
+                [
+                  22,
+                  20,
+                  23,
+                  21
+                ],
+                [
+                  23,
+                  20,
+                  24,
+                  21
+                ],
+                [
+                  24,
+                  20,
+                  25,
+                  21
+                ],
+                [
+                  25,
+                  20,
+                  26,
+                  21
+                ],
+                [
+                  26,
+                  20,
+                  27,
+                  21
+                ],
+                [
+                  37,
+                  20,
+                  38,
+                  21
+                ],
+                [
+                  38,
+                  20,
+                  39,
+                  21
+                ],
+                [
+                  39,
+                  20,
+                  40,
+                  21
+                ],
+                [
+                  40,
+                  20,
+                  41,
+                  21
+                ],
+                [
+                  41,
+                  20,
+                  42,
+                  21
+                ],
+                [
+                  42,
+                  20,
+                  43,
+                  21
+                ],
+                [
+                  43,
+                  20,
+                  44,
+                  21
+                ],
+                [
+                  44,
+                  20,
+                  45,
+                  21
+                ],
+                [
+                  45,
+                  20,
+                  46,
+                  21
+                ],
+                [
+                  46,
+                  20,
+                  47,
+                  21
+                ],
+                [
+                  16,
+                  21,
+                  17,
+                  22
+                ],
+                [
+                  17,
+                  21,
+                  18,
+                  22
+                ],
+                [
+                  18,
+                  21,
+                  19,
+                  22
+                ],
+                [
+                  20,
+                  21,
+                  21,
+                  22
+                ],
+                [
+                  21,
+                  21,
+                  22,
+                  22
+                ],
+                [
+                  22,
+                  21,
+                  23,
+                  22
+                ],
+                [
+                  23,
+                  21,
+                  24,
+                  22
+                ],
+                [
+                  24,
+                  21,
+                  25,
+                  22
+                ],
+                [
+                  25,
+                  21,
+                  26,
+                  22
+                ],
+                [
+                  26,
+                  21,
+                  27,
+                  22
+                ],
+                [
+                  36,
+                  21,
+                  37,
+                  22
+                ],
+                [
+                  37,
+                  21,
+                  38,
+                  22
+                ],
+                [
+                  38,
+                  21,
+                  39,
+                  22
+                ],
+                [
+                  39,
+                  21,
+                  40,
+                  22
+                ],
+                [
+                  40,
+                  21,
+                  41,
+                  22
+                ],
+                [
+                  41,
+                  21,
+                  42,
+                  22
+                ],
+                [
+                  42,
+                  21,
+                  43,
+                  22
+                ],
+                [
+                  43,
+                  21,
+                  44,
+                  22
+                ],
+                [
+                  44,
+                  21,
+                  45,
+                  22
+                ],
+                [
+                  45,
+                  21,
+                  46,
+                  22
+                ],
+                [
+                  46,
+                  21,
+                  47,
+                  22
+                ],
+                [
+                  47,
+                  21,
+                  48,
+                  22
+                ],
+                [
+                  16,
+                  22,
+                  17,
+                  23
+                ],
+                [
+                  17,
+                  22,
+                  18,
+                  23
+                ],
+                [
+                  18,
+                  22,
+                  19,
+                  23
+                ],
+                [
+                  19,
+                  22,
+                  20,
+                  23
+                ],
+                [
+                  21,
+                  22,
+                  22,
+                  23
+                ],
+                [
+                  22,
+                  22,
+                  23,
+                  23
+                ],
+                [
+                  23,
+                  22,
+                  24,
+                  23
+                ],
+                [
+                  24,
+                  22,
+                  25,
+                  23
+                ],
+                [
+                  25,
+                  22,
+                  26,
+                  23
+                ],
+                [
+                  26,
+                  22,
+                  27,
+                  23
+                ],
+                [
+                  36,
+                  22,
+                  37,
+                  23
+                ],
+                [
+                  37,
+                  22,
+                  38,
+                  23
+                ],
+                [
+                  38,
+                  22,
+                  39,
+                  23
+                ],
+                [
+                  39,
+                  22,
+                  40,
+                  23
+                ],
+                [
+                  40,
+                  22,
+                  41,
+                  23
+                ],
+                [
+                  41,
+                  22,
+                  42,
+                  23
+                ],
+                [
+                  44,
+                  22,
+                  45,
+                  23
+                ],
+                [
+                  45,
+                  22,
+                  46,
+                  23
+                ],
+                [
+                  46,
+                  22,
+                  47,
+                  23
+                ],
+                [
+                  36,
+                  23,
+                  37,
+                  24
+                ],
+                [
+                  37,
+                  23,
+                  38,
+                  24
+                ],
+                [
+                  38,
+                  23,
+                  39,
+                  24
+                ],
+                [
+                  39,
+                  23,
+                  40,
+                  24
+                ],
+                [
+                  40,
+                  23,
+                  41,
+                  24
+                ],
+                [
+                  41,
+                  23,
+                  42,
+                  24
+                ],
+                [
+                  42,
+                  23,
+                  43,
+                  24
+                ],
+                [
+                  45,
+                  23,
+                  46,
+                  24
+                ],
+                [
+                  46,
+                  23,
+                  47,
+                  24
+                ]
+              ],
+              "method": "Registered generated brow strokes restricted to native brow envelope, with source-backed removal of orphan original tip (47,21); eye anatomy unchanged."
+            }
+          },
+          "closed": {
+            "file": "../npc078-thinking-emotions/happy/attempt-horizontal-v1/eyes/thinking/right/closed.png",
+            "sha256": "989ec069479352c985e3d3ff52db3aa7d8c1eece88afbd1648785d19fa745fdf",
+            "changedPixels": 591,
+            "reviewedRepair20261023": {
+              "candidateSha256": "989ec069479352c985e3d3ff52db3aa7d8c1eece88afbd1648785d19fa745fdf",
+              "previousSha256": "b2c527d93546d9b9e9cb20d8701992ffe74592b012a0e5219520cde121ae5b0a",
+              "masterSha256": "227ad84d4510983628706d51c9e1e7924a5ad446f4abab08f1217abaa3e5945d",
+              "allowedSourceChangeRegions": [
+                [
+                  17,
+                  19,
+                  18,
+                  20
+                ],
+                [
+                  18,
+                  19,
+                  19,
+                  20
+                ],
+                [
+                  19,
+                  19,
+                  20,
+                  20
+                ],
+                [
+                  21,
+                  19,
+                  22,
+                  20
+                ],
+                [
+                  22,
+                  19,
+                  23,
+                  20
+                ],
+                [
+                  23,
+                  19,
+                  24,
+                  20
+                ],
+                [
+                  24,
+                  19,
+                  25,
+                  20
+                ],
+                [
+                  25,
+                  19,
+                  26,
+                  20
+                ],
+                [
+                  38,
+                  19,
+                  39,
+                  20
+                ],
+                [
+                  39,
+                  19,
+                  40,
+                  20
+                ],
+                [
+                  40,
+                  19,
+                  41,
+                  20
+                ],
+                [
+                  41,
+                  19,
+                  42,
+                  20
+                ],
+                [
+                  42,
+                  19,
+                  43,
+                  20
+                ],
+                [
+                  43,
+                  19,
+                  44,
+                  20
+                ],
+                [
+                  44,
+                  19,
+                  45,
+                  20
+                ],
+                [
+                  46,
+                  19,
+                  47,
+                  20
+                ],
+                [
+                  16,
+                  20,
+                  17,
+                  21
+                ],
+                [
+                  17,
+                  20,
+                  18,
+                  21
+                ],
+                [
+                  18,
+                  20,
+                  19,
+                  21
+                ],
+                [
+                  19,
+                  20,
+                  20,
+                  21
+                ],
+                [
+                  20,
+                  20,
+                  21,
+                  21
+                ],
+                [
+                  21,
+                  20,
+                  22,
+                  21
+                ],
+                [
+                  22,
+                  20,
+                  23,
+                  21
+                ],
+                [
+                  23,
+                  20,
+                  24,
+                  21
+                ],
+                [
+                  24,
+                  20,
+                  25,
+                  21
+                ],
+                [
+                  25,
+                  20,
+                  26,
+                  21
+                ],
+                [
+                  26,
+                  20,
+                  27,
+                  21
+                ],
+                [
+                  37,
+                  20,
+                  38,
+                  21
+                ],
+                [
+                  38,
+                  20,
+                  39,
+                  21
+                ],
+                [
+                  39,
+                  20,
+                  40,
+                  21
+                ],
+                [
+                  40,
+                  20,
+                  41,
+                  21
+                ],
+                [
+                  41,
+                  20,
+                  42,
+                  21
+                ],
+                [
+                  42,
+                  20,
+                  43,
+                  21
+                ],
+                [
+                  43,
+                  20,
+                  44,
+                  21
+                ],
+                [
+                  44,
+                  20,
+                  45,
+                  21
+                ],
+                [
+                  45,
+                  20,
+                  46,
+                  21
+                ],
+                [
+                  46,
+                  20,
+                  47,
+                  21
+                ],
+                [
+                  16,
+                  21,
+                  17,
+                  22
+                ],
+                [
+                  17,
+                  21,
+                  18,
+                  22
+                ],
+                [
+                  18,
+                  21,
+                  19,
+                  22
+                ],
+                [
+                  20,
+                  21,
+                  21,
+                  22
+                ],
+                [
+                  21,
+                  21,
+                  22,
+                  22
+                ],
+                [
+                  22,
+                  21,
+                  23,
+                  22
+                ],
+                [
+                  23,
+                  21,
+                  24,
+                  22
+                ],
+                [
+                  24,
+                  21,
+                  25,
+                  22
+                ],
+                [
+                  25,
+                  21,
+                  26,
+                  22
+                ],
+                [
+                  26,
+                  21,
+                  27,
+                  22
+                ],
+                [
+                  36,
+                  21,
+                  37,
+                  22
+                ],
+                [
+                  37,
+                  21,
+                  38,
+                  22
+                ],
+                [
+                  38,
+                  21,
+                  39,
+                  22
+                ],
+                [
+                  39,
+                  21,
+                  40,
+                  22
+                ],
+                [
+                  40,
+                  21,
+                  41,
+                  22
+                ],
+                [
+                  41,
+                  21,
+                  42,
+                  22
+                ],
+                [
+                  42,
+                  21,
+                  43,
+                  22
+                ],
+                [
+                  43,
+                  21,
+                  44,
+                  22
+                ],
+                [
+                  44,
+                  21,
+                  45,
+                  22
+                ],
+                [
+                  45,
+                  21,
+                  46,
+                  22
+                ],
+                [
+                  46,
+                  21,
+                  47,
+                  22
+                ],
+                [
+                  47,
+                  21,
+                  48,
+                  22
+                ],
+                [
+                  16,
+                  22,
+                  17,
+                  23
+                ],
+                [
+                  17,
+                  22,
+                  18,
+                  23
+                ],
+                [
+                  18,
+                  22,
+                  19,
+                  23
+                ],
+                [
+                  19,
+                  22,
+                  20,
+                  23
+                ],
+                [
+                  21,
+                  22,
+                  22,
+                  23
+                ],
+                [
+                  22,
+                  22,
+                  23,
+                  23
+                ],
+                [
+                  23,
+                  22,
+                  24,
+                  23
+                ],
+                [
+                  24,
+                  22,
+                  25,
+                  23
+                ],
+                [
+                  25,
+                  22,
+                  26,
+                  23
+                ],
+                [
+                  26,
+                  22,
+                  27,
+                  23
+                ],
+                [
+                  36,
+                  22,
+                  37,
+                  23
+                ],
+                [
+                  37,
+                  22,
+                  38,
+                  23
+                ],
+                [
+                  38,
+                  22,
+                  39,
+                  23
+                ],
+                [
+                  39,
+                  22,
+                  40,
+                  23
+                ],
+                [
+                  40,
+                  22,
+                  41,
+                  23
+                ],
+                [
+                  41,
+                  22,
+                  42,
+                  23
+                ],
+                [
+                  44,
+                  22,
+                  45,
+                  23
+                ],
+                [
+                  45,
+                  22,
+                  46,
+                  23
+                ],
+                [
+                  46,
+                  22,
+                  47,
+                  23
+                ],
+                [
+                  36,
+                  23,
+                  37,
+                  24
+                ],
+                [
+                  37,
+                  23,
+                  38,
+                  24
+                ],
+                [
+                  38,
+                  23,
+                  39,
+                  24
+                ],
+                [
+                  39,
+                  23,
+                  40,
+                  24
+                ],
+                [
+                  40,
+                  23,
+                  41,
+                  24
+                ],
+                [
+                  41,
+                  23,
+                  42,
+                  24
+                ],
+                [
+                  42,
+                  23,
+                  43,
+                  24
+                ],
+                [
+                  45,
+                  23,
+                  46,
+                  24
+                ],
+                [
+                  46,
+                  23,
+                  47,
+                  24
+                ]
+              ],
+              "method": "Registered generated brow strokes restricted to native brow envelope, with source-backed removal of orphan original tip (47,21); eye anatomy unchanged."
+            }
+          }
+        }
+      }
+    ],
+    "angry": [
+      {
+        "id": "left",
+        "label": "Links",
+        "phases": {
+          "open": {
+            "file": "../npc078-thinking-emotions/angry/attempt-horizontal-v1/eyes/thinking/left/open.png",
+            "sha256": "d9ebd6f0f5896d027bef351f3d8276b3a124642206a7199362b6465875d71c8c"
+          },
+          "half": {
+            "file": "../npc078-thinking-emotions/angry/attempt-horizontal-v1/eyes/thinking/left/half.png",
+            "sha256": "21b886c2aa3e8bbd1bcf5661b8deb1f483548b0ec20a537dc60f2feedef236d1"
+          },
+          "closed": {
+            "file": "../npc078-thinking-emotions/angry/attempt-horizontal-v1/eyes/thinking/left/closed.png",
+            "sha256": "d247ee9a827bb2716038fb4cb343f3cf445c34a891d652f43b7a0f1d95bd38f6"
+          }
+        }
+      },
+      {
+        "id": "right",
+        "label": "Rechts",
+        "phases": {
+          "open": {
+            "file": "../npc078-thinking-emotions/angry/attempt-horizontal-v1/eyes/thinking/right/open.png",
+            "sha256": "afa9cc639ab47c6383a99ce89ef5df46cd8db693ef3abc3bd00cf01e1f09a276"
+          },
+          "half": {
+            "file": "../npc078-thinking-emotions/angry/attempt-horizontal-v1/eyes/thinking/right/half.png",
+            "sha256": "be82feba9583617d0788a55604ae260aed809518b776cd55e7dc8dfe51e0ffb5"
+          },
+          "closed": {
+            "file": "../npc078-thinking-emotions/angry/attempt-horizontal-v1/eyes/thinking/right/closed.png",
+            "sha256": "d247ee9a827bb2716038fb4cb343f3cf445c34a891d652f43b7a0f1d95bd38f6"
+          }
+        }
+      }
+    ],
+    "sad": [
+      {
+        "id": "left",
+        "label": "Links",
+        "phases": {
+          "open": {
+            "file": "../npc078-thinking-emotions/sad/attempt-horizontal-v1/eyes/thinking/left/open.png",
+            "sha256": "95373a704605a161de5db38c7d184197e65c9616fb9b05b52baaa56461494be5"
+          },
+          "half": {
+            "file": "../npc078-thinking-emotions/sad/attempt-horizontal-v1/eyes/thinking/left/half.png",
+            "sha256": "b037f17c1dfe417abd787da32d73844ab14e4e3d2cbc48cf9169759f2ed64134"
+          },
+          "closed": {
+            "file": "../npc078-thinking-emotions/sad/attempt-horizontal-v1/eyes/thinking/left/closed.png",
+            "sha256": "d33d735ccc6a95eb622fe1c4ea69ad798a57bdd86e33996aaba1b6461f90c41f"
+          }
+        }
+      },
+      {
+        "id": "right",
+        "label": "Rechts",
+        "phases": {
+          "open": {
+            "file": "../npc078-thinking-emotions/sad/attempt-horizontal-v1/eyes/thinking/right/open.png",
+            "sha256": "9b0c51c1c21eb94bc7509db8a838799b7e6e1d28033e3b5e5eefb60a604adba8"
+          },
+          "half": {
+            "file": "../npc078-thinking-emotions/sad/attempt-horizontal-v1/eyes/thinking/right/half.png",
+            "sha256": "dc29c32c6b7ea875b6e6b0a6fed4624837aab415a951cc70a7ded875d1097856"
+          },
+          "closed": {
+            "file": "../npc078-thinking-emotions/sad/attempt-horizontal-v1/eyes/thinking/right/closed.png",
+            "sha256": "d33d735ccc6a95eb622fe1c4ea69ad798a57bdd86e33996aaba1b6461f90c41f"
+          }
+        }
+      }
+    ],
+    "afraid": [
+      {
+        "id": "left",
+        "label": "Links",
+        "phases": {
+          "open": {
+            "file": "../npc078-thinking-emotions/afraid/attempt-horizontal-v1/eyes/thinking/left/open.png",
+            "sha256": "f5580f0573a2072813159a03041a5cb9100ba69093c362b701f631ffcf1129d2"
+          },
+          "half": {
+            "file": "../npc078-thinking-emotions/afraid/attempt-horizontal-v1/eyes/thinking/left/half.png",
+            "sha256": "31ecf0827f60c38f85794862a96aa5b5cda6b06703e98f4bc63644db7ac410f9"
+          },
+          "closed": {
+            "file": "../npc078-thinking-emotions/afraid/attempt-horizontal-v1/eyes/thinking/left/closed.png",
+            "sha256": "de288fd1ced6ce50dbe7e4cbe9c3a6d0e871c987941c12ddfd80c1681e3a16d8"
+          }
+        }
+      },
+      {
+        "id": "right",
+        "label": "Rechts",
+        "phases": {
+          "open": {
+            "file": "../npc078-thinking-emotions/afraid/attempt-horizontal-v1/eyes/thinking/right/open.png",
+            "sha256": "602011c11669bf2cff7c9b439deeb062c16ae268fadf1c21eeecda7a40e7180c"
+          },
+          "half": {
+            "file": "../npc078-thinking-emotions/afraid/attempt-horizontal-v1/eyes/thinking/right/half.png",
+            "sha256": "eda821b2d70550f95596608989b88bf8174508e62094fe4bb845af9215736854"
+          },
+          "closed": {
+            "file": "../npc078-thinking-emotions/afraid/attempt-horizontal-v1/eyes/thinking/right/closed.png",
+            "sha256": "de288fd1ced6ce50dbe7e4cbe9c3a6d0e871c987941c12ddfd80c1681e3a16d8"
+          }
+        }
+      }
+    ],
+    "guarded": [
+      {
+        "id": "left",
+        "label": "Links",
+        "phases": {
+          "open": {
+            "file": "../npc078-thinking-emotions/guarded/attempt-horizontal-v1/eyes/thinking/left/open.png",
+            "sha256": "fc1d29f967f58d3118c4cac76dc2836b87639a78965060eba1cff187af997fd0"
+          },
+          "half": {
+            "file": "../npc078-thinking-emotions/guarded/attempt-horizontal-v1/eyes/thinking/left/half.png",
+            "sha256": "c16af3c3330a79fdaac08e5ce7a364f16e5c072875840112d179dfe88054ae39"
+          },
+          "closed": {
+            "file": "../npc078-thinking-emotions/guarded/attempt-horizontal-v1/eyes/thinking/left/closed.png",
+            "sha256": "92b85c8a68b235422d019014fe3f818cb992ac3b40e622ec2eb177f4fab2b44b"
+          }
+        }
+      },
+      {
+        "id": "right",
+        "label": "Rechts",
+        "phases": {
+          "open": {
+            "file": "../npc078-thinking-emotions/guarded/attempt-horizontal-v1/eyes/thinking/right/open.png",
+            "sha256": "cd6331c2a31c06abe23fd2113b89610ab443d47686e50ea484e0e8b28cd9ca02"
+          },
+          "half": {
+            "file": "../npc078-thinking-emotions/guarded/attempt-horizontal-v1/eyes/thinking/right/half.png",
+            "sha256": "72339c3595459fef890f8550e2a8ea85373f57d8ad6bed24b061774293e1815a"
+          },
+          "closed": {
+            "file": "../npc078-thinking-emotions/guarded/attempt-horizontal-v1/eyes/thinking/right/closed.png",
+            "sha256": "92b85c8a68b235422d019014fe3f818cb992ac3b40e622ec2eb177f4fab2b44b"
+          }
+        }
+      }
+    ]
+  },
+  "parentReviewedRepairs": {
+    "happy-brows-v4": {
+      "moods": [
+        "happy"
+      ],
+      "masterHashes": {
+        "happy": "227ad84d4510983628706d51c9e1e7924a5ad446f4abab08f1217abaa3e5945d"
+      },
+      "scope": "Only listed eye frames and their playback reviewed; complete portrait acceptance remains pending.",
+      "reviewEvidence": [
+        "happy-eyes-neutral-old-v4-same-happy-X-8x.png",
+        "happy-v4-playback-0..21.png",
+        "../npc078-eyes-review/happy-v4-candidate-review-pins.json"
+      ]
+    }
+  }
+}

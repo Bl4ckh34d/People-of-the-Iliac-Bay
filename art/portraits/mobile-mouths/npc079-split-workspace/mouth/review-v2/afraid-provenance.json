@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T19:09:23.3347855Z",
+    "portraitRecord":  79,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "afraid",
+    "prompt":  "Use case: stylized-concept\nAsset type: NPC079 pixel-art lower-face speech-mouth atlas for Daggerfall Unity\nInput images: Image 1 is the exact repeated 3×3 lower-face reference grid; use it for cell framing, placement, scale, and source palette. Image 2 is the full original portrait; use it for identity, skin, hair, and color reference.\nPrimary request: Create one exact 3-column × 3-row atlas of nine complete 64:29 lower portrait halves, row-major A B C / D E F / G H X. No labels, gutters, borders, extra panels, or added bottom band.\nSubject and expression: Same adult woman and exact original framing. Fear stays subtle and tense. Keep the emotion in mild lip-corner tension while preserving each required mouth-shape family.\nStyle: Crisp native-scale pixel art with compact clusters and the original muted brown-rose lips and warm skin. Use only small, matte, muted ivory tooth pixels where required.\nExact Rhubarb pose contract:\nA: gently pressed closed lips for P/B/M.\nB: narrow horizontal opening with upper and lower teeth nearly together for consonants/EE. Make tooth pixels a small coherent cluster, not isolated bright dots.\nC: medium unrounded opening for EH/AE.\nD: clearly wider vertical AA opening than C.\nE: slightly rounded AO/ER opening, no wider than C.\nF: small forward rounded pucker for UW/OW/W, with no teeth and a small opening.\nG: upper teeth touch lower lip for spoken F/V. Show compact upper incisors contacting the lower lip; keep this distinct from F\u0027s pucker and from a wide vowel.\nH: open L pose with raised tongue behind upper teeth; tongue may be too small to show, but opening must sit between C and D.\nX: relaxed closed idle lips.\nCritical: F is the pucker. G is the teeth-to-lower-lip F/V pose. Preserve clear pose differences at native pixel scale. Do not turn G into a pucker or remove its correct teeth.\nConstraints: Change only mouth and immediate lip corners. Keep nose, cheeks, jaw, chin, neck, hair, face identity, crop, and framing aligned with references. Preserve muted palette and original mouth size.\nAvoid: lipstick red, pure white shiny teeth, tooth gaps, black stripes, oversized mouth, broad grin, exaggerated grimace, broad skin repaint, changed jaw/nose/hair, smoothing, blur, text, watermark, or artifacts.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a164fb-c9b2-75c2-8f4c-33658fdd5a3a as C:\\Users\\Daniel\\.codex\\generated_images\\01a164fb-c9b2-75c2-8f4c-33658fdd5a3a\\exec-47dcde6b-8545-4d30-8098-ec22e164fc7b.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a164fb-c9b2-75c2-8f4c-33658fdd5a3a\\exec-47dcde6b-8545-4d30-8098-ec22e164fc7b.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "70b1b52df73159543afd5776eae7565bfd3619fd31bc5fd90af674e42520d460",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "51b7d166c01001213d48e19be135f463e41b6a9892da5abe9c686cf1ae53ca2a",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a164fb-c9b2-75c2-8f4c-33658fdd5a3a\\exec-47dcde6b-8545-4d30-8098-ec22e164fc7b.png",
+                      "sha256":  "280aa3774342ae046d0133804b5748f44b1e571f0b02ed656b2aff1de023c34d",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/afraid/raw.png",
+                "sha256":  "280aa3774342ae046d0133804b5748f44b1e571f0b02ed656b2aff1de023c34d",
+                "width":  1863,
+                "height":  844
+            }
+}

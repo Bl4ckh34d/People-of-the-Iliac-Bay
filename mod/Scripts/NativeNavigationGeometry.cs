@@ -44,6 +44,11 @@ namespace PeopleOfTheIliacBay.DFU
         internal static bool IsDynamicNavigationBody(Component component)
         {
             if(!component)return false;
+            // Interaction triggers are not physical navigation geometry. Native
+            // loot icons change their trigger height with their random artwork;
+            // including them makes an unchanged RDB fail its static fingerprint.
+            var collider=component as Collider;
+            if(collider && collider.isTrigger)return true;
             if(component.GetComponentInParent<DaggerfallEntityBehaviour>() ||
                 component.GetComponentInParent<MobilePersonNPC>() ||
                 component.GetComponentInParent<CrowdMotion>() ||

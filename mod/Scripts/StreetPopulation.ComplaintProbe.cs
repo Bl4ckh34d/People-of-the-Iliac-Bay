@@ -17,26 +17,30 @@ namespace PeopleOfTheIliacBay.DFU
         {
             bool verifyWaiting=Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-verify-complaint-wait")>=0;
             var game=GameManager.Instance;var clock=DaggerfallUnity.Instance.WorldTime.Now;
-            clock.RaiseTime((float)((43200-clock.ToSeconds()%86400+86400)%86400));
             DaggerfallUI.Instance.PopToHUD();game.PauseGame(false);
             var host=GetComponent<PeopleOfTheIliacBayMod>();
             typeof(PeopleOfTheIliacBayMod).GetField("exteriorGuardsEnabled",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(host,true);
-            var guards=GetComponent<GuardPopulation>();float deadline=Time.realtimeSinceStartup+180;
+            var guards=GetComponent<GuardPopulation>();float deadline=Time.realtimeSinceStartup+30;
             while((!guards || !guards.OwnsSettlement || !guards.HasAvailableDialogueGuards()) && Time.realtimeSinceStartup<deadline)
                 yield return null;
-            if(!guards || !guards.HasAvailableDialogueGuards())throw new InvalidOperationException("Complaint fixture has no ready guard roster.");
+            if(!guards || !guards.OwnsSettlement || !guards.HasAvailableDialogueGuards())
+                throw new InvalidOperationException("Complaint fixture has no actual available local guard within total30seconds.");
             if(game.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.None)
                 throw new InvalidOperationException("Complaint fixture requires no existing player crime.");
             ResidentActor witness=null;float shortest=float.PositiveInfinity;Vector3 guardPosition=Vector3.zero;
-            deadline=Time.realtimeSinceStartup+60;
+            int activeBodies=0,eligibleAdults=0,reachablePairs=0;
             while(!witness && Time.realtimeSinceStartup<deadline)
             {
+                activeBodies=0;eligibleAdults=0;reachablePairs=0;
                 foreach(var actor in new List<ResidentActor>(actors.Values))
                 {
-                    if(!actor || !actor.gameObject.activeInHierarchy || actor.IsSleeping || actor.IsConversing ||
+                    if(!actor || !actor.gameObject.activeInHierarchy)continue;
+                    activeBodies++;
+                    if(actor.IsSleeping || actor.IsConversing ||
                         !actor.Resident.IsAlive || actor.Resident.IsQuestProtected || actor.Resident.AgeGroup!=ResidentAgeGroup.Adult ||
                         worldStore.ActiveNpcAction(actor.Resident.Id)!=null ||
                         worldStore.ReadNpcConversationBoundary(actor.Resident.Id,clock.ToSeconds())!=null)continue;
+                    eligibleAdults++;
                     string guardId;Vector3 target;List<SavedRoutePoint> route;
                     Vector3 ground=actor.transform.position-Vector3.up;
                     if(!guards.TryFindNearestComplaintGuard(ground,out guardId,out target,out route) ||
@@ -45,11 +49,13 @@ namespace PeopleOfTheIliacBay.DFU
                     for(int i=1;i<route.Count;i++)length+=Vector2.Distance(new Vector2((float)route[i-1].X,(float)route[i-1].Z),
                         new Vector2((float)route[i].X,(float)route[i].Z));
                     if(length>=shortest || length>100)continue;
+                    reachablePairs++;
                     shortest=length;witness=actor;guardPosition=target;
                 }
                 if(!witness)yield return null;
             }
-            if(!witness)throw new InvalidOperationException("No actual adult has a nearby reachable complaint guard.");
+            if(!witness)throw new InvalidOperationException("No existing adult body has a nearby reachable complaint guard within total30seconds: activeBodies="+
+                activeBodies+"; eligibleAdults="+eligibleAdults+"; reachablePairs="+reachablePairs+"; fixtureClockUnchanged=true");
             string person=witness.Resident.Id;int guardCount=guards.Roster.Guards.Count;
             // A side offset may land inside a building. Verify the incident point
             // before using it; an unreachable test placement cannot prove delivery.
@@ -89,6 +95,8 @@ namespace PeopleOfTheIliacBay.DFU
                 float started=Time.realtimeSinceStartup,nextTrace=started+10;bool restoredProgress=false;
                 float waitingSince=-1,waitSeconds=0,maxWaitDrift=0;double waitingTravel=0;
                 Vector3 waitPosition=Vector3.zero;bool waitingPassed=false;
+                GuardActor conversationListener=null;float conversationStarted=-1,conversationUntil=-1;
+                Vector3 listenerStart=Vector3.zero,speakerStart=Vector3.zero;
                 var first=worldStore.GetDialogueComplaint(person);
                 var realIncident=new Vector3((float)first.CrimeX,(float)first.CrimeY,(float)first.CrimeZ);
                 if(verifyWaiting)
@@ -113,9 +121,44 @@ namespace PeopleOfTheIliacBay.DFU
                     if(step>0.9f)throw new InvalidOperationException("Complaint runner jumped: "+step);
                     var pending=worldStore.GetDialogueComplaint(person);
                     var state=worldStore.ReadNpcConversationBoundary(person,clock.ToSeconds());
+                    if(pending!=null)
+                    {
+                        GuardActor listener=null;
+                        foreach(var candidate in UnityEngine.Object.FindObjectsOfType<GuardActor>())
+                            if(candidate.GuardId==pending.GuardId && candidate.gameObject.activeInHierarchy &&
+                                (ResidentActor)typeof(GuardActor).GetField("reportWitness",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(candidate)==witness)
+                            {listener=candidate;break;}
+                        if(listener)
+                        {
+                            float until=(float)typeof(GuardActor).GetField("reportConversationUntil",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(listener);
+                            if(until>Time.time)
+                            {
+                                if(conversationListener!=listener || conversationUntil!=until)
+                                {
+                                    conversationListener=listener;conversationStarted=Time.time;conversationUntil=until;
+                                    listenerStart=listener.transform.position;speakerStart=current;
+                                    if(until-conversationStarted<1.8f || until-conversationStarted>5.1f)
+                                        throw new InvalidOperationException("Threat report contact lacks a two-to-five-second conversation before dispatch.");
+                                }
+                                var facing=speakerStart-listenerStart;facing.y=0;
+                                if(Vector3.Distance(listener.transform.position,listenerStart)>0.2f ||
+                                    Vector3.Distance(current,speakerStart)>0.2f ||
+                                    Vector3.Dot(listener.transform.forward,facing.normalized)<0.9f ||
+                                    Vector3.Dot(witness.transform.forward,-facing.normalized)<0.9f)
+                                    throw new InvalidOperationException("Complaint partners failed physical standing/facing conversation before dispatch.");
+                                if(game.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.None ||
+                                    state.ReportStatus!=NpcConversationBoundaryReportStatus.Started)
+                                    throw new InvalidOperationException("Threat report dispatched before its physical conversation completed.");
+                            }
+                        }
+                    }
                     if(pending==null)
                     {
-                        double seconds=Time.realtimeSinceStartup-started-waitSeconds;double kmh=(travelled-waitingTravel)/seconds*3.6;
+                        float conversationSeconds=conversationUntil-conversationStarted;
+                        if(!conversationListener || conversationStarted<0 || conversationSeconds<1.8f ||
+                            conversationSeconds>5.1f || Time.time<conversationUntil)
+                            throw new InvalidOperationException("Delivered complaint skipped its observed pre-dispatch conversation.");
+                        double seconds=Time.realtimeSinceStartup-started-waitSeconds-conversationSeconds;double kmh=(travelled-waitingTravel)/seconds*3.6;
                         var report=guards.Roster.Reports.Find(row=>row.Id=="dialogue:"+boundary.ReceiptId);
                         var charge=worldStore.ReadNpcVerbalCharge();
                         if(state.ReportStatus!=NpcConversationBoundaryReportStatus.Delivered || report==null ||
@@ -127,6 +170,10 @@ namespace PeopleOfTheIliacBay.DFU
                                 "; kmh="+kmh+"; travel="+travelled+"; report="+(report!=null)+"; charge="+(charge!=null));
                         Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_COMPLAINT_PASS: travelMetres="+travelled+"; realSeconds="+seconds+
                             "; averageKmh="+kmh+"; maxStep="+maxStep+"; bodyProgress=true; restore=true; delayedCharge=true; finiteGuards=true; LLMSelectionNotTested=true");
+                        if(!report.GuardIds.Contains(conversationListener.GuardId))
+                            throw new InvalidOperationException("Delivered complaint changed its observed physical guard listener.");
+                        Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_COMPLAINT_CONVERSATION_PASS: seconds="+conversationSeconds+
+                            "; bothStill=true; mutualFacing=true; actualDirectThreatReceipt=true; beforeDispatch=true");
                         // Dispatch was verified above. End the controlled player crime
                         // before testing routine resumption: a witness may legitimately
                         // stand and watch the ensuing guard confrontation otherwise.

@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T15:31:16.2520127Z",
+    "portraitRecord":  91,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "happy",
+    "prompt":  "Create a 2×2 pixel-art eye atlas from the single supplied reference grid. Each cell is a complete, aligned 64×35 upper portrait crop. Use row-major order: OPEN, HALF CLOSED / FULLY CLOSED, OPEN REPEAT. Keep the face, hair, framing, brow positions, eye spacing, iris size and source palette consistent across all four cells.\n\nShow a clear but gentle happy expression: soft, rounded, slightly lifted brows; relaxed smile-eyes; a small friendly lift in the lower lids. Make the mood visibly warmer than neutral while keeping source eye anatomy compact and natural. Do not make the brows surprised, angry, blocky, duplicated, or detached. Keep one coherent brow shape per eye.\n\nKeep both irises stationary in their original positions and preserve their small native pixel clusters and warm muted highlights. Do not shift gaze, enlarge eyes, add broad white sclera, or add bright glints. For HALF CLOSED, the upper lids descend over the top of both irises while leaving them partly visible; do not move the eyeballs or lower lids. For FULLY CLOSED, both lids cover the irises completely with natural closed-eye curves. Keep brows and smile-eye expression consistent in all phases. No cheek movement, face shift, hair changes, extra details, labels, gutters, text, or watermark.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-e5606b01-5adb-446b-9a7d-11c600689993.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-e5606b01-5adb-446b-9a7d-11c600689993.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "428f65da65c68b7c50b7cefcf4fde03aa83505c54de6ccbb2ac3ab018f8a5c51",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "4bc32091eba9e8ef44f76a0ec4c1fe6c6b26be1c59c3ec999c9bd3709e281c2f",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-e5606b01-5adb-446b-9a7d-11c600689993.png",
+                      "sha256":  "f50b9d2751a3e45ae67e7830239821cff25e9214c0f46b623f1f6c25fb461242",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/happy/raw.png",
+                "sha256":  "f50b9d2751a3e45ae67e7830239821cff25e9214c0f46b623f1f6c25fb461242",
+                "width":  1695,
+                "height":  928
+            }
+}

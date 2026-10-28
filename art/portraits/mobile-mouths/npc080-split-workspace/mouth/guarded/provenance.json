@@ -1,0 +1,19 @@
+{
+  "portrait": 80,
+  "emotion": "guarded / skeptical",
+  "status": "generated; review pending; not assembled or installed",
+  "generator": "built-in image_gen edit",
+  "generation_count": 1,
+  "generated_original": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-626e-7471-95f3-109617bb3581\\exec-ddf7c98c-3e2a-490d-b34a-69c1af8ce83e.png",
+  "output": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc080-split-workspace\\mouth\\guarded\\raw.png",
+  "dimensions": "1863x844",
+  "output_sha256": "EB3E13265649124743403705D973BC847339FB84E25F94D352F787C85685D50B",
+  "edit_target": {
+    "sha256": "29D10CFC35236E76D51A7B266E4614B74B2C36CE461E2D82E3D02E36012D288B",
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc080-split-workspace\\mouth\\neutral\\raw.png"
+  },
+  "cell_order": "3x3 row-major: A B C / D E F / G H X",
+  "prompt": "Edit this existing nonsexual fantasy game portrait animation atlas only. Preserve its exact full 3x3 layout, cell order A B C / D E F / G H X, framing, pixel scale, muted original palette, and all existing pixel-art details. Keep all nine distinct speech mouth shapes and their articulation. Make only a very subtle guarded, skeptical adjustment to the mouth corners across the atlas: closed A and X look firm and slightly questioning, with mild asymmetry, not angry, frowning, smiling, pouting, or sneering. Preserve all other image parts and colors unchanged. Do not add new content, crop, alter frame geometry, labels or text.",
+  "prior_rejection": "Original moderation rejection preserved as provenance-rejected.json",
+  "visual_review": "Reopened saved atlas. All nine speech shapes remain legible and framing/palette remain close to neutral target. Skeptical corner asymmetry is very subtle and may be indistinguishable from neutral at native size; parent should compare native A/X before selection. No further generation authorized."
+}

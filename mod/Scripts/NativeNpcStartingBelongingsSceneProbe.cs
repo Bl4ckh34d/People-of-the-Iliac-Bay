@@ -45,7 +45,7 @@ namespace PeopleOfTheIliacBay.DFU
         public static IEnumerator RunFixture(PeopleOfTheIliacBayMod host,StreetPopulation streets,string character)
         {
             Require(Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-npc-starting-belongings-scene-probe")>=0 &&
-                character!=null && character.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal),
+                character!=null && NativeProbeText.IsTestCharacter(character),
                 "Starting-belongings scene probe requires its explicit flag and owned character.");
             Require(host && streets,"Starting-belongings scene probe has no live adapter or town population.");
             var game=GameManager.Instance;game.SaveLoadManager.EnumerateSaves();

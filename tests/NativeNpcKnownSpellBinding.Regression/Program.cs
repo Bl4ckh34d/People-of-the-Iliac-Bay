@@ -76,12 +76,41 @@ internal static class Program
         }
     }
 
+    private static void FirstBookAllowsNextObservedMagickaSpend()
+    {
+        var store = new WorldStateStore(42);
+        var person = store.GetOrCreate(100, new[] { 10 }, 1).Households[0].Residents[0];
+        var actor = Body(person);
+        var archetype = store.ResolveNpcArchetype(person.Id);
+        var before = store.ReadNpcVitals(person.Id, archetype);
+        Require(!before.IsPersisted && before.Revision == 0 && before.CurrentMagicka > 0, "Fixture must start seed-only.");
+        long samplerRevision = before.Revision;
+        actor.AddComponent<NativeNpcVitalsBinding>().Rebaseline = () =>
+        {
+            var saved = store.ReadNpcVitals(person.Id, archetype);
+            Require(saved.CurrentHealth == before.CurrentHealth && saved.CurrentMagicka == before.CurrentMagicka,
+                "Book capture must not change actual resources.");
+            samplerRevision = saved.Revision;
+        };
+        var binding = NativeNpcKnownSpellBinding.BindTo(actor, store, person);
+        actor.GetComponent<DaggerfallEntityBehaviour>().Entity.DeserializeSpellbook(new[] {
+            new EffectBundleSettings { Name = "Shield", StandardSpellIndex = 17 } });
+        Require(binding != null && binding.Capture(), "First Shield book was not captured.");
+        Require(store.ReadNpcVitals(person.Id, archetype).Revision == 1, "First book must initialize a saved owner.");
+        Require(store.TryCaptureObservedNpcVitalsChange(store.CaptureNpcVitalsWriteEpoch(), person.Id, archetype,
+            before.CurrentHealth, before.CurrentMagicka, before.CurrentHealth, before.CurrentMagicka - 1, 100, samplerRevision),
+            "First native magicka spend was rejected after book initialized the saved vitals revision.");
+        Require(store.ReadNpcVitals(person.Id, archetype).CurrentMagicka == before.CurrentMagicka - 1,
+            "Observed magicka spend was not persisted exactly.");
+    }
+
     private static int Main()
     {
         int failed = 0;
         foreach (var test in new (string Name, Action Run)[] {
             ("Shield book restore preserves NPC skill cost source", RestoredShieldKeepsOwnSkills),
             ("Supplied managed spellbook retains content and uses NPC skills", SuppliedBookUsesResidentSkills),
+            ("First saved spellbook permits next observed magicka spend", FirstBookAllowsNextObservedMagickaSpend),
             ("Player quest mismatched and unmanaged bodies remain unchanged", ForeignBodiesRemainUnchanged) })
         {
             try { test.Run(); Console.WriteLine("PASS " + test.Name); }

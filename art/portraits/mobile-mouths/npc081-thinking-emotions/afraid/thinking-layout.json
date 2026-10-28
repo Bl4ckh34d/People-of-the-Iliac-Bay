@@ -1,0 +1,25 @@
+{
+  "emotionId": "afraid",
+  "referenceUpperFile": "eyes/afraid/open.png",
+  "browSourceFile": "eyes/afraid/open.png",
+  "halfSourceFile": "eyes/afraid/half.png",
+  "closedSourceFile": "eyes/afraid/closed.png",
+  "halfLidRegions": [
+    {
+      "x": 18,
+      "y": 25,
+      "width": 11,
+      "height": 2
+    },
+    {
+      "x": 36,
+      "y": 25,
+      "width": 11,
+      "height": 2
+    }
+  ],
+  "sourceSha256": "3cc1a5f39295fa9b28ef72744418a2b3cdeea8320f9fc5b295c8b0c9584156dc",
+  "referenceSha256": "b3993748bf55bb3a04033f8bc0aa3da971ef1d36b36af5a511b48e17306e7265",
+  "candidateOnly": true,
+  "rationale": "Provisional from npc081 portrait-specific neutral band y25..26. Inspected all six mood phase crops; selected band remains above visible iris/sclera. Sad/afraid brows approach the strip; parent-native review required. Applies to afraid only after inspecting its source phase RGB; not an approval to build or publish."
+}

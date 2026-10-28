@@ -16,11 +16,12 @@ namespace PeopleOfTheIliacBay.DFU
     {
         private Func<WorldStateStore> getStore;
         private Func<bool> available;
+        private Func<bool> companionAvailable;
         private IDisposable hooks;
         private float nextPresenceCheck;
-        public void Install(Func<WorldStateStore> store,Func<bool> enabled)
+        public void Install(Func<WorldStateStore> store,Func<bool> enabled,Func<bool> companionEnabled)
         {
-            getStore=store; available=enabled;
+            getStore=store; available=enabled; companionAvailable=companionEnabled;
             var type=Type.GetType("PeopleOfTheIliacBay.QuestHooks.NativeDefenseHooks, PeopleOfTheIliacBay.QuestHooks",true);
             hooks=(IDisposable)Activator.CreateInstance(type,new object[] {
                 new Func<DaggerfallEntityBehaviour,DaggerfallEntityBehaviour,Action<Exception>>(BeginDamage),
@@ -136,8 +137,17 @@ namespace PeopleOfTheIliacBay.DFU
                 getStore().ClearNpcVerbalCharge();
             var aggression=BeginAttackOnCivilian(target,source);
             var damage=BeginDamageCore(target,source);
-            if(aggression==null)return damage;
-            return error=>{aggression(error);if(damage!=null)damage(error);};
+            var victim=target?target.GetComponent<ResidentActor>():null;
+            // Personal safety belongs to the hit resident, even before the
+            // independent municipal guard roster has finished loading.
+            var streets=victim && source?
+                UnityEngine.Object.FindObjectOfType<StreetPopulation>():null;
+            var mobileResponse=streets?streets.BeginMobileResidentAttack(victim,source):null;
+            // Dungeon companions have no municipal guard owner. Their actual
+            // kill receipts follow mod availability, not settlement defense.
+            var companion=companionAvailable!=null && companionAvailable() && getStore!=null?NativeCompanionLootClaims.BeginDamage(getStore(),target,source):null;
+            if(aggression==null && companion==null && mobileResponse==null)return damage;
+            return error=>{if(aggression!=null)aggression(error);if(damage!=null)damage(error);if(companion!=null)companion(error);if(mobileResponse!=null)mobileResponse(error);};
         }
         private Action<Exception> BeginAttackOnCivilian(DaggerfallEntityBehaviour target,DaggerfallEntityBehaviour source)
         {
@@ -313,8 +323,10 @@ namespace PeopleOfTheIliacBay.DFU
         }
         private void ObserveDeath(object sender)
         {
-            if(available==null || !available()) return;
             var death=sender as EnemyDeath; if(!death) return;
+            if(companionAvailable!=null && companionAvailable() && getStore!=null)
+                NativeCompanionLootClaims.BindCorpse(getStore(),death.GetComponent<DaggerfallEntityBehaviour>());
+            if(available==null || !available()) return;
             var target=death.GetComponent<DaggerfallEntityBehaviour>(); string id=Identity(target); if(id==null) return;
             var store=getStore(); var record=store.GetDefenseCombatant(id); if(record==null) return;
             var scene=DefenseScene.For(target);

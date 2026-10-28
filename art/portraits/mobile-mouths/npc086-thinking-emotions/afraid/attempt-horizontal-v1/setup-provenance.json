@@ -1,0 +1,78 @@
+{
+  "kind": "current-copy-source-preparation",
+  "createdAtUtc": "2026-10-22T08:05:30.0305668Z",
+  "portraitRecord": 86,
+  "emotionId": "afraid",
+  "sourceWorkspace": "art/portraits/mobile-mouths/npc086-split-workspace",
+  "sourceManifestSha256": "c84860b0c914ad63574ffc5cb1d79ba7f0c0f0cb3e4f094ecbb117786cf06cbe",
+  "claim": "Copied only immutable original/split and this moodâ€™s selected open/half/closed sources from the current split workspace. No generation, historical art provenance, or source editing is claimed.",
+  "sourceFile": "original.png",
+  "sourceSha256": "685cd0cb922554bb245a0431ee5f141aadbb8c740df7fb81d5a9cb03c888e99d",
+  "sourceWidth": 64,
+  "sourceHeight": 64,
+  "splitY": 35,
+  "sourceFiles": [
+    "original.png",
+    "source-upper.png",
+    "source-lower.png",
+    "eyes/afraid/open.png",
+    "eyes/afraid/half.png",
+    "eyes/afraid/closed.png"
+  ],
+  "copiedFiles": {
+    "original.png": {
+      "source": "art/portraits/mobile-mouths/npc086-split-workspace/original.png",
+      "sha256": "685cd0cb922554bb245a0431ee5f141aadbb8c740df7fb81d5a9cb03c888e99d",
+      "sourceSha256": "685cd0cb922554bb245a0431ee5f141aadbb8c740df7fb81d5a9cb03c888e99d"
+    },
+    "source-upper.png": {
+      "source": "art/portraits/mobile-mouths/npc086-split-workspace/source-upper.png",
+      "sha256": "16a17f3483dc81d8b503be1f63dc8fffe5af1fa3788541abf724814161150c32",
+      "sourceSha256": "16a17f3483dc81d8b503be1f63dc8fffe5af1fa3788541abf724814161150c32"
+    },
+    "source-lower.png": {
+      "source": "art/portraits/mobile-mouths/npc086-split-workspace/source-lower.png",
+      "sha256": "e759f67562c028b486e9a8e17a04f91946ecaadcbc42917577c0a38813e52fe9",
+      "sourceSha256": "e759f67562c028b486e9a8e17a04f91946ecaadcbc42917577c0a38813e52fe9"
+    },
+    "layout.json": {
+      "source": "art/portraits/mobile-mouths/npc086-split-workspace/layout.json",
+      "sha256": "23719bd032e7efbca9360e6a0d022a1188154e74c0aa6cd7adccaefc257f534c",
+      "sourceSha256": "b8825d18815413fc7fc06dc06cbfea0ec0ece2a4302799167b12e9c6fe7512ea"
+    },
+    "eyes/afraid/open.png": {
+      "source": "art/portraits/mobile-mouths/npc086-split-workspace/eyes/afraid/open.png",
+      "sha256": "1487d475accd1da1d24b95125940f4db4b98484049751ebda95eeeea83a0b81e",
+      "sourceSha256": "1487d475accd1da1d24b95125940f4db4b98484049751ebda95eeeea83a0b81e"
+    },
+    "eyes/afraid/half.png": {
+      "source": "art/portraits/mobile-mouths/npc086-split-workspace/eyes/afraid/half.png",
+      "sha256": "7d79077d9689534ae85922deedfead129f1db7848757cf6a64eb90887d86cc4a",
+      "sourceSha256": "7d79077d9689534ae85922deedfead129f1db7848757cf6a64eb90887d86cc4a"
+    },
+    "eyes/afraid/closed.png": {
+      "source": "art/portraits/mobile-mouths/npc086-split-workspace/eyes/afraid/closed.png",
+      "sha256": "c4b13e3c4ca9fa74bbfaef161d6d8ae5ce37f1419548e410ed4484fc8b9f8079",
+      "sourceSha256": "c4b13e3c4ca9fa74bbfaef161d6d8ae5ce37f1419548e410ed4484fc8b9f8079"
+    }
+  },
+  "sourceLayoutSha256": "b8825d18815413fc7fc06dc06cbfea0ec0ece2a4302799167b12e9c6fe7512ea",
+  "workspaceLayoutSha256": "23719bd032e7efbca9360e6a0d022a1188154e74c0aa6cd7adccaefc257f534c",
+  "browLockEndY": 20,
+  "browInspection": "Native open/half/closed views: afraid brow reaches row20; ocular phase changes start row21.",
+  "referenceGrid": {
+    "file": "thinking-reference-grid.png",
+    "sha256": "aefc7f8c974c707db3ba594e07dc49465146ac7ef0f34136c69b6aa86607e62d",
+    "width": 1024,
+    "height": 560,
+    "nearestNeighborScale": 8,
+    "cellOrder": [
+      "open-left",
+      "open-right",
+      "half-left",
+      "half-right"
+    ]
+  },
+  "candidateWorkspace": "art/portraits/mobile-mouths/npc086-thinking-emotions/afraid/attempt-horizontal-v1",
+  "notCopied": "No current manifest or legacy thinking map was copied into this mood root; no mouth source or unrelated mood source was copied."
+}

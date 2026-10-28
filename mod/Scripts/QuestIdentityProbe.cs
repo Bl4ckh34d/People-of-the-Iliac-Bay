@@ -20,7 +20,7 @@ namespace PeopleOfTheIliacBay.DFU
         public static IEnumerator Run()
         {
             var game = GameManager.Instance;
-            Require(game.PlayerEntity.Name.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal), "Disposable character required.");
+            Require(NativeProbeText.IsTestCharacter(game.PlayerEntity.Name), "Disposable character required.");
             // Generated family homes may contain no original NPC at all. Use a
             // real tavern, whose vanilla occupants can own a Questor resource.
             if (game.PlayerEnterExit.IsPlayerInside) game.PlayerEnterExit.TransitionExterior();

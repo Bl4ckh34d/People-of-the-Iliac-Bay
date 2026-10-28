@@ -16,13 +16,16 @@ namespace PeopleOfTheIliacBay.QuestHooks
         private readonly Func<bool> ownsTown;
         private readonly Action<bool> report;
         private readonly Func<Vector3, Vector3, GameObject> resolveActor;
+        private readonly Action<DaggerfallEntityBehaviour,DaggerfallEntityBehaviour> attacked;
 
-        public NativeGuardHooks(Func<bool> ownsTown, Action<bool> report, Func<Vector3, Vector3, GameObject> resolveActor)
+        public NativeGuardHooks(Func<bool> ownsTown, Action<bool> report, Func<Vector3, Vector3, GameObject> resolveActor,
+            Action<DaggerfallEntityBehaviour,DaggerfallEntityBehaviour> attacked)
         {
             if (active != null) throw new InvalidOperationException("Guard hooks already installed.");
             this.ownsTown = ownsTown ?? throw new ArgumentNullException(nameof(ownsTown));
             this.report = report ?? throw new ArgumentNullException(nameof(report));
             this.resolveActor = resolveActor ?? throw new ArgumentNullException(nameof(resolveActor));
+            this.attacked = attacked ?? throw new ArgumentNullException(nameof(attacked));
             active = this;
             try
             {
@@ -33,6 +36,8 @@ namespace PeopleOfTheIliacBay.QuestHooks
                     prefix: new HarmonyMethod(typeof(NativeGuardHooks).GetMethod("BeforeSingle", flags)));
                 harmony.Patch(typeof(PlayerEntity).GetMethod("MakeNPCGuardsIntoEnemiesIfGuardsSpawned", BindingFlags.Instance | BindingFlags.NonPublic),
                     prefix: new HarmonyMethod(typeof(NativeGuardHooks).GetMethod("BeforePoolConversion", flags)));
+                harmony.Patch(typeof(DaggerfallEntityBehaviour).GetMethod("HandleAttackFromSource",new[] {typeof(DaggerfallEntityBehaviour)}),
+                    postfix:new HarmonyMethod(typeof(NativeGuardHooks).GetMethod("AfterAttack",flags)));
             }
             catch { Dispose(); throw; }
         }
@@ -47,6 +52,12 @@ namespace PeopleOfTheIliacBay.QuestHooks
 
         private static bool BeforePoolConversion()
         { return active == null || !active.ownsTown(); }
+
+        private static void AfterAttack(DaggerfallEntityBehaviour __instance,DaggerfallEntityBehaviour sourceEntityBehaviour)
+        {
+            var owner=active;
+            if(owner!=null && owner.ownsTown())owner.attacked(__instance,sourceEntityBehaviour);
+        }
 
         private static bool BeforeSingle(Vector3 __0, Vector3 __1, ref GameObject __result)
         {

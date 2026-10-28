@@ -33,10 +33,10 @@ namespace PeopleOfTheIliacBay.DFU
                 if(!valid()) yield break;
                 store.GetOrCreateFamilies(town.SettlementId,homes);
             }
-            var inventory=new TavernRoomSurvey.Result();
-            yield return TavernRoomSurvey.ReadRemoteSteps(door,location.Climate.ClimateType,inventory,valid);
+            var inventory=new TavernBedSurvey.Result();
+            yield return TavernBedSurvey.ReadRemoteSteps(door,location.Climate.ClimateType,inventory,valid);
             if(!valid()) yield break;
-            if(inventory.Rooms==null || !inventory.KeeperHash.HasValue || inventory.ReceptionRoute==null)
+            if(inventory.Beds==null || !inventory.KeeperHash.HasValue || inventory.ReceptionRoute==null)
             {result.Unavailable="Intermediate inn has no surveyed keeper route.";yield break;}
             double now=dfu.WorldTime.Now.ToSeconds();
             var receipt=GameManager.Instance.PlayerEntity.GetRentedRoom(town.SettlementId,door.BuildingKey);
@@ -83,10 +83,10 @@ namespace PeopleOfTheIliacBay.DFU
                 yield return ExtendOvernight(dayTrip,days,town,secondsPerMetre,seed,candidate,valid,excluded);
                 if(!valid()) yield break;
                 if(candidate.Trip==null) {result.Unavailable=candidate.Unavailable;yield break;}
-                var inventory=new TavernRoomSurvey.Result();
-                yield return TavernRoomSurvey.ReadRemoteSteps(candidate.InnDoor,location.Climate.ClimateType,inventory,valid);
+                var inventory=new TavernBedSurvey.Result();
+                yield return TavernBedSurvey.ReadRemoteSteps(candidate.InnDoor,location.Climate.ClimateType,inventory,valid);
                 if(!valid()) yield break;
-                if(inventory.Rooms==null || !inventory.KeeperHash.HasValue || inventory.ReceptionRoute==null)
+                if(inventory.Beds==null || !inventory.KeeperHash.HasValue || inventory.ReceptionRoute==null)
                 {excluded.Add(candidate.InnDoor.BuildingKey);continue;}
                 double now=dfu.WorldTime.Now.ToSeconds();
                 var receipt=GameManager.Instance.PlayerEntity.GetRentedRoom(town.SettlementId,candidate.InnDoor.BuildingKey);
@@ -100,7 +100,7 @@ namespace PeopleOfTheIliacBay.DFU
                 ResidentVisitSnapshot stay=default(ResidentVisitSnapshot);
                 foreach(var visit in ResidentVisitJourney.Create(candidate.Trip.ArrivesAt,candidate.Trip.Destination).ScheduledVisits())
                     if(visit.Purpose==ResidentVisitPurpose.Inn) {stay=visit;break;}
-                if(store.AvailableLodgingRoom(town.SettlementId,candidate.InnDoor.BuildingKey,1,candidate.Trip.InnReceptions[0].ServiceEndsAt,stay.RoomUntil)!=null)
+                if(store.AvailableLodgingBeds(town.SettlementId,candidate.InnDoor.BuildingKey,1,candidate.Trip.InnReceptions[0].ServiceEndsAt,stay.RoomUntil)!=null)
                 {
                     if(valid()) {result.Trip=candidate.Trip;result.InnDoor=candidate.InnDoor;}
                     yield break;
@@ -149,6 +149,7 @@ namespace PeopleOfTheIliacBay.DFU
             {
                 if(!valid()) yield break;
                 var inn=inns[innIndex];var trip=ResidentTrip.CopyValidated(original);var current=firstDoor;
+                IReadOnlyList<RoutePoint> firstToInn=null,innToLast=null;
                 var used=new HashSet<int>{first.BuildingKey};bool complete=true;
                 int firstDay=1;
                 if(lodgingFirst)
@@ -157,6 +158,7 @@ namespace PeopleOfTheIliacBay.DFU
                     yield return town.ReadBuildingRouteSteps(firstDoor,inn,arrivalRoute,valid);
                     if(!valid()) yield break;
                     if(arrivalRoute.Points==null) continue;
+                    firstToInn=arrivalRoute.Points;
                     trip=ResidentOvernightPlan.PrependInn(original,inn.BuildingKey,arrivalRoute.Points,secondsPerMetre);
                     firstDay=2; // The arrival night consumes the first overnight stop.
                 }
@@ -166,6 +168,7 @@ namespace PeopleOfTheIliacBay.DFU
                     yield return town.ReadBuildingRouteSteps(current,inn,toInn,valid);
                     if(!valid()) yield break;
                     if(toInn.Points==null) {complete=false;break;}
+                    if(firstToInn==null) firstToInn=toInn.Points;
                     trip.Destination.Stops.Add(Stop(inn.BuildingKey,ResidentVisitPurpose.Inn,toInn.Points,secondsPerMetre,1,0,0));
                     var services=new List<UnloadedSettlementSurvey.Entrance>();
                     foreach(var door in town.Entrances)
@@ -183,6 +186,7 @@ namespace PeopleOfTheIliacBay.DFU
                         if(route.Points!=null) {chosen=services[option];servicePath=route.Points;break;}
                     }
                     if(chosen==null) {complete=false;break;}
+                    innToLast=servicePath;
                     int type=(int)types[chosen.BuildingKey],open=PlayerActivate.openHours[type]*60,close=PlayerActivate.closeHours[type]*60;
                     if(close>=1440) open=close=0;
                     trip.Destination.Stops.Add(Stop(chosen.BuildingKey,first.Purpose,servicePath,secondsPerMetre,
@@ -192,16 +196,7 @@ namespace PeopleOfTheIliacBay.DFU
                 if(!complete) continue;
                 if(current.BuildingKey!=firstDoor.BuildingKey || current.Position!=firstDoor.Position)
                 {
-                    var returnPath=new UnloadedSettlementSurvey.RouteResult();
-                    yield return town.ReadBuildingRouteSteps(current,firstDoor,returnPath,valid);
-                    if(!valid()) yield break;
-                    if(returnPath.Points==null) continue;
-                    var exit=new List<SavedRoutePoint>();
-                    foreach(var p in returnPath.Points) exit.Add(new SavedRoutePoint {X=p.X,Z=p.Z});
-                    foreach(var p in original.Destination.ExitRoute) exit.Add(new SavedRoutePoint {X=p.X,Z=p.Z});
-                    double added=Length(returnPath.Points)*secondsPerMetre;
-                    trip.Destination.ExitRoute=exit;trip.Destination.ExitWalkSeconds+=added;
-                    if(trip.Destination.Walled) trip.Destination.ExitGateSeconds+=added;
+                    trip=ResidentOvernightPlan.ReturnViaInn(trip,original,firstToInn,innToLast,secondsPerMetre);
                 }
                 var timed=ResidentOvernightPlan.Schedule(trip,seed);
                 if(valid()) {result.Trip=timed;result.InnDoor=inn;}

@@ -1,0 +1,1626 @@
+﻿{
+    "schemaVersion": 2,
+    "portraitRecord": 85,
+    "bank": "TFAC00I0.RCI",
+    "status": "masked-half-prototype-visual-review-pending-not-installed",
+    "width": 64,
+    "height": 64,
+    "splitY": 35,
+    "original": "original.png",
+    "originalUpper": "source-upper.png",
+    "originalLower": "source-lower.png",
+    "eyeSets": [
+        {
+            "id": "neutral",
+            "label": "Neutral",
+            "phases": {
+                "open": {
+                    "file": "eyes/neutral/open.png",
+                    "difference": "eyes/neutral/open-diff.png",
+                    "changedPixels": 0
+                },
+                "half": {
+                    "file": "eyes/neutral/half.png",
+                    "difference": "eyes/neutral/half-diff.png",
+                    "changedPixels": 412
+                },
+                "closed": {
+                    "file": "eyes/neutral/closed.png",
+                    "difference": "eyes/neutral/closed-diff.png",
+                    "changedPixels": 419
+                }
+            }
+        },
+        {
+            "id": "happy",
+            "label": "Fröhlich",
+            "phases": {
+                "open": {
+                    "file": "eyes/happy/open.png",
+                    "difference": "eyes/happy/open-diff.png",
+                    "changedPixels": 654
+                },
+                "half": {
+                    "file": "eyes/happy/half.png",
+                    "difference": "eyes/happy/half-diff.png",
+                    "changedPixels": 661
+                },
+                "closed": {
+                    "file": "eyes/happy/closed.png",
+                    "difference": "eyes/happy/closed-diff.png",
+                    "changedPixels": 662
+                }
+            }
+        },
+        {
+            "id": "angry",
+            "label": "Wütend",
+            "phases": {
+                "open": {
+                    "file": "eyes/angry/open.png",
+                    "difference": "eyes/angry/open-diff.png",
+                    "changedPixels": 659
+                },
+                "half": {
+                    "file": "eyes/angry/half.png",
+                    "difference": "eyes/angry/half-diff.png",
+                    "changedPixels": 661
+                },
+                "closed": {
+                    "file": "eyes/angry/closed.png",
+                    "difference": "eyes/angry/closed-diff.png",
+                    "changedPixels": 662
+                }
+            }
+        },
+        {
+            "id": "sad",
+            "label": "Traurig",
+            "phases": {
+                "open": {
+                    "file": "eyes/sad/open.png",
+                    "difference": "eyes/sad/open-diff.png",
+                    "changedPixels": 657,
+                    "outsideMaskChangedPixels": 1,
+                    "outsideMaskChanges": [
+                        {
+                            "id": "npc085-sad-outer-brow-extension",
+                            "emotion": "sad",
+                            "phase": "open",
+                            "x": 13,
+                            "y": 15,
+                            "area": "outside-eye-mask",
+                            "originalRgb": "633F1F",
+                            "beforeRgb": "633F1F",
+                            "donor": {
+                                "sourceFile": "eyes/sad/raw.png",
+                                "sha256": "4962d851e32e82c3188a3b4c255ee9ec605a30b8c82fd244b9ff12ee0d937ebf",
+                                "phase": "open",
+                                "x": 13,
+                                "y": 15,
+                                "rgb": "985C38"
+                            },
+                            "operation": "blend-original",
+                            "outputRgb": "7E4E2C",
+                            "weight": 0.5
+                        }
+                    ],
+                    "boundaryRepairs": [
+                        {
+                            "id": "npc085-sad-outer-brow-extension",
+                            "emotion": "sad",
+                            "phase": "open",
+                            "x": 13,
+                            "y": 15,
+                            "area": "outside-eye-mask",
+                            "originalRgb": "633F1F",
+                            "beforeRgb": "633F1F",
+                            "donor": {
+                                "sourceFile": "eyes/sad/raw.png",
+                                "sha256": "4962d851e32e82c3188a3b4c255ee9ec605a30b8c82fd244b9ff12ee0d937ebf",
+                                "phase": "open",
+                                "x": 13,
+                                "y": 15,
+                                "rgb": "985C38"
+                            },
+                            "operation": "blend-original",
+                            "outputRgb": "7E4E2C",
+                            "weight": 0.5
+                        },
+                        {
+                            "id": "npc085-sad-mask-edge-alignment",
+                            "emotion": "sad",
+                            "phase": "open",
+                            "x": 14,
+                            "y": 15,
+                            "area": "inside-eye-mask",
+                            "originalRgb": "633F1F",
+                            "beforeRgb": "7E4E2C",
+                            "donor": {
+                                "sourceFile": "eyes/sad/raw.png",
+                                "sha256": "4962d851e32e82c3188a3b4c255ee9ec605a30b8c82fd244b9ff12ee0d937ebf",
+                                "phase": "open",
+                                "x": 14,
+                                "y": 15,
+                                "rgb": "9A5D39"
+                            },
+                            "operation": "copy-donor",
+                            "outputRgb": "9A5D39"
+                        }
+                    ]
+                },
+                "half": {
+                    "file": "eyes/sad/half.png",
+                    "difference": "eyes/sad/half-diff.png",
+                    "changedPixels": 660,
+                    "outsideMaskChangedPixels": 1,
+                    "outsideMaskChanges": [
+                        {
+                            "id": "npc085-sad-outer-brow-extension",
+                            "emotion": "sad",
+                            "phase": "half",
+                            "x": 13,
+                            "y": 15,
+                            "area": "outside-eye-mask",
+                            "originalRgb": "633F1F",
+                            "beforeRgb": "633F1F",
+                            "donor": {
+                                "sourceFile": "eyes/sad/raw.png",
+                                "sha256": "4962d851e32e82c3188a3b4c255ee9ec605a30b8c82fd244b9ff12ee0d937ebf",
+                                "phase": "open",
+                                "x": 13,
+                                "y": 15,
+                                "rgb": "985C38"
+                            },
+                            "operation": "blend-original",
+                            "outputRgb": "7E4E2C",
+                            "weight": 0.5
+                        }
+                    ],
+                    "boundaryRepairs": [
+                        {
+                            "id": "npc085-sad-outer-brow-extension",
+                            "emotion": "sad",
+                            "phase": "half",
+                            "x": 13,
+                            "y": 15,
+                            "area": "outside-eye-mask",
+                            "originalRgb": "633F1F",
+                            "beforeRgb": "633F1F",
+                            "donor": {
+                                "sourceFile": "eyes/sad/raw.png",
+                                "sha256": "4962d851e32e82c3188a3b4c255ee9ec605a30b8c82fd244b9ff12ee0d937ebf",
+                                "phase": "open",
+                                "x": 13,
+                                "y": 15,
+                                "rgb": "985C38"
+                            },
+                            "operation": "blend-original",
+                            "outputRgb": "7E4E2C",
+                            "weight": 0.5
+                        },
+                        {
+                            "id": "npc085-sad-mask-edge-alignment",
+                            "emotion": "sad",
+                            "phase": "half",
+                            "x": 14,
+                            "y": 15,
+                            "area": "inside-eye-mask",
+                            "originalRgb": "633F1F",
+                            "beforeRgb": "7E4E2C",
+                            "donor": {
+                                "sourceFile": "eyes/sad/raw.png",
+                                "sha256": "4962d851e32e82c3188a3b4c255ee9ec605a30b8c82fd244b9ff12ee0d937ebf",
+                                "phase": "open",
+                                "x": 14,
+                                "y": 15,
+                                "rgb": "9A5D39"
+                            },
+                            "operation": "copy-donor",
+                            "outputRgb": "9A5D39"
+                        }
+                    ]
+                },
+                "closed": {
+                    "file": "eyes/sad/closed.png",
+                    "difference": "eyes/sad/closed-diff.png",
+                    "changedPixels": 661,
+                    "outsideMaskChangedPixels": 1,
+                    "outsideMaskChanges": [
+                        {
+                            "id": "npc085-sad-outer-brow-extension",
+                            "emotion": "sad",
+                            "phase": "closed",
+                            "x": 13,
+                            "y": 15,
+                            "area": "outside-eye-mask",
+                            "originalRgb": "633F1F",
+                            "beforeRgb": "633F1F",
+                            "donor": {
+                                "sourceFile": "eyes/sad/raw.png",
+                                "sha256": "4962d851e32e82c3188a3b4c255ee9ec605a30b8c82fd244b9ff12ee0d937ebf",
+                                "phase": "open",
+                                "x": 13,
+                                "y": 15,
+                                "rgb": "985C38"
+                            },
+                            "operation": "blend-original",
+                            "outputRgb": "7E4E2C",
+                            "weight": 0.5
+                        }
+                    ],
+                    "boundaryRepairs": [
+                        {
+                            "id": "npc085-sad-outer-brow-extension",
+                            "emotion": "sad",
+                            "phase": "closed",
+                            "x": 13,
+                            "y": 15,
+                            "area": "outside-eye-mask",
+                            "originalRgb": "633F1F",
+                            "beforeRgb": "633F1F",
+                            "donor": {
+                                "sourceFile": "eyes/sad/raw.png",
+                                "sha256": "4962d851e32e82c3188a3b4c255ee9ec605a30b8c82fd244b9ff12ee0d937ebf",
+                                "phase": "open",
+                                "x": 13,
+                                "y": 15,
+                                "rgb": "985C38"
+                            },
+                            "operation": "blend-original",
+                            "outputRgb": "7E4E2C",
+                            "weight": 0.5
+                        },
+                        {
+                            "id": "npc085-sad-mask-edge-alignment",
+                            "emotion": "sad",
+                            "phase": "closed",
+                            "x": 14,
+                            "y": 15,
+                            "area": "inside-eye-mask",
+                            "originalRgb": "633F1F",
+                            "beforeRgb": "7E4E2C",
+                            "donor": {
+                                "sourceFile": "eyes/sad/raw.png",
+                                "sha256": "4962d851e32e82c3188a3b4c255ee9ec605a30b8c82fd244b9ff12ee0d937ebf",
+                                "phase": "open",
+                                "x": 14,
+                                "y": 15,
+                                "rgb": "9A5D39"
+                            },
+                            "operation": "copy-donor",
+                            "outputRgb": "9A5D39"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": "afraid",
+            "label": "Ängstlich",
+            "phases": {
+                "open": {
+                    "file": "eyes/afraid/open.png",
+                    "difference": "eyes/afraid/open-diff.png",
+                    "changedPixels": 660
+                },
+                "half": {
+                    "file": "eyes/afraid/half.png",
+                    "difference": "eyes/afraid/half-diff.png",
+                    "changedPixels": 661
+                },
+                "closed": {
+                    "file": "eyes/afraid/closed.png",
+                    "difference": "eyes/afraid/closed-diff.png",
+                    "changedPixels": 663
+                }
+            }
+        },
+        {
+            "id": "guarded",
+            "label": "Skeptisch",
+            "phases": {
+                "open": {
+                    "file": "eyes/guarded/open.png",
+                    "difference": "eyes/guarded/open-diff.png",
+                    "changedPixels": 663
+                },
+                "half": {
+                    "file": "eyes/guarded/half.png",
+                    "difference": "eyes/guarded/half-diff.png",
+                    "changedPixels": 662
+                },
+                "closed": {
+                    "file": "eyes/guarded/closed.png",
+                    "difference": "eyes/guarded/closed-diff.png",
+                    "changedPixels": 665
+                }
+            }
+        }
+    ],
+    "mouths": [
+        {
+            "shape": "A",
+            "file": "mouth/A.png",
+            "difference": "mouth/A-diff.png",
+            "changedPixels": 0
+        },
+        {
+            "shape": "B",
+            "file": "mouth/B.png",
+            "difference": "mouth/B-diff.png",
+            "changedPixels": 293
+        },
+        {
+            "shape": "C",
+            "file": "mouth/C.png",
+            "difference": "mouth/C-diff.png",
+            "changedPixels": 292
+        },
+        {
+            "shape": "D",
+            "file": "mouth/D.png",
+            "difference": "mouth/D-diff.png",
+            "changedPixels": 293
+        },
+        {
+            "shape": "E",
+            "file": "mouth/E.png",
+            "difference": "mouth/E-diff.png",
+            "changedPixels": 292
+        },
+        {
+            "shape": "F",
+            "file": "mouth/F.png",
+            "difference": "mouth/F-diff.png",
+            "changedPixels": 292
+        },
+        {
+            "shape": "G",
+            "file": "mouth/G.png",
+            "difference": "mouth/G-diff.png",
+            "changedPixels": 293
+        },
+        {
+            "shape": "H",
+            "file": "mouth/H.png",
+            "difference": "mouth/H-diff.png",
+            "changedPixels": 294
+        },
+        {
+            "shape": "X",
+            "file": "mouth/X.png",
+            "difference": "mouth/X-diff.png",
+            "changedPixels": 0
+        }
+    ],
+    "mouthSets": [
+        {
+            "id": "neutral",
+            "label": "Neutral",
+            "frames": [
+                {
+                    "shape": "A",
+                    "file": "mouth/neutral/A.png",
+                    "difference": "mouth/neutral/A-diff.png",
+                    "changedPixels": 0,
+                    "sha256": "d454c096dc36a98cb471685b0a11a3c30ea8f148e2e4adedd12e3213aa14546f"
+                },
+                {
+                    "shape": "B",
+                    "file": "mouth/neutral/B.png",
+                    "difference": "mouth/neutral/B-diff.png",
+                    "changedPixels": 293,
+                    "sha256": "2be3e4bfdcee68cae899e476fff34d297e76a7558faf3f545107555e838feb2d"
+                },
+                {
+                    "shape": "C",
+                    "file": "mouth/neutral/C.png",
+                    "difference": "mouth/neutral/C-diff.png",
+                    "changedPixels": 292,
+                    "sha256": "1da5919fc36f1316f168ff3dc19306e2a86ec77f0fa7dee8e1e3d028bd381442"
+                },
+                {
+                    "shape": "D",
+                    "file": "mouth/neutral/D.png",
+                    "difference": "mouth/neutral/D-diff.png",
+                    "changedPixels": 293,
+                    "sha256": "635c78ed775db0ffcdda6cf0677c9c2da4b1a4586faa80cc401edb0b609f4bfd"
+                },
+                {
+                    "shape": "E",
+                    "file": "mouth/neutral/E.png",
+                    "difference": "mouth/neutral/E-diff.png",
+                    "changedPixels": 292,
+                    "sha256": "035714f25e42a914bab2acd5672a214d1f9de2e3173d9576a06691b773c18f52"
+                },
+                {
+                    "shape": "F",
+                    "file": "mouth/neutral/F.png",
+                    "difference": "mouth/neutral/F-diff.png",
+                    "changedPixels": 292,
+                    "sha256": "0187b4cccd701aa0c9562f09bb7cd67d729ab407b15f22bcd919e80b2c35a5e2"
+                },
+                {
+                    "shape": "G",
+                    "file": "mouth/neutral/G.png",
+                    "difference": "mouth/neutral/G-diff.png",
+                    "changedPixels": 293,
+                    "sha256": "c8845d2cd625890b2b082ad9d833c3a0663e94f5348cb6ab69a9425733bd61ff"
+                },
+                {
+                    "shape": "H",
+                    "file": "mouth/neutral/H.png",
+                    "difference": "mouth/neutral/H-diff.png",
+                    "changedPixels": 294,
+                    "sha256": "25dabb3600d9f323ca5f8386ba14c1f1cafecee3c47946fa577997c9b340ca2c"
+                },
+                {
+                    "shape": "X",
+                    "file": "mouth/neutral/X.png",
+                    "difference": "mouth/neutral/X-diff.png",
+                    "changedPixels": 0,
+                    "sha256": "d454c096dc36a98cb471685b0a11a3c30ea8f148e2e4adedd12e3213aa14546f"
+                }
+            ]
+        },
+        {
+            "id": "happy",
+            "label": "Fröhlich",
+            "frames": [
+                {
+                    "shape": "A",
+                    "file": "mouth/happy/A.png",
+                    "difference": "mouth/happy/A-diff.png",
+                    "changedPixels": 292,
+                    "sha256": "0ae382d70e639cc2db3f09340791fa49edd5faa6527950067adf6e764f6557cb"
+                },
+                {
+                    "shape": "B",
+                    "file": "mouth/happy/B.png",
+                    "difference": "mouth/happy/B-diff.png",
+                    "changedPixels": 290,
+                    "sha256": "37c9ad200e1d5d5430a61113659268304ab34df9722b8b5b0e7a082d96bd48f5"
+                },
+                {
+                    "shape": "C",
+                    "file": "mouth/happy/C.png",
+                    "difference": "mouth/happy/C-diff.png",
+                    "changedPixels": 289,
+                    "sha256": "d6742a97077001732eda455a25b24d6050c4e341ff61e2df29c70f17460946e7"
+                },
+                {
+                    "shape": "D",
+                    "file": "mouth/happy/D.png",
+                    "difference": "mouth/happy/D-diff.png",
+                    "changedPixels": 286,
+                    "sha256": "7339188589e18a1ea08a9c7163ada9da56d062ef7eaad63c7a48cf6fa2596c3f"
+                },
+                {
+                    "shape": "E",
+                    "file": "mouth/happy/E.png",
+                    "difference": "mouth/happy/E-diff.png",
+                    "changedPixels": 289,
+                    "sha256": "69697619d9bd2034b2bd7f9892bbe04bed916438babd414c5cd206837b71884f"
+                },
+                {
+                    "shape": "F",
+                    "file": "mouth/happy/F.png",
+                    "difference": "mouth/happy/F-diff.png",
+                    "changedPixels": 293,
+                    "sha256": "160bc523654c74c4df321a989bc271382d3c61b52e321255fa30d7317d0569fe"
+                },
+                {
+                    "shape": "G",
+                    "file": "mouth/happy/G.png",
+                    "difference": "mouth/happy/G-diff.png",
+                    "changedPixels": 280,
+                    "sha256": "cfb4e71cdd6a993a424557735947f732debb4eadf0988c3391082a64fc839bbc"
+                },
+                {
+                    "shape": "H",
+                    "file": "mouth/happy/H.png",
+                    "difference": "mouth/happy/H-diff.png",
+                    "changedPixels": 270,
+                    "sha256": "fc5ddacfe6262e83f96b170570b15be37157fec506eafbec08603f36efff1a8b"
+                },
+                {
+                    "shape": "X",
+                    "file": "mouth/happy/X.png",
+                    "difference": "mouth/happy/X-diff.png",
+                    "changedPixels": 285,
+                    "sha256": "b8ea6ee220882cd629f6d5553ec4e17c3aab0bb3f489a7488b518169912bde2c"
+                }
+            ]
+        },
+        {
+            "id": "angry",
+            "label": "Wütend",
+            "frames": [
+                {
+                    "shape": "A",
+                    "file": "mouth/angry/A.png",
+                    "difference": "mouth/angry/A-diff.png",
+                    "changedPixels": 294,
+                    "sha256": "78b78cd0c2aa032ce72e1518c6ab23945ddaa943279ddaa8c3b49d597271ab8b"
+                },
+                {
+                    "shape": "B",
+                    "file": "mouth/angry/B.png",
+                    "difference": "mouth/angry/B-diff.png",
+                    "changedPixels": 291,
+                    "sha256": "305565b807babf2a5ffa9b51fdf2710b5e466ec13b6ed10958e0a0148768936d"
+                },
+                {
+                    "shape": "C",
+                    "file": "mouth/angry/C.png",
+                    "difference": "mouth/angry/C-diff.png",
+                    "changedPixels": 291,
+                    "sha256": "75f708ea746c5161a8c78570706315c6c731ef9f2539fee5e61d6acc18d18ffb"
+                },
+                {
+                    "shape": "D",
+                    "file": "mouth/angry/D.png",
+                    "difference": "mouth/angry/D-diff.png",
+                    "changedPixels": 293,
+                    "sha256": "770828b3d72b2efb764f46f2287a15bb9ef1a7eec412a42123fdfeffc50a7803"
+                },
+                {
+                    "shape": "E",
+                    "file": "mouth/angry/E.png",
+                    "difference": "mouth/angry/E-diff.png",
+                    "changedPixels": 293,
+                    "sha256": "d11859b2fa50d70dfccfe0efe7d8dcf3cac2ddece39d1111f1ec222456f9a0e7"
+                },
+                {
+                    "shape": "F",
+                    "file": "mouth/angry/F.png",
+                    "difference": "mouth/angry/F-diff.png",
+                    "changedPixels": 291,
+                    "sha256": "46957cfca2c6f8f1f0d8c291e6ff8a4bee0bd9146e5e685dd4fc9f7fc6c58b0b"
+                },
+                {
+                    "shape": "G",
+                    "file": "mouth/angry/G.png",
+                    "difference": "mouth/angry/G-diff.png",
+                    "changedPixels": 292,
+                    "sha256": "7a17b3ba5430842261fa529f9414fec5bc38efc4064b38770950346ec809c318"
+                },
+                {
+                    "shape": "H",
+                    "file": "mouth/angry/H.png",
+                    "difference": "mouth/angry/H-diff.png",
+                    "changedPixels": 294,
+                    "sha256": "86942c696bebbb900c4e2906087c93527d23ea135d63c09133d62cc8474cab8a"
+                },
+                {
+                    "shape": "X",
+                    "file": "mouth/angry/X.png",
+                    "difference": "mouth/angry/X-diff.png",
+                    "changedPixels": 290,
+                    "sha256": "82f25c8c5c47b799fddf238d0ae0de1c8156a7e685b66e9114a09aa8a6fc8f33"
+                }
+            ]
+        },
+        {
+            "id": "sad",
+            "label": "Traurig",
+            "frames": [
+                {
+                    "shape": "A",
+                    "file": "mouth/sad/A.png",
+                    "difference": "mouth/sad/A-diff.png",
+                    "changedPixels": 293,
+                    "sha256": "d046678d072c2e3b49a90ee9d1f55b771f99094b572cb4c6706d9282a0431af7"
+                },
+                {
+                    "shape": "B",
+                    "file": "mouth/sad/B.png",
+                    "difference": "mouth/sad/B-diff.png",
+                    "changedPixels": 294,
+                    "sha256": "e85940107a39f88f3a1b633bd32786bba38336ec444afecc384b374f6139ba21"
+                },
+                {
+                    "shape": "C",
+                    "file": "mouth/sad/C.png",
+                    "difference": "mouth/sad/C-diff.png",
+                    "changedPixels": 292,
+                    "sha256": "5aef91c047ae40013df892438c51c996013a2149fc3326c5cc84f3619643ced4"
+                },
+                {
+                    "shape": "D",
+                    "file": "mouth/sad/D.png",
+                    "difference": "mouth/sad/D-diff.png",
+                    "changedPixels": 294,
+                    "sha256": "351790763533f6426f25d2ef1e2f528acdbc45a06dd2cbcf0317da2f1401c5af"
+                },
+                {
+                    "shape": "E",
+                    "file": "mouth/sad/E.png",
+                    "difference": "mouth/sad/E-diff.png",
+                    "changedPixels": 294,
+                    "sha256": "e8bac98b2ebfe7f4e97b189f1aee16e1101a397bef6c93f19eaa60e057006fcd"
+                },
+                {
+                    "shape": "F",
+                    "file": "mouth/sad/F.png",
+                    "difference": "mouth/sad/F-diff.png",
+                    "changedPixels": 294,
+                    "sha256": "f1c080b73dc0ed8df5a957ff6304fdbf7b9a244b8cc2fbb45c15f94af77f7773"
+                },
+                {
+                    "shape": "G",
+                    "file": "mouth/sad/G.png",
+                    "difference": "mouth/sad/G-diff.png",
+                    "changedPixels": 294,
+                    "sha256": "ac341c15a01485600fcdff0c428bf75b815e1358edf51665c09970781ffab036"
+                },
+                {
+                    "shape": "H",
+                    "file": "mouth/sad/H.png",
+                    "difference": "mouth/sad/H-diff.png",
+                    "changedPixels": 294,
+                    "sha256": "1aac91ad6b3eb14b294f0e35cd85a448c0466e39e46b028b105d1312faee27b6"
+                },
+                {
+                    "shape": "X",
+                    "file": "mouth/sad/X.png",
+                    "difference": "mouth/sad/X-diff.png",
+                    "changedPixels": 294,
+                    "sha256": "7292e9e5527e6275e42b2f517618b20dbb8f0ce08f3079154517fa8bebe8d680"
+                }
+            ]
+        },
+        {
+            "id": "afraid",
+            "label": "Ängstlich",
+            "frames": [
+                {
+                    "shape": "A",
+                    "file": "mouth/afraid/A.png",
+                    "difference": "mouth/afraid/A-diff.png",
+                    "changedPixels": 293,
+                    "sha256": "7eb7120686ed9be5d05217aab0e9480bbc8bfcc24328abb44a4eb3dd46b08be2"
+                },
+                {
+                    "shape": "B",
+                    "file": "mouth/afraid/B.png",
+                    "difference": "mouth/afraid/B-diff.png",
+                    "changedPixels": 293,
+                    "sha256": "044d639617b263b11d391e60a650bfc554dfcc7a6d51e61df1830e8db98f50d4"
+                },
+                {
+                    "shape": "C",
+                    "file": "mouth/afraid/C.png",
+                    "difference": "mouth/afraid/C-diff.png",
+                    "changedPixels": 291,
+                    "sha256": "3c5a59a9b56f1e222b7d2cdc0b80b3861665f1c5d2c35e8d791b75063d441fe7"
+                },
+                {
+                    "shape": "D",
+                    "file": "mouth/afraid/D.png",
+                    "difference": "mouth/afraid/D-diff.png",
+                    "changedPixels": 291,
+                    "sha256": "709c9fd1a99859ca8c04be2c6df49e7aa3803d905224f3bee387caf0f87427f9"
+                },
+                {
+                    "shape": "E",
+                    "file": "mouth/afraid/E.png",
+                    "difference": "mouth/afraid/E-diff.png",
+                    "changedPixels": 291,
+                    "sha256": "2aaca2d4160e339327e0dc446975183610fefc9f08a745e939b767d7f4841dfa"
+                },
+                {
+                    "shape": "F",
+                    "file": "mouth/afraid/F.png",
+                    "difference": "mouth/afraid/F-diff.png",
+                    "changedPixels": 292,
+                    "sha256": "7436d9c8815301eb8b937311794a283695acdc9526e05b17ea3e1ab477ca5afe"
+                },
+                {
+                    "shape": "G",
+                    "file": "mouth/afraid/G.png",
+                    "difference": "mouth/afraid/G-diff.png",
+                    "changedPixels": 288,
+                    "sha256": "8839ba1a7f9ebf6aeb1ba21d5ef8f56022083eb30c3c178cfebd671757fe1050"
+                },
+                {
+                    "shape": "H",
+                    "file": "mouth/afraid/H.png",
+                    "difference": "mouth/afraid/H-diff.png",
+                    "changedPixels": 291,
+                    "sha256": "df34c642b6bb107e7c7d1ef5c7787208bc89608be5149dcc706c016afab0659f"
+                },
+                {
+                    "shape": "X",
+                    "file": "mouth/afraid/X.png",
+                    "difference": "mouth/afraid/X-diff.png",
+                    "changedPixels": 292,
+                    "sha256": "ffca4f37604101a39ea1f0f41da1707b92292294b0057277d47fc42589c079e8"
+                }
+            ]
+        },
+        {
+            "id": "guarded",
+            "label": "Skeptisch",
+            "frames": [
+                {
+                    "shape": "A",
+                    "file": "mouth/guarded/A.png",
+                    "difference": "mouth/guarded/A-diff.png",
+                    "changedPixels": 283,
+                    "sha256": "48a2b72eb26772410a149cc3ecb536f32d643d9c8d24e0bdea54b14162cc1778"
+                },
+                {
+                    "shape": "B",
+                    "file": "mouth/guarded/B.png",
+                    "difference": "mouth/guarded/B-diff.png",
+                    "changedPixels": 289,
+                    "sha256": "539aee588faa9d9c48613618ee696706cecfdf9cffba6266e005517500f16b75"
+                },
+                {
+                    "shape": "C",
+                    "file": "mouth/guarded/C.png",
+                    "difference": "mouth/guarded/C-diff.png",
+                    "changedPixels": 282,
+                    "sha256": "de9a477d079bd3b8ebceca98377601f4b71fb3c1d64afcf8d0270e4685d45b57"
+                },
+                {
+                    "shape": "D",
+                    "file": "mouth/guarded/D.png",
+                    "difference": "mouth/guarded/D-diff.png",
+                    "changedPixels": 289,
+                    "sha256": "f9c0efba0738240aafc330fe8a82f3fd1700a030823b2cd05fdc4b0dac1cd08d"
+                },
+                {
+                    "shape": "E",
+                    "file": "mouth/guarded/E.png",
+                    "difference": "mouth/guarded/E-diff.png",
+                    "changedPixels": 284,
+                    "sha256": "6a5fc6b0b7d69940f2396cdb79e6d2a14636a7cfbb616ff1785b743408e82f1c"
+                },
+                {
+                    "shape": "F",
+                    "file": "mouth/guarded/F.png",
+                    "difference": "mouth/guarded/F-diff.png",
+                    "changedPixels": 287,
+                    "sha256": "1c162ca5a855f8f4c06bbcd2d40f5cbfd95d150c2a11c94ad3bb436facc69d48"
+                },
+                {
+                    "shape": "G",
+                    "file": "mouth/guarded/G.png",
+                    "difference": "mouth/guarded/G-diff.png",
+                    "changedPixels": 287,
+                    "sha256": "b0ac3673109fcdb9b909f0f16ff31b28c4e268a75901ba3501f0a15e93901f58"
+                },
+                {
+                    "shape": "H",
+                    "file": "mouth/guarded/H.png",
+                    "difference": "mouth/guarded/H-diff.png",
+                    "changedPixels": 287,
+                    "sha256": "e46f35bca9d3d1507438266abd129db2a98bb0891dff7f4f884e52d0819a4266"
+                },
+                {
+                    "shape": "X",
+                    "file": "mouth/guarded/X.png",
+                    "difference": "mouth/guarded/X-diff.png",
+                    "changedPixels": 288,
+                    "sha256": "e9a776afaac085aa01888b855ee858e49b5fbdce50083fc4c025cd1baafb8d06"
+                }
+            ]
+        }
+    ],
+    "audio": "../sample.wav",
+    "timing": "../sample.visemes.json",
+    "visualAcceptance": "pending",
+    "browLockRows": [
+        11,
+        17
+    ],
+    "eyeRegions": [
+        {
+            "x": 14,
+            "y": 11,
+            "width": 17,
+            "height": 19
+        },
+        {
+            "x": 33,
+            "y": 11,
+            "width": 18,
+            "height": 19
+        }
+    ],
+    "eyeFeatureLocks": [
+        {
+            "emotion": "neutral",
+            "phase": "half",
+            "x": 22,
+            "y": 23,
+            "width": 1,
+            "height": 1,
+            "sourceFile": "source-upper.png"
+        },
+        {
+            "emotion": "neutral",
+            "phase": "half",
+            "x": 43,
+            "y": 23,
+            "width": 1,
+            "height": 1,
+            "sourceFile": "source-upper.png"
+        },
+        {
+            "emotion": "sad",
+            "phase": "half",
+            "x": 43,
+            "y": 23,
+            "width": 1,
+            "height": 1,
+            "sourceFile": "source-upper.png"
+        }
+    ],
+    "useOriginalFeaturePalette": false,
+    "thinkingEyeSetsByEmotion": {
+        "neutral": [
+            {
+                "id": "left",
+                "label": "Links",
+                "phases": {
+                    "open": {
+                        "file": "../npc085-thinking-emotions/neutral/attempt-horizontal-v1/eyes/thinking/left/open.png",
+                        "sha256": "3cf718ec7a4b1e15f0de9bc22faeaabc57fd3c71145343d61aebd83a0cb70f0f"
+                    },
+                    "half": {
+                        "file": "../npc085-thinking-emotions/neutral/attempt-horizontal-v1/eyes/thinking/left/half.png",
+                        "sha256": "5c998b66df92d0ba9ce9790df2a9fbf1564162290d5f1fa64e96a10794b8f6d5"
+                    },
+                    "closed": {
+                        "file": "../npc085-thinking-emotions/neutral/attempt-horizontal-v1/eyes/thinking/left/closed.png",
+                        "sha256": "6e1c5807bb9c0cad72470fd7f36474e47988c37648d31f220ba24a0278c5afe0"
+                    }
+                }
+            },
+            {
+                "id": "right",
+                "label": "Rechts",
+                "phases": {
+                    "open": {
+                        "file": "../npc085-thinking-emotions/neutral/attempt-horizontal-v1/eyes/thinking/right/open.png",
+                        "sha256": "e52ced4d7ac4946c60901167c23cd0a07efc379480a427eced7bfee4fd80c70b"
+                    },
+                    "half": {
+                        "file": "../npc085-thinking-emotions/neutral/attempt-horizontal-v1/eyes/thinking/right/half.png",
+                        "sha256": "ea6f9da273665883c5e28c4e0cebc20c2ee1c1ceae101269933d0a6cc304b017"
+                    },
+                    "closed": {
+                        "file": "../npc085-thinking-emotions/neutral/attempt-horizontal-v1/eyes/thinking/right/closed.png",
+                        "sha256": "6e1c5807bb9c0cad72470fd7f36474e47988c37648d31f220ba24a0278c5afe0"
+                    }
+                }
+            }
+        ],
+        "happy": [
+            {
+                "id": "left",
+                "label": "Links",
+                "phases": {
+                    "open": {
+                        "file": "../npc085-thinking-emotions/happy/attempt-horizontal-v1/eyes/thinking/left/open.png",
+                        "sha256": "cd1ccebe55223f24a64c430fc2f645d06e4291ccc44ee53eef723c3f2b1c71e7"
+                    },
+                    "half": {
+                        "file": "../npc085-thinking-emotions/happy/attempt-horizontal-v1/eyes/thinking/left/half.png",
+                        "sha256": "dc3c45ffd21832f294b43a00bad525bf93481d270f24cdb7c963daa1e4f0d490"
+                    },
+                    "closed": {
+                        "file": "../npc085-thinking-emotions/happy/attempt-horizontal-v1/eyes/thinking/left/closed.png",
+                        "sha256": "ae2782b17ea3f2c1b3ff718072aa58378f3f6ef00540cf0bdd83ffd25b367584"
+                    }
+                }
+            },
+            {
+                "id": "right",
+                "label": "Rechts",
+                "phases": {
+                    "open": {
+                        "file": "../npc085-thinking-emotions/happy/attempt-horizontal-v1/eyes/thinking/right/open.png",
+                        "sha256": "1ba85e076e91e68a78a9cf51de72e5a95e6dfe8666cb66478644ea5671cd8e7b"
+                    },
+                    "half": {
+                        "file": "../npc085-thinking-emotions/happy/attempt-horizontal-v1/eyes/thinking/right/half.png",
+                        "sha256": "55035342aef0081580e127ab89a42d4c6b3d971f6846dc7cd2b60fec519198e8"
+                    },
+                    "closed": {
+                        "file": "../npc085-thinking-emotions/happy/attempt-horizontal-v1/eyes/thinking/right/closed.png",
+                        "sha256": "ae2782b17ea3f2c1b3ff718072aa58378f3f6ef00540cf0bdd83ffd25b367584"
+                    }
+                }
+            }
+        ],
+        "angry": [
+            {
+                "id": "left",
+                "label": "Links",
+                "phases": {
+                    "open": {
+                        "file": "../npc085-thinking-emotions/angry/attempt-horizontal-v1/eyes/thinking/left/open.png",
+                        "sha256": "f7768becb5ecee4d5e995ee00ced402a8c4008c1b2b0135f679c95f5c9d40ef2"
+                    },
+                    "half": {
+                        "file": "../npc085-thinking-emotions/angry/attempt-horizontal-v1/eyes/thinking/left/half.png",
+                        "sha256": "13991e5c544aef62b698dcf7598573bca68291d315c016c1270fd7b1fa8ed4b3"
+                    },
+                    "closed": {
+                        "file": "../npc085-thinking-emotions/angry/attempt-horizontal-v1/eyes/thinking/left/closed.png",
+                        "sha256": "a753f96daeff5372a612edcc273837b6d3e25b8c2cc834fe79c11cc077a07a4e"
+                    }
+                }
+            },
+            {
+                "id": "right",
+                "label": "Rechts",
+                "phases": {
+                    "open": {
+                        "file": "../npc085-thinking-emotions/angry/attempt-horizontal-v1/eyes/thinking/right/open.png",
+                        "sha256": "eeab5d185bcbfa0c9c8299adfc52578e716ad08a6df686f979010566a6aeba0d"
+                    },
+                    "half": {
+                        "file": "../npc085-thinking-emotions/angry/attempt-horizontal-v1/eyes/thinking/right/half.png",
+                        "sha256": "29a7726d78d919e58774b59e6ba8586a44c6f69a5c2e4c9396f6c17e6c373ba6"
+                    },
+                    "closed": {
+                        "file": "../npc085-thinking-emotions/angry/attempt-horizontal-v1/eyes/thinking/right/closed.png",
+                        "sha256": "a753f96daeff5372a612edcc273837b6d3e25b8c2cc834fe79c11cc077a07a4e"
+                    }
+                }
+            }
+        ],
+        "sad": [
+            {
+                "id": "left",
+                "label": "Links",
+                "phases": {
+                    "open": {
+                        "file": "../npc085-thinking-emotions/sad/attempt-horizontal-v1/eyes/thinking/left/open.png",
+                        "sha256": "3516861911014d81376fe089f2796b1813a172b0ca9a90a93dc6cd8bc121d9a0",
+                        "outsideMaskChangedPixels": 1,
+                        "declaredOutsideMaskChangedPixels": 1,
+                        "undeclaredOutsideMaskChangedPixels": 0,
+                        "browBoundaryPixels": [
+                            {
+                                "x": 13,
+                                "y": 15,
+                                "expectedOriginalRgb": [
+                                    99,
+                                    63,
+                                    31
+                                ],
+                                "expectedBrowRgb": [
+                                    126,
+                                    78,
+                                    44
+                                ]
+                            }
+                        ],
+                        "browBoundarySourceFile": "../npc085-thinking-emotions/sad/attempt-horizontal-v1/eyes/sad/open-brow-master-repaired.png",
+                        "browBoundarySourceSha256": "ff054ef11d1f41bd838de6d607247d6932d375b6fbc3c82c96b91ef40096f111"
+                    },
+                    "half": {
+                        "file": "../npc085-thinking-emotions/sad/attempt-horizontal-v1/eyes/thinking/left/half.png",
+                        "sha256": "30b90eec9f0cc2eb2890fdf7fbf24cf894e42dc9ead8f52b7daa8136de37fefd",
+                        "outsideMaskChangedPixels": 1,
+                        "declaredOutsideMaskChangedPixels": 1,
+                        "undeclaredOutsideMaskChangedPixels": 0,
+                        "browBoundaryPixels": [
+                            {
+                                "x": 13,
+                                "y": 15,
+                                "expectedOriginalRgb": [
+                                    99,
+                                    63,
+                                    31
+                                ],
+                                "expectedBrowRgb": [
+                                    126,
+                                    78,
+                                    44
+                                ]
+                            }
+                        ],
+                        "browBoundarySourceFile": "../npc085-thinking-emotions/sad/attempt-horizontal-v1/eyes/sad/open-brow-master-repaired.png",
+                        "browBoundarySourceSha256": "ff054ef11d1f41bd838de6d607247d6932d375b6fbc3c82c96b91ef40096f111"
+                    },
+                    "closed": {
+                        "file": "../npc085-thinking-emotions/sad/attempt-horizontal-v1/eyes/thinking/left/closed.png",
+                        "sha256": "c0ba6a5472fc004b05f14d6f2439061bba4eac43cdea558d830e4e011fcdbb5e",
+                        "outsideMaskChangedPixels": 1,
+                        "declaredOutsideMaskChangedPixels": 1,
+                        "undeclaredOutsideMaskChangedPixels": 0,
+                        "browBoundaryPixels": [
+                            {
+                                "x": 13,
+                                "y": 15,
+                                "expectedOriginalRgb": [
+                                    99,
+                                    63,
+                                    31
+                                ],
+                                "expectedBrowRgb": [
+                                    126,
+                                    78,
+                                    44
+                                ]
+                            }
+                        ],
+                        "browBoundarySourceFile": "../npc085-thinking-emotions/sad/attempt-horizontal-v1/eyes/sad/open-brow-master-repaired.png",
+                        "browBoundarySourceSha256": "ff054ef11d1f41bd838de6d607247d6932d375b6fbc3c82c96b91ef40096f111"
+                    }
+                }
+            },
+            {
+                "id": "right",
+                "label": "Rechts",
+                "phases": {
+                    "open": {
+                        "file": "../npc085-thinking-emotions/sad/attempt-horizontal-v1/eyes/thinking/right/open.png",
+                        "sha256": "5322ae84e08c207f1b464b5a855b725c7b196d5901887efa468756491b5dd281",
+                        "outsideMaskChangedPixels": 1,
+                        "declaredOutsideMaskChangedPixels": 1,
+                        "undeclaredOutsideMaskChangedPixels": 0,
+                        "browBoundaryPixels": [
+                            {
+                                "x": 13,
+                                "y": 15,
+                                "expectedOriginalRgb": [
+                                    99,
+                                    63,
+                                    31
+                                ],
+                                "expectedBrowRgb": [
+                                    126,
+                                    78,
+                                    44
+                                ]
+                            }
+                        ],
+                        "browBoundarySourceFile": "../npc085-thinking-emotions/sad/attempt-horizontal-v1/eyes/sad/open-brow-master-repaired.png",
+                        "browBoundarySourceSha256": "ff054ef11d1f41bd838de6d607247d6932d375b6fbc3c82c96b91ef40096f111"
+                    },
+                    "half": {
+                        "file": "../npc085-thinking-emotions/sad/attempt-horizontal-v1/eyes/thinking/right/half.png",
+                        "sha256": "bbbbd169f91d08bdd2f82e6004871b1e3f7e1d0768a335bddf537838fa8eea1a",
+                        "outsideMaskChangedPixels": 1,
+                        "declaredOutsideMaskChangedPixels": 1,
+                        "undeclaredOutsideMaskChangedPixels": 0,
+                        "browBoundaryPixels": [
+                            {
+                                "x": 13,
+                                "y": 15,
+                                "expectedOriginalRgb": [
+                                    99,
+                                    63,
+                                    31
+                                ],
+                                "expectedBrowRgb": [
+                                    126,
+                                    78,
+                                    44
+                                ]
+                            }
+                        ],
+                        "browBoundarySourceFile": "../npc085-thinking-emotions/sad/attempt-horizontal-v1/eyes/sad/open-brow-master-repaired.png",
+                        "browBoundarySourceSha256": "ff054ef11d1f41bd838de6d607247d6932d375b6fbc3c82c96b91ef40096f111"
+                    },
+                    "closed": {
+                        "file": "../npc085-thinking-emotions/sad/attempt-horizontal-v1/eyes/thinking/right/closed.png",
+                        "sha256": "c0ba6a5472fc004b05f14d6f2439061bba4eac43cdea558d830e4e011fcdbb5e",
+                        "outsideMaskChangedPixels": 1,
+                        "declaredOutsideMaskChangedPixels": 1,
+                        "undeclaredOutsideMaskChangedPixels": 0,
+                        "browBoundaryPixels": [
+                            {
+                                "x": 13,
+                                "y": 15,
+                                "expectedOriginalRgb": [
+                                    99,
+                                    63,
+                                    31
+                                ],
+                                "expectedBrowRgb": [
+                                    126,
+                                    78,
+                                    44
+                                ]
+                            }
+                        ],
+                        "browBoundarySourceFile": "../npc085-thinking-emotions/sad/attempt-horizontal-v1/eyes/sad/open-brow-master-repaired.png",
+                        "browBoundarySourceSha256": "ff054ef11d1f41bd838de6d607247d6932d375b6fbc3c82c96b91ef40096f111"
+                    }
+                }
+            }
+        ],
+        "afraid": [
+            {
+                "id": "left",
+                "label": "Links",
+                "phases": {
+                    "open": {
+                        "file": "../npc085-thinking-emotions/afraid/attempt-horizontal-v1/eyes/thinking/left/open.png",
+                        "sha256": "6213bc3ef993922272f7f41492c58642c90f5f57f83dc021412422683e32211a"
+                    },
+                    "half": {
+                        "file": "../npc085-thinking-emotions/afraid/attempt-horizontal-v1/eyes/thinking/left/half.png",
+                        "sha256": "786d38cf8e435cb537851bf682d3a0ad58c6c2651a18e19ad5933b369c3a20b8"
+                    },
+                    "closed": {
+                        "file": "../npc085-thinking-emotions/afraid/attempt-horizontal-v1/eyes/thinking/left/closed.png",
+                        "sha256": "a330a91c88e0df530d12040d8f112310bf22e331cc40b00a5a412d73d6bd5b6e"
+                    }
+                }
+            },
+            {
+                "id": "right",
+                "label": "Rechts",
+                "phases": {
+                    "open": {
+                        "file": "../npc085-thinking-emotions/afraid/attempt-horizontal-v1/eyes/thinking/right/open.png",
+                        "sha256": "472545fb45a6a76ab2a76efa7f65b1398226c6f266e49bbc0efc074964a76f60"
+                    },
+                    "half": {
+                        "file": "../npc085-thinking-emotions/afraid/attempt-horizontal-v1/eyes/thinking/right/half.png",
+                        "sha256": "bffeede76637f932c182923e835dfb136bc17ef14159d49cc277ab9b97e3c86b"
+                    },
+                    "closed": {
+                        "file": "../npc085-thinking-emotions/afraid/attempt-horizontal-v1/eyes/thinking/right/closed.png",
+                        "sha256": "a330a91c88e0df530d12040d8f112310bf22e331cc40b00a5a412d73d6bd5b6e"
+                    }
+                }
+            }
+        ],
+        "guarded": [
+            {
+                "id": "left",
+                "label": "Links",
+                "phases": {
+                    "open": {
+                        "file": "../npc085-thinking-emotions/guarded/attempt-horizontal-v1/eyes/thinking/left/open.png",
+                        "sha256": "8bf31e381dbef24adf1ef9381b61af162d24f00ec50b3e7258af7a8575782219"
+                    },
+                    "half": {
+                        "file": "../npc085-thinking-emotions/guarded/attempt-horizontal-v1/eyes/thinking/left/half.png",
+                        "sha256": "e9d776e2f95153f14509c662a1c5adc128ee52bd1edbac8b0d1d647004dcad64"
+                    },
+                    "closed": {
+                        "file": "../npc085-thinking-emotions/guarded/attempt-horizontal-v1/eyes/thinking/left/closed.png",
+                        "sha256": "a5d27ec5ccb0b5f9be98ba1f8c0a57bad5ec2546a45709f0b280fbb0a1861a0b"
+                    }
+                }
+            },
+            {
+                "id": "right",
+                "label": "Rechts",
+                "phases": {
+                    "open": {
+                        "file": "../npc085-thinking-emotions/guarded/attempt-horizontal-v1/eyes/thinking/right/open.png",
+                        "sha256": "e51439f500006ee090ae0a7493d15335d0e89419434230d1173caa4362338a10"
+                    },
+                    "half": {
+                        "file": "../npc085-thinking-emotions/guarded/attempt-horizontal-v1/eyes/thinking/right/half.png",
+                        "sha256": "a43d871c4f0d226bd768b6d264a77a70f9acc599cb32cb07f4417363d15dfb1f"
+                    },
+                    "closed": {
+                        "file": "../npc085-thinking-emotions/guarded/attempt-horizontal-v1/eyes/thinking/right/closed.png",
+                        "sha256": "a5d27ec5ccb0b5f9be98ba1f8c0a57bad5ec2546a45709f0b280fbb0a1861a0b"
+                    }
+                }
+            }
+        ]
+    },
+    "thinkingVisualAcceptance": "parent-reviewed-user-review-pending",
+    "boundaryRepairSummary": {
+        "declaredPixelRules": [
+            {
+                "id": "npc085-sad-outer-brow-extension",
+                "emotion": "sad",
+                "phases": [
+                    "open",
+                    "half",
+                    "closed"
+                ],
+                "x": 13,
+                "y": 15,
+                "area": "outside-eye-mask",
+                "expectedOriginalRgb": "633F1F",
+                "expectedBeforeRgb": "633F1F",
+                "donorSourceFile": "eyes/sad/raw.png",
+                "donorSourceSha256": "4962d851e32e82c3188a3b4c255ee9ec605a30b8c82fd244b9ff12ee0d937ebf",
+                "donorPhase": "open",
+                "donorX": 13,
+                "donorY": 15,
+                "expectedDonorRgb": "985C38",
+                "operation": "blend-original",
+                "weight": 0.5,
+                "expectedOutputRgb": "7E4E2C"
+            },
+            {
+                "id": "npc085-sad-mask-edge-alignment",
+                "emotion": "sad",
+                "phases": [
+                    "open",
+                    "half",
+                    "closed"
+                ],
+                "x": 14,
+                "y": 15,
+                "area": "inside-eye-mask",
+                "expectedOriginalRgb": "633F1F",
+                "expectedBeforeRgb": "7E4E2C",
+                "donorSourceFile": "eyes/sad/raw.png",
+                "donorSourceSha256": "4962d851e32e82c3188a3b4c255ee9ec605a30b8c82fd244b9ff12ee0d937ebf",
+                "donorPhase": "open",
+                "donorX": 14,
+                "donorY": 15,
+                "expectedDonorRgb": "9A5D39",
+                "operation": "copy-donor",
+                "expectedOutputRgb": "9A5D39"
+            }
+        ],
+        "appliedPixelRepairs": [
+            {
+                "id": "npc085-sad-outer-brow-extension",
+                "emotion": "sad",
+                "phase": "open",
+                "x": 13,
+                "y": 15,
+                "area": "outside-eye-mask",
+                "originalRgb": "633F1F",
+                "beforeRgb": "633F1F",
+                "donor": {
+                    "sourceFile": "eyes/sad/raw.png",
+                    "sha256": "4962d851e32e82c3188a3b4c255ee9ec605a30b8c82fd244b9ff12ee0d937ebf",
+                    "phase": "open",
+                    "x": 13,
+                    "y": 15,
+                    "rgb": "985C38"
+                },
+                "operation": "blend-original",
+                "outputRgb": "7E4E2C",
+                "weight": 0.5
+            },
+            {
+                "id": "npc085-sad-mask-edge-alignment",
+                "emotion": "sad",
+                "phase": "open",
+                "x": 14,
+                "y": 15,
+                "area": "inside-eye-mask",
+                "originalRgb": "633F1F",
+                "beforeRgb": "7E4E2C",
+                "donor": {
+                    "sourceFile": "eyes/sad/raw.png",
+                    "sha256": "4962d851e32e82c3188a3b4c255ee9ec605a30b8c82fd244b9ff12ee0d937ebf",
+                    "phase": "open",
+                    "x": 14,
+                    "y": 15,
+                    "rgb": "9A5D39"
+                },
+                "operation": "copy-donor",
+                "outputRgb": "9A5D39"
+            },
+            {
+                "id": "npc085-sad-outer-brow-extension",
+                "emotion": "sad",
+                "phase": "half",
+                "x": 13,
+                "y": 15,
+                "area": "outside-eye-mask",
+                "originalRgb": "633F1F",
+                "beforeRgb": "633F1F",
+                "donor": {
+                    "sourceFile": "eyes/sad/raw.png",
+                    "sha256": "4962d851e32e82c3188a3b4c255ee9ec605a30b8c82fd244b9ff12ee0d937ebf",
+                    "phase": "open",
+                    "x": 13,
+                    "y": 15,
+                    "rgb": "985C38"
+                },
+                "operation": "blend-original",
+                "outputRgb": "7E4E2C",
+                "weight": 0.5
+            },
+            {
+                "id": "npc085-sad-mask-edge-alignment",
+                "emotion": "sad",
+                "phase": "half",
+                "x": 14,
+                "y": 15,
+                "area": "inside-eye-mask",
+                "originalRgb": "633F1F",
+                "beforeRgb": "7E4E2C",
+                "donor": {
+                    "sourceFile": "eyes/sad/raw.png",
+                    "sha256": "4962d851e32e82c3188a3b4c255ee9ec605a30b8c82fd244b9ff12ee0d937ebf",
+                    "phase": "open",
+                    "x": 14,
+                    "y": 15,
+                    "rgb": "9A5D39"
+                },
+                "operation": "copy-donor",
+                "outputRgb": "9A5D39"
+            },
+            {
+                "id": "npc085-sad-outer-brow-extension",
+                "emotion": "sad",
+                "phase": "closed",
+                "x": 13,
+                "y": 15,
+                "area": "outside-eye-mask",
+                "originalRgb": "633F1F",
+                "beforeRgb": "633F1F",
+                "donor": {
+                    "sourceFile": "eyes/sad/raw.png",
+                    "sha256": "4962d851e32e82c3188a3b4c255ee9ec605a30b8c82fd244b9ff12ee0d937ebf",
+                    "phase": "open",
+                    "x": 13,
+                    "y": 15,
+                    "rgb": "985C38"
+                },
+                "operation": "blend-original",
+                "outputRgb": "7E4E2C",
+                "weight": 0.5
+            },
+            {
+                "id": "npc085-sad-mask-edge-alignment",
+                "emotion": "sad",
+                "phase": "closed",
+                "x": 14,
+                "y": 15,
+                "area": "inside-eye-mask",
+                "originalRgb": "633F1F",
+                "beforeRgb": "7E4E2C",
+                "donor": {
+                    "sourceFile": "eyes/sad/raw.png",
+                    "sha256": "4962d851e32e82c3188a3b4c255ee9ec605a30b8c82fd244b9ff12ee0d937ebf",
+                    "phase": "open",
+                    "x": 14,
+                    "y": 15,
+                    "rgb": "9A5D39"
+                },
+                "operation": "copy-donor",
+                "outputRgb": "9A5D39"
+            }
+        ],
+        "outsideMaskChangedPixels": 3,
+        "outsideMaskChanges": [
+            {
+                "id": "npc085-sad-outer-brow-extension",
+                "emotion": "sad",
+                "phase": "open",
+                "x": 13,
+                "y": 15,
+                "area": "outside-eye-mask",
+                "originalRgb": "633F1F",
+                "beforeRgb": "633F1F",
+                "donor": {
+                    "sourceFile": "eyes/sad/raw.png",
+                    "sha256": "4962d851e32e82c3188a3b4c255ee9ec605a30b8c82fd244b9ff12ee0d937ebf",
+                    "phase": "open",
+                    "x": 13,
+                    "y": 15,
+                    "rgb": "985C38"
+                },
+                "operation": "blend-original",
+                "outputRgb": "7E4E2C",
+                "weight": 0.5
+            },
+            {
+                "id": "npc085-sad-outer-brow-extension",
+                "emotion": "sad",
+                "phase": "half",
+                "x": 13,
+                "y": 15,
+                "area": "outside-eye-mask",
+                "originalRgb": "633F1F",
+                "beforeRgb": "633F1F",
+                "donor": {
+                    "sourceFile": "eyes/sad/raw.png",
+                    "sha256": "4962d851e32e82c3188a3b4c255ee9ec605a30b8c82fd244b9ff12ee0d937ebf",
+                    "phase": "open",
+                    "x": 13,
+                    "y": 15,
+                    "rgb": "985C38"
+                },
+                "operation": "blend-original",
+                "outputRgb": "7E4E2C",
+                "weight": 0.5
+            },
+            {
+                "id": "npc085-sad-outer-brow-extension",
+                "emotion": "sad",
+                "phase": "closed",
+                "x": 13,
+                "y": 15,
+                "area": "outside-eye-mask",
+                "originalRgb": "633F1F",
+                "beforeRgb": "633F1F",
+                "donor": {
+                    "sourceFile": "eyes/sad/raw.png",
+                    "sha256": "4962d851e32e82c3188a3b4c255ee9ec605a30b8c82fd244b9ff12ee0d937ebf",
+                    "phase": "open",
+                    "x": 13,
+                    "y": 15,
+                    "rgb": "985C38"
+                },
+                "operation": "blend-original",
+                "outputRgb": "7E4E2C",
+                "weight": 0.5
+            }
+        ]
+    },
+    "thinkingBoundaryRepairSummary": {
+        "status": "declared-boundary-pixel-invariants-pass-not-visual-acceptance",
+        "portraitRecord": 85,
+        "emotion": "sad",
+        "outsideMaskChangedPixels": 6,
+        "declaredOutsideMaskChangedPixels": 6,
+        "undeclaredOutsideMaskChangedPixels": 0,
+        "mapCount": 6,
+        "browBoundarySourceFile": "../npc085-thinking-emotions/sad/attempt-horizontal-v1/eyes/sad/open-brow-master-repaired.png",
+        "browBoundarySourceSha256": "ff054ef11d1f41bd838de6d607247d6932d375b6fbc3c82c96b91ef40096f111",
+        "rawDonorSourceFile": "eyes/sad/raw.png",
+        "rawDonorSourceSha256": "4962d851e32e82c3188a3b4c255ee9ec605a30b8c82fd244b9ff12ee0d937ebf",
+        "maps": [
+            {
+                "gaze": "left",
+                "phase": "open",
+                "file": "eyes/thinking/left/open.png",
+                "sha256": "3516861911014d81376fe089f2796b1813a172b0ca9a90a93dc6cd8bc121d9a0",
+                "outsideMaskChangedPixels": 1,
+                "declaredOutsideMaskChangedPixels": 1,
+                "undeclaredOutsideMaskChangedPixels": 0,
+                "browBoundaryPixels": [
+                    {
+                        "x": 13,
+                        "y": 15,
+                        "expectedOriginalRgb": [
+                            99,
+                            63,
+                            31
+                        ],
+                        "expectedBrowRgb": [
+                            126,
+                            78,
+                            44
+                        ]
+                    }
+                ]
+            },
+            {
+                "gaze": "left",
+                "phase": "half",
+                "file": "eyes/thinking/left/half.png",
+                "sha256": "30b90eec9f0cc2eb2890fdf7fbf24cf894e42dc9ead8f52b7daa8136de37fefd",
+                "outsideMaskChangedPixels": 1,
+                "declaredOutsideMaskChangedPixels": 1,
+                "undeclaredOutsideMaskChangedPixels": 0,
+                "browBoundaryPixels": [
+                    {
+                        "x": 13,
+                        "y": 15,
+                        "expectedOriginalRgb": [
+                            99,
+                            63,
+                            31
+                        ],
+                        "expectedBrowRgb": [
+                            126,
+                            78,
+                            44
+                        ]
+                    }
+                ]
+            },
+            {
+                "gaze": "left",
+                "phase": "closed",
+                "file": "eyes/thinking/left/closed.png",
+                "sha256": "c0ba6a5472fc004b05f14d6f2439061bba4eac43cdea558d830e4e011fcdbb5e",
+                "outsideMaskChangedPixels": 1,
+                "declaredOutsideMaskChangedPixels": 1,
+                "undeclaredOutsideMaskChangedPixels": 0,
+                "browBoundaryPixels": [
+                    {
+                        "x": 13,
+                        "y": 15,
+                        "expectedOriginalRgb": [
+                            99,
+                            63,
+                            31
+                        ],
+                        "expectedBrowRgb": [
+                            126,
+                            78,
+                            44
+                        ]
+                    }
+                ]
+            },
+            {
+                "gaze": "right",
+                "phase": "open",
+                "file": "eyes/thinking/right/open.png",
+                "sha256": "5322ae84e08c207f1b464b5a855b725c7b196d5901887efa468756491b5dd281",
+                "outsideMaskChangedPixels": 1,
+                "declaredOutsideMaskChangedPixels": 1,
+                "undeclaredOutsideMaskChangedPixels": 0,
+                "browBoundaryPixels": [
+                    {
+                        "x": 13,
+                        "y": 15,
+                        "expectedOriginalRgb": [
+                            99,
+                            63,
+                            31
+                        ],
+                        "expectedBrowRgb": [
+                            126,
+                            78,
+                            44
+                        ]
+                    }
+                ]
+            },
+            {
+                "gaze": "right",
+                "phase": "half",
+                "file": "eyes/thinking/right/half.png",
+                "sha256": "bbbbd169f91d08bdd2f82e6004871b1e3f7e1d0768a335bddf537838fa8eea1a",
+                "outsideMaskChangedPixels": 1,
+                "declaredOutsideMaskChangedPixels": 1,
+                "undeclaredOutsideMaskChangedPixels": 0,
+                "browBoundaryPixels": [
+                    {
+                        "x": 13,
+                        "y": 15,
+                        "expectedOriginalRgb": [
+                            99,
+                            63,
+                            31
+                        ],
+                        "expectedBrowRgb": [
+                            126,
+                            78,
+                            44
+                        ]
+                    }
+                ]
+            },
+            {
+                "gaze": "right",
+                "phase": "closed",
+                "file": "eyes/thinking/right/closed.png",
+                "sha256": "c0ba6a5472fc004b05f14d6f2439061bba4eac43cdea558d830e4e011fcdbb5e",
+                "outsideMaskChangedPixels": 1,
+                "declaredOutsideMaskChangedPixels": 1,
+                "undeclaredOutsideMaskChangedPixels": 0,
+                "browBoundaryPixels": [
+                    {
+                        "x": 13,
+                        "y": 15,
+                        "expectedOriginalRgb": [
+                            99,
+                            63,
+                            31
+                        ],
+                        "expectedBrowRgb": [
+                            126,
+                            78,
+                            44
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

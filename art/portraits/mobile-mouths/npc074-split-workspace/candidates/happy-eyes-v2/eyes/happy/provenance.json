@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T10:40:24.2324654Z",
+    "portraitRecord":  74,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "happy",
+    "prompt":  "Use case: pixel-art NPC portrait emotion sheet. Create one 2×2 atlas of the same character\u0027s upper-face crop, clearly and unmistakably HAPPY. The current happy-eyes candidate was judged too close to neutral, so make this version\u0027s eye smile visibly warmer: a gentle happy squint; lower lids lifted slightly toward the eyes; small soft smile crinkles at the outer corners; and a relaxed friendly brow arc. The eyes should still read as the source character and not as surprise, worry, or alarm.\nInput image: Use the single supplied local reference grid only. It is the exact source upper-half grid, repeated for identity, pixel scale, crop, and framing.\nComposition: Exactly four equal cells in a 2×2 grid, overall aspect ratio 64:35. Row-major order: OPEN happy eyes, HALF-CLOSED happy eyes, FULLY CLOSED happy eyes, OPEN REPEAT. Each cell is the complete same upper-face crop. No labels, text, gutters, borders, extra panels, full-face views, or zoomed feature crops.\nExpression and anatomy: Make the open and repeat-open phases unmistakably warm through a visibly friendly eyelid/brow shape and small lower-lid/outer-corner smile creases. Keep the eye opening narrow and source-like, with a gentle squint rather than wide eyes. Relax the brows into a soft, friendly arc; do not raise them into a surprised neutral look. Keep the happy brow shape consistent through half and closed phases. Closed lids must cover the eye naturally.\nPreserve: Exact character identity, hairline, blue ornament, face crop, eye spacing, original compact blue-gray iris clusters, muted pale glints, warm skin palette, and soft native pixel clusters. Both pupils look forward and stay aligned. Keep new crease pixels small and within the existing eye/brow feature area.\nAvoid: Neutral expression, surprised or raised brows, wide/alarmed eyes, enlarged or round irises, oversized sclera, bright white flash, added high-contrast lines, thick black outlines, changed hair or ornament, blur, gradients, labels, gutters, or background changes. Do not widen the source eye apertures to make the emotion read.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-bce964ee-1198-4608-9b4a-66843422374d.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-bce964ee-1198-4608-9b4a-66843422374d.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "2efaad16ffae3fc9541f3d14137095db7cddeb908310fef80410ce201fd2ad84",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-bce964ee-1198-4608-9b4a-66843422374d.png",
+                      "sha256":  "d79b4b4b659f3c3cdfb2eac4a2b9c05bb0f010a64024705b6a78460c480f0609",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/happy/raw.png",
+                "sha256":  "d79b4b4b659f3c3cdfb2eac4a2b9c05bb0f010a64024705b6a78460c480f0609",
+                "width":  1695,
+                "height":  928
+            }
+}

@@ -16,11 +16,11 @@ using UnityEngine;
 namespace PeopleOfTheIliacBay.DFU
 {
     // Native accepted-path proof for ordered typed MoveTo/Wait task chains.
-    internal static class GoalSequenceProbe
+    internal static partial class GoalSequenceProbe
     {
         private const BindingFlags Members = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
         private const BindingFlags StaticMembers = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
-        private const string Character = "PeopleOfTheIliacBayTest-9a5f197b";
+        private const string Character = "Hakon Ironhand";
         private const string SaveName = "People - Gothway Garden";
         private const string Switch = "-peopleoftheiliacbay-goal-sequence-probe";
         private const string TwoPassSwitch = "-peopleoftheiliacbay-goal-two-pass-probe";
@@ -57,7 +57,6 @@ namespace PeopleOfTheIliacBay.DFU
 
         private sealed class RunResult
         {
-            internal LocalDecisionSession OwnedSession;
             internal string Pass;
         }
 
@@ -75,7 +74,7 @@ namespace PeopleOfTheIliacBay.DFU
                 (requestedStepCount != 2 && requestedStepCount != 3 && requestedStepCount != 4 && requestedStepCount != 5))
                 throw new ArgumentOutOfRangeException("requestedStepCount", "Native sequence probe supports 2, 3, 4, or 5 steps.");
             if (game.PlayerMotor == null || game.PlayerEntity.Name != Character ||
-                game.PlayerEnterExit.IsPlayerInsideBuilding || !streets.Ready)
+                !SequenceStartScene(game) || !streets.Ready)
                 throw new InvalidOperationException("Goal sequence probe requires the owned character in a loaded exterior town.");
 
             FieldInfo localDialogueField = Field(host.GetType(), "localDialogueEnabled");
@@ -83,17 +82,8 @@ namespace PeopleOfTheIliacBay.DFU
             FieldInfo busyField = Field(host.GetType(), "conversationBusy");
             FieldInfo greetingField = Field(host.GetType(), "returningGreetingPending");
             FieldInfo greetingRetryField = Field(host.GetType(), "returningGreetingRetryAt");
-            FieldInfo plannerField = Field(host.GetType(), "decisionPlannerEnabled");
-            FieldInfo routingSessionField = Field(host.GetType(), "decisionRoutingSession");
-            FieldInfo routingConnectionField = Field(host.GetType(), "decisionRoutingConnection");
-            FieldInfo shadowField = Field(host.GetType(), "decisionShadow");
-            FieldInfo shadowSessionField = Field(host.GetType(), "decisionShadowSession");
-            FieldInfo shadowInitializedField = Field(host.GetType(), "decisionShadowInitialized");
             FieldInfo memoryWindowField = Field(host.GetType(), "memoryWindow");
             FieldInfo conversationOpenField = Field(host.GetType(), "conversationSessionOpen");
-            if (routingSessionField.GetValue(host) != null || shadowField.GetValue(host) != null ||
-                shadowSessionField.GetValue(host) != null)
-                throw new InvalidOperationException("Goal sequence recovery requires no pre-existing decision-session ownership.");
             if (Convert.ToBoolean(conversationOpenField.GetValue(host), CultureInfo.InvariantCulture) ||
                 memoryWindowField.GetValue(host) != null || DaggerfallUI.UIManager != null &&
                 DaggerfallUI.UIManager.TopWindow is DaggerfallTalkWindow)
@@ -104,14 +94,14 @@ namespace PeopleOfTheIliacBay.DFU
             bool originalBusy = Convert.ToBoolean(busyField.GetValue(host), CultureInfo.InvariantCulture);
             bool originalGreetingPending = Convert.ToBoolean(greetingField.GetValue(host), CultureInfo.InvariantCulture);
             float originalGreetingRetry = Convert.ToSingle(greetingRetryField.GetValue(host), CultureInfo.InvariantCulture);
-            bool originalPlanner = Convert.ToBoolean(plannerField.GetValue(host), CultureInfo.InvariantCulture);
-            bool originalShadowInitialized = Convert.ToBoolean(shadowInitializedField.GetValue(host), CultureInfo.InvariantCulture);
-            object originalRoutingSession = routingSessionField.GetValue(host);
-            object originalRoutingConnection = routingConnectionField.GetValue(host);
             Vector3 originalPlayer = game.PlayerMotor.transform.position;
             WorldStateStore initialStore = Field(host.GetType(), "store").GetValue(host) as WorldStateStore;
             if (initialStore == null) throw new InvalidOperationException("Goal sequence probe cannot fingerprint the loaded baseline store.");
-            string baselineLedger = ActionTaskFingerprint(initialStore);
+            var baselinePaidFollow=ResumeHiredFixture?initialStore.ActiveNpcAction(SequenceCompanion):null;
+            string baselineLiveFollow=baselinePaidFollow?.Id;
+            long baselinePaidRevision=ResumeHiredFixture?initialStore.ReadNpcServiceContracts().Revision:0;
+            int baselinePaidGold=game.PlayerEntity.GetGoldAmount();
+            string baselineLedger = ActionTaskFingerprint(initialStore,baselineLiveFollow);
 
             Exception runFailure = null;
             Exception recoveryFailure = null;
@@ -165,24 +155,12 @@ namespace PeopleOfTheIliacBay.DFU
                     if (client) client.Cancel();
                 }
                 catch (Exception error) { if (recoveryFailure == null) recoveryFailure = error; }
-                try
-                {
-                    if (result.OwnedSession != null) result.OwnedSession.Dispose();
-                }
-                catch (Exception error) { if (recoveryFailure == null) recoveryFailure = error; }
-                try
-                {
-                    routingSessionField.SetValue(host, originalRoutingSession);
-                    routingConnectionField.SetValue(host, originalRoutingConnection);
-                    shadowInitializedField.SetValue(host, originalShadowInitialized);
-                }
-                catch (Exception error) { if (recoveryFailure == null) recoveryFailure = error; }
             }
 
             IEnumerator restore = null;
             try
             {
-                restore = DriveFlattened(ConversationMoodProbe.LoadSave(host, streets, character, SaveName, true));
+                restore = DriveFlattened(ConversationMoodProbe.LoadSave(host, streets, character, SequenceBaselineSave, true));
                 while (true)
                 {
                     bool more;
@@ -204,10 +182,6 @@ namespace PeopleOfTheIliacBay.DFU
                     busyField.SetValue(host, originalBusy);
                     greetingField.SetValue(host, originalGreetingPending);
                     greetingRetryField.SetValue(host, originalGreetingRetry);
-                    plannerField.SetValue(host, originalPlanner);
-                    routingSessionField.SetValue(host, originalRoutingSession);
-                    routingConnectionField.SetValue(host, originalRoutingConnection);
-                    shadowInitializedField.SetValue(host, originalShadowInitialized);
                 }
                 catch (Exception error) { if (recoveryFailure == null) recoveryFailure = error; }
             }
@@ -217,12 +191,27 @@ namespace PeopleOfTheIliacBay.DFU
             if (recoveryFailure == null)
             {
                 WorldStateStore restoredStore = Field(host.GetType(), "store").GetValue(host) as WorldStateStore;
-                if (restoredStore == null || ActionTaskFingerprint(restoredStore) != baselineLedger)
+                if (restoredStore == null || ActionTaskFingerprint(restoredStore,baselineLiveFollow) != baselineLedger)
                     recoveryFailure = new InvalidOperationException("Exact owned baseline reload did not restore the captured action/task fingerprint.");
+                else if(ResumeHiredFixture)
+                {
+                    var restoredFollow=restoredStore.ActiveNpcAction(SequenceCompanion);NpcServiceContract restoredContract;
+                    if(baselinePaidFollow==null || restoredFollow==null || restoredFollow.Id!=baselinePaidFollow.Id ||
+                        !NpcPaidCompanionTravel.TryReadActiveTravel(restoredStore,restoredFollow,
+                            DaggerfallUnity.Instance.WorldTime.Now.ToSeconds(),out restoredContract) ||
+                        restoredFollow.AcceptedAt!=baselinePaidFollow.AcceptedAt || restoredFollow.DeadlineAt!=baselinePaidFollow.DeadlineAt ||
+                        restoredFollow.FinishAt!=baselinePaidFollow.FinishAt ||
+                        restoredContract.ContractId!=NpcPaidCompanionAction.ContractId(baselinePaidFollow) ||
+                        restoredStore.ReadNpcServiceContracts().Revision!=baselinePaidRevision ||
+                        game.PlayerEntity.GetGoldAmount()!=baselinePaidGold)
+                        recoveryFailure=new InvalidOperationException("Hired baseline reload did not restore the same active Follow, contract, deadline and payment.");
+                    else Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GOAL_HIRED_BASELINE_RESTORED: sameFollow=true; sameContract=true; "+
+                        "sameDeadline=true; samePayment=true; livePositionRevisionMayAdvance=true");
+                }
             }
             if (recoveryFailure == null)
                 Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GOAL_SEQUENCE_BASELINE_RESTORED: character=" + character +
-                    "; save=" + SaveName + "; actionTaskFingerprintExact=true; playerPositionExact=true; hostFlagsRestored=true; sessionOwnershipRestored=true.");
+                    "; save=" + SequenceBaselineSave + "; actionTaskFingerprintExact=true; playerPositionExact=true; hostFlagsRestored=true; sessionOwnershipRestored=true.");
             if (recoveryFailure != null)
             {
                 Debug.LogError("PEOPLE_OF_THE_ILIAC_BAY_GOAL_SEQUENCE_BASELINE_RESTORE_FAIL: " + recoveryFailure);
@@ -239,13 +228,16 @@ namespace PeopleOfTheIliacBay.DFU
                 Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GOAL_CHAIN_LENGTH_PASS: " + result.Pass);
         }
 
-        private static string ActionTaskFingerprint(WorldStateStore store)
+        private static string ActionTaskFingerprint(WorldStateStore store,string liveFollowId=null)
         {
             var state = store.Snapshot();
             var rows = new StringBuilder();
             foreach (NpcActionJob action in state.NpcActions.OrderBy(value => value.Id, StringComparer.Ordinal))
                 rows.Append("A|").Append(action.Id).Append('|').Append(action.ProposalId).Append('|').Append(action.ResidentId)
-                    .Append('|').Append(action.Kind).Append('|').Append(action.Phase).Append('|').Append(action.Revision)
+                    .Append('|').Append(action.Kind).Append('|').Append(action.Phase).Append('|')
+                    // Only the restored active Follow's physical-position counter
+                    // can advance normally while native bodies are recreated.
+                    .Append(action.Id==liveFollowId?"live-position":action.Revision.ToString(CultureInfo.InvariantCulture))
                     .Append('|').Append(action.CompletedEffectId).Append('\n');
             foreach (NpcTaskPlan task in state.NpcTasks.OrderBy(value => value.Id, StringComparer.Ordinal))
             {
@@ -307,9 +299,20 @@ namespace PeopleOfTheIliacBay.DFU
                 throw new ArgumentOutOfRangeException("requestedStepCount", "Native sequence probe supports 2, 3, 4, or 5 steps.");
 
             GameManager game = GameManager.Instance;
-            if (game.PlayerEntity.Name != Character || game.PlayerEnterExit.IsPlayerInsideBuilding || !streets.Ready)
+            if (game.PlayerEntity.Name != Character || !SequenceStartScene(game) || !streets.Ready)
                 throw new InvalidOperationException("Goal sequence probe requires the owned character in a loaded exterior town.");
             var store = Field(typeof(PeopleOfTheIliacBayMod), "store").GetValue(host) as WorldStateStore;
+            NpcActionJob paidFollow=null;
+            if(PaidTravelFixture)
+            {
+                if(!twoPass)throw new InvalidOperationException("Paid travel acceptance requires real two-pass extraction.");
+                yield return HireActualSequenceCompanion(host,streets);
+                store=Field(typeof(PeopleOfTheIliacBayMod),"store").GetValue(host) as WorldStateStore;
+                paidFollow=store.ReadPaidFollowForTravelTask(SequenceCompanion,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
+                if(paidFollow==null)throw new InvalidOperationException("The actual paid travel service did not reach the exterior.");
+            }
+            long paidLedgerRevision=PaidTravelFixture?store.ReadNpcServiceContracts().Revision:0;
+            int paidPlayerGold=game.PlayerEntity.GetGoldAmount();
             var geometry = Field(typeof(StreetPopulation), "geometry").GetValue(streets) as TownGeometry;
             BuildingDirectory directory = game.StreamingWorld.GetCurrentBuildingDirectory();
             if (store == null || geometry == null || directory == null)
@@ -323,9 +326,20 @@ namespace PeopleOfTheIliacBay.DFU
 
             Vector3 originalPlayer = game.PlayerMotor.transform.position;
             var rejectedResidents = new HashSet<string>(StringComparer.Ordinal);
-            object[] fixtureArguments = { streets, store, geometry, directory, game, rejectedResidents, null };
-            MethodInfo findFixture = Method(typeof(NativeMoveToWaitProbe), "FindFixture", StaticMembers, 7);
+            object[] fixtureArguments = PaidTravelFixture?new object[]{streets,store,geometry,directory,game,rejectedResidents,null,SequenceCompanion}:
+                new object[]{streets,store,geometry,directory,game,rejectedResidents,null};
+            MethodInfo findFixture = Method(typeof(NativeMoveToWaitProbe), PaidTravelFixture?"FindPaidFixture":"FindFixture", StaticMembers, PaidTravelFixture?8:7);
             object fixture = findFixture.Invoke(null, fixtureArguments);
+            // Fresh saves need ordinary route preparation and an actual outing.
+            // Advance the disposable clock, never manufacture a resident/route.
+            float fixtureDeadline=Time.realtimeSinceStartup+(PaidTravelFixture?0:90);
+            while(fixture==null && Time.realtimeSinceStartup<fixtureDeadline)
+            {
+                DaggerfallUI.Instance.PopToHUD();game.PauseGame(false);
+                if(streets.OutdoorRoutesPrepared)DaggerfallUnity.Instance.WorldTime.Now.RaiseTime(300);
+                yield return new WaitForSecondsRealtime(0.5f);
+                fixture=findFixture.Invoke(null,fixtureArguments);
+            }
             if (fixture == null)
                 throw new InvalidOperationException("No normal reachable named-Building fixture is available: " +
                     (fixtureArguments[6] as string ?? "no fixture reason was returned."));
@@ -396,7 +410,7 @@ namespace PeopleOfTheIliacBay.DFU
             DaggerfallUI.Instance.PopToHUD();
             game.TalkManager.TalkToMobileNPC(actor.Person);
             DaggerfallTalkWindow talk = null;
-            IEnumerator talkWait = (IEnumerator)Method(typeof(DecisionShadowProbe), "WaitForTalk", StaticMembers, 2)
+            IEnumerator talkWait = (IEnumerator)Method(typeof(NativeDialogueProbe), "WaitForTalk", StaticMembers, 2)
                 .Invoke(null, new object[] { actor, (Action<DaggerfallTalkWindow>)(value => talk = value) });
             while (talkWait.MoveNext()) yield return talkWait.Current;
             if (talk == null) throw new InvalidOperationException("Native Talk did not open for the sequence fixture actor.");
@@ -412,16 +426,9 @@ namespace PeopleOfTheIliacBay.DFU
             var textClient = Field(host.GetType(), "localDialogue").GetValue(host) as LocalDialogueClient;
             if (textClient) textClient.Cancel();
 
-            var transport = new DeterministicAcceptTransport(turn);
-            var session = new LocalDecisionSession(transport)
-                { ExpectedModelId = "goal-sequence-native-probe", Enabled = true };
-            result.OwnedSession = session;
-            Method(host.GetType(), "InstallDecisionRoutingForProbe", Members, 2).Invoke(host,
-                new object[] { session, new LocalDialogueConnection("http://127.0.0.1:8093/completion", 10000) });
-
+            long consentBefore = ReadLong(host, "dialogueWillingnessCompletionCount");
             MethodInfo capture = Method(host.GetType(), "CaptureConversationContext", Members, 3);
             MethodInfo continueExtraction = Method(host.GetType(), "ContinueGoalActionExtraction", Members, 5);
-            MethodInfo pump = Method(host.GetType(), "UpdateDecisionShadow", Members, 0);
             long revision = ReadLong(host, "conversationContextRequestRevision") + 1;
             object snapshot = capture.Invoke(host, new object[] { talk, turn, revision });
             if (snapshot == null) throw new InvalidOperationException("Could not capture current Talk context for typed sequence.");
@@ -429,7 +436,7 @@ namespace PeopleOfTheIliacBay.DFU
                 .Invoke(null, new object[] { talk });
             int transcriptStart = TranscriptCount(talk);
             string actorId = actor.Resident.Id;
-            if (store.ActiveNpcAction(actorId) != null || store.ActiveNpcTask(actorId) != null)
+            if ((!PaidTravelFixture && store.ActiveNpcAction(actorId) != null) || store.ActiveNpcTask(actorId) != null)
                 throw new InvalidOperationException("Sequence fixture actor acquired a commitment before extraction.");
             long willingnessBefore = ReadLong(host, "goalWillingnessDispatchCount");
             long decompositionDispatchBefore = twoPass ? ReadLong(host, "goalTwoPassDecompositionDispatchCount") : 0;
@@ -441,7 +448,12 @@ namespace PeopleOfTheIliacBay.DFU
 
             if (twoPass)
             {
-                Method(host.GetType(), "TryBeginGoalActionConversation", Members, 4).Invoke(host,
+                if(PaidTravelFixture)
+                {
+                    Field(host.GetType(),"conversationBusy").SetValue(host,false);
+                    Method(host.GetType(),"SubmitFreeText",Members,2).Invoke(host,new object[]{talk,turn});
+                }
+                else Method(host.GetType(), "TryBeginGoalActionConversation", Members, 4).Invoke(host,
                     new object[] { talk, turn, history, snapshot });
             }
             else
@@ -474,7 +486,6 @@ namespace PeopleOfTheIliacBay.DFU
             bool twoPassStagesLogged = false;
             while (Time.realtimeSinceStartup < bindingDeadline && !HasReply(host, talk, transcriptStart, turn))
             {
-                pump.Invoke(host, null);
                 if (twoPass && string.Equals(ReadString(host, "goalLastBindingStatus"), "binding", StringComparison.Ordinal) &&
                     (ReadLong(host, "goalTwoPassDecompositionDispatchCount") - decompositionDispatchBefore != 1 ||
                      ReadLong(host, "goalTwoPassDecompositionCompletionCount") - decompositionCompletionBefore != 1 ||
@@ -490,15 +501,14 @@ namespace PeopleOfTheIliacBay.DFU
                 if (active != null) acceptedTask = active;
                 if (acceptedTask != null)
                 {
-                    if (transport.CallCount == 0 || transport.LastChoice != "ACCEPT")
-                        throw new InvalidOperationException("Goal sequence task was saved before deterministic D3 ACCEPT.");
+                    if (ReadLong(host, "dialogueWillingnessCompletionCount") == consentBefore || ReadString(host, "dialogueWillingnessLastChoice") != "ACCEPT")
+                        throw new InvalidOperationException("Goal sequence task was saved before same-model ACCEPT.");
                     break;
                 }
-                if (store.ActiveNpcAction(actorId) != null && transport.CallCount == 0)
-                    throw new InvalidOperationException("Native action started before the task reached deterministic D3 willingness.");
+                if (!PaidTravelFixture && store.ActiveNpcAction(actorId) != null && ReadLong(host, "dialogueWillingnessCompletionCount") == consentBefore)
+                    throw new InvalidOperationException("Native action started before the task reached same-model willingness.");
                 yield return null;
             }
-            pump.Invoke(host, null);
             // The model callback can save the task and append its reply in one
             // Unity Update before this observer resumes. Re-read after the loop
             // rather than treating the completed reply as evidence of no task.
@@ -510,10 +520,8 @@ namespace PeopleOfTheIliacBay.DFU
                 parameterDispatchBefore, parameterCompletionBefore);
             if (twoPass) LogTwoPassRepair(host, repairDispatchBefore, repairCompletionBefore);
             if (acceptedTask == null || acceptedTask.Steps == null ||
-                acceptedTask.Steps.Count != requestedStepCount || willingnessDispatches != 1 || transport.CallCount != 1 ||
-                !string.Equals(transport.LastChoice, "ACCEPT", StringComparison.Ordinal) ||
-                !string.Equals(transport.LastPurpose, "npc-action-willingness-v1", StringComparison.Ordinal) ||
-                !string.Equals(transport.LastTurn, turn, StringComparison.Ordinal) ||
+                acceptedTask.Steps.Count != requestedStepCount || willingnessDispatches != 1 || ReadLong(host, "dialogueWillingnessCompletionCount") != consentBefore + 1 ||
+                !string.Equals(ReadString(host, "dialogueWillingnessLastChoice"), "ACCEPT", StringComparison.Ordinal) ||
                 !string.Equals(extractionStatus, "Valid", StringComparison.Ordinal) ||
                 !string.Equals(bindingStatus, "bound", StringComparison.Ordinal) ||
                 twoPass && (ReadLong(host, "goalTwoPassDecompositionDispatchCount") - decompositionDispatchBefore != 1 ||
@@ -522,8 +530,8 @@ namespace PeopleOfTheIliacBay.DFU
                     ReadLong(host, "goalTwoPassParameterCompletionCount") - parameterCompletionBefore != 1))
             {
                 string diagnostic = "extraction=" + (extractionStatus ?? "<null>") + "; binding=" + (bindingStatus ?? "<null>") +
-                    "; willingnessDispatches=" + willingnessDispatches + "; d3Calls=" + transport.CallCount +
-                    "; d3Purpose=" + (transport.LastPurpose ?? "<none>") + "; d3Choice=" + (transport.LastChoice ?? "<none>") +
+                    "; willingnessDispatches=" + willingnessDispatches + "; consentCompletions=" + (ReadLong(host, "dialogueWillingnessCompletionCount") - consentBefore) +
+                    "; dialogueChoice=" + (ReadString(host, "dialogueWillingnessLastChoice") ?? "<none>") +
                     "; task=" + (acceptedTask == null ? "<none>" : acceptedTask.Id + "/" + acceptedTask.Phase) +
                     "; requestedSteps=" + requestedStepCount + "; reply=" + (FindReply(talk, transcriptStart, turn) ?? "<none>") +
                     (twoPass ? "; liveTurn=" + turn : "; typedResponse=" + output);
@@ -534,6 +542,8 @@ namespace PeopleOfTheIliacBay.DFU
 
             NpcTaskPlan task = store.ReadNpcTask(acceptedTask.Id);
             if (task == null) throw new InvalidOperationException("Accepted native task receipt could not be read back.");
+            if(PaidTravelFixture && (task.PaidFollowActionId!=paidFollow.Id || task.DeadlineAt>paidFollow.FinishAt))
+                throw new InvalidOperationException("Travel task did not retain its existing paid Follow and absolute end.");
             string taskId = task.Id;
             var moveAction = store.ReadNpcAction(task.Id + ":step:0");
             if (task.Phase != NpcTaskPhase.Running || task.CurrentStepIndex != 0 || moveAction == null ||
@@ -565,7 +575,6 @@ namespace PeopleOfTheIliacBay.DFU
             float talkOpenUntil = Time.realtimeSinceStartup + 0.5f;
             while (Time.realtimeSinceStartup < talkOpenUntil)
             {
-                pump.Invoke(host, null);
                 task = store.ReadNpcTask(taskId);
                 moveAction = store.ReadNpcAction(taskId + ":step:0");
                 bool futureActionDispatched = false;
@@ -594,7 +603,7 @@ namespace PeopleOfTheIliacBay.DFU
                 "; stepCount=" + task.Steps.Count + "; stepKinds=" + string.Join(",", task.Steps.Select(s => s.Kind.ToString()).ToArray()) +
                 "; targetKeys=" + string.Join(",", task.Steps.Select(s => s.Target.BuildingKey.ToString(CultureInfo.InvariantCulture)).ToArray()) +
                 "; waitGameSeconds=" + WaitGameSeconds.ToString(CultureInfo.InvariantCulture) +
-                "; willingnessDispatches=" + willingnessDispatches + "; d3Choice=" + transport.LastChoice +
+                "; willingnessDispatches=" + willingnessDispatches + "; dialogueChoice=" + ReadString(host, "dialogueWillingnessLastChoice") +
                 "; receipt=" + reply + "; actorPositionUnchangedWhileTalkOpen=true.");
 
             DaggerfallUI.Instance.PopToHUD();
@@ -751,7 +760,7 @@ namespace PeopleOfTheIliacBay.DFU
             float bestRoutineRouteRemaining = float.PositiveInfinity;
             Vector3 lastRoutineProgressPosition = actor.transform.position - Vector3.up;
             bool routineStallWatchArmed = false;
-            while (Time.realtimeSinceStartup < routineDeadline &&
+            while (!PaidTravelFixture && Time.realtimeSinceStartup < routineDeadline &&
                 (store.ActiveNpcTask(actorId) != null || store.ActiveNpcAction(actorId) != null))
             {
                 float routeRemaining;
@@ -801,11 +810,21 @@ namespace PeopleOfTheIliacBay.DFU
             }
             task = store.ReadNpcTask(taskId);
             if (task == null || task.Phase != NpcTaskPhase.Completed || task.CurrentStepIndex != requestedStepCount ||
-                store.ActiveNpcTask(actorId) != null || store.ActiveNpcAction(actorId) != null)
+                store.ActiveNpcTask(actorId) != null || !PaidTravelFixture && store.ActiveNpcAction(actorId) != null)
                 throw new InvalidOperationException("Completed ordered goal did not physically release routine ownership within " +
                     routineHardLimitSeconds.ToString("F0", CultureInfo.InvariantCulture) + "s; " +
                     DescribeRoutineProgress(streets, geometry, store, actorId, actor, out _, out _, out _) + ".");
 
+            if(PaidTravelFixture)
+            {
+                var resumed=store.ActiveNpcAction(actorId);
+                if(resumed==null || resumed.Id!=paidFollow.Id || NpcActionExecutor.IsTerminal(resumed) ||
+                    resumed.FinishAt!=paidFollow.FinishAt || NpcPaidCompanionAction.ContractId(resumed)!=NpcPaidCompanionAction.ContractId(paidFollow) ||
+                    store.ReadNpcServiceContracts().Revision!=paidLedgerRevision || game.PlayerEntity.GetGoldAmount()!=paidPlayerGold)
+                    throw new InvalidOperationException("Completed travel task did not resume the same paid Follow without new money/time.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GOAL_SEQUENCE_PAID_RESUMED: follow="+resumed.Id+"; contract="+
+                    NpcPaidCompanionAction.ContractId(resumed)+"; originalFinish="+resumed.FinishAt+"; samePayment=true; sameContract=true");
+            }
             string pass = "actorId=" + actorId + "; taskId=" + task.Id +
                 "; taskPhase=" + task.Phase + "; stepCount=" + requestedStepCount + "; building=" + buildingName +
                 "; alternateBuilding=" + alternateName + "; buildingKey=" + moveOption.Target.BuildingKey +
@@ -814,8 +833,8 @@ namespace PeopleOfTheIliacBay.DFU
                 "m; completedEffects=" + string.Join(",", task.Steps.Select(step => step.CompletedEffectId).ToArray()) +
                 "; waitGameSeconds=" + WaitGameSeconds.ToString(CultureInfo.InvariantCulture) +
                 "; waitDriftMax=" + (waitDrifts.Count == 0 ? 0f : waitDrifts.Values.Max()).ToString("F3", CultureInfo.InvariantCulture) +
-                "m; routineOwnerReleased=true; extraction=" + (twoPass ? "live-two-pass" : "injected-typed-fixture") +
-                "; d3Acceptance=deterministic-ACCEPT; liveExtraction=" + twoPass.ToString().ToLowerInvariant() +
+                "m; routineOwnerReleased="+(!PaidTravelFixture).ToString().ToLowerInvariant()+"; paidFollowResumed="+PaidTravelFixture.ToString().ToLowerInvariant()+"; extraction=" + (twoPass ? "live-two-pass" : "injected-typed-fixture") +
+                "; sameModelWillingness=ACCEPT; controlledConsent=false; liveExtraction=" + twoPass.ToString().ToLowerInvariant() +
                 (twoPass ? "; decompositionDispatchCount=1; decompositionCompletionCount=1; parameterDispatchCount=1; parameterCompletionCount=1; repairDispatchCount=" +
                     (ReadLong(host, "goalTwoPassRepairDispatchCount") - repairDispatchBefore) + "; repairCompletionCount=" +
                     (ReadLong(host, "goalTwoPassRepairCompletionCount") - repairCompletionBefore) +
@@ -1134,7 +1153,8 @@ namespace PeopleOfTheIliacBay.DFU
                 if (question == null || question.textLabel == null || answer == null || answer.textLabel == null) continue;
                 if (question.textColor == DaggerfallUI.DaggerfallQuestionTextColor && question.textLabel.Text == turn &&
                     answer.textColor != DaggerfallUI.DaggerfallQuestionTextColor && !string.IsNullOrWhiteSpace(answer.textLabel.Text))
-                    return answer.textLabel.Text;
+                    return (string)Method(typeof(PeopleOfTheIliacBayMod), "CanonicalTranscriptText", StaticMembers, 1)
+                        .Invoke(null, new object[] { answer });
             }
             return null;
         }
@@ -1165,45 +1185,5 @@ namespace PeopleOfTheIliacBay.DFU
                 throw new InvalidOperationException("Required goal sequence probe field missing: " + name);
         }
 
-        private sealed class DeterministicAcceptTransport : ILocalDecisionTransport
-        {
-            private readonly string expectedTurn;
-            private int calls;
-            internal int CallCount { get { return Volatile.Read(ref calls); } }
-            internal string LastChoice { get; private set; }
-            internal string LastPurpose { get; private set; }
-            internal string LastTurn { get; private set; }
-
-            internal DeterministicAcceptTransport(string turn) { expectedTurn = turn; }
-
-            public LocalDecisionHttpResponse Send(Uri endpoint, byte[] bytes, int timeoutMilliseconds,
-                CancellationToken cancellationToken)
-            {
-                if (cancellationToken.IsCancellationRequested)
-                    return new LocalDecisionHttpResponse(null, null, NpcDecisionFailureKind.Transport, "cancelled");
-                string payload = new UTF8Encoding(false, true).GetString(bytes);
-                var root = FullSerializer.fsJsonParser.Parse(payload);
-                var criteria = root.AsDictionary["questions"].AsDictionary["decision"].AsDictionary["criteria"].AsDictionary;
-                var state = FullSerializer.fsJsonParser.Parse(root.AsDictionary["state"].AsString);
-                LastPurpose = state.AsDictionary["purpose"].AsString;
-                LastTurn = state.AsDictionary["originalTurn"].AsString;
-                if (!criteria.ContainsKey("ACCEPT") || LastPurpose != "npc-action-willingness-v1" || LastTurn != expectedTurn)
-                    return new LocalDecisionHttpResponse(null, null, NpcDecisionFailureKind.Transport,
-                        "deterministic fixture precondition failed");
-
-                var body = new StringBuilder("{\"model\":\"goal-sequence-native-probe\",\"answers\":{\"decision\":{\"type\":\"choice\",\"choice\":\"ACCEPT\",\"probabilities\":{");
-                bool first = true;
-                foreach (string option in criteria.Keys.OrderBy(value => value, StringComparer.Ordinal))
-                {
-                    if (!first) body.Append(',');
-                    first = false;
-                    body.Append('"').Append(option).Append("\":").Append(option == "ACCEPT" ? '1' : '0');
-                }
-                body.Append("}}}}");
-                LastChoice = "ACCEPT";
-                Interlocked.Increment(ref calls);
-                return new LocalDecisionHttpResponse(200, body.ToString(), NpcDecisionFailureKind.None);
-            }
-        }
     }
 }

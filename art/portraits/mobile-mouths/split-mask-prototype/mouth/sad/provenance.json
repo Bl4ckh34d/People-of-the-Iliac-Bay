@@ -1,0 +1,43 @@
+{
+  "emotion": "sad",
+  "artifact": "raw lower-mouth 3x3 sheet",
+  "prompt": "Use case: illustration-story\r\nAsset type: pixel-art NPC portrait lower-half speech-mouth emotion sheet\r\nPrimary request: Edit Image 1, a 3x3 sheet of the same native lower portrait half with nine speech mouth poses, into a restrained but clearly SAD expression set. Image 2 is identity and palette reference only.\r\nComposition: Preserve the exact 3x3 grid, complete lower-half cells, framing, nose/chin placement, and source layout. Keep the sheet aspect ratio near 2.20690, no gutters, labels, or text.\r\nSubject: The same woman in all nine cells. Show low-energy sadness with gently downturned relaxed lip corners and subtle nearby tension. Make sadness clear, but do not make the mouth angry, tense, theatrical, or a large exaggerated frown.\r\nCell order, row-major: A B C / D E F / G H X. Preserve each source cell's distinct speech viseme and exact mouth opening size and anchor. A must remain fully lip-closed for M/B/P. B through H must keep their distinct speech mouth shapes. X is the emotional resting mouth, with softly downturned corners.\r\nStyle: Preserve original soft muted pixel-art skin palette, shading, lip color, geometry, and proportions. Keep mouth size and native placement unchanged.\r\nConstraints: Change only emotion-appropriate lip corners, lip tension, and small nearby folds within the mouth area. Preserve source lower-half cell scale, nose, cheeks, chin, skin tone, face framing, and every other feature. No full-face repaint, no moving or enlarging mouths, no widened teeth, no giant grin, no exaggerated frown, no anger, no tears, no makeup, no black outlines, no harsh contrast, no blur, no airbrush, no text, no watermark. Output one complete 3x3 sheet; do not crop or add margins.",
+  "sourcePaths": [
+    "art/portraits/mobile-mouths/split-mask-prototype/mouth-reference-grid.png",
+    "art/portraits/mobile-mouths/split-mask-prototype/original.png"
+  ],
+  "sourceSha256": {
+    "mouth-reference-grid.png": "81B130639901DA518717B9B48B461C210CE9F9D8D1C7141CE409D46E542DD7DE",
+    "original.png": "4BBB1C9F6BEA7561D316FA6587A93FD0C9BCBFA3C9AA0992BB85B804AA213125"
+  },
+  "generatedPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-fb9b-7322-8190-74bf6fb54c9d\\exec-b86881cc-228d-4c5a-a622-b6a577264026.png",
+  "generatedSha256": "12FD1C0A3439B7DDF1CEBE6759079C8079B8F3EC651209B99E4B60F6363B6215",
+  "outputPath": "art/portraits/mobile-mouths/split-mask-prototype/mouth/sad/raw.png",
+  "outputSha256": "12FD1C0A3439B7DDF1CEBE6759079C8079B8F3EC651209B99E4B60F6363B6215",
+  "dimensions": [
+    1862,
+    845
+  ],
+  "grid": [
+    3,
+    3
+  ],
+  "cellOrder": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "X"
+  ],
+  "generationCalls": 1,
+  "generator": "built-in image_gen",
+  "deviations": [
+    "Sheet dimensions are 1862x845; aspect ratio is 2.20355 versus target 2.20690.",
+    "Some open speech cells read close to neutral; sadness is clearest in X and relaxed corners."
+  ],
+  "review": "pending"
+}

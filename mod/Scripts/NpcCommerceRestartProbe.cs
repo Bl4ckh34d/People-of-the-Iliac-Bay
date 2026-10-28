@@ -18,7 +18,7 @@ namespace PeopleOfTheIliacBay.DFU
     {
         private static readonly string ProcessToken=System.Diagnostics.Process.GetCurrentProcess().Id+":"+
             System.Diagnostics.Process.GetCurrentProcess().StartTime.ToUniversalTime().Ticks;
-        private const string Character="PeopleOfTheIliacBayTest-9a5f197b";
+        private const string Character="Hakon Ironhand";
         private const BindingFlags Private=BindingFlags.Instance|BindingFlags.NonPublic;
         [Serializable] public sealed class Evidence
         {

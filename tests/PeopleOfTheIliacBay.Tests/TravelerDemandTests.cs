@@ -12,9 +12,9 @@ namespace PeopleOfTheIliacBay.Tests
             (origin,seed,sex)=>origin.SettlementId+"-"+seed+"-"+sex); }
         public static void Add(List<(string Name,Action Body)> cases)
         {
-            cases.Add(("Traveler self knowledge distinguishes pending paid and expired Inn rooms without inventing a house",(Action)(()=>{
+            cases.Add(("Traveler self knowledge distinguishes pending booked and expired Inn beds without inventing a house",(Action)(()=>{
                 var store=new WorldStateStore(42);store.GetOrCreate(1,new int[0]);
-                store.RegisterLodging(1,7,new[]{new LodgingRoom{Id="room",Beds=new List<string>{"bed"}}});
+                store.RegisterLodgingBeds(1,7,new[]{new LodgingBed {Id="bed"}});
                 TravelerProposal proposal=null;
                 for(int slot=0;slot<1000;slot++)
                 {proposal=Make(slot:slot);if(TravelerAdventurerPolicy.Archetype(proposal.Person.AppearanceSeed)==NpcArchetype.Mage)break;}
@@ -22,16 +22,16 @@ namespace PeopleOfTheIliacBay.Tests
                 var journey=store.TravelerJourneyFor(proposal.Visit.Id);
                 string pending=TravelerConversationContext.IdentityAndLodging(store,proposal.Person.Id,1,journey.CheckInAt-1,
                     key=>"Actual Origin",key=>"Actual Inn");
-                Check.True(pending.Contains("mage traveler") && pending.Contains("Actual Origin") && pending.Contains("no room booking is confirmed"));
-                Check.True(!pending.Contains("Your paid room"));
+                Check.True(pending.Contains("mage traveler") && pending.Contains("Actual Origin") && pending.Contains("no bed booking is confirmed"));
+                Check.True(!pending.Contains("Your booked bed"));
                 Check.True(store.TryAdmitTraveler(proposal.Visit.Id,journey.CheckInAt));
                 string booked=TravelerConversationContext.IdentityAndLodging(store,proposal.Person.Id,1,journey.CheckInAt+1,
                     key=>"Actual Origin",key=>"Actual Inn");
-                Check.True(booked.Contains("Your paid room is at Actual Inn"));
+                Check.True(booked.Contains("Your booked bed is at Actual Inn"));
                 Check.True(booked.Contains("No permanent house or household is verified"));
                 string expired=TravelerConversationContext.IdentityAndLodging(store,proposal.Person.Id,1,journey.CheckOutAt+1,
                     key=>"Actual Origin",key=>"Actual Inn");
-                Check.True(expired.Contains("earlier room booking at Actual Inn has ended") && !expired.Contains("Your paid room"));
+                Check.True(expired.Contains("earlier bed booking at Actual Inn has ended") && !expired.Contains("Your booked bed"));
                 string departed=TravelerConversationContext.PlannedActivity(store,proposal.Person.Id,1,journey.ExitAt+1,key=>"Actual Inn");
                 Check.True(departed.Contains("No onward settlement is recorded") && !departed.Contains("return home"));
                 Check.True(store.ReadNpcProgress(proposal.Person.Id)==null);Check.Equal(0,store.Snapshot().Settlements[0].Households.Count);

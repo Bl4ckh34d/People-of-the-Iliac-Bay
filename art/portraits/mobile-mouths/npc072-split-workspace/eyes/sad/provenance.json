@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T09:23:15.7835129Z",
+    "portraitRecord":  72,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "sad",
+    "prompt":  "Create one pixel-art eye atlas for common portrait NPC072 in the sad expression. Use the attached exact 2x2 eyes reference grid as source for identity, hair, face crop, eye spacing, original iris size and hue, palette, and native pixel style. Return exactly four equal cells as a 2-column by 2-row atlas, overall aspect ratio 64:35. Every cell must be the complete 64x35 original upper-half crop, with no labels, gutters, borders, empty space, zooms, or extra panels.\n\nRow-major cells:\n- Top-left: OPEN sad eyes.\n- Top-right: HALF-CLOSED sad eyes.\n- Bottom-left: FULLY CLOSED sad eyes, with opaque eyelids covering both eyes.\n- Bottom-right: exact repeat of the top-left OPEN sad eyes.\n\nGive sad expression through subtly raised inner brow ends and softened, slightly downcast lids. Keep brow placement consistent across open, half, and closed cells. Both pupils face forward. Preserve the source compact golden-olive irises, small dark pupils, softened native pixel clusters, and muted tan skin palette. Keep eyes natural and restrained. HALF-CLOSED cells retain a small visible iris. Closed lids use source-compatible skin and outline colors, not dark empty holes.\n\nDo not add duplicate shadow eyebrows, thick black brows, alarmed wide eyes, oversized irises, bright white glints, harsh outlines, or new colors. Do not change face shape, hair, framing, nose, mouth, background, or any other source details. Use crisp native pixel-art edges only, no blur, smoothing, antialiasing, resampling, or vector shapes.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-28bda930-afa8-48af-899c-d33bdd926c57.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-28bda930-afa8-48af-899c-d33bdd926c57.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "4af6922ef7f8345a11ae8418761144f64dcaaa8b836f461486a2fb206cbebd85",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "54d6fd210b1a398af8045a12af8675cde83466f12bf4006cc8a7bbb8e135a2fe",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-28bda930-afa8-48af-899c-d33bdd926c57.png",
+                      "sha256":  "da0aa8cdb6d07178824a4ba15985a15a667616cd7ffafd7876b5a06206b2495e",
+                      "width":  1696,
+                      "height":  927
+                  },
+    "raw":  {
+                "path":  "eyes/sad/raw.png",
+                "sha256":  "da0aa8cdb6d07178824a4ba15985a15a667616cd7ffafd7876b5a06206b2495e",
+                "width":  1696,
+                "height":  927
+            }
+}

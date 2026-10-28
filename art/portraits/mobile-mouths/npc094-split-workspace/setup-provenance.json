@@ -1,0 +1,24 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T15:34:46.3643728Z",
+    "preparationTool":  "tools/PreparePortraitSplitWorkspace.ps1",
+    "portraitRecord":  94,
+    "bank":  "TFAC00I0.RCI",
+    "sourcePath":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\catalog\\common-094.png",
+    "sourceSha256":  "8e4aa92146ab2222c493cfb3117c20d502b62697bf9536542396a2c77294b42a",
+    "sourceWidth":  64,
+    "sourceHeight":  64,
+    "splitY":  35,
+    "layoutPath":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait094-full-preflight\\parent-layout-v1.json",
+    "layoutSha256":  "ce39f57bdd743f187f6e693379220394c58fef68fbf0378a02f7ccda11cb3757",
+    "workspaceFiles":  {
+                           "source-upper.png":  "afc8b5f3934367602e2565a5291153f1666f59dd3cf3d0c822fc412bf227b62f",
+                           "original.png":  "8e4aa92146ab2222c493cfb3117c20d502b62697bf9536542396a2c77294b42a",
+                           "mouth-reference-grid.png":  "03333150fa434b82f5aee2980349eef43e7f903314e98375e37c5225dccb85b3",
+                           "eyes-reference-grid.png":  "5b1b72745caff5508160ba7840d50d6b760143ebf3fa11a905acaa5553c82c0b",
+                           "layout.json":  "ce39f57bdd743f187f6e693379220394c58fef68fbf0378a02f7ccda11cb3757",
+                           "source-lower.png":  "05b7528c245bcdbbb9bca8feb2517125c64b4b4b387cf89224c92138bf0aca58"
+                       },
+    "generatedExpressions":  false,
+    "note":  "Reference-only workspace. No animated mouth or eye frames are declared; original neutral A/X may be used later only by an explicit builder."
+}

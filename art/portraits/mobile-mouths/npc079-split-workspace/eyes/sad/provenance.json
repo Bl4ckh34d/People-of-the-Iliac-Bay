@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 79,
+  "emotion": "sad",
+  "asset": "eyes/sad/raw.png",
+  "tool": "built-in image_gen",
+  "prompt": "Create ONE pixel-art sprite atlas for the SAD eye emotion of Daggerfall Unity portrait record 79, using the provided original upper half and eye reference grid as strict visual references. This is a 2-column × 2-row contact sheet of four equal, aligned cells, row-major: OPEN, HALF-CLOSED, CLOSED, REPEATED OPEN. Each cell must depict the entire same original 64×35 upper portrait half (not a crop or new face), keeping hair, forehead, skin, nose bridge, background, portrait framing, soft muted native palette, pixel-art texture, and both eyes in exact position. Keep brows and eye identity consistent across all four cells; open and repeated-open should match. Sadness must read as low-energy, tired sadness: gaze slightly lowered, gently raised inner brow ends, heavy drooping upper lids, no alarm or wide-eyed fear. For blink phases, lower lids vertically over the same stationary irises/pupils; do not shift, narrow, shrink, recolor, or redraw iris/pupil geometry. Closed phase must fully cover eyes with coherent native dark lid pixels, no white flash pixels. Preserve original source pixels outside the eye/brow feature region. No tears, props, text, dividers, labels, glow, dramatic contrast, new hair, face/head drift, or extra panels. Output only the complete 2×2 sheet.",
+  "promptSha256": "459627fd524142205018a4c08e2dd8e161d2e520840f9e3da657bd397100ee9f",
+  "references": [
+    {
+      "path": "original.png",
+      "sha256": "70b1b52df73159543afd5776eae7565bfd3619fd31bc5fd90af674e42520d460"
+    },
+    {
+      "path": "eyes-reference-grid.png",
+      "sha256": "81737009a51fbafd2ca540f49ed88457428fda5bfa128c4cefd0b03debb867da"
+    }
+  ],
+  "generationOutputPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-fb9b-7322-8190-74bf6fb54c9d\\exec-9185780d-92d3-4a1e-be64-b7421268ab6b.png",
+  "resultSha256": "12914a67a52468d5bb7c00311d420c0d281ef4a943e3fb412b9ea2e7464c88dd",
+  "dimensions": {
+    "width": 1695,
+    "height": 928
+  },
+  "visibleDefects": [
+    "The 2×2 arrangement and identity are recognizable, but added long horizontal brow strokes and some brow/eyelid lines are coarse and not fully source-matched.",
+    "Iris/pupil details vary in size and highlight placement between cells; the closed cell leaves dark irregular eye-area shapes, and repeated-open does not exactly match the first open.",
+    "Generated sheet includes full upper-half framing but is not native 64×35 per cell; saved unchanged as raw."
+  ],
+  "rawCopiedUnchanged": true
+}

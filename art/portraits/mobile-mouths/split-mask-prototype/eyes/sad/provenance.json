@@ -1,0 +1,38 @@
+{
+  "emotion": "sad",
+  "artifact": "raw upper-eye 2x2 sheet",
+  "prompt": "Use case: illustration-story\r\nAsset type: pixel-art NPC portrait upper-half emotion sheet\r\nPrimary request: Edit Image 1, a 2x2 sheet of the same native upper portrait half, into one restrained SAD eye expression set. Image 2 is identity and palette reference only.\r\nComposition: Preserve the exact 2x2 grid, cell framing, original hairline, face crop, eye positions, and overall layout. Keep the sheet aspect ratio near 1.82857, with four complete equal upper-half cells, no gutters, labels, or text.\r\nSubject: The same woman in every cell. Show low-energy sadness with a clearly downcast gaze and drooping heavy upper lids. Keep both eyes and both brows readable. Expression must look distinctly downcast and tired, not alarmed or wide-eyed.\r\nCell order, row-major: open sad eyes; half blink with lids covering about half the iris; fully closed blink with all iris and sclera hidden; repeat the same open sad eyes as cell 1. Use the same emotional brow shape and exact brow position in all four cells; only eyelid phase changes between blink states.\r\nStyle: Preserve source soft muted pixel-art palette, facial geometry, proportions, low contrast, and soft shading. Keep eye size and native placement unchanged.\r\nConstraints: Edit only expression in the eye and brow region of Image 1. Preserve head framing, hair, hairline, forehead, nose bridge, cheek shape, skin tone, and every other feature. No full-face repaint, no face enlargement, no changed head angle, no added makeup, no thick black brows, no heavy eyeliner, no harsh dark shadow, no sharpened edges, no blur, no airbrush, no new objects, no tears, no text, no watermark. Output one complete 2x2 sheet; do not crop or add margins.",
+  "sourcePaths": [
+    "art/portraits/mobile-mouths/split-mask-prototype/eyes-reference-grid.png",
+    "art/portraits/mobile-mouths/split-mask-prototype/original.png"
+  ],
+  "sourceSha256": {
+    "original.png": "4BBB1C9F6BEA7561D316FA6587A93FD0C9BCBFA3C9AA0992BB85B804AA213125",
+    "eyes-reference-grid.png": "A533A7BD5E93C132A22191FB9C4EC35466840A8B0BAC4218064DB6BC5F4FAACC"
+  },
+  "generatedPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fdf-2ede-7fc1-b24a-9d18707baa51\\exec-8592eaf7-6cf8-4d9b-9a36-0f55d7f114ef.png",
+  "generatedSha256": "7712E605EC631C65063FE46F229324268FB621B0099BEEE021AA1DC7BA6BB1CE",
+  "outputPath": "art/portraits/mobile-mouths/split-mask-prototype/eyes/sad/raw.png",
+  "outputSha256": "7712E605EC631C65063FE46F229324268FB621B0099BEEE021AA1DC7BA6BB1CE",
+  "dimensions": [
+    1695,
+    928
+  ],
+  "grid": [
+    2,
+    2
+  ],
+  "cellOrder": [
+    "open sad",
+    "half blink",
+    "fully closed blink",
+    "repeat open sad"
+  ],
+  "generationCalls": 1,
+  "generator": "built-in image_gen",
+  "deviations": [
+    "Sheet dimensions are 1862x845; aspect ratio is 2.20355 versus target 2.20690.",
+    "Some open speech cells read close to neutral; sadness is clearest in X and relaxed corners."
+  ],
+  "review": "pending"
+}

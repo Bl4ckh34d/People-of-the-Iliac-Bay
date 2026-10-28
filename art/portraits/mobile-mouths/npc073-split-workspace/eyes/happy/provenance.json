@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T10:08:46.5062323Z",
+    "portraitRecord":  73,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "happy",
+    "prompt":  "Use case: stylized-concept.\nAsset type: pixel-art NPC face animation sprite sheet.\nPrimary request: Create one 2×2 atlas of the same source character\u0027s upper-face crops for a clearly happy expression. Use the reference grid only for pixel-art style, identity, crop, and geometry. The face should read warm and gently happy through the eyes, with soft smile creases and a slight relaxed lift at the outer brows. Keep it clearly happier than neutral, but not alarmed, surprised, or wide-eyed.\nInput image: The single supplied image is the exact local eyes reference grid. It repeats the original upper halves as layout and identity reference.\nStyle/medium: Soft, muted, low-resolution pixel art. Preserve the source\u0027s warm skin colors, brown hair, blue wand, compact brown irises, and softened native pixel clusters.\nComposition/framing: Output exactly a 2×2 grid, overall aspect ratio 64:35. Each quadrant is the same complete upper-face crop as one reference cell. Row-major order: open happy eyes; half-closed happy eyes; fully closed happy eyes; repeat of the open happy eyes. No labels, text, gutters, borders, extra panels, full-face views, or zoomed feature crops.\nConstraints: Keep head shape, hair, wand, framing, eye spacing, iris size and hue, and pixel scale stable. Keep both pupils looking forward in the same direction. Change lids and a restrained happy expression only. The open eyes stay close to original aperture. Half and closed phases keep the same happy brow placement as open; closed lids cover eyes opaquely. Preserve fine clusters and source-like highlights. Keep brows clear and intact inside the crop.\nAvoid: Alarmed wide eyes, enlarged or shifted irises, changed head or hair, harsh white flashes, heavy black outlines, blur, gradients, vector circles, duplicated brow shadows, labels, gutters, or new background details.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-c15f4c40-25f0-4e04-851f-0a6e8ede0ccc.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-c15f4c40-25f0-4e04-851f-0a6e8ede0ccc.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "8505d9e9fde3c536cf08958e97076aba44aa5d60e2e76ba6fc3fdb1384b8d643",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "c6d813083b72162535d946fdab92c8327e91b20edef562492001ed6bf5d023ce",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f4-68c7-7fb2-b996-5255972f967c\\exec-c15f4c40-25f0-4e04-851f-0a6e8ede0ccc.png",
+                      "sha256":  "f47bc5c7dc6be3b052d766ff956266ba2bcb751a203279daf0354c8135f5b399",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/happy/raw.png",
+                "sha256":  "f47bc5c7dc6be3b052d766ff956266ba2bcb751a203279daf0354c8135f5b399",
+                "width":  1695,
+                "height":  928
+            }
+}

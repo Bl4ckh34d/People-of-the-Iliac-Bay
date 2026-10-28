@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 81,
+  "emotion": "sad",
+  "asset": "mouth/sad/raw.png",
+  "tool": "built-in image_gen",
+  "prompt": "Make one 3×3 SAD speech-mouth atlas for Daggerfall Unity native portrait record 81. Use the provided mouth-reference grid and original portrait as exact face, framing and palette references. Tiles are equal, aligned, row-major A B C / D E F / G H X. Each tile must retain the same complete original 64×29 lower-half composition at identical scale and position; leave nose, cheeks, jaw, neck, hair, background, and all non-mouth detail unchanged. Change only the compact mouth/lip/oral interior. Make all nine mouth shapes genuinely distinct and readable at native pixel scale, while keeping only a subtle sadness cue (slightly lowered corners, gentle tension), never a huge reversed-U pout. Exact shapes: A closed lips; B narrow opening with tooth contact; C small/medium opening with visible muted teeth; D wide open Ah; E rounded O; F smaller puckered U; G lower lip against upper teeth F/V; H small visible tongue tip for L; X relaxed closed sad rest. Do not let sadness close B-H. Keep lip outline and lip hue matching the original soft muted brown-red palette exactly in spirit: no lipstick red, no brighter/orange skin, no glowing white teeth or highlight stripes. Teeth and oral interior use restrained source-like cream/dark interior pixels. Preserve source head/jaw/neck geometry and hair silhouette exactly. No tears, objects, text, labels, dividers, extra tiles, crop, rescaling, blur, or dramatic contrast. Return only the complete 3×3 atlas.",
+  "promptSha256": "0e8e3c03d200a295171f5457eb5afb90b9a7c275226cdce8e7319c5986901150",
+  "references": [
+    {
+      "sha256": "eb0f7dcd1d390a6ff58d1bc0bba7a3855b5930ee824aa54e2f749211721e8ba0",
+      "path": "original.png"
+    },
+    {
+      "sha256": "195f9a431b7a6509ca0c701eb5057672431e11ab58037bef41cc61402bbe851f",
+      "path": "mouth-reference-grid.png"
+    }
+  ],
+  "resultSha256": "c3bf31bba4492643e2453bd77ba54b52de7b31e8338594f1f9fa11a3895ecacc",
+  "dimensions": {
+    "height": 844,
+    "width": 1863
+  },
+  "rawCopiedUnchanged": true,
+  "visibleDefects": [
+    "Nine shapes are visibly articulated: closed A/X, narrow and medium openings, wide Ah, rounded O, puckered U, F/V and tongue L.",
+    "Lip red appears more saturated than the original source, with bright tooth pixels; compare against the original palette before selecting.",
+    "No obvious large head/jaw/neck drift at enlarged sheet view; native-cell and mask validation remain outstanding."
+  ],
+  "recoveredOutputCandidatePath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-fb9b-7322-8190-74bf6fb54c9d\\exec-9dc171a5-7741-441d-9c7b-6f451581ca97.png",
+  "toolOutputHintRetained": false,
+  "recoveryFolderPngCount": 21,
+  "recoveryNote": "Exact image_gen output_hint was not retained. This candidate was recovered from the saved output folder by timestamp and visual content; the folder contains 21 PNGs, so dimensions alone do not uniquely identify a pair. Parent review pending. This records a recovered candidate, not exact tool-result attribution."
+}

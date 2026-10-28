@@ -25,9 +25,11 @@ namespace PeopleOfTheIliacBay.DFU
         public AlarmPerson Active(string id, double now)
         {
             var alarm = store.ActiveAlarm(id, now);
+            var person=alarm==null?null:alarm.People.Find(p=>p.ResidentId==id);
+            if(person!=null && person.Reaction==CivilianReaction.Flee)return person;
             if (alarm != null && alarm.ThreatId != null && continuesThreatResponse != null &&
                 continuesThreatResponse(id, alarm.ThreatId)) return null;
-            return alarm == null ? null : alarm.People.Find(p => p.ResidentId == id);
+            return person;
         }
         public void Threat(DaggerfallEntityBehaviour target,string threatId,IEnumerable<ResidentActor> actors,double now,int building,Func<string,bool> sleeping)
         {
@@ -161,6 +163,7 @@ namespace PeopleOfTheIliacBay.DFU
         public static void Move(ResidentActor actor, AlarmPerson person, ResidentRoutine routine, Transform origin,
             TownGeometry geometry, InteriorGeometry indoor,Vector3? danger=null,Vector3? shelterTarget=null,int shelterBuilding=-1,bool allowHome=true)
         {
+            if(person.Reaction==CivilianReaction.Flee)actor.ReleaseFlightPause();
             Vector3 ground = origin.TransformPoint(new Vector3((float)person.X, (float)person.Y, (float)person.Z));
             Vector3 target = ground;
             var game = GameManager.Instance;
@@ -177,6 +180,8 @@ namespace PeopleOfTheIliacBay.DFU
                         {
                             actor.NextCounterattack = Time.time + 1.5f;
                             actor.Counterattacks++;
+                            DaggerfallWorkshop.Game.Items.DaggerfallUnityItem heldWeapon;
+                            if(NativeNpcCombatAssist.TryWeapon(actor,out heldWeapon))actor.ShowMeleeSwing(player-actor.transform.position);
                             var source=actor.GetComponent<DaggerfallEntityBehaviour>();
                             int damage=2+(int)(actor.Resident.AppearanceSeed%4);
                             if (!game.PlayerEntity.GodMode && source)
@@ -248,7 +253,7 @@ namespace PeopleOfTheIliacBay.DFU
             actor.Place(ground, person.Reaction == CivilianReaction.Fight ? player - ground : deltaMove,
                 blocked || deltaMove.sqrMagnitude < 0.000001f,
                 person.Reaction == CivilianReaction.Flee && !blocked && deltaMove.sqrMagnitude > 0.000001f);
-            var saved = origin.InverseTransformPoint(actor.transform.position-Vector3.up);
+            var saved = origin.InverseTransformPoint(actor.GroundPosition);
             person.X = saved.x; person.Y = saved.y; person.Z = saved.z;
         }
         private static Vector3 Point(SavedRoutePoint point) { return new Vector3((float)point.X, 0, (float)point.Z); }

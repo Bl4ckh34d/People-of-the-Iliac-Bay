@@ -99,7 +99,7 @@ namespace PeopleOfTheIliacBay.DFU
         {
             float fixtureDeadline=Time.realtimeSinceStartup+540f;
             Require(Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-container-deposit-probe")>=0 &&
-                !string.IsNullOrWhiteSpace(character) && character.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal),
+                !string.IsNullOrWhiteSpace(character) && NativeProbeText.IsTestCharacter(character),
                 "Home-container fixture requires its explicit flag and an owned test character.");
             Require(host && streets,"Home-container fixture has no live town adapter.");
             var game=GameManager.Instance;game.SaveLoadManager.EnumerateSaves();
@@ -340,7 +340,7 @@ namespace PeopleOfTheIliacBay.DFU
         public static IEnumerator Run(StreetPopulation streets,string expectedCharacter,float fixtureDeadline)
         {
             if(Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-container-deposit-probe")<0 ||
-                string.IsNullOrWhiteSpace(expectedCharacter) || !expectedCharacter.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal))
+                string.IsNullOrWhiteSpace(expectedCharacter) || !NativeProbeText.IsTestCharacter(expectedCharacter))
                 throw new InvalidOperationException("Home container probe requires an explicitly owned fixture character and flag.");
             var game=GameManager.Instance;var room=game==null?null:game.PlayerEnterExit.Interior;
             if(!streets || !streets.Ready || game.PlayerEntity.Name!=expectedCharacter || !room)

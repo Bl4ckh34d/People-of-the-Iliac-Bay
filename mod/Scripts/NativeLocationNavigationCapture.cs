@@ -19,7 +19,7 @@ namespace PeopleOfTheIliacBay.DFU
                 string.IsNullOrWhiteSpace(locationName) || !game || !game.StreamingWorld ||
                 !game.PlayerEnterExit || game.PlayerEnterExit.IsPlayerInside ||
                 game.PlayerEntity == null ||
-                !game.PlayerEntity.Name.StartsWith("PeopleOfTheIliacBayTest-", StringComparison.Ordinal))
+                !NativeProbeText.IsTestCharacter(game.PlayerEntity.Name))
                 throw new InvalidOperationException("Location capture requires an owned exterior test fixture and a target location.");
 
             DFLocation target;

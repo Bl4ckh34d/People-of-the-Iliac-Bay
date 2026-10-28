@@ -1,0 +1,159 @@
+﻿{
+    "kind":  "derived-whole-native-cell-atlas",
+    "status":  "review-candidate",
+    "sourceRaw":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait085-happy-mouth-repair-v1\\generation\\mouth\\happy\\raw.png",
+    "sourceRawSha256":  "14a5ad5760c6bb8023b1926d1214e4fcf1e4c15168f5a687c61a0820ae12b136",
+    "sourceRawDimensions":  [
+                                1863,
+                                844
+                            ],
+    "sourceOriginal":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait085-happy-mouth-repair-v1\\candidate\\original.png",
+    "sourceOriginalSha256":  "8381f07edb8751dd0dfa93e4049c5ae00563c75ba9b0bb1fb5dfa80ca2a001d4",
+    "sourceLower":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait085-happy-mouth-repair-v1\\candidate\\source-lower.png",
+    "sourceLowerSha256":  "d454c096dc36a98cb471685b0a11a3c30ea8f148e2e4adedd12e3213aa14546f",
+    "sampling":  {
+                     "interpolation":  "NearestNeighbor",
+                     "pixelOffsetMode":  "Half",
+                     "targetCell":  [
+                                        64,
+                                        29
+                                    ],
+                     "cellOrder":  "A B C / D E F / G H X",
+                     "atlas":  [
+                                   192,
+                                   87
+                               ],
+                     "compositingMode":  "SourceCopy"
+                 },
+    "registration":  {
+                         "teethOnlyEdit":  false,
+                         "shape":  "H",
+                         "offsetX":  0,
+                         "cellIndex":  7,
+                         "vacatedTopRow":  "original lower-half row 0",
+                         "scope":  "entire native cell before existing mouth mask and feather",
+                         "pixelRecolor":  false,
+                         "offsetY":  1,
+                         "mouthCropResize":  false
+                     },
+    "cells":  [
+                  {
+                      "cellIndex":  0,
+                      "shape":  "A",
+                      "sourceBounds":  {
+                                           "left":  0,
+                                           "width":  621,
+                                           "top":  0,
+                                           "height":  281
+                                       },
+                      "changedPixels":  0,
+                      "method":  "standard native whole-cell sample; unchanged"
+                  },
+                  {
+                      "cellIndex":  1,
+                      "shape":  "B",
+                      "sourceBounds":  {
+                                           "left":  621,
+                                           "width":  621,
+                                           "top":  0,
+                                           "height":  281
+                                       },
+                      "changedPixels":  0,
+                      "method":  "standard native whole-cell sample; unchanged"
+                  },
+                  {
+                      "cellIndex":  2,
+                      "shape":  "C",
+                      "sourceBounds":  {
+                                           "left":  1242,
+                                           "width":  621,
+                                           "top":  0,
+                                           "height":  281
+                                       },
+                      "changedPixels":  0,
+                      "method":  "standard native whole-cell sample; unchanged"
+                  },
+                  {
+                      "cellIndex":  3,
+                      "shape":  "D",
+                      "sourceBounds":  {
+                                           "left":  0,
+                                           "width":  621,
+                                           "top":  281,
+                                           "height":  281
+                                       },
+                      "changedPixels":  0,
+                      "method":  "standard native whole-cell sample; unchanged"
+                  },
+                  {
+                      "cellIndex":  4,
+                      "shape":  "E",
+                      "sourceBounds":  {
+                                           "left":  621,
+                                           "width":  621,
+                                           "top":  281,
+                                           "height":  281
+                                       },
+                      "changedPixels":  0,
+                      "method":  "standard native whole-cell sample; unchanged"
+                  },
+                  {
+                      "cellIndex":  5,
+                      "shape":  "F",
+                      "sourceBounds":  {
+                                           "left":  1242,
+                                           "width":  621,
+                                           "top":  281,
+                                           "height":  281
+                                       },
+                      "changedPixels":  0,
+                      "method":  "standard native whole-cell sample; unchanged"
+                  },
+                  {
+                      "cellIndex":  6,
+                      "shape":  "G",
+                      "sourceBounds":  {
+                                           "left":  0,
+                                           "width":  621,
+                                           "top":  562,
+                                           "height":  282
+                                       },
+                      "changedPixels":  0,
+                      "method":  "standard native whole-cell sample; unchanged"
+                  },
+                  {
+                      "cellIndex":  7,
+                      "shape":  "H",
+                      "sourceBounds":  {
+                                           "left":  621,
+                                           "width":  621,
+                                           "top":  562,
+                                           "height":  282
+                                       },
+                      "changedPixels":  1720,
+                      "method":  "whole-cell rigid offset (0,+1); top row filled from original lower-half"
+                  },
+                  {
+                      "cellIndex":  8,
+                      "shape":  "X",
+                      "sourceBounds":  {
+                                           "left":  1242,
+                                           "width":  621,
+                                           "top":  562,
+                                           "height":  282
+                                       },
+                      "changedPixels":  0,
+                      "method":  "standard native whole-cell sample; unchanged"
+                  }
+              ],
+    "output":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait085-happy-mouth-repair-v3\\candidate\\candidates\\happy-mouth-repair-v3-derived\\raw.png",
+    "outputSha256":  "761e2ecca69d7deb3a0588f0956326549d6779961248394a871d38d1a1ea36a1",
+    "outputDimensions":  [
+                             192,
+                             87
+                         ],
+    "selectedCandidateLayout":  "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\portrait085-happy-mouth-repair-v3\\candidate\\layout.json",
+    "selectedCandidateLayoutSha256":  "5cc049018fd719ced97fdf173a4ef29576a967133d135257c4d968505744f4b6",
+    "noNewGeneration":  true,
+    "v1AndV2SourcePreserved":  true
+}

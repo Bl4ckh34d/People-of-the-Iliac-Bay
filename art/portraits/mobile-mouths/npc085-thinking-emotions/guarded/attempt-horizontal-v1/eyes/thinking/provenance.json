@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T08:45:13.0915549Z",
+    "portraitRecord":  85,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Create one clean pixel-art working atlas for NPC 085, guarded emotion, using the supplied reference grid as the exact visual source. Preserve the exact face identity, palette, skin shading, warm dark eye shadow, both source upper- and lower-lid contours and compact aperture shapes, iris/pupil size and actual warm brown-gold hue, guarded eyebrow shape/expression, and all exterior pixels. Do not widen the eyes, expose more sclera, change the eye makeup/shadow, or alter the brows.\n\nCanvas: exact 64:35 aspect ratio; 2 columns × 2 rows, no gutters or labels. Top row: LEFT gaze open, RIGHT gaze open. Bottom row: LEFT gaze half-lidded, RIGHT gaze half-lidded. Repeat each eye phase consistently for both eyes. The only open-phase change from the reference is a gentle lateral glance of about one native pixel: pupils/irises move left in the left cells and right in the right cells, remaining inside the existing apertures. Keep iris contour, size and warm brown-gold color unchanged. Keep sclera muted warm beige; highlights restrained with tiny glints only. No bright white bands, broad sclera, or glossy enlargement. Half-lid phases must preserve the source lid contour and lower it naturally, without adding eye geometry.\n\nKeep the image crisp, low-resolution pixel art with stepped native contours, no smoothing, no painterly detail, no text, no extra panels, and no face redesign.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-a45fa98b-5489-4de6-a70e-e75be59b46c4.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-a45fa98b-5489-4de6-a70e-e75be59b46c4.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "8381f07edb8751dd0dfa93e4049c5ae00563c75ba9b0bb1fb5dfa80ca2a001d4",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "8b332bc25e79594cb36c40f3cc0c3baa73e6e9eb8f214d2ecea630bb16d71795",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-a45fa98b-5489-4de6-a70e-e75be59b46c4.png",
+                      "sha256":  "bb48223020729d8a324a0c1061f43945718bd2fb642a734bd0ce86296c302866",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "bb48223020729d8a324a0c1061f43945718bd2fb642a734bd0ce86296c302866",
+                "width":  1695,
+                "height":  928
+            }
+}

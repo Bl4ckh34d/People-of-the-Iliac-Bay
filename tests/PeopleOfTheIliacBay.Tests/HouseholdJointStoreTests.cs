@@ -194,13 +194,6 @@ namespace PeopleOfTheIliacBay.Tests
                 saved=store.Snapshot();saved.Settlements[0].Households[0].Residents[0].IsAlive=false;
                 restored.Restore(saved);Check.True(restored.GetHouseholdJointMovement(2,7)==null);
             }));
-            cases.Add(("Old schema rejects future shared progress while empty old saves migrate",()=>{
-                var store=Prepared(out var plan,out var motion);var saved=store.Snapshot();saved.Version=68;
-                var restored=new WorldStateStore(0);Check.Throws<ArgumentException>(()=>restored.Restore(saved));
-                saved.HouseholdJointProgress.Clear();restored.Restore(saved);Check.Equal(WorldState.CurrentVersion,restored.Snapshot().Version);
-                saved.Version=1;saved.HouseholdJointProgress.Add(motion.Snapshot());
-                Check.Throws<ArgumentException>(()=>restored.Restore(saved));
-            }));
             cases.Add(("Restore rejects duplicate joint owners and forged current segment",()=>{
                 var store=Prepared(out var plan,out var motion);var saved=store.Snapshot();
                 saved.HouseholdJointProgress.Add(HouseholdJointProgress.Copy(saved.HouseholdJointProgress[0]));

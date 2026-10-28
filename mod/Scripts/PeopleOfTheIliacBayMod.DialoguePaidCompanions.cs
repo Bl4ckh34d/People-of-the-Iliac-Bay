@@ -25,11 +25,7 @@ namespace PeopleOfTheIliacBay.DFU
                 SubmitConversationActionReply(window,text,snapshot,ConversationActionReply.NoChange());
                 return true;
             }
-            string offer = "Hire this companion for " + dailyGold.ToString(CultureInfo.InvariantCulture) +
-                " gold for 24 game hours of Follow and travel from acceptance? No automatic renewal. " +
-                "The started day is non-refundable, including early dismissal or withdrawal. " +
-                "Dismissal ends service immediately. A failed hire is fully refunded.";
-            var confirm = new PersonalCommerceConfirmBox(offer, accepted =>
+            var confirm = CreatePaidCompanionOffer(GameManager.Instance.TalkManager.NameNPC,dailyGold,accepted =>
             {
                 if (!CurrentMemorySession(window,session) || conversationPersonId != person) return;
                 if (!accepted)
@@ -42,7 +38,7 @@ namespace PeopleOfTheIliacBay.DFU
                 bool committed = streets != null && streets.TryHirePaidCompanion(person,proposalId,decision,
                     CommandTurnFor(snapshot),dailyGold,out reason);
                 if (committed)
-                    conversationResponseCue += " ACTION ACCEPTED AND SAVED: paid Follow for 24 game hours at " +
+                    conversationResponseCue += " ACTION ACCEPTED AND SAVED: paid Follow for one day at " +
                         dailyGold.ToString(CultureInfo.InvariantCulture) + " gold. " + reason +
                         " Acknowledge only accepted intent; do not claim physical arrival or automatic renewal.";
                 else
@@ -56,6 +52,20 @@ namespace PeopleOfTheIliacBay.DFU
             });
             DaggerfallUI.UIManager.PushWindow(confirm);
             return true;
+        }
+
+        private static PersonalCommerceConfirmBox CreatePaidCompanionOffer(string name,int dailyGold,Action<bool> complete)
+        {
+            if(string.IsNullOrWhiteSpace(name))name="this companion";
+            string[] rows = {
+                "Hire "+name+" for one day for "+dailyGold.ToString(CultureInfo.InvariantCulture)+" gold?",
+                "",
+                "Payment is up front.",
+                "No refund for ending the day early.",
+                "Another day needs a new agreement.",
+                "If the hire cannot begin, your gold is returned."
+            };
+            return new PersonalCommerceConfirmBox(rows,complete);
         }
     }
 }

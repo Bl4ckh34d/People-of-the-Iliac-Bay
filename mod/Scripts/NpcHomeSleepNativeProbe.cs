@@ -14,6 +14,18 @@ namespace PeopleOfTheIliacBay.DFU
     {
         internal static IEnumerator Run(PeopleOfTheIliacBayMod host,StreetPopulation streets,string character)
         {
+            var field=typeof(StreetPopulation).GetField("sleepingArt",BindingFlags.NonPublic|BindingFlags.Instance);
+            object original=field.GetValue(streets);
+            bool missingArt=Environment.GetEnvironmentVariable("POTIB_HOME_SLEEP_NO_ART")=="1";
+            try
+            {
+                if(missingArt)field.SetValue(streets,null);
+                yield return RunCase(host,streets,character,missingArt);
+            }
+            finally {field.SetValue(streets,original);}
+        }
+        private static IEnumerator RunCase(PeopleOfTheIliacBayMod host,StreetPopulation streets,string character,bool missingArt)
+        {
             string save=null;var args=Environment.GetCommandLineArgs();
             for(int i=0;i+1<args.Length;i++)if(args[i]=="-peopleoftheiliacbay-fixture-save")save=args[i+1];
             var game=GameManager.Instance;
@@ -30,7 +42,7 @@ namespace PeopleOfTheIliacBay.DFU
                 if(home.Residents.Count!=1 || home.BedCapacity<1)continue;
                 var candidate=home.Residents[0];
                 if(!candidate.IsAlive || candidate.IsQuestProtected || candidate.AgeGroup!=ResidentAgeGroup.Adult ||
-                    art.ForResident(candidate)==null || store.ActiveNpcAction(candidate.Id)!=null ||
+                    !missingArt && art.ForResident(candidate)==null || store.ActiveNpcAction(candidate.Id)!=null ||
                     store.ActiveNpcTask(candidate.Id)!=null || store.ReadNpcHealthCare(candidate.Id)!=null)continue;
                 foreach(var owner in directory.GetComponentsInChildren<DaggerfallStaticDoors>())
                 foreach(var entry in owner.Doors)
@@ -56,7 +68,11 @@ namespace PeopleOfTheIliacBay.DFU
             body.Entity.SetHealth(injured);actor.GetComponent<NativeNpcVitalsBinding>().Capture();
             DaggerfallUnity.Instance.WorldTime.Now.RaiseTime(3600);
             yield return new WaitForSecondsRealtime(1);
-            actor=streets.FindActor(person.Id);Require(actor && actor.IsSleeping,"Ordinary sleep did not use its real bed.");
+            actor=streets.FindActor(person.Id);
+            float bedDeadline=Time.realtimeSinceStartup+30;
+            while(!Resting(streets,actor,missingArt) && Time.realtimeSinceStartup<bedDeadline)
+            {yield return null;actor=streets.FindActor(person.Id);}
+            Require(Resting(streets,actor,missingArt),"Ordinary sleep did not use its real bed; missingArt="+missingArt);
             body=actor.GetComponent<DaggerfallEntityBehaviour>();
             Require(body.Entity.CurrentHealth==injured,"Rest healed before a full native hour.");
             rate=NativeNpcRestTreatment.RecoveryRatePerGameHour(body.Entity);
@@ -105,12 +121,26 @@ namespace PeopleOfTheIliacBay.DFU
             yield return new WaitForSecondsRealtime(1);
             TownSmokeHarness.EnterInterior(doorOwner.transform,door);
             yield return new WaitForSecondsRealtime(2);DaggerfallUI.Instance.PopToHUD();
-            actor=streets.FindActor(person.Id);Require(actor && actor.IsSleeping,"Resident missing after an unloaded ordinary night.");
+            actor=streets.FindActor(person.Id);Require(Resting(streets,actor,missingArt),"Resident missing from its bed after an unloaded ordinary night.");
             body=actor.GetComponent<DaggerfallEntityBehaviour>();
             Require(body.Entity.CurrentHealth==maximum,"Known home sleep did not catch up on materialization.");
             Require(store.ReadNpcInventory(person.Id).WalletGold==0,"Unloaded home rest charged money.");
             Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_HOME_SLEEP_NATIVE_PASS: nativeHourRate=true; realHomeBed=true; diseaseBlocks=true; fullNightRecovery=true; unloadedNight=true; noPotionOrGold=true");
+            if(missingArt)Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_HOME_SLEEP_NO_ART_PASS: standingBesideAssignedBed=true; healingWithoutSprite=true");
             yield return ConversationMoodProbe.LoadSave(host,streets,character,save,false);
+        }
+        private static bool Resting(StreetPopulation streets,ResidentActor actor,bool missingArt)
+        {
+            if(!actor)return false;
+            if(!missingArt)return actor.IsSleeping;
+            var flags=BindingFlags.NonPublic|BindingFlags.Instance;
+            var claims=(System.Collections.Generic.Dictionary<string,BedAssignment>)typeof(StreetPopulation).GetField("bedClaims",flags).GetValue(streets);
+            var beds=(System.Collections.Generic.Dictionary<int,BedAnchor>)typeof(StreetPopulation).GetField("indoorBeds",flags).GetValue(streets);
+            var geometry=(InteriorGeometry)typeof(StreetPopulation).GetField("indoorGeometry",flags).GetValue(streets);
+            BedAssignment claim;Vector3 beside;
+            return !actor.IsSleeping && claims.TryGetValue(actor.Resident.Id,out claim) &&
+                geometry.StandBesideBed(beds[claim.BedRecordIndex],out beside) &&
+                Vector3.Distance(actor.transform.position-Vector3.up,beside)<=0.65f;
         }
         static void Require(bool value,string message) {if(!value)throw new InvalidOperationException(message);}
     }

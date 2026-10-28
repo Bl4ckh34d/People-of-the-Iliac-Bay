@@ -104,8 +104,8 @@ namespace PeopleOfTheIliacBay.Core
         public static string NativeLayoutPersonId(int town,string layoutKey,int hash)
         {
             Require(town>=0 && !string.IsNullOrWhiteSpace(layoutKey) && layoutKey.Length<=160 &&
-                layoutKey.StartsWith("castle:",StringComparison.Ordinal) &&
-                layoutKey.IndexOfAny(new[] {'\r','\n','\t',' '})<0,"Invalid native castle layout key.");
+                (layoutKey.StartsWith("castle:",StringComparison.Ordinal) || layoutKey.StartsWith("scene:",StringComparison.Ordinal)) &&
+                layoutKey.IndexOfAny(new[] {'\r','\n','\t',' '})<0,"Invalid native layout key.");
             return string.Format(CultureInfo.InvariantCulture,"npc-layout:{0}:{1}:{2}",town,layoutKey,hash);
         }
         public List<NativePerson> NativePeopleFor(int town)
@@ -193,7 +193,7 @@ namespace PeopleOfTheIliacBay.Core
         {
             Require(person != null && person.SettlementId >= 0 && person.WorkKey >= -1 &&
                 person.Id == NativeId(person.SettlementId, person.WorkKey, person.NativeHash,person.NativeLayoutKey) &&
-                (person.NativeLayoutKey==null || world.Version>=78 && person.WorkKey==-1 && person.HomeKey==-1 && person.BedSlot==-1 && person.BedCapacity==0) &&
+                (person.NativeLayoutKey==null || person.WorkKey==-1 && person.HomeKey==-1 && person.BedSlot==-1 && person.BedCapacity==0) &&
                 !string.IsNullOrWhiteSpace(person.Name) && person.Name.Length <= 256 &&
                 (person.Sex == ResidentSex.Male || person.Sex == ResidentSex.Female) &&
                 person.Race >= 0 && person.Race <= 255 && person.FactionId >= 0 &&
@@ -210,11 +210,16 @@ namespace PeopleOfTheIliacBay.Core
                 var town = world.Settlements.Find(t => t.SettlementId == person.SettlementId);
                 var home = town.Households.Find(h => h.BuildingKey == person.HomeKey);
                 Require(home != null || person.HomeKey == person.WorkKey, "Native home is neither work site nor known residence.");
-                if (home != null) Require(home.BedCapacity == person.BedCapacity && (home.HeadId == person.Id ?
-                    home.Residents[0].Id == person.Id && (home.Residents[0].BedSlot == -1 ? person.BedSlot==0 : home.Residents[0].BedSlot==person.BedSlot) &&
-                    home.Residents[0].Sex == person.Sex && home.Residents[0].IsAlive == person.IsAlive && home.Residents[0].FullName == person.Name &&
-                    home.Residents[0].Race == person.Race : !FamilyBedSlots(home).Contains(person.BedSlot)),
-                    "Native bed overlaps saved family or capacity changed.");
+                if (home != null)
+                {
+                    var member = home.Residents.Find(r => r.Id == person.Id);
+                    int index = member == null ? -1 : home.Residents.IndexOf(member);
+                    Require(home.BedCapacity == person.BedCapacity && (member != null ?
+                        (member.BedSlot == -1 ? person.BedSlot == index : member.BedSlot == person.BedSlot) &&
+                        member.Sex == person.Sex && member.IsAlive == person.IsAlive && member.FullName == person.Name &&
+                        member.Race == person.Race : !FamilyBedSlots(home).Contains(person.BedSlot)),
+                        "Native bed overlaps saved family or capacity changed.");
+                }
             }
         }
         private static HashSet<int> FamilyBedSlots(Household home)
@@ -245,7 +250,7 @@ namespace PeopleOfTheIliacBay.Core
                     WorkKey = person.WorkKey, NativeHash = person.NativeHash, Sex = person.Sex, Race = person.Race,
                     FactionId = person.FactionId, TextureArchive = person.TextureArchive, TextureRecord = person.TextureRecord,
                     IsAlive = person.IsAlive, HomeKey = person.HomeKey, BedSlot = person.BedSlot, BedCapacity = person.BedCapacity,
-                    ResponseIncidentId = person.ResponseIncidentId,RetiredBedroomFlat=world.Version>=25 && person.RetiredBedroomFlat });
+                    ResponseIncidentId = person.ResponseIncidentId,RetiredBedroomFlat=person.RetiredBedroomFlat });
             }
             return result;
         }

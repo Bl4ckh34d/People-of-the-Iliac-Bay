@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T08:36:13.9081352Z",
+    "portraitRecord":  84,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Make one opaque pixel-art eye atlas for common portrait NPC084 ANGRY, using this single image as the exact source/reference. Canvas: exact 2 columns × 2 rows, equal cells, overall aspect ratio 64:35 (about 1.83:1), each cell represents a native 64×35 eye-area crop. No gutters, margins, labels, borders, text, or extra panels. Row-major order: top-left LEFT/open; top-right RIGHT/open; bottom-left LEFT/half; bottom-right RIGHT/half. Both eyes glance together in each cell.\n\nPreserve this exact angry expression, brow shape and position, eye spacing, original face, source palette, pixel scale, compact iris size and source eyelid contours. Keep each eye opening exactly as the source phase shows it: source open aperture in the top row, source half-lid aperture and coverage in the bottom row. Do not widen, enlarge, lift, or reshape either eyelid or aperture. Change only the iris/pupil placement by a gentle horizontal glance of about one native pixel: toward the viewer\u0027s left in LEFT cells and toward the viewer\u0027s right in RIGHT cells. Keep both small pupils fully inside the source opening and naturally bounded by the existing lids.\n\nMatch the actual source iris hue exactly: muted olive/hazel brown-green, not blue or gray. Keep the original dark pupils and subtle warm sclera. No broad bright sclera bands, large pale patches, bright-white glare, increased contrast, oversized irises, perfect circles, or new shiny reflections. Tiny restrained glints only at the source\u0027s original subdued intensity. Do not change brows, forehead, hair, skin, nose, face, background, crop, or anything outside the eye features. Preserve crisp native pixel edges; no smoothing, blur, antialiasing, resampling, or invented colors. Return only the requested four cells, with no closed or vertical gaze.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-f0d20d63-ee3b-4593-8696-5f4bbf1d37f4.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-f0d20d63-ee3b-4593-8696-5f4bbf1d37f4.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "10ec019f2359c6e700ebcba2286778ad666255ba107e21849cbe885f65de2d88",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "4107e983f25dc4968990e57a15e221fcde316df3c57d892bea6f6c6695a92e1f",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-f0d20d63-ee3b-4593-8696-5f4bbf1d37f4.png",
+                      "sha256":  "ac2e662c4387fa6173621baf54d27a16731a3dd1b176e53c7965d90453fb7f8e",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "ac2e662c4387fa6173621baf54d27a16731a3dd1b176e53c7965d90453fb7f8e",
+                "width":  1695,
+                "height":  928
+            }
+}

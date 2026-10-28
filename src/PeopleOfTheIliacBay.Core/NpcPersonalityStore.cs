@@ -103,7 +103,6 @@ namespace PeopleOfTheIliacBay.Core
         private static List<NpcPersonalityProfile> CopyNpcPersonalities(WorldState source, WorldState validated)
         {
             var result = new List<NpcPersonalityProfile>();
-            if (source.Version < 33) return result;
             Require(source.NpcPersonalities != null, "Missing NPC personality ledger.");
             var identities = new HashSet<string>(StringComparer.Ordinal);
             foreach (var saved in source.NpcPersonalities)

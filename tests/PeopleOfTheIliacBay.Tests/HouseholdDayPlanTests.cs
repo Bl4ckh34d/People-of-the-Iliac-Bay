@@ -54,7 +54,7 @@ namespace PeopleOfTheIliacBay.Tests
                 var request=HouseholdDayAppointmentTests.SharedRequest();var plan=Create(request);
                 var father=HouseholdDayPlanner.RoutesFor(plan,"father",request.SecondRoutine);
                 Check.Near(plan.Second.Outings[0].DepartureSeconds,father[0].Outing.DepartureSeconds);
-                Check.True(father[0].Outing.DepartureSeconds>9*3600);Check.Equal(0,father[0].FirstVisitIndex);
+                Check.Near(9*3600,father[0].Outing.DepartureSeconds);Check.Equal(0,father[0].FirstVisitIndex);
                 plan.First.Outings.RemoveAt(0);var routes=HouseholdDayPlanner.RoutesFor(plan,"mother",request.FirstRoutine);
                 Check.Equal(2,routes.Count);Check.Equal(1,routes[0].FirstVisitIndex);
                 Check.Equal(HouseholdDayPlanner.JointVisitIndex,routes[1].FirstVisitIndex);
@@ -159,11 +159,11 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.Throws<ArgumentException>(()=>store.Restore(corrupted));
                 Check.True(store.TryHouseholdDaySchedules(2,7,3,out var first,out var second,out reason),reason);
             }));
-            cases.Add(("Household date migration rejects forged future fields while genuine schema65 stays empty",()=>{
-                var request=Request();var store=Store(request);var saved=store.Snapshot();saved.Version=65;
-                var restored=new WorldStateStore(0);restored.Restore(saved);Check.Equal(0,restored.Snapshot().HouseholdDays.Count);
-                saved.HouseholdDays.Add(Create(request));Check.Throws<ArgumentException>(()=>restored.Restore(saved));
-                saved.Version=WorldState.CurrentVersion;saved.HouseholdDays.Add(HouseholdDayPlan.Copy(saved.HouseholdDays[0]));
+            cases.Add(("Household date restore rejects duplicate day records",()=>{
+                var request=Request();var store=Store(request);var saved=store.Snapshot();
+                var restored=new WorldStateStore(0);restored.Restore(saved);
+                saved.HouseholdDays.Add(Create(request));
+                saved.HouseholdDays.Add(HouseholdDayPlan.Copy(saved.HouseholdDays[0]));
                 Check.Throws<ArgumentException>(()=>restored.Restore(saved));
             }));
             cases.Add(("Dated family day alternates full parental absences and preserves source routes",()=>{

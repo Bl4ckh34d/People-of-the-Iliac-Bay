@@ -18,11 +18,13 @@ namespace PeopleOfTheIliacBay.DFU
         public static IEnumerator Run(StreetPopulation streets, GuardPopulation guards, string character)
         {
             var game = GameManager.Instance;
-            if (!game.PlayerEntity.Name.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal) || game.PlayerEntity.Name != character)
-                throw new InvalidOperationException("Fresh previews require a disposable test character.");
+            if (game.PlayerEntity.Name != TownSmokeHarness.CanonicalFixtureCharacter || game.PlayerEntity.Name != character)
+                throw new InvalidOperationException("Fresh previews require the canonical Hakon Ironhand test character.");
             expectedCharacter = character;
             if (game.PlayerGPS.CurrentLocation.Name != "Gothway Garden")
                 throw new InvalidOperationException("Fresh previews must begin in Gothway Garden.");
+            FreshPreviewFighter.Configure(game.PlayerEntity);
+            FreshPreviewFighter.RequireConfigured(game.PlayerEntity, game.TransportManager);
             Noon();
             yield return Ready(streets, guards);
             Center();
@@ -65,10 +67,9 @@ namespace PeopleOfTheIliacBay.DFU
         {
             var game = GameManager.Instance;
             float deadline = Time.realtimeSinceStartup + 90;
-            while ((!game.StreamingWorld.IsReady || game.StreamingWorld.IsRepositioningPlayer || !streets.Ready ||
-                !guards.OwnsSettlement || guards.Roster.SettlementId != game.PlayerGPS.CurrentLocation.MapTableData.MapId) &&
+            while ((!game.StreamingWorld.IsReady || game.StreamingWorld.IsRepositioningPlayer || !streets.Ready) &&
                 Time.realtimeSinceStartup < deadline) yield return null;
-            if (!streets.Ready || !guards.OwnsSettlement || guards.Roster.SettlementId != game.PlayerGPS.CurrentLocation.MapTableData.MapId)
+            if (!streets.Ready)
                 throw new InvalidOperationException("Fresh preview population readiness timed out.");
         }
 

@@ -1,0 +1,19 @@
+{
+  "status": "layout proposal only; not registered or consumed by builder",
+  "portraitRecord": 79,
+  "bank": "TFAC00I0.RCI",
+  "sourceSha256": "70b1b52df73159543afd5776eae7565bfd3619fd31bc5fd90af674e42520d460",
+  "width": 64,
+  "height": 64,
+  "splitY": 35,
+  "browLockEndY": 24,
+  "eyeRegions": [
+    {"x": 15, "y": 15, "width": 16, "height": 17},
+    {"x": 34, "y": 15, "width": 17, "height": 17}
+  ],
+  "halfLidRegions": [
+    {"x": 15, "y": 25, "width": 16, "height": 2},
+    {"x": 34, "y": 25, "width": 17, "height": 2}
+  ],
+  "rationale": "Retain existing brow lock and half-lid bounds. Current builder preserves open directional cells exactly; half phase substitutes neutral lid strip y25-26, closed phase uses neutral closed eyes below brow. New iris movement must remain evident in open frames and below half overlay."
+}

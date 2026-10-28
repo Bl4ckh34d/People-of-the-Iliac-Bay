@@ -19,7 +19,7 @@ namespace PeopleOfTheIliacBay.DFU
         internal static IEnumerator RunFixture(PeopleOfTheIliacBayMod host,StreetPopulation streets,string character)
         {
             if(Environment.GetEnvironmentVariable("POTIB_ROADMAP_PROBE")!="guard-assault" ||
-                string.IsNullOrEmpty(character) || !character.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal))
+                string.IsNullOrEmpty(character) || !NativeProbeText.IsTestCharacter(character))
                 throw new InvalidOperationException("Guard assault probe requires POTIB_ROADMAP_PROBE=guard-assault and owned fixture character.");
             var game=GameManager.Instance;var guards=UnityEngine.Object.FindObjectOfType<GuardPopulation>();
             Require(host&&streets&&guards&&game!=null&&game.PlayerEntity.Name==character,"Guard assault fixture is unavailable.");

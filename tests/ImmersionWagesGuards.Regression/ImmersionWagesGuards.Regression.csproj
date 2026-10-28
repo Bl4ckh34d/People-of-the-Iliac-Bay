@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><TreatWarningsAsErrors>true</TreatWarningsAsErrors><StartupObject>Program</StartupObject></PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../src/PeopleOfTheIliacBay.Core/*.cs" />
+    <Compile Include="../PeopleOfTheIliacBay.Tests/GuardRefugeTests.cs" />
+    <Compile Include="../PeopleOfTheIliacBay.Tests/NpcCompanionWageTests.cs" />
+    <Compile Include="../NpcServiceContract.Tests/FocusedTestRunner.cs" />
+    <Compile Include="../NpcServiceSettlement.Regression/Program.cs" />
+    <Compile Include="../NpcServiceHealthPause.Regression/Program.cs" />
+    <Compile Include="../NpcServiceHealthCareStore.Regression/Program.cs" />
+  </ItemGroup>
+</Project>

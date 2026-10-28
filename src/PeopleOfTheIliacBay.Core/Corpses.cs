@@ -237,6 +237,9 @@ namespace PeopleOfTheIliacBay.Core
             var alarm = FindIncident(incidentId);
             Require(!AlarmResident(alarm.SettlementId, alarm.VictimId).IsAlive && alarm.HasLocation &&
                 ValidTime(now) && now >= alarm.StartedAt, "Corpse needs a confirmed positioned death.");
+            var traveler=Traveler(alarm.VictimId);
+            if(traveler!=null && traveler.HomeKey>=0 && traveler.IsAlive && OriginResident(state,traveler)!=null)
+                KillTraveler(traveler.Id,now);
             if (alarm.Corpse == null) alarm.Corpse = new CorpseState { DiedAt = now, CleanupVersion = 1 };
             RememberRecentDeathWitnesses(alarm);
         }
@@ -320,7 +323,6 @@ namespace PeopleOfTheIliacBay.Core
         {
             var corpse = alarm.Corpse;
             if (corpse == null) return null;
-            Require(source.Version>=61 || corpse.Departure==null,"Legacy corpse contains future departure state.");
             var departure=CorpseDepartureState.CopyValidated(corpse.Departure,corpse.DiedAt);
             Require(departure==null || (corpse.HasPosition?corpse.BuildingKey:alarm.BuildingKey)==-1 && alarm.Scene==null,
                 "Only exterior corpses have departure cleanup.");
@@ -379,7 +381,7 @@ namespace PeopleOfTheIliacBay.Core
                 else
                 {
                     var town = source.Settlements.Find(t => t.SettlementId == alarm.SettlementId);
-                    var visitor=source.Version>=9 && source.Travelers!=null ? source.Travelers.Find(p=>p!=null && p.Id==seen.ObserverId) : null;
+                    var visitor=source.Travelers!=null ? source.Travelers.Find(p=>p!=null && p.Id==seen.ObserverId) : null;
                     bool traveling=visitor!=null && (visitor.IsAlive || visitor.DiedAt>=seen.SeenAt) &&
                         source.TravelerVisits!=null && source.TravelerVisits.Exists(v=>v!=null && v.PersonId==visitor.Id && v.SettlementId==alarm.SettlementId);
                     bool native=source.NativePeople!=null && source.NativePeople.Exists(p=>p!=null && p.Id==seen.ObserverId && p.SettlementId==alarm.SettlementId);

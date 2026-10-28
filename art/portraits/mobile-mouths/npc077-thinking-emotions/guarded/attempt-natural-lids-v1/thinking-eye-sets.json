@@ -1,0 +1,1921 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 77,
+  "bank": "TFAC00I0.RCI",
+  "thinkingEyeSets": [
+    {
+      "id": "up-left",
+      "label": "Up-left",
+      "phases": {
+        "open": {
+          "file": "eyes/thinking/up-left/open.png",
+          "sha256": "11d238e14d5d428c2d34905425d17dacc6c03d39271596790df21ed9e3e4c736",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/guarded/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "f0e2d50d2552a533cac040d7e46725100f78d76e2b1a725e4f7f02c9d839c63d"
+            },
+            {
+              "file": "eyes/guarded/open.png",
+              "sha256": "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 0,
+            "cellColumn": 0,
+            "cellIndex": 0,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "half": {
+          "file": "eyes/thinking/up-left/half.png",
+          "sha256": "b69fd325abe6873d3784c12ad9d21a5d86d085e8c5c5ab54a794b8c72ea18883",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/guarded/half.png",
+            "eyes/guarded/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "f0e2d50d2552a533cac040d7e46725100f78d76e2b1a725e4f7f02c9d839c63d"
+            },
+            {
+              "file": "eyes/guarded/open.png",
+              "sha256": "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6"
+            },
+            {
+              "file": "eyes/guarded/half.png",
+              "sha256": "dbf3cfa3ac0e98c8d744ce18ad0fd6bfff11a6008c39b7433423fd57a2dab086"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 0,
+            "cellColumn": 0,
+            "cellIndex": 0,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": [
+              {
+                "x": 15,
+                "y": 23,
+                "width": 16,
+                "height": 3
+              },
+              {
+                "x": 34,
+                "y": 23,
+                "width": 17,
+                "height": 3
+              }
+            ],
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 99,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "closed": {
+          "file": "eyes/thinking/up-left/closed.png",
+          "sha256": "2a1b02936dae4ef0bf7498b36cad0b974ab928907d7ca0560b5a78de5be41fb5",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/guarded/closed.png",
+            "eyes/guarded/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "f0e2d50d2552a533cac040d7e46725100f78d76e2b1a725e4f7f02c9d839c63d"
+            },
+            {
+              "file": "eyes/guarded/open.png",
+              "sha256": "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6"
+            },
+            {
+              "file": "eyes/guarded/closed.png",
+              "sha256": "2a1b02936dae4ef0bf7498b36cad0b974ab928907d7ca0560b5a78de5be41fb5"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 0,
+            "cellColumn": 0,
+            "cellIndex": 0,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 297,
+            "halfLidOffset": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "up",
+      "label": "Up",
+      "phases": {
+        "open": {
+          "file": "eyes/thinking/up/open.png",
+          "sha256": "30ea6b919ef731699f6bcbaa2b7c3919f0b2f45d7e0298a58ada1280136074d8",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/guarded/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "f0e2d50d2552a533cac040d7e46725100f78d76e2b1a725e4f7f02c9d839c63d"
+            },
+            {
+              "file": "eyes/guarded/open.png",
+              "sha256": "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 0,
+            "cellColumn": 1,
+            "cellIndex": 1,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "half": {
+          "file": "eyes/thinking/up/half.png",
+          "sha256": "a1b008c1bfb3527d61935bc19b77e418aae3d6f42b0d65652408f2396fdbdcfd",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/guarded/half.png",
+            "eyes/guarded/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "f0e2d50d2552a533cac040d7e46725100f78d76e2b1a725e4f7f02c9d839c63d"
+            },
+            {
+              "file": "eyes/guarded/open.png",
+              "sha256": "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6"
+            },
+            {
+              "file": "eyes/guarded/half.png",
+              "sha256": "dbf3cfa3ac0e98c8d744ce18ad0fd6bfff11a6008c39b7433423fd57a2dab086"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 0,
+            "cellColumn": 1,
+            "cellIndex": 1,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": [
+              {
+                "x": 15,
+                "y": 23,
+                "width": 16,
+                "height": 3
+              },
+              {
+                "x": 34,
+                "y": 23,
+                "width": 17,
+                "height": 3
+              }
+            ],
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 99,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "closed": {
+          "file": "eyes/thinking/up/closed.png",
+          "sha256": "2a1b02936dae4ef0bf7498b36cad0b974ab928907d7ca0560b5a78de5be41fb5",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/guarded/closed.png",
+            "eyes/guarded/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "f0e2d50d2552a533cac040d7e46725100f78d76e2b1a725e4f7f02c9d839c63d"
+            },
+            {
+              "file": "eyes/guarded/open.png",
+              "sha256": "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6"
+            },
+            {
+              "file": "eyes/guarded/closed.png",
+              "sha256": "2a1b02936dae4ef0bf7498b36cad0b974ab928907d7ca0560b5a78de5be41fb5"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 0,
+            "cellColumn": 1,
+            "cellIndex": 1,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 297,
+            "halfLidOffset": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "up-right",
+      "label": "Up-right",
+      "phases": {
+        "open": {
+          "file": "eyes/thinking/up-right/open.png",
+          "sha256": "e71547a55822b5a4acf160ca8f94be13ab9b8c12954005c647aa4f52f2a6c35c",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/guarded/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "f0e2d50d2552a533cac040d7e46725100f78d76e2b1a725e4f7f02c9d839c63d"
+            },
+            {
+              "file": "eyes/guarded/open.png",
+              "sha256": "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 0,
+            "cellColumn": 2,
+            "cellIndex": 2,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "half": {
+          "file": "eyes/thinking/up-right/half.png",
+          "sha256": "c76b4a2325e751dcec0400ba93f4e9f23968ac3bcb30df1f3ef5184025f1b452",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/guarded/half.png",
+            "eyes/guarded/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "f0e2d50d2552a533cac040d7e46725100f78d76e2b1a725e4f7f02c9d839c63d"
+            },
+            {
+              "file": "eyes/guarded/open.png",
+              "sha256": "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6"
+            },
+            {
+              "file": "eyes/guarded/half.png",
+              "sha256": "dbf3cfa3ac0e98c8d744ce18ad0fd6bfff11a6008c39b7433423fd57a2dab086"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 0,
+            "cellColumn": 2,
+            "cellIndex": 2,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": [
+              {
+                "x": 15,
+                "y": 23,
+                "width": 16,
+                "height": 3
+              },
+              {
+                "x": 34,
+                "y": 23,
+                "width": 17,
+                "height": 3
+              }
+            ],
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 99,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "closed": {
+          "file": "eyes/thinking/up-right/closed.png",
+          "sha256": "2a1b02936dae4ef0bf7498b36cad0b974ab928907d7ca0560b5a78de5be41fb5",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/guarded/closed.png",
+            "eyes/guarded/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "f0e2d50d2552a533cac040d7e46725100f78d76e2b1a725e4f7f02c9d839c63d"
+            },
+            {
+              "file": "eyes/guarded/open.png",
+              "sha256": "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6"
+            },
+            {
+              "file": "eyes/guarded/closed.png",
+              "sha256": "2a1b02936dae4ef0bf7498b36cad0b974ab928907d7ca0560b5a78de5be41fb5"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 0,
+            "cellColumn": 2,
+            "cellIndex": 2,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 297,
+            "halfLidOffset": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "left",
+      "label": "Left",
+      "phases": {
+        "open": {
+          "file": "eyes/thinking/left/open.png",
+          "sha256": "e56f2b4a01b07a5b46b91d9427b47eae11c708985c9f55ae28053d9e7e4e75c5",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/guarded/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "f0e2d50d2552a533cac040d7e46725100f78d76e2b1a725e4f7f02c9d839c63d"
+            },
+            {
+              "file": "eyes/guarded/open.png",
+              "sha256": "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 1,
+            "cellColumn": 0,
+            "cellIndex": 3,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "half": {
+          "file": "eyes/thinking/left/half.png",
+          "sha256": "fe1a0c2bd6f2c2ad109b3e8ed3ef75a07902ce4b17cbd0c814fba35c839c0944",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/guarded/half.png",
+            "eyes/guarded/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "f0e2d50d2552a533cac040d7e46725100f78d76e2b1a725e4f7f02c9d839c63d"
+            },
+            {
+              "file": "eyes/guarded/open.png",
+              "sha256": "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6"
+            },
+            {
+              "file": "eyes/guarded/half.png",
+              "sha256": "dbf3cfa3ac0e98c8d744ce18ad0fd6bfff11a6008c39b7433423fd57a2dab086"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 1,
+            "cellColumn": 0,
+            "cellIndex": 3,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": [
+              {
+                "x": 15,
+                "y": 23,
+                "width": 16,
+                "height": 3
+              },
+              {
+                "x": 34,
+                "y": 23,
+                "width": 17,
+                "height": 3
+              }
+            ],
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 99,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "closed": {
+          "file": "eyes/thinking/left/closed.png",
+          "sha256": "2a1b02936dae4ef0bf7498b36cad0b974ab928907d7ca0560b5a78de5be41fb5",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/guarded/closed.png",
+            "eyes/guarded/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "f0e2d50d2552a533cac040d7e46725100f78d76e2b1a725e4f7f02c9d839c63d"
+            },
+            {
+              "file": "eyes/guarded/open.png",
+              "sha256": "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6"
+            },
+            {
+              "file": "eyes/guarded/closed.png",
+              "sha256": "2a1b02936dae4ef0bf7498b36cad0b974ab928907d7ca0560b5a78de5be41fb5"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 1,
+            "cellColumn": 0,
+            "cellIndex": 3,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 297,
+            "halfLidOffset": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "center",
+      "label": "Center",
+      "phases": {
+        "open": {
+          "file": "eyes/thinking/center/open.png",
+          "sha256": "0f837d3fce701d03872f7e3e99e1f3d3bcae663786cc63e9882b432fcef60dcc",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/guarded/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "f0e2d50d2552a533cac040d7e46725100f78d76e2b1a725e4f7f02c9d839c63d"
+            },
+            {
+              "file": "eyes/guarded/open.png",
+              "sha256": "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 1,
+            "cellColumn": 1,
+            "cellIndex": 4,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "half": {
+          "file": "eyes/thinking/center/half.png",
+          "sha256": "869fbfd76fb3c3cadba0e34a6e032c1ea322d21f16539432508efc3eeb55e35e",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/guarded/half.png",
+            "eyes/guarded/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "f0e2d50d2552a533cac040d7e46725100f78d76e2b1a725e4f7f02c9d839c63d"
+            },
+            {
+              "file": "eyes/guarded/open.png",
+              "sha256": "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6"
+            },
+            {
+              "file": "eyes/guarded/half.png",
+              "sha256": "dbf3cfa3ac0e98c8d744ce18ad0fd6bfff11a6008c39b7433423fd57a2dab086"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 1,
+            "cellColumn": 1,
+            "cellIndex": 4,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": [
+              {
+                "x": 15,
+                "y": 23,
+                "width": 16,
+                "height": 3
+              },
+              {
+                "x": 34,
+                "y": 23,
+                "width": 17,
+                "height": 3
+              }
+            ],
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 99,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "closed": {
+          "file": "eyes/thinking/center/closed.png",
+          "sha256": "2a1b02936dae4ef0bf7498b36cad0b974ab928907d7ca0560b5a78de5be41fb5",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/guarded/closed.png",
+            "eyes/guarded/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "f0e2d50d2552a533cac040d7e46725100f78d76e2b1a725e4f7f02c9d839c63d"
+            },
+            {
+              "file": "eyes/guarded/open.png",
+              "sha256": "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6"
+            },
+            {
+              "file": "eyes/guarded/closed.png",
+              "sha256": "2a1b02936dae4ef0bf7498b36cad0b974ab928907d7ca0560b5a78de5be41fb5"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 1,
+            "cellColumn": 1,
+            "cellIndex": 4,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 297,
+            "halfLidOffset": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "right",
+      "label": "Right",
+      "phases": {
+        "open": {
+          "file": "eyes/thinking/right/open.png",
+          "sha256": "6fe9afe570512610e5951d7c09e2048769f6900abf16c9fc40e199d5db4b7ee3",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/guarded/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "f0e2d50d2552a533cac040d7e46725100f78d76e2b1a725e4f7f02c9d839c63d"
+            },
+            {
+              "file": "eyes/guarded/open.png",
+              "sha256": "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 1,
+            "cellColumn": 2,
+            "cellIndex": 5,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "half": {
+          "file": "eyes/thinking/right/half.png",
+          "sha256": "256ef76b2629337c9d206dcc7444942b1f6b9b6d1281dfc38fdb65ecfb26249d",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/guarded/half.png",
+            "eyes/guarded/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "f0e2d50d2552a533cac040d7e46725100f78d76e2b1a725e4f7f02c9d839c63d"
+            },
+            {
+              "file": "eyes/guarded/open.png",
+              "sha256": "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6"
+            },
+            {
+              "file": "eyes/guarded/half.png",
+              "sha256": "dbf3cfa3ac0e98c8d744ce18ad0fd6bfff11a6008c39b7433423fd57a2dab086"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 1,
+            "cellColumn": 2,
+            "cellIndex": 5,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": [
+              {
+                "x": 15,
+                "y": 23,
+                "width": 16,
+                "height": 3
+              },
+              {
+                "x": 34,
+                "y": 23,
+                "width": 17,
+                "height": 3
+              }
+            ],
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 99,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "closed": {
+          "file": "eyes/thinking/right/closed.png",
+          "sha256": "2a1b02936dae4ef0bf7498b36cad0b974ab928907d7ca0560b5a78de5be41fb5",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/guarded/closed.png",
+            "eyes/guarded/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "f0e2d50d2552a533cac040d7e46725100f78d76e2b1a725e4f7f02c9d839c63d"
+            },
+            {
+              "file": "eyes/guarded/open.png",
+              "sha256": "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6"
+            },
+            {
+              "file": "eyes/guarded/closed.png",
+              "sha256": "2a1b02936dae4ef0bf7498b36cad0b974ab928907d7ca0560b5a78de5be41fb5"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 1,
+            "cellColumn": 2,
+            "cellIndex": 5,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 297,
+            "halfLidOffset": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "down-left",
+      "label": "Down-left",
+      "phases": {
+        "open": {
+          "file": "eyes/thinking/down-left/open.png",
+          "sha256": "053410bf330f1e074c35b91b3f9028b7473d8a65718a567eabb365bd044b00df",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/guarded/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "f0e2d50d2552a533cac040d7e46725100f78d76e2b1a725e4f7f02c9d839c63d"
+            },
+            {
+              "file": "eyes/guarded/open.png",
+              "sha256": "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 2,
+            "cellColumn": 0,
+            "cellIndex": 6,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "half": {
+          "file": "eyes/thinking/down-left/half.png",
+          "sha256": "8b6003a14edd3bebb9d708ea4197d54a1648c2679c01c36ead4bdada55fb59bb",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/guarded/half.png",
+            "eyes/guarded/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "f0e2d50d2552a533cac040d7e46725100f78d76e2b1a725e4f7f02c9d839c63d"
+            },
+            {
+              "file": "eyes/guarded/open.png",
+              "sha256": "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6"
+            },
+            {
+              "file": "eyes/guarded/half.png",
+              "sha256": "dbf3cfa3ac0e98c8d744ce18ad0fd6bfff11a6008c39b7433423fd57a2dab086"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 2,
+            "cellColumn": 0,
+            "cellIndex": 6,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": [
+              {
+                "x": 15,
+                "y": 23,
+                "width": 16,
+                "height": 3
+              },
+              {
+                "x": 34,
+                "y": 23,
+                "width": 17,
+                "height": 3
+              }
+            ],
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 99,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "closed": {
+          "file": "eyes/thinking/down-left/closed.png",
+          "sha256": "2a1b02936dae4ef0bf7498b36cad0b974ab928907d7ca0560b5a78de5be41fb5",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/guarded/closed.png",
+            "eyes/guarded/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "f0e2d50d2552a533cac040d7e46725100f78d76e2b1a725e4f7f02c9d839c63d"
+            },
+            {
+              "file": "eyes/guarded/open.png",
+              "sha256": "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6"
+            },
+            {
+              "file": "eyes/guarded/closed.png",
+              "sha256": "2a1b02936dae4ef0bf7498b36cad0b974ab928907d7ca0560b5a78de5be41fb5"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 2,
+            "cellColumn": 0,
+            "cellIndex": 6,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 297,
+            "halfLidOffset": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "down",
+      "label": "Down",
+      "phases": {
+        "open": {
+          "file": "eyes/thinking/down/open.png",
+          "sha256": "3312b8bc7a8f47e9f77b9e177b0bdaab574fbb29416129e8e32f8680566976da",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/guarded/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "f0e2d50d2552a533cac040d7e46725100f78d76e2b1a725e4f7f02c9d839c63d"
+            },
+            {
+              "file": "eyes/guarded/open.png",
+              "sha256": "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 2,
+            "cellColumn": 1,
+            "cellIndex": 7,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "half": {
+          "file": "eyes/thinking/down/half.png",
+          "sha256": "0e05a9cf7528f353fef54256d2e8176fca836e635da378e37a71f79f2ca17360",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/guarded/half.png",
+            "eyes/guarded/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "f0e2d50d2552a533cac040d7e46725100f78d76e2b1a725e4f7f02c9d839c63d"
+            },
+            {
+              "file": "eyes/guarded/open.png",
+              "sha256": "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6"
+            },
+            {
+              "file": "eyes/guarded/half.png",
+              "sha256": "dbf3cfa3ac0e98c8d744ce18ad0fd6bfff11a6008c39b7433423fd57a2dab086"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 2,
+            "cellColumn": 1,
+            "cellIndex": 7,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": [
+              {
+                "x": 15,
+                "y": 23,
+                "width": 16,
+                "height": 3
+              },
+              {
+                "x": 34,
+                "y": 23,
+                "width": 17,
+                "height": 3
+              }
+            ],
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 99,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "closed": {
+          "file": "eyes/thinking/down/closed.png",
+          "sha256": "2a1b02936dae4ef0bf7498b36cad0b974ab928907d7ca0560b5a78de5be41fb5",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/guarded/closed.png",
+            "eyes/guarded/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "f0e2d50d2552a533cac040d7e46725100f78d76e2b1a725e4f7f02c9d839c63d"
+            },
+            {
+              "file": "eyes/guarded/open.png",
+              "sha256": "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6"
+            },
+            {
+              "file": "eyes/guarded/closed.png",
+              "sha256": "2a1b02936dae4ef0bf7498b36cad0b974ab928907d7ca0560b5a78de5be41fb5"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 2,
+            "cellColumn": 1,
+            "cellIndex": 7,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 297,
+            "halfLidOffset": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "down-right",
+      "label": "Down-right",
+      "phases": {
+        "open": {
+          "file": "eyes/thinking/down-right/open.png",
+          "sha256": "4494cfd8660e53e7f5327b6bcf5cebcadca13865f4a182bfedc0146e6a03ca7e",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/guarded/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "f0e2d50d2552a533cac040d7e46725100f78d76e2b1a725e4f7f02c9d839c63d"
+            },
+            {
+              "file": "eyes/guarded/open.png",
+              "sha256": "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 2,
+            "cellColumn": 2,
+            "cellIndex": 8,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "half": {
+          "file": "eyes/thinking/down-right/half.png",
+          "sha256": "86a33aed5600c0bc154b3ebf671c94f419bec9be9fe98d5b6f0d47b4213e596d",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/guarded/half.png",
+            "eyes/guarded/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "f0e2d50d2552a533cac040d7e46725100f78d76e2b1a725e4f7f02c9d839c63d"
+            },
+            {
+              "file": "eyes/guarded/open.png",
+              "sha256": "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6"
+            },
+            {
+              "file": "eyes/guarded/half.png",
+              "sha256": "dbf3cfa3ac0e98c8d744ce18ad0fd6bfff11a6008c39b7433423fd57a2dab086"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 2,
+            "cellColumn": 2,
+            "cellIndex": 8,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": [
+              {
+                "x": 15,
+                "y": 23,
+                "width": 16,
+                "height": 3
+              },
+              {
+                "x": 34,
+                "y": 23,
+                "width": 17,
+                "height": 3
+              }
+            ],
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 99,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "closed": {
+          "file": "eyes/thinking/down-right/closed.png",
+          "sha256": "2a1b02936dae4ef0bf7498b36cad0b974ab928907d7ca0560b5a78de5be41fb5",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/guarded/closed.png",
+            "eyes/guarded/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "f0e2d50d2552a533cac040d7e46725100f78d76e2b1a725e4f7f02c9d839c63d"
+            },
+            {
+              "file": "eyes/guarded/open.png",
+              "sha256": "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6"
+            },
+            {
+              "file": "eyes/guarded/closed.png",
+              "sha256": "2a1b02936dae4ef0bf7498b36cad0b974ab928907d7ca0560b5a78de5be41fb5"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 2,
+            "cellColumn": 2,
+            "cellIndex": 8,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 297,
+            "halfLidOffset": 0
+          }
+        }
+      }
+    }
+  ],
+  "source": {
+    "original": "original.png",
+    "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+    "referenceGrid": "thinking-reference-grid.png",
+    "referenceSha256": "302e6b4c3fd45c530972de5a4dcccb178d397912056d225231120219043827c4",
+    "rawAtlas": "eyes/thinking/raw.png",
+    "rawAtlasSha256": "f0e2d50d2552a533cac040d7e46725100f78d76e2b1a725e4f7f02c9d839c63d",
+    "referenceUpper": {
+      "file": "eyes/guarded/open.png",
+      "sha256": "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6"
+    },
+    "browMaster": {
+      "file": "eyes/guarded/open.png",
+      "sha256": "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6"
+    },
+    "halfLid": {
+      "file": "eyes/guarded/half.png",
+      "sha256": "dbf3cfa3ac0e98c8d744ce18ad0fd6bfff11a6008c39b7433423fd57a2dab086"
+    },
+    "closedEye": {
+      "file": "eyes/guarded/closed.png",
+      "sha256": "2a1b02936dae4ef0bf7498b36cad0b974ab928907d7ca0560b5a78de5be41fb5"
+    }
+  },
+  "geometry": {
+    "width": 64,
+    "height": 64,
+    "splitY": 35,
+    "frameWidth": 64,
+    "frameHeight": 35,
+    "eyeRegions": [
+      {
+        "height": 17,
+        "width": 16,
+        "y": 15,
+        "x": 15
+      },
+      {
+        "height": 17,
+        "width": 17,
+        "y": 15,
+        "x": 34
+      }
+    ],
+    "halfLidRegions": [
+      {
+        "x": 15,
+        "y": 23,
+        "width": 16,
+        "height": 3
+      },
+      {
+        "x": 34,
+        "y": 23,
+        "width": 17,
+        "height": 3
+      }
+    ],
+    "halfLidOffsetsByGaze": {
+      "up-left": 0,
+      "up": 0,
+      "up-right": 0,
+      "left": 0,
+      "center": 0,
+      "right": 0,
+      "down-left": 0,
+      "down": 0,
+      "down-right": 0
+    },
+    "browLockEndY": 22,
+    "reference": {
+      "width": 1536,
+      "height": 840,
+      "scale": 8,
+      "cells": 9,
+      "exactSourceCells": true
+    },
+    "rawAspect": 1.8265086206896552,
+    "rawAspectTolerance": 0.01,
+    "cellOrder": [
+      "up-left",
+      "up",
+      "up-right",
+      "left",
+      "center",
+      "right",
+      "down-left",
+      "down",
+      "down-right"
+    ]
+  },
+  "inputHashes": [
+    {
+      "file": "layout.json",
+      "sha256": "2b54678470e2778b95bda1524b157cd89b3cf477d226da07ee0c203d9500adc5"
+    },
+    {
+      "file": "thinking-layout.json",
+      "sha256": "e90e7f5acb3e4c3915e192380ceb71ce2ed2931d889cb4eb04714a3ed139b443"
+    },
+    {
+      "file": "setup-provenance.json",
+      "sha256": "1de666292891caf610e9d53658bf327bc0be59a34f9ee22b6d72b0ad678708f9"
+    },
+    {
+      "file": "original.png",
+      "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+    },
+    {
+      "file": "thinking-reference-grid.png",
+      "sha256": "302e6b4c3fd45c530972de5a4dcccb178d397912056d225231120219043827c4"
+    },
+    {
+      "file": "eyes/thinking/raw.png",
+      "sha256": "f0e2d50d2552a533cac040d7e46725100f78d76e2b1a725e4f7f02c9d839c63d"
+    },
+    {
+      "file": "eyes/guarded/open.png",
+      "sha256": "1a448b65b460d5583ebed9dfab5232dcf5baaa039662bb19e6a18833e7fa88a6"
+    },
+    {
+      "file": "eyes/guarded/half.png",
+      "sha256": "dbf3cfa3ac0e98c8d744ce18ad0fd6bfff11a6008c39b7433423fd57a2dab086"
+    },
+    {
+      "file": "eyes/guarded/closed.png",
+      "sha256": "2a1b02936dae4ef0bf7498b36cad0b974ab928907d7ca0560b5a78de5be41fb5"
+    }
+  ],
+  "verification": {
+    "result": "pixel-invariants-pass-not-visual-acceptance",
+    "phaseCount": 27,
+    "expectedPhaseCount": 27,
+    "gazeSetCount": 9,
+    "expectedGazeSetCount": 9,
+    "sourceHashesUnchanged": true,
+    "referenceExact": true,
+    "outsideMaskChangedPixels": 0,
+    "noExistingOutputsOverwritten": true
+  },
+  "emotionId": "guarded"
+}

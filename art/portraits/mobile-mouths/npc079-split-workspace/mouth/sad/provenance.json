@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 79,
+  "emotion": "sad",
+  "asset": "mouth/sad/raw.png",
+  "tool": "built-in image_gen",
+  "prompt": "Create ONE pixel-art sprite atlas for the SAD speech-mouth emotion of Daggerfall Unity portrait record 79, using the provided original lower half and mouth reference grid as strict visual references. Output one 3-column × 3-row grid of nine equal aligned cells, row-major exactly A B C / D E F / G H X. Every cell must show the entire same original 64×29 lower portrait half at native feature scale, not a crop or new face. Keep nose, cheeks, jaw, neck, hair, background, framing, soft muted palette, shading and pixel-art texture consistent with the source. Change only the mouth/lip expression. SAD is low-energy and restrained: gently downturned mouth corners, subdued lips, no pout or grimace. A and X are closed-mouth poses; B–H are distinct small speech-mouth shapes appropriate to the reference phoneme variety, with modest openings that fit the same lip size and face. Keep shapes coherent and readable at native pixel scale. Preserve all original pixels outside the mouth feature region; do not shift or resize the face or mouth between tiles. No tears, objects, text, labels, dividers, new facial hair, exaggerated emotion, high contrast, blur, or extra panels. Output only the complete 3×3 sheet.",
+  "promptSha256": "10b0d7eea08f3c04a9edf8459a9af52420e9933f0bb0cb01cbecdd2e0b055d22",
+  "references": [
+    {
+      "path": "original.png",
+      "sha256": "70b1b52df73159543afd5776eae7565bfd3619fd31bc5fd90af674e42520d460"
+    },
+    {
+      "path": "mouth-reference-grid.png",
+      "sha256": "51b7d166c01001213d48e19be135f463e41b6a9892da5abe9c686cf1ae53ca2a"
+    }
+  ],
+  "generationOutputPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-fb9b-7322-8190-74bf6fb54c9d\\exec-424407c7-0fbd-4f1b-977d-8668e9ca2766.png",
+  "resultSha256": "5501ff69e71ca791d5e432d59b57b20c0eb08fe5b7afcdf7306935f103f0458d",
+  "dimensions": {
+    "width": 1863,
+    "height": 844
+  },
+  "visibleDefects": [
+    "The 3×3 layout is recognizable, but mouth poses are mostly very similar, so A–H/X phoneme variation is weak.",
+    "Several frames show bright thin tooth/highlight stripes that do not match the muted original lip shading; corners are not consistently downturned.",
+    "Frames include lower-face, neck, hair and background rather than native 64×29 crops and do not preserve only the mouth region; saved unchanged as raw."
+  ],
+  "rawCopiedUnchanged": true
+}

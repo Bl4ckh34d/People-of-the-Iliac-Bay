@@ -17,7 +17,7 @@ namespace PeopleOfTheIliacBay.DFU
         public static IEnumerator Run(string questJson, IDictionary<int, string[]> homes)
         {
             var game = GameManager.Instance;
-            Require(game.PlayerEntity.Name.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal), "Disposable character required.");
+            Require(NativeProbeText.IsTestCharacter(game.PlayerEntity.Name), "Disposable character required.");
             Require(!string.IsNullOrEmpty(questJson), "Parser probe did not return its bound quest.");
             var quest = new Quest();
             quest.RestoreSaveData((Quest.QuestSaveData_v1)SaveLoadManager.Deserialize(typeof(Quest.QuestSaveData_v1), questJson));

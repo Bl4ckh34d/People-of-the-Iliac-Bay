@@ -1,0 +1,131 @@
+{
+  "portraitRecord": 77,
+  "width": 64,
+  "height": 64,
+  "splitY": 35,
+  "eyeRegions": [
+    {
+      "height": 17,
+      "width": 16,
+      "y": 15,
+      "x": 15
+    },
+    {
+      "height": 17,
+      "width": 17,
+      "y": 15,
+      "x": 34
+    }
+  ],
+  "eyeFeatureLocks": [
+    {
+      "emotion": "sad",
+      "phase": "half",
+      "x": 20,
+      "y": 28,
+      "width": 7,
+      "height": 1
+    },
+    {
+      "emotion": "sad",
+      "phase": "half",
+      "x": 38,
+      "y": 28,
+      "width": 7,
+      "height": 1
+    },
+    {
+      "emotion": "sad",
+      "phase": "half",
+      "x": 18,
+      "y": 23,
+      "width": 11,
+      "height": 4
+    },
+    {
+      "emotion": "sad",
+      "phase": "half",
+      "x": 37,
+      "y": 23,
+      "width": 11,
+      "height": 4
+    },
+    {
+      "emotion": "sad",
+      "phase": "closed",
+      "x": 18,
+      "y": 23,
+      "width": 11,
+      "height": 4
+    },
+    {
+      "emotion": "sad",
+      "phase": "closed",
+      "x": 37,
+      "y": 23,
+      "width": 11,
+      "height": 4
+    }
+  ],
+  "pixelRepairs": [
+    {
+      "emotion": "angry",
+      "phase": "half",
+      "x": 24,
+      "y": 27,
+      "copyFromX": 23,
+      "copyFromY": 27,
+      "expectedSourceRgb": "C6A27C",
+      "reason": "Continue lowered upper eyelid edge across exposed bright pixel"
+    },
+    {
+      "emotion": "angry",
+      "phase": "half",
+      "x": 25,
+      "y": 27,
+      "copyFromX": 23,
+      "copyFromY": 27,
+      "expectedSourceRgb": "87694D",
+      "reason": "Continue lowered upper eyelid edge across adjacent interruption"
+    },
+    {
+      "emotion": "angry",
+      "phase": "half",
+      "x": 24,
+      "y": 26,
+      "copyFromX": 23,
+      "copyFromY": 26,
+      "expectedSourceRgb": "543921",
+      "reason": "Fill area above lowered lid edge with adjacent eyelid skin"
+    },
+    {
+      "emotion": "angry",
+      "phase": "half",
+      "x": 25,
+      "y": 26,
+      "copyFromX": 22,
+      "copyFromY": 26,
+      "expectedSourceRgb": "4A321E",
+      "reason": "Fill area above lowered lid edge with adjacent eyelid skin"
+    }
+  ],
+  "mouthRegion": {
+    "height": 13,
+    "width": 20,
+    "y": 39,
+    "x": 22
+  },
+  "maskBoundary": "Source pixels outside these regions must remain byte-identical. Feathering, if used, stays inside these bounds.",
+  "grid": {
+    "columns": 2,
+    "rows": 2,
+    "order": [
+      "open",
+      "half",
+      "closed",
+      "open-reference"
+    ]
+  },
+  "bank": "TFAC00I0.RCI",
+  "browLockEndY": 22
+}

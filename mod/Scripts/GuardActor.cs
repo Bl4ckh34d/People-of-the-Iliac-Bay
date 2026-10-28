@@ -20,8 +20,64 @@ namespace PeopleOfTheIliacBay.DFU
         private MobileUnit mobile;
         private double displayedAt;
         private float groundOffset;
+        private SleepingArt sleepArt;
+        private SleepingPose sleeping;
+        private BedAnchor restBed;
+        public bool IsSleeping { get { return sleeping && sleeping.Active; } }
+        public void SetSleepingArt(SleepingArt art) { sleepArt = art; }
         public Vector3 GroundPosition {get {return transform.position-Vector3.up*groundOffset;}}
         private Coroutine combatStart;
+        private ResidentActor reportWitness;
+        private Transform conversationPartner;
+        private bool inquiryConversation;
+        private GuardDuty reportConversationDuty;
+        private float reportConversationUntil;
+        internal void BeginReportConversation(ResidentActor witness,float seconds)
+        {
+            reportWitness=witness;conversationPartner=witness.transform;inquiryConversation=false;reportConversationUntil=Time.time+seconds;
+            reportConversationDuty=roster.Guards.Find(g=>g.Id==GuardId).Duty;
+            witness.BeginGuardInquiry(this);
+        }
+        internal bool BeginInquiryConversation(Transform partner,float seconds,double now)
+        {
+            if(!partner || conversationPartner || !roster.PauseSearchForInquiry(GuardId,now,
+                seconds*DaggerfallUnity.Instance.WorldTime.TimeScale))return false;
+            conversationPartner=partner;reportWitness=partner.GetComponent<ResidentActor>();inquiryConversation=true;
+            reportConversationUntil=Time.time+seconds;
+            if(reportWitness)reportWitness.BeginGuardInquiry(this);
+            return HoldReportConversation();
+        }
+        internal bool HoldsInquiry(ResidentActor person)
+        {return reportWitness==person && conversationPartner &&
+            Time.time<reportConversationUntil && gameObject.activeInHierarchy && !CombatReady && !DefenseTarget;}
+        internal void EndReportConversation()
+        {
+            if(inquiryConversation && roster!=null)
+            {
+                var clock=DaggerfallUnity.Instance.WorldTime.Now;
+                roster.EndSearchInquiryPause(GuardId,clock.ToSeconds()+(clock.Second-Math.Floor(clock.Second)));
+            }
+            if(reportWitness)reportWitness.EndGuardInquiry(this);
+            reportWitness=null;conversationPartner=null;inquiryConversation=false;
+        }
+        internal bool HoldReportConversation()
+        {
+            var guard=roster.Guards.Find(g=>g.Id==GuardId);
+            if(!conversationPartner)return false;
+            var native=conversationPartner.GetComponent<DaggerfallEntityBehaviour>();
+            if(!conversationPartner.gameObject.activeInHierarchy || native && native.Entity!=null && native.Entity.CurrentHealth<=0 ||
+                reportWitness && (!reportWitness.Resident.IsAlive || reportWitness.IsSleeping || reportWitness.IsConversing) ||
+                Time.time>=reportConversationUntil || !guard.IsAlive ||
+                guard.Duty!=(inquiryConversation?GuardDuty.Searching:reportConversationDuty) || CombatReady || DefenseTarget ||
+                (conversationPartner.position-transform.position).sqrMagnitude>25)
+            {EndReportConversation();return false;}
+            SetInteriorPose(transform.position,conversationPartner.position-transform.position,false);
+            if(reportWitness)reportWitness.HoldGuardInquiryPosition();
+            // A native stationary flat has one frontal image. Its billboard
+            // must keep facing the camera; conversationPartner is its exact
+            // logical contact, not permission to turn the visible quad edge-on.
+            return true;
+        }
         private GameObject torchBody;
         private Light torchLight;
         public void SetTorch(bool visible, bool illuminate, float range)
@@ -50,6 +106,15 @@ namespace PeopleOfTheIliacBay.DFU
         }
         public bool CombatReady { get; private set; }
         public bool IsInterior { get; private set; }
+        internal bool IsDungeonCustodyBody
+        {
+            get
+            {
+                var game=GameManager.Instance;
+                return game && game.PlayerEnterExit && game.PlayerEnterExit.IsPlayerInsideDungeon &&
+                    game.PlayerEnterExit.Dungeon && GetComponentInParent<DaggerfallDungeon>()==game.PlayerEnterExit.Dungeon;
+            }
+        }
         private int? buildingKey;
         private static GuardPoint3 Point(Vector3 p) { return new GuardPoint3 { X = p.x, Y = p.y, Z = p.z }; }
         private Vector3 Scene(GuardPoint3 p) { return transform.parent.TransformPoint(new Vector3((float)p.X, (float)p.Y, (float)p.Z)); }
@@ -114,18 +179,55 @@ namespace PeopleOfTheIliacBay.DFU
         {
             var guard = roster.Guards.Find(g => g.Id == GuardId);
             if (!guard.IsAlive) { gameObject.SetActive(false); return; }
+            bool atRestBed = guard.Refuge != null && guard.Refuge.RestBedRecord.HasValue &&
+                guard.Refuge.Evaluate(now).Phase == RefugePhase.Sheltered;
+            if (!atRestBed && sleeping) sleeping.Wake();
             if (guard.Refuge!=null)
             {
+                if(guard.Refuge.WallRoute!=null && !WallCombatActive) EnsureWallBowEquipped();
                 bool indoors=RefugeIndoors(guard,now);
                 if (indoors!=IsInterior) { gameObject.SetActive(false); return; }
                 var snapshot=guard.Refuge.Evaluate(now);
-                var target=indoors ? Scene(snapshot.Position)+Vector3.up*groundOffset :
+                if(snapshot.Phase==RefugePhase.WallPosted && WallCombatActive)
+                {displayedAt=now;return;}
+                var target=indoors || guard.Refuge.IsUpperExterior(now) ? Scene(snapshot.Position)+Vector3.up*groundOffset :
                     geometry.ScenePoint(new RoutePoint(snapshot.Position.X,snapshot.Position.Z))+Vector3.up*groundOffset;
+                if(!indoors && guard.Refuge.IsUpperExterior(now) && ReturnToWallPost(target))
+                {displayedAt=now;return;}
                 var facing=target-transform.position; facing.y=0;
                 if (facing.sqrMagnitude>0.00000001f) transform.forward=facing.normalized;
                 transform.position=target;
-                var refugeState=snapshot.Phase==RefugePhase.Sheltered && (!guard.Refuge.WallDuty || guard.Refuge.RestBedRecord.HasValue) ? MobileStates.Idle : MobileStates.Move;
-                if (mobile.EnemyState!=refugeState) mobile.ChangeEnemyState(refugeState);
+                var refugeState=snapshot.Phase==RefugePhase.WallPosted || snapshot.Phase==RefugePhase.Sheltered &&
+                    (!guard.Refuge.WallDuty || guard.Refuge.Resting || guard.Refuge.RestBedRecord.HasValue) ? MobileStates.Idle : MobileStates.Move;
+                if (mobile.EnemyState!=refugeState && !(snapshot.Phase==RefugePhase.WallPosted && WallLawActive)) mobile.ChangeEnemyState(refugeState);
+                if (indoors && atRestBed && sleepArt != null)
+                {
+                    var room = transform.parent.GetComponent<DaggerfallInterior>();
+                    if (room && (restBed == null || restBed.RecordIndex != guard.Refuge.RestBedRecord.Value))
+                    {
+                        restBed = BedGeometry.Read(room).Find(b => b.RecordIndex == guard.Refuge.RestBedRecord.Value);
+                        if(restBed==null)
+                            foreach(var furnished in room.GetComponentsInChildren<QuarterBed>())
+                                if(furnished.Anchor.RecordIndex==guard.Refuge.RestBedRecord.Value) {restBed=furnished.Anchor;break;}
+                    }
+                    SleepingArt.Atlas atlas = null;
+                    if (restBed != null)
+                    {
+                        try { atlas = sleepArt.ForCityWatch(); }
+                        catch (Exception error)
+                        {
+                            // Optional art must not prevent the physical rest routine.
+                            // Do not retry a broken installed asset every placement tick.
+                            sleepArt = null;
+                            Debug.LogWarning("People of the Iliac Bay guard sleep art unavailable: " + error.Message);
+                        }
+                    }
+                    if (atlas != null)
+                    {
+                        if (!sleeping) sleeping = gameObject.AddComponent<SleepingPose>();
+                        sleeping.BeginGuard(room.transform, restBed, atlas);
+                    }
+                }
                 displayedAt=now; return;
             }
             if (IsInterior)
@@ -166,6 +268,7 @@ namespace PeopleOfTheIliacBay.DFU
 
         public void BeginCombat(double now, SavedRoutePoint reportedSuspect = null)
         {
+            if (sleeping) sleeping.Wake();
             if (DefenseTarget) EndCombat();
             var guard = roster.Guards.Find(g => g.Id == GuardId);
             if(IsInterior && guard.Interior!=null && !guard.Interior.Returning)
@@ -203,6 +306,7 @@ namespace PeopleOfTheIliacBay.DFU
             var guard = roster.Guards.Find(g => g.Id == GuardId);
             if (!guard.IsAlive || entity.CurrentHealth <= 0) return;
             guard.HealthFraction = (double)entity.CurrentHealth / entity.MaxHealth;
+            if(IsDungeonCustodyBody){displayedAt=now;return;}
             if (guard.Refuge!=null) { displayedAt=now; return; }
             if (DefenseTarget) { CaptureDefense(now); displayedAt = now; return; }
             if (IsInterior)
@@ -232,6 +336,8 @@ namespace PeopleOfTheIliacBay.DFU
         }
         public void EndCombat()
         {
+            WallLawActive=false;
+            WallCombatActive=false;wallCombatTarget=null;
             ClearDefenseTarget();
             if (combatStart != null) { StopCoroutine(combatStart); combatStart = null; }
             GetComponent<EnemyMotor>().enabled = false;
@@ -246,6 +352,7 @@ namespace PeopleOfTheIliacBay.DFU
 
         private void Died(DaggerfallEntity ignored)
         {
+            if (sleeping) sleeping.Wake();
             SetTorch(false, false, 8f);
             var guard = roster.Guards.Find(g => g.Id == GuardId);
             if (IsInterior && guard.Interior != null)
@@ -260,6 +367,6 @@ namespace PeopleOfTheIliacBay.DFU
         }
 
         private void OnDestroy()
-        { if (entity != null) entity.OnDeath -= Died; }
+        { EndReportConversation();if (entity != null) entity.OnDeath -= Died; }
     }
 }

@@ -1,0 +1,40 @@
+{
+  "portraitRecord": 79,
+  "bank": "TFAC00I0.RCI",
+  "emotion": "happy",
+  "asset": "upper-half eye expression sheet",
+  "generator": "built-in image_gen",
+  "generation_count": 1,
+  "source": {
+    "path": "art/portraits/mobile-mouths/npc079-split-workspace/eyes-reference-grid.png",
+    "sha256": "81737009A51FBAFD2CA540F49ED88457428FDA5BFA128C4CEFD0B03DEBB867DA",
+    "dimensions_px": [1024, 560]
+  },
+  "original_identity_reference": {
+    "path": "art/portraits/mobile-mouths/npc079-split-workspace/original.png",
+    "sha256": "70B1B52DF73159543AFD5776EAE7565BFD3619FD31BC5FD90AF674E42520D460",
+    "dimensions_px": [64, 64]
+  },
+  "generated": {
+    "path": "C:/Users/Daniel/.codex/generated_images/01a15fde-8b98-7181-a1df-84e7b766303c/exec-d872f94f-9767-4645-bbba-ab68c7c8a46d.png",
+    "sha256": "0C31D972F9559D146D80E09FE42D4843128BC89A21653B550976844375CF5B37",
+    "dimensions_px": [1695, 928]
+  },
+  "output": {
+    "path": "art/portraits/mobile-mouths/npc079-split-workspace/eyes/happy/raw.png",
+    "sha256": "0C31D972F9559D146D80E09FE42D4843128BC89A21653B550976844375CF5B37",
+    "dimensions_px": [1695, 928],
+    "copied_unaltered": true
+  },
+  "grid": {
+    "rows": 2,
+    "columns": 2,
+    "row_major_order": ["open-happy", "half-blink-happy", "closed-happy", "repeat-open-happy"],
+    "native_cell_dimensions_px": [64, 35]
+  },
+  "prompt": "Create one complete HAPPY eye-expression sheet by editing Image 1, the supplied 2x2 eye reference grid. Preserve this exact NPC 79 identity: same woman, dark hair edges, forehead, tan skin, eye spacing, head framing, soft muted original palette and pixel texture. Keep each upper-half cell 64x35 native pixels enlarged 8x, with full same-size 2x2 layout. Row-major cells: open happy, half blink happy, fully closed happy blink, repeat open happy. Make happiness clearly warmer and friendlier than the tense/neutral source: gently relax the furrow, slightly raise and soften both brows into the same friendly shape in every phase, and give both eyes subtle smiling warmth with very slight lift at outer corners. Keep eyebrows stationary and identical in height and shape across all four cells. Keep both pupils looking same direction. Maintain exact iris and pupil width, size, and horizontal position from open to half; lids move downward over stationary original eyes, never shift or shrink eyeballs. Closed lids hide all iris. Preserve original hair and forehead pixels, face geometry, muted soft skin shading and low contrast; keep native pixel blocks crisp but not harsh. No large expression, no thick black brows, no black eyeliner, no white eye highlights beyond original, no brow jumps, no eye direction change, no changes outside eye/brow regions, no blur, no smoothing, no added details, text, labels, or gutters. Output full 2x2 sheet only.",
+  "visual_review": {
+    "status": "raw generation; parent review pending",
+    "notes": "Mood reads warmer than reference. At full-sheet view brows and upper-lid lines look darker and somewhat thicker than source; compare at native 64x35 before adoption. Output size is 1695x928 rather than reference 1024x560. Open, half, closed, repeat-open phases are apparent; verify brow height lock, iris position/width, and complete closure at native scale. No resizing or postprocessing performed."
+  }
+}

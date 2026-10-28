@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 82,
+  "emotion": "angry",
+  "asset": "eyes",
+  "generatedUtc": "2026-10-21T22:51:00.3340556Z",
+  "prompt": "Create a pixel-art sprite atlas for NPC082 angry eye expression, using the attached original portrait and 2x2 eye-reference grid as strict identity, palette, scale, and framing references. Output exactly one 2-column by 2-row sheet, row-major: top-left OPEN angry, top-right HALF-CLOSED angry, bottom-left CLOSED angry, bottom-right repeat of the same OPEN angry. Every cell is the complete original upper face half in the same framing as the eye-reference cells, not a cropped eye sticker. Preserve the same brown curly hair, skin, background, face geometry, eye spacing, eye size, compact fixed iris width and pupil position, and soft muted brown pixel palette. Emotion must read as focused anger: inner eyebrow ends lowered and drawn slightly together, outer ends subtly higher, a clear tense V, with narrowed focused lids. Keep brow color, original softness and approximate thickness; no thick black strokes, no harsh eyeliner, no blur or smudged shadows, no added crease marks. Keep both brows identical in all four cells. In open cells preserve the original eye anatomy and compact stationary irises. Half and closed cells must have coherent eyelids that cover the same eyeballs vertically without shrinking or shifting irises sideways. No bright white flashes, no extra eye highlights. Maintain crisp pixel-art edges and the exact 2x2 atlas grid. Do not change hair silhouette, forehead geometry, lighting, crop, or add text/borders.",
+  "references": [
+    {
+      "path": "original.png",
+      "sha256": "37270c9eb3e1260c3774263d512bfd0bab8e144fef129b32a0f065c92aa48d26"
+    },
+    {
+      "path": "eyes-reference-grid.png",
+      "sha256": "8bae461f66a90aa6765a4ab9879e23172d11eb901b6551fe0f910224c970d5a7"
+    }
+  ],
+  "tool": "built-in image_gen",
+  "outputHint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-bfa3-7821-8c10-1973507e5744 as C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-bfa3-7821-8c10-1973507e5744\\exec-a03e7df9-a42d-4cec-a6d0-1a7815dda371.png by default.",
+  "generatedOutputPath": "C:\\Users\\Daniel\\.codex\\generated_images\\01a15fde-bfa3-7821-8c10-1973507e5744\\exec-a03e7df9-a42d-4cec-a6d0-1a7815dda371.png",
+  "rawPath": "raw.png",
+  "rawSha256": "46964164834dd55ddfe1cb30fd87671cb8475883e725e1db9ac18f01f9e123c4",
+  "generatedOutputSha256": "46964164834dd55ddfe1cb30fd87671cb8475883e725e1db9ac18f01f9e123c4",
+  "dimensionsPx": [
+    1695,
+    928
+  ],
+  "grid": "2x2: OPEN, HALF-CLOSED / CLOSED, repeat OPEN",
+  "notes": [
+    "Raw output copied unchanged from exact output path returned by image_gen.",
+    "Emotion/brow clarity and native cell alignment require parent review before native assembly."
+  ]
+}

@@ -80,27 +80,6 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.Equal("father", store.Snapshot().Settlements[0].Households[0].Residents[2].FatherId);
                 Check.Equal(987654u, store.Snapshot().Settlements[0].Households[0].SurnameSeed);
             }));
-            cases.Add(("Legacy saves retain adults and historical appearances without inventing family ties", () => {
-                foreach (int version in new[] { 1, 2 })
-                {
-                    // Actual old field shape: no surname, sex, age or relationship fields.
-                    string json = "{\"Version\":" + version + ",\"WorldSeed\":42,\"Settlements\":[{\"SettlementId\":100,\"Households\":[{\"BuildingKey\":10,\"Residents\":[{\"Id\":\"old0\",\"HomeKey\":10,\"AppearanceSeed\":2,\"IsAlive\":false},{\"Id\":\"old1\",\"HomeKey\":10,\"AppearanceSeed\":3}]}]}],\"Routines\":[]}";
-                    var old = JsonSerializer.Deserialize<WorldState>(json, Json);
-                    if (version == 1) old.Routines = null;
-                    else old.Routines.Add(Visit("old1"));
-                    var store = new WorldStateStore(0); store.Restore(old); var saved = store.Snapshot();
-                    Check.Equal(new WorldState().Version, saved.Version); var home = saved.Settlements[0].Households[0];
-                    Check.Equal(2, home.Residents.Count);
-                    Check.Equal(StableSeed.Combine(42, 100, 10, 0xfffffffe), home.SurnameSeed);
-                    Check.Equal("old0", home.Residents[0].Id); Check.Equal(2u, home.Residents[0].AppearanceSeed);
-                    Check.True(!home.Residents[0].IsAlive); Check.Equal(ResidentSex.Male, home.Residents[0].Sex);
-                    Check.Equal(ResidentSex.Female, home.Residents[1].Sex);
-                    Check.True(home.Residents.All(r => r.AgeGroup == ResidentAgeGroup.Adult && r.PartnerId == null && r.MotherId == null && r.FatherId == null));
-                    Check.True(store.ReadNpcHouseholdKnowledge("old1").ToContext().Contains("does not prove childlessness"));
-                    Check.Equal(version == 1 ? 0 : 1, saved.Routines.Count);
-                    if (version == 2) Check.Equal(12d, saved.Routines[0].Residents[0].Route[1].X);
-                }
-            }));
             var corruptions = new Dictionary<string, Action<Household>> {
                 { "unknown age", h => h.Residents[2].AgeGroup = (ResidentAgeGroup)99 },
                 { "unknown sex", h => h.Residents[0].Sex = (ResidentSex)99 },

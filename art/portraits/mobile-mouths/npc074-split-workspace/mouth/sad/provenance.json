@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T10:34:08.5291119Z",
+    "portraitRecord":  74,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "sad",
+    "prompt":  "Use case: stylized-concept\nAsset type: pixel-art NPC sad speech-mouth atlas for a retro RPG portrait\nPrimary request: Create one 3-by-3 atlas of only this portrait\u0027s lower 64x29 face region. Row-major cells A, B, C / D, E, F / G, H, X. Give the same NPC a restrained sad delivery: gentle downturned lip corners and muted expression, without changing the face identity.\nInput image: Use only the provided exact NPC074 mouth reference grid as the visual guide for the original muted lip color, small mouth scale, skin, jaw, nose edge, hair/blue ornament framing and native pixel clusters.\nSubject: The same long light-brown/blond-haired fantasy NPC with a blue ornament along the left edge. Keep the source\u0027s soft warm palette and very small mouth scale.\nStyle/medium: Crisp restrained 1990s pixel-art portrait with hard pixel edges matching the reference; no smoothing or antialiasing.\nComposition/framing: Exact 3x3 grid with nine equal cells, each matching a 64:29 landscape lower-face crop. Identical crop, scale and alignment in every cell; no gaps, borders, labels or text.\nConstraints: Change only lips and the mouth interior within the natural mouth contour. Keep muted pink-brown lips, subdued gray-ivory teeth, natural skin transitions, jaw/nose/hair/ornament registration and stable sad expression. A and X are closed: A has gently pressed lips as for P/B/M; X is relaxed closed idle. B is a narrow opening with nearly together teeth for consonants/EE. C is a medium unrounded EH/AE opening. D is a wide AA opening. E is a slightly rounded AO/ER opening, no wider than C. F is a puckered UW/OW/W opening. G shows upper teeth touching the lower lip for F/V. H shows a raised tongue behind the upper teeth for L, with an opening between C and D. Use teeth only where the pose calls for them, muted and small; cavity stays dark and tongue stays subtle. Keep closed A/X simple and lip-sized. Avoid lipstick-red color, bright white teeth, big grin, exaggerated corners, broad mouth, extra shadow-brow or facial changes, teeth/tongue in poses that do not call for them, hair/skin/jaw edits, text, labels, watermark or antialiasing.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-2ca0bc79-96ed-4c22-8075-b1e2f63c560f.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-2ca0bc79-96ed-4c22-8075-b1e2f63c560f.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "409365dd3ee1fdc22b39b274c14042a887129728fa4a1a771a4996c443b289ae",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "fb9c8ade231ed63083cb2e8913d0227f84681dca1515de3e03a14898c767e061",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161f3-bf3d-7a13-bcc1-6f81db2928d8\\exec-2ca0bc79-96ed-4c22-8075-b1e2f63c560f.png",
+                      "sha256":  "cc4d81f2154a91d9cb42b7aa4825d9082aec6d6efba454022d313828973149dc",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/sad/raw.png",
+                "sha256":  "cc4d81f2154a91d9cb42b7aa4825d9082aec6d6efba454022d313828973149dc",
+                "width":  1863,
+                "height":  844
+            }
+}

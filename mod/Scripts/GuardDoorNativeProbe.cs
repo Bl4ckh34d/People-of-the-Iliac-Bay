@@ -32,7 +32,7 @@ namespace PeopleOfTheIliacBay.DFU
         internal static IEnumerator Run(PeopleOfTheIliacBayMod host,StreetPopulation streets,string character)
         {
             Require(Environment.GetEnvironmentVariable("POTIB_ROADMAP_PROBE")=="guard-door" &&
-                !string.IsNullOrEmpty(character) && character.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal),
+                !string.IsNullOrEmpty(character) && NativeProbeText.IsTestCharacter(character),
                 "requires guard-door and an owned fixture character.");
             string mode=Environment.GetEnvironmentVariable("POTIB_GUARD_DOOR_MODE")??"witnessed";
             Require(mode=="witnessed" || mode=="unwitnessed","mode must be witnessed or unwitnessed.");

@@ -18,10 +18,10 @@ namespace PeopleOfTheIliacBay.DFU
             WorldStateStore store,Fixture fixture)
         {
             var game=GameManager.Instance;
-            Need(fixture!=null && fixture.mapId==187853213 && roads && store!=null && streets.Ready &&
+            Need(fixture!=null && fixture.mapId==187853213 && fixture.stagedDoorDistance>=2.2f && fixture.stagedDoorDistance<=8 && roads && store!=null && streets.Ready &&
                 !game.PlayerEnterExit.IsPlayerInsideDungeon && NativeProbeText.IsTestCharacter(game.PlayerEntity.Name),
                 "Dungeon staging requires an owned loaded settlement/Inn, its real population, and the explicit Privateer's Hold map.");
-            if(string.IsNullOrWhiteSpace(fixture.residentId))fixture.residentId=host.FindPaidCompanionProbeCandidate();
+            yield return FindOrdinaryFixtureCompanion(host,streets,store,fixture);
             Need(!string.IsNullOrWhiteSpace(fixture.residentId),"No actual nearby eligible adventurer exists; use the ordinary traveler warmup or supply an existing paid resident ID.");
             var actor=streets.FindActor(fixture.residentId);if(!actor)actor=roads.FindPaidCompanion(fixture.residentId);
             Need(actor && actor.Resident!=null && actor.Resident.IsAlive && actor.gameObject.activeInHierarchy &&
@@ -53,8 +53,11 @@ namespace PeopleOfTheIliacBay.DFU
                 }
                 finally{store.TryCloseNpcConversationCommandSession(session);}
                 action=store.ActiveNpcAction(fixture.residentId);
-                Need(NpcPaidCompanionTravel.TryReadActiveTravel(store,action,Now(),out paid) && game.PlayerEntity.GetGoldAmount()==fundedPurse-fee,
-                    "Existing native hire admission did not debit exactly the quoted level-based wage.");
+                int paidPurse=game.PlayerEntity.GetGoldAmount();
+                Need(paidPurse==fundedPurse-fee,"Native hire debit mismatch: before="+fundedPurse+"; after="+paidPurse+"; quoted="+fee);
+                Need(NpcPaidCompanionTravel.TryReadActiveTravel(store,action,Now(),out paid),
+                    "Native hire contract is not active at the actual clock: now="+Now()+"; accepted="+(action==null?-1:action.AcceptedAt)+
+                    "; finish="+(action==null?-1:action.FinishAt)+"; paidJob="+NpcPaidCompanionAction.IsPaidFollowJob(action));
                 Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DUNGEON_FOLLOW_STAGE_HIRE: resident="+fixture.residentId+"; action="+action.Id+
                     "; nativeDebit="+fee+"; contract="+paid.ContractId+"; explicitFixtureConsent=true; dialogueModel=false");
             }
@@ -72,21 +75,34 @@ namespace PeopleOfTheIliacBay.DFU
                 location.Loaded && location.HasDungeon && location.MapTableData.MapId==fixture.mapId,"Native Privateer's Hold location is unavailable.");
             var pixel=MapsFile.LongitudeLatitudeToMapPixel(location.MapTableData.Longitude,location.MapTableData.Latitude);
             game.StreamingWorld.TeleportToCoordinates(pixel.X,pixel.Y,StreamingWorld.RepositionMethods.RandomStartMarker);
-            DaggerfallStaticDoors entranceOwner=null;StaticDoor entrance=default(StaticDoor);float deadline=Time.realtimeSinceStartup+90;
+            DaggerfallStaticDoors entranceOwner=null;StaticDoor entrance=default(StaticDoor);float deadline=Time.realtimeSinceStartup+30;
+            Vector3 normal=Vector3.zero,doorGround=Vector3.zero,playerGround=Vector3.zero,actorGround=Vector3.zero;bool floorsReady=false;
             while(Time.realtimeSinceStartup<deadline)
             {
                 var directory=game.StreamingWorld.GetCurrentBuildingDirectory();
                 if(game.StreamingWorld.IsReady && !game.StreamingWorld.IsRepositioningPlayer && directory && directory.MapID==fixture.mapId &&
                     game.PlayerGPS.HasCurrentLocation && game.PlayerGPS.CurrentLocation.MapTableData.MapId==fixture.mapId)
                 {
+                    entranceOwner=null;float lowest=float.MaxValue;
                     foreach(var collection in directory.GetComponentsInChildren<DaggerfallStaticDoors>())
                     {
-                        foreach(var door in collection.Doors??new StaticDoor[0])
-                            if(door.doorType==DoorTypes.DungeonEntrance){entranceOwner=collection;entrance=door;break;}
-                        if(entranceOwner)break;
+                        foreach(var raw in collection.Doors??new StaticDoor[0])
+                        {
+                            if(raw.doorType!=DoorTypes.DungeonEntrance)continue;
+                            var door=raw;door.ownerPosition=collection.transform.position;door.ownerRotation=collection.transform.rotation;
+                            float height=DaggerfallStaticDoors.GetDoorPosition(door).y;
+                            if(height>=lowest)continue;lowest=height;entranceOwner=collection;entrance=door;
+                        }
                     }
                     actor=roads.FindPaidCompanion(fixture.residentId);
-                    if(entranceOwner && actor)break;
+                    if(entranceOwner && actor)
+                    {
+                        normal=DaggerfallStaticDoors.GetDoorNormal(entrance);normal.y=0;normal.Normalize();
+                        doorGround=StreetPopulation.FollowExteriorDoorGround(entrance);
+                        floorsReady=normal.sqrMagnitude>0.9f && StaticFloor(doorGround,null,out doorGround) &&
+                            StaticFloor(doorGround+normal*0.8f,null,out playerGround) && StaticFloor(doorGround+normal*fixture.stagedDoorDistance,null,out actorGround);
+                        if(floorsReady)break;
+                    }
                 }
                 yield return null;
             }
@@ -94,10 +110,7 @@ namespace PeopleOfTheIliacBay.DFU
             action=store.ReadNpcAction(actionId);Need(action!=null && !NpcActionExecutor.IsTerminal(action),"Staged native transport ended its paid action.");
             actor.CaptureState();Need(InventorySignature(store.ReadNpcInventory(fixture.residentId))==inventory && ContractSignature(store,action)==contract,
                 "Staged native transport changed resident native inventory, wallet or paid contract.");
-            var normal=DaggerfallStaticDoors.GetDoorNormal(entrance);normal.y=0;normal.Normalize();
-            var doorGround=StreetPopulation.FollowExteriorDoorGround(entrance);Vector3 playerGround=Vector3.zero,actorGround=Vector3.zero;
-            Need(normal.sqrMagnitude>0.9f && StaticFloor(doorGround+normal*0.8f,null,out playerGround) &&
-                StaticFloor(doorGround+normal*2.2f,null,out actorGround),"Actual dungeon entrance has no measured staging floors.");
+            Need(floorsReady,"Actual owner-bound dungeon entrance has no measured staging floors within 30 seconds.");
             Need(BodyClear(playerGround,playerGround,actor.transform,true) && BodyClear(actorGround,actorGround,actor.transform,true) &&
                 ClearSupportedRoute(new[]{actorGround,doorGround},null,actor.transform),"Actual native door staging points or approach are obstructed.");
             var controller=game.PlayerMotor.GetComponent<CharacterController>();bool controllerEnabled=controller && controller.enabled;

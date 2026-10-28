@@ -83,6 +83,7 @@ namespace PeopleOfTheIliacBay.DFU
                 draft.Pairs.Add(new NpcInnServiceSeatPair{First=a.Position,Second=b.Position,FirstCounterToSeat=a.FromCounter,
                     SecondCounterToSeat=b.FromCounter,FirstSeatToEntry=a.ToEntry,SecondSeatToEntry=b.ToEntry});points+=count;
             }
+            if(draft.Pairs.Count>0)NpcInnServiceCatalog.CanonicalizeMeasuredRoutes(draft);
         }
     }
 }

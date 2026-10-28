@@ -21,7 +21,7 @@ namespace PeopleOfTheIliacBay.DFU
             Action<NpcActionJob> completedTransfer = null)
         {
             var game=GameManager.Instance;
-            Need(game.PlayerEntity.Name=="PeopleOfTheIliacBayTest-9a5f197b" && Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-action-probe")>=0,
+            Need(game.PlayerEntity.Name=="Hakon Ironhand" && Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-action-probe")>=0,
                 "explicit disposable action fixture required");
             var room=game.PlayerEnterExit.Interior;
             var geometry=(InteriorGeometry)typeof(StreetPopulation).GetField("indoorGeometry",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(streets);

@@ -137,8 +137,10 @@ namespace PeopleOfTheIliacBay.DFU
             if (disposition <= -100)
             {
                 const string response="I do not wish to speak with you. Leave me alone.";
+                string speakerName = GameManager.Instance.TalkManager.NameNPC;
+                string hudResponse = string.IsNullOrWhiteSpace(speakerName) ? response : speakerName + ": " + response;
                 DaggerfallUI.Instance.PopToHUD();
-                DaggerfallUI.AddHUDText(response);
+                DaggerfallUI.AddHUDText(hudResponse);
                 return response;
             }
             if (!IsConversationAtOwnedPlace(out place)) return null;

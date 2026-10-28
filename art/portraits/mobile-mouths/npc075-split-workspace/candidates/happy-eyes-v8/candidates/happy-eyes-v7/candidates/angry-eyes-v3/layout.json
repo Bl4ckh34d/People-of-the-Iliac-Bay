@@ -1,0 +1,403 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 75,
+  "bank": "TFAC00I0.RCI",
+  "width": 64,
+  "height": 64,
+  "splitY": 35,
+  "browLockEndY": 24,
+  "eyeRegions": [
+    {
+      "x": 18,
+      "y": 15,
+      "width": 15,
+      "height": 18
+    },
+    {
+      "x": 38,
+      "y": 15,
+      "width": 13,
+      "height": 18
+    }
+  ],
+  "mouthRegion": {
+    "x": 21,
+    "y": 40,
+    "width": 22,
+    "height": 12
+  },
+  "source": {
+    "path": "art/portraits/mobile-mouths/split-mask-prototype/catalog/common-075.png",
+    "sha256": "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98"
+  },
+  "calibrationStatus": "parent-inspected native source; source hair fringe locked at y15-16; generated phases require review",
+  "calibrationEvidence": [
+    "work/portrait075-full-preflight/common-075-native-grid.png",
+    "work/portrait075-full-preflight/feature-zoom.png",
+    "work/portrait075-full-preflight/source-boundary-followup.md"
+  ],
+  "sourceHairCutoutsWithinEyeEnvelopes": [
+    {
+      "x": 18,
+      "y": 15,
+      "width": 4,
+      "height": 2,
+      "side": "left",
+      "reason": "dark hairline occupies upper-left envelope; exact feather edge uncertain"
+    },
+    {
+      "x": 41,
+      "y": 15,
+      "width": 10,
+      "height": 2,
+      "side": "right",
+      "reason": "dark hair fringe occupies upper-right envelope; exact feather edge uncertain"
+    }
+  ],
+  "calibrationReason": "Keep the proposed full brow envelopes and 36 explicit source-upper locks for the two fringe rectangles across six moods/three phases. Hair locks are entirely above inclusive brow end24; selected open master then preserves these same pixels in all thinking phases. Do not move or recolor irises. Inspect generated brow endpoints against fringe locks before accepting.",
+  "maskContract": "The two eyeRegions are bounding envelopes, not safe rectangular composite masks. Subtract sourceHairCutoutsWithinEyeEnvelopes before any future composite. Recheck native open/half/closed phases.",
+  "eyeFeatureLocks": [
+    {
+      "emotion": "neutral",
+      "phase": "open",
+      "sourceFile": "source-upper.png",
+      "x": 18,
+      "y": 15,
+      "width": 4,
+      "height": 2
+    },
+    {
+      "emotion": "neutral",
+      "phase": "open",
+      "sourceFile": "source-upper.png",
+      "x": 41,
+      "y": 15,
+      "width": 10,
+      "height": 2
+    },
+    {
+      "emotion": "neutral",
+      "phase": "half",
+      "sourceFile": "source-upper.png",
+      "x": 18,
+      "y": 15,
+      "width": 4,
+      "height": 2
+    },
+    {
+      "emotion": "neutral",
+      "phase": "half",
+      "sourceFile": "source-upper.png",
+      "x": 41,
+      "y": 15,
+      "width": 10,
+      "height": 2
+    },
+    {
+      "emotion": "neutral",
+      "phase": "closed",
+      "sourceFile": "source-upper.png",
+      "x": 18,
+      "y": 15,
+      "width": 4,
+      "height": 2
+    },
+    {
+      "emotion": "neutral",
+      "phase": "closed",
+      "sourceFile": "source-upper.png",
+      "x": 41,
+      "y": 15,
+      "width": 10,
+      "height": 2
+    },
+    {
+      "emotion": "happy",
+      "phase": "open",
+      "sourceFile": "source-upper.png",
+      "x": 18,
+      "y": 15,
+      "width": 4,
+      "height": 2
+    },
+    {
+      "emotion": "happy",
+      "phase": "open",
+      "sourceFile": "source-upper.png",
+      "x": 41,
+      "y": 15,
+      "width": 10,
+      "height": 2
+    },
+    {
+      "emotion": "happy",
+      "phase": "half",
+      "sourceFile": "source-upper.png",
+      "x": 18,
+      "y": 15,
+      "width": 4,
+      "height": 2
+    },
+    {
+      "emotion": "happy",
+      "phase": "half",
+      "sourceFile": "source-upper.png",
+      "x": 41,
+      "y": 15,
+      "width": 10,
+      "height": 2
+    },
+    {
+      "emotion": "happy",
+      "phase": "closed",
+      "sourceFile": "source-upper.png",
+      "x": 18,
+      "y": 15,
+      "width": 4,
+      "height": 2
+    },
+    {
+      "emotion": "happy",
+      "phase": "closed",
+      "sourceFile": "source-upper.png",
+      "x": 41,
+      "y": 15,
+      "width": 10,
+      "height": 2
+    },
+    {
+      "emotion": "angry",
+      "phase": "open",
+      "sourceFile": "source-upper.png",
+      "x": 18,
+      "y": 15,
+      "width": 4,
+      "height": 2
+    },
+    {
+      "emotion": "angry",
+      "phase": "open",
+      "sourceFile": "source-upper.png",
+      "x": 41,
+      "y": 15,
+      "width": 10,
+      "height": 2
+    },
+    {
+      "emotion": "angry",
+      "phase": "half",
+      "sourceFile": "source-upper.png",
+      "x": 18,
+      "y": 15,
+      "width": 4,
+      "height": 2
+    },
+    {
+      "emotion": "angry",
+      "phase": "half",
+      "sourceFile": "source-upper.png",
+      "x": 41,
+      "y": 15,
+      "width": 10,
+      "height": 2
+    },
+    {
+      "emotion": "angry",
+      "phase": "closed",
+      "sourceFile": "source-upper.png",
+      "x": 18,
+      "y": 15,
+      "width": 4,
+      "height": 2
+    },
+    {
+      "emotion": "angry",
+      "phase": "closed",
+      "sourceFile": "source-upper.png",
+      "x": 41,
+      "y": 15,
+      "width": 10,
+      "height": 2
+    },
+    {
+      "emotion": "sad",
+      "phase": "open",
+      "sourceFile": "source-upper.png",
+      "x": 18,
+      "y": 15,
+      "width": 4,
+      "height": 2
+    },
+    {
+      "emotion": "sad",
+      "phase": "open",
+      "sourceFile": "source-upper.png",
+      "x": 41,
+      "y": 15,
+      "width": 10,
+      "height": 2
+    },
+    {
+      "emotion": "sad",
+      "phase": "half",
+      "sourceFile": "source-upper.png",
+      "x": 18,
+      "y": 15,
+      "width": 4,
+      "height": 2
+    },
+    {
+      "emotion": "sad",
+      "phase": "half",
+      "sourceFile": "source-upper.png",
+      "x": 41,
+      "y": 15,
+      "width": 10,
+      "height": 2
+    },
+    {
+      "emotion": "sad",
+      "phase": "closed",
+      "sourceFile": "source-upper.png",
+      "x": 18,
+      "y": 15,
+      "width": 4,
+      "height": 2
+    },
+    {
+      "emotion": "sad",
+      "phase": "closed",
+      "sourceFile": "source-upper.png",
+      "x": 41,
+      "y": 15,
+      "width": 10,
+      "height": 2
+    },
+    {
+      "emotion": "afraid",
+      "phase": "open",
+      "sourceFile": "source-upper.png",
+      "x": 18,
+      "y": 15,
+      "width": 4,
+      "height": 2
+    },
+    {
+      "emotion": "afraid",
+      "phase": "open",
+      "sourceFile": "source-upper.png",
+      "x": 41,
+      "y": 15,
+      "width": 10,
+      "height": 2
+    },
+    {
+      "emotion": "afraid",
+      "phase": "half",
+      "sourceFile": "source-upper.png",
+      "x": 18,
+      "y": 15,
+      "width": 4,
+      "height": 2
+    },
+    {
+      "emotion": "afraid",
+      "phase": "half",
+      "sourceFile": "source-upper.png",
+      "x": 41,
+      "y": 15,
+      "width": 10,
+      "height": 2
+    },
+    {
+      "emotion": "afraid",
+      "phase": "closed",
+      "sourceFile": "source-upper.png",
+      "x": 18,
+      "y": 15,
+      "width": 4,
+      "height": 2
+    },
+    {
+      "emotion": "afraid",
+      "phase": "closed",
+      "sourceFile": "source-upper.png",
+      "x": 41,
+      "y": 15,
+      "width": 10,
+      "height": 2
+    },
+    {
+      "emotion": "guarded",
+      "phase": "open",
+      "sourceFile": "source-upper.png",
+      "x": 18,
+      "y": 15,
+      "width": 4,
+      "height": 2
+    },
+    {
+      "emotion": "guarded",
+      "phase": "open",
+      "sourceFile": "source-upper.png",
+      "x": 41,
+      "y": 15,
+      "width": 10,
+      "height": 2
+    },
+    {
+      "emotion": "guarded",
+      "phase": "half",
+      "sourceFile": "source-upper.png",
+      "x": 18,
+      "y": 15,
+      "width": 4,
+      "height": 2
+    },
+    {
+      "emotion": "guarded",
+      "phase": "half",
+      "sourceFile": "source-upper.png",
+      "x": 41,
+      "y": 15,
+      "width": 10,
+      "height": 2
+    },
+    {
+      "emotion": "guarded",
+      "phase": "closed",
+      "sourceFile": "source-upper.png",
+      "x": 18,
+      "y": 15,
+      "width": 4,
+      "height": 2
+    },
+    {
+      "emotion": "guarded",
+      "phase": "closed",
+      "sourceFile": "source-upper.png",
+      "x": 41,
+      "y": 15,
+      "width": 10,
+      "height": 2
+    }
+  ],
+  "sourceSelections": {
+    "mouths": {
+      "happy": {
+        "file": "candidates/happy-mouth-v2/mouth/happy/raw.png"
+      }
+    },
+    "eyes": {
+      "happy": {
+        "file": "candidates/happy-eyes-v3/eyes/happy/raw.png"
+      },
+      "guarded": {
+        "file": "candidates/guarded-eyes-v2/eyes/guarded/raw.png"
+      },
+      "angry": {
+        "file": "candidates/angry-eyes-v2/eyes/angry/raw.png"
+      }
+    }
+  }
+}

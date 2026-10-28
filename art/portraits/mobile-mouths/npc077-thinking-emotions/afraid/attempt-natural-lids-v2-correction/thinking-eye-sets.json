@@ -1,0 +1,2005 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 77,
+  "bank": "TFAC00I0.RCI",
+  "thinkingEyeSets": [
+    {
+      "id": "up-left",
+      "label": "Up-left",
+      "phases": {
+        "open": {
+          "file": "eyes/thinking/up-left/open.png",
+          "sha256": "82b98a2028fd1b84c2d6290260739cc96280cd2fac067fa859a50190e7f03528",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "842c9d179525ab0db0ef0ee1d6a1578251456219db9475cd7d54e5c847b18ba4"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 0,
+            "cellColumn": 0,
+            "cellIndex": 0,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "half": {
+          "file": "eyes/thinking/up-left/half.png",
+          "sha256": "e1fa489dc3bedd94ab1ac44684f5b44a939f75d1d785d2d613849c2ef3a4f726",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/half.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "842c9d179525ab0db0ef0ee1d6a1578251456219db9475cd7d54e5c847b18ba4"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1"
+            },
+            {
+              "file": "eyes/afraid/half.png",
+              "sha256": "ab92909e2b69ac61abe6c73dd6fdff8d6ececaf34f664f75e8a51ba539b23676"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 0,
+            "cellColumn": 0,
+            "cellIndex": 0,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": [
+              {
+                "x": 15,
+                "y": 23,
+                "width": 16,
+                "height": 3
+              },
+              {
+                "x": 34,
+                "y": 23,
+                "width": 17,
+                "height": 3
+              }
+            ],
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 99,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "closed": {
+          "file": "eyes/thinking/up-left/closed.png",
+          "sha256": "a7f2d2f3464b33b107dbade023d251569f2db2f0b0fa9ca221c6c71cc8e0abc8",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/closed.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "842c9d179525ab0db0ef0ee1d6a1578251456219db9475cd7d54e5c847b18ba4"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1"
+            },
+            {
+              "file": "eyes/afraid/closed.png",
+              "sha256": "a7f2d2f3464b33b107dbade023d251569f2db2f0b0fa9ca221c6c71cc8e0abc8"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 0,
+            "cellColumn": 0,
+            "cellIndex": 0,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 297,
+            "halfLidOffset": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "up",
+      "label": "Up",
+      "phases": {
+        "open": {
+          "file": "eyes/thinking/up/open.png",
+          "sha256": "be6c582eade032dd7a3a6438923257e589b478b328adca6b7794a9ee4615db8c",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "842c9d179525ab0db0ef0ee1d6a1578251456219db9475cd7d54e5c847b18ba4"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 0,
+            "cellColumn": 1,
+            "cellIndex": 1,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "half": {
+          "file": "eyes/thinking/up/half.png",
+          "sha256": "96112131f39cf80e7529707117c5983c3a889a0efd9451321ffef2eaf77d69be",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/half.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "842c9d179525ab0db0ef0ee1d6a1578251456219db9475cd7d54e5c847b18ba4"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1"
+            },
+            {
+              "file": "eyes/afraid/half.png",
+              "sha256": "ab92909e2b69ac61abe6c73dd6fdff8d6ececaf34f664f75e8a51ba539b23676"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 0,
+            "cellColumn": 1,
+            "cellIndex": 1,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": [
+              {
+                "x": 15,
+                "y": 23,
+                "width": 16,
+                "height": 3
+              },
+              {
+                "x": 34,
+                "y": 23,
+                "width": 17,
+                "height": 3
+              }
+            ],
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 99,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "closed": {
+          "file": "eyes/thinking/up/closed.png",
+          "sha256": "a7f2d2f3464b33b107dbade023d251569f2db2f0b0fa9ca221c6c71cc8e0abc8",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/closed.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "842c9d179525ab0db0ef0ee1d6a1578251456219db9475cd7d54e5c847b18ba4"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1"
+            },
+            {
+              "file": "eyes/afraid/closed.png",
+              "sha256": "a7f2d2f3464b33b107dbade023d251569f2db2f0b0fa9ca221c6c71cc8e0abc8"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 0,
+            "cellColumn": 1,
+            "cellIndex": 1,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 297,
+            "halfLidOffset": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "up-right",
+      "label": "Up-right",
+      "phases": {
+        "open": {
+          "file": "eyes/thinking/up-right/open.png",
+          "sha256": "08a8ac6e53ccfe509daa6c8f43989b035c8d42a6f7a3411b84bdeef7dd70cb41",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "842c9d179525ab0db0ef0ee1d6a1578251456219db9475cd7d54e5c847b18ba4"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 0,
+            "cellColumn": 2,
+            "cellIndex": 2,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "half": {
+          "file": "eyes/thinking/up-right/half.png",
+          "sha256": "3358f5fbf317b049ec7c2615eb08c438e162b22d3db3db7c202f8d88e878ae99",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/half.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "842c9d179525ab0db0ef0ee1d6a1578251456219db9475cd7d54e5c847b18ba4"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1"
+            },
+            {
+              "file": "eyes/afraid/half.png",
+              "sha256": "ab92909e2b69ac61abe6c73dd6fdff8d6ececaf34f664f75e8a51ba539b23676"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 0,
+            "cellColumn": 2,
+            "cellIndex": 2,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": [
+              {
+                "x": 15,
+                "y": 23,
+                "width": 16,
+                "height": 3
+              },
+              {
+                "x": 34,
+                "y": 23,
+                "width": 17,
+                "height": 3
+              }
+            ],
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 99,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "closed": {
+          "file": "eyes/thinking/up-right/closed.png",
+          "sha256": "a7f2d2f3464b33b107dbade023d251569f2db2f0b0fa9ca221c6c71cc8e0abc8",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/closed.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "842c9d179525ab0db0ef0ee1d6a1578251456219db9475cd7d54e5c847b18ba4"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1"
+            },
+            {
+              "file": "eyes/afraid/closed.png",
+              "sha256": "a7f2d2f3464b33b107dbade023d251569f2db2f0b0fa9ca221c6c71cc8e0abc8"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 0,
+            "cellColumn": 2,
+            "cellIndex": 2,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 297,
+            "halfLidOffset": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "left",
+      "label": "Left",
+      "phases": {
+        "open": {
+          "file": "eyes/thinking/left/open.png",
+          "sha256": "26dc8474078ddfb7dfce1e55294c62c92d64abf23e2d11f9f098cd2d3270c704",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "842c9d179525ab0db0ef0ee1d6a1578251456219db9475cd7d54e5c847b18ba4"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 1,
+            "cellColumn": 0,
+            "cellIndex": 3,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          },
+          "changedPixels": 554,
+          "reviewedRepair20261023": {
+            "candidateSha256": "26dc8474078ddfb7dfce1e55294c62c92d64abf23e2d11f9f098cd2d3270c704",
+            "previousSha256": "336c56d20dd511f109dd82c49bc9b9c852da3a9169a2bc077bdba2f75afb0e49",
+            "masterSha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1",
+            "allowedSourceChangeRegions": [
+              [
+                19,
+                25,
+                28,
+                26
+              ],
+              [
+                38,
+                25,
+                48,
+                26
+              ]
+            ],
+            "method": "Generated upper-lash donor registered per eye, palette mapped; OPEN lash row25 and HALF rows25-27 only; original gaze pixels below lash, lower lids and brows preserved."
+          }
+        },
+        "half": {
+          "file": "eyes/thinking/left/half.png",
+          "sha256": "eb134be1677f90b506e7ecc8ad818453f373b0f593009480cbc9028a5e6aac03",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/half.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "842c9d179525ab0db0ef0ee1d6a1578251456219db9475cd7d54e5c847b18ba4"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1"
+            },
+            {
+              "file": "eyes/afraid/half.png",
+              "sha256": "ab92909e2b69ac61abe6c73dd6fdff8d6ececaf34f664f75e8a51ba539b23676"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 1,
+            "cellColumn": 0,
+            "cellIndex": 3,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": [
+              {
+                "x": 15,
+                "y": 23,
+                "width": 16,
+                "height": 3
+              },
+              {
+                "x": 34,
+                "y": 23,
+                "width": 17,
+                "height": 3
+              }
+            ],
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 99,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          },
+          "changedPixels": 551,
+          "reviewedRepair20261023": {
+            "candidateSha256": "eb134be1677f90b506e7ecc8ad818453f373b0f593009480cbc9028a5e6aac03",
+            "previousSha256": "a8fb9a239462d0dc6ab86548254102c8b0d10050fa18ff7e2a610f648a584013",
+            "masterSha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1",
+            "allowedSourceChangeRegions": [
+              [
+                19,
+                25,
+                28,
+                28
+              ],
+              [
+                38,
+                25,
+                48,
+                28
+              ]
+            ],
+            "method": "Generated upper-lash donor registered per eye, palette mapped; OPEN lash row25 and HALF rows25-27 only; original gaze pixels below lash, lower lids and brows preserved."
+          }
+        },
+        "closed": {
+          "file": "eyes/thinking/left/closed.png",
+          "sha256": "a7f2d2f3464b33b107dbade023d251569f2db2f0b0fa9ca221c6c71cc8e0abc8",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/closed.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "842c9d179525ab0db0ef0ee1d6a1578251456219db9475cd7d54e5c847b18ba4"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1"
+            },
+            {
+              "file": "eyes/afraid/closed.png",
+              "sha256": "a7f2d2f3464b33b107dbade023d251569f2db2f0b0fa9ca221c6c71cc8e0abc8"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 1,
+            "cellColumn": 0,
+            "cellIndex": 3,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 297,
+            "halfLidOffset": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "center",
+      "label": "Center",
+      "phases": {
+        "open": {
+          "file": "eyes/thinking/center/open.png",
+          "sha256": "1cca7b0bc49e5bcea3a703e426438de3c20a8195cc8b9195b12bdb71e978aee8",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "842c9d179525ab0db0ef0ee1d6a1578251456219db9475cd7d54e5c847b18ba4"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 1,
+            "cellColumn": 1,
+            "cellIndex": 4,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "half": {
+          "file": "eyes/thinking/center/half.png",
+          "sha256": "0d3598ba934879256d28beb6f125788a5cee36dc8625278253d92c6eb5cc3504",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/half.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "842c9d179525ab0db0ef0ee1d6a1578251456219db9475cd7d54e5c847b18ba4"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1"
+            },
+            {
+              "file": "eyes/afraid/half.png",
+              "sha256": "ab92909e2b69ac61abe6c73dd6fdff8d6ececaf34f664f75e8a51ba539b23676"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 1,
+            "cellColumn": 1,
+            "cellIndex": 4,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": [
+              {
+                "x": 15,
+                "y": 23,
+                "width": 16,
+                "height": 3
+              },
+              {
+                "x": 34,
+                "y": 23,
+                "width": 17,
+                "height": 3
+              }
+            ],
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 99,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "closed": {
+          "file": "eyes/thinking/center/closed.png",
+          "sha256": "a7f2d2f3464b33b107dbade023d251569f2db2f0b0fa9ca221c6c71cc8e0abc8",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/closed.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "842c9d179525ab0db0ef0ee1d6a1578251456219db9475cd7d54e5c847b18ba4"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1"
+            },
+            {
+              "file": "eyes/afraid/closed.png",
+              "sha256": "a7f2d2f3464b33b107dbade023d251569f2db2f0b0fa9ca221c6c71cc8e0abc8"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 1,
+            "cellColumn": 1,
+            "cellIndex": 4,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 297,
+            "halfLidOffset": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "right",
+      "label": "Right",
+      "phases": {
+        "open": {
+          "file": "eyes/thinking/right/open.png",
+          "sha256": "1342b4918cf0225e37fbee3034a15628434da7eb8d7fb38b3d27d44622ab4850",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "842c9d179525ab0db0ef0ee1d6a1578251456219db9475cd7d54e5c847b18ba4"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 1,
+            "cellColumn": 2,
+            "cellIndex": 5,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          },
+          "changedPixels": 554,
+          "reviewedRepair20261023": {
+            "candidateSha256": "1342b4918cf0225e37fbee3034a15628434da7eb8d7fb38b3d27d44622ab4850",
+            "previousSha256": "6b1a5a63c5024437e1ad29aee84ecf11243dd8ff844d935b4f80d08ff71ebcd6",
+            "masterSha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1",
+            "allowedSourceChangeRegions": [
+              [
+                19,
+                25,
+                28,
+                26
+              ],
+              [
+                38,
+                25,
+                48,
+                26
+              ]
+            ],
+            "method": "Generated upper-lash donor registered per eye, palette mapped; OPEN lash row25 and HALF rows25-27 only; original gaze pixels below lash, lower lids and brows preserved."
+          }
+        },
+        "half": {
+          "file": "eyes/thinking/right/half.png",
+          "sha256": "11e4450082f8bca4dd55c1a5236c6edbbe8c70c174753ae045c7550998f43a56",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/half.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "842c9d179525ab0db0ef0ee1d6a1578251456219db9475cd7d54e5c847b18ba4"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1"
+            },
+            {
+              "file": "eyes/afraid/half.png",
+              "sha256": "ab92909e2b69ac61abe6c73dd6fdff8d6ececaf34f664f75e8a51ba539b23676"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 1,
+            "cellColumn": 2,
+            "cellIndex": 5,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": [
+              {
+                "x": 15,
+                "y": 23,
+                "width": 16,
+                "height": 3
+              },
+              {
+                "x": 34,
+                "y": 23,
+                "width": 17,
+                "height": 3
+              }
+            ],
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 99,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          },
+          "changedPixels": 551,
+          "reviewedRepair20261023": {
+            "candidateSha256": "11e4450082f8bca4dd55c1a5236c6edbbe8c70c174753ae045c7550998f43a56",
+            "previousSha256": "f077716558ad79ecf4651df017e217c74ee550b1d31a00387932d3e105c48033",
+            "masterSha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1",
+            "allowedSourceChangeRegions": [
+              [
+                19,
+                25,
+                28,
+                28
+              ],
+              [
+                38,
+                25,
+                48,
+                28
+              ]
+            ],
+            "method": "Generated upper-lash donor registered per eye, palette mapped; OPEN lash row25 and HALF rows25-27 only; original gaze pixels below lash, lower lids and brows preserved."
+          }
+        },
+        "closed": {
+          "file": "eyes/thinking/right/closed.png",
+          "sha256": "a7f2d2f3464b33b107dbade023d251569f2db2f0b0fa9ca221c6c71cc8e0abc8",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/closed.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "842c9d179525ab0db0ef0ee1d6a1578251456219db9475cd7d54e5c847b18ba4"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1"
+            },
+            {
+              "file": "eyes/afraid/closed.png",
+              "sha256": "a7f2d2f3464b33b107dbade023d251569f2db2f0b0fa9ca221c6c71cc8e0abc8"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 1,
+            "cellColumn": 2,
+            "cellIndex": 5,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 297,
+            "halfLidOffset": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "down-left",
+      "label": "Down-left",
+      "phases": {
+        "open": {
+          "file": "eyes/thinking/down-left/open.png",
+          "sha256": "987ed06d1e58bdd9cfc4bd8a25bb0312de1973abaf126c92ed4644a6d75b4fe2",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "842c9d179525ab0db0ef0ee1d6a1578251456219db9475cd7d54e5c847b18ba4"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 2,
+            "cellColumn": 0,
+            "cellIndex": 6,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "half": {
+          "file": "eyes/thinking/down-left/half.png",
+          "sha256": "3f8ce51c61c7a39ad9f220c4a74d0880db3eb4daccb485da2532c7fcef4db75e",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/half.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "842c9d179525ab0db0ef0ee1d6a1578251456219db9475cd7d54e5c847b18ba4"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1"
+            },
+            {
+              "file": "eyes/afraid/half.png",
+              "sha256": "ab92909e2b69ac61abe6c73dd6fdff8d6ececaf34f664f75e8a51ba539b23676"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 2,
+            "cellColumn": 0,
+            "cellIndex": 6,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": [
+              {
+                "x": 15,
+                "y": 23,
+                "width": 16,
+                "height": 3
+              },
+              {
+                "x": 34,
+                "y": 23,
+                "width": 17,
+                "height": 3
+              }
+            ],
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 99,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "closed": {
+          "file": "eyes/thinking/down-left/closed.png",
+          "sha256": "a7f2d2f3464b33b107dbade023d251569f2db2f0b0fa9ca221c6c71cc8e0abc8",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/closed.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "842c9d179525ab0db0ef0ee1d6a1578251456219db9475cd7d54e5c847b18ba4"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1"
+            },
+            {
+              "file": "eyes/afraid/closed.png",
+              "sha256": "a7f2d2f3464b33b107dbade023d251569f2db2f0b0fa9ca221c6c71cc8e0abc8"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 2,
+            "cellColumn": 0,
+            "cellIndex": 6,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 297,
+            "halfLidOffset": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "down",
+      "label": "Down",
+      "phases": {
+        "open": {
+          "file": "eyes/thinking/down/open.png",
+          "sha256": "f942a989d27448e1a7ffc49fc0ec4d454d4347ab2b302407211aa5abe549a492",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "842c9d179525ab0db0ef0ee1d6a1578251456219db9475cd7d54e5c847b18ba4"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 2,
+            "cellColumn": 1,
+            "cellIndex": 7,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "half": {
+          "file": "eyes/thinking/down/half.png",
+          "sha256": "8928f8b86b934e4465be61bc1e31fea12048c47dd21d943e40b217f2aa2eff72",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/half.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "842c9d179525ab0db0ef0ee1d6a1578251456219db9475cd7d54e5c847b18ba4"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1"
+            },
+            {
+              "file": "eyes/afraid/half.png",
+              "sha256": "ab92909e2b69ac61abe6c73dd6fdff8d6ececaf34f664f75e8a51ba539b23676"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 2,
+            "cellColumn": 1,
+            "cellIndex": 7,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": [
+              {
+                "x": 15,
+                "y": 23,
+                "width": 16,
+                "height": 3
+              },
+              {
+                "x": 34,
+                "y": 23,
+                "width": 17,
+                "height": 3
+              }
+            ],
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 99,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "closed": {
+          "file": "eyes/thinking/down/closed.png",
+          "sha256": "a7f2d2f3464b33b107dbade023d251569f2db2f0b0fa9ca221c6c71cc8e0abc8",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/closed.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "842c9d179525ab0db0ef0ee1d6a1578251456219db9475cd7d54e5c847b18ba4"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1"
+            },
+            {
+              "file": "eyes/afraid/closed.png",
+              "sha256": "a7f2d2f3464b33b107dbade023d251569f2db2f0b0fa9ca221c6c71cc8e0abc8"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 2,
+            "cellColumn": 1,
+            "cellIndex": 7,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 297,
+            "halfLidOffset": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "down-right",
+      "label": "Down-right",
+      "phases": {
+        "open": {
+          "file": "eyes/thinking/down-right/open.png",
+          "sha256": "e397f2806080b1aa59f7cebaf545f4af3a813a4b475e1802c17dfc42ff2099d1",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "842c9d179525ab0db0ef0ee1d6a1578251456219db9475cd7d54e5c847b18ba4"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 2,
+            "cellColumn": 2,
+            "cellIndex": 8,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "half": {
+          "file": "eyes/thinking/down-right/half.png",
+          "sha256": "cf246fa7e3cf48b4e493b86b44277dec4c6154f9095362e8de0a045f1423e49e",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/half.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "842c9d179525ab0db0ef0ee1d6a1578251456219db9475cd7d54e5c847b18ba4"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1"
+            },
+            {
+              "file": "eyes/afraid/half.png",
+              "sha256": "ab92909e2b69ac61abe6c73dd6fdff8d6ececaf34f664f75e8a51ba539b23676"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 2,
+            "cellColumn": 2,
+            "cellIndex": 8,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": [
+              {
+                "x": 15,
+                "y": 23,
+                "width": 16,
+                "height": 3
+              },
+              {
+                "x": 34,
+                "y": 23,
+                "width": 17,
+                "height": 3
+              }
+            ],
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 99,
+            "closedEyePixels": 0,
+            "halfLidOffset": 0
+          }
+        },
+        "closed": {
+          "file": "eyes/thinking/down-right/closed.png",
+          "sha256": "a7f2d2f3464b33b107dbade023d251569f2db2f0b0fa9ca221c6c71cc8e0abc8",
+          "sourceFiles": [
+            "eyes/thinking/raw.png",
+            "eyes/afraid/closed.png",
+            "eyes/afraid/open.png"
+          ],
+          "sourceHashes": [
+            {
+              "file": "original.png",
+              "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+            },
+            {
+              "file": "eyes/thinking/raw.png",
+              "sha256": "842c9d179525ab0db0ef0ee1d6a1578251456219db9475cd7d54e5c847b18ba4"
+            },
+            {
+              "file": "eyes/afraid/open.png",
+              "sha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1"
+            },
+            {
+              "file": "eyes/afraid/closed.png",
+              "sha256": "a7f2d2f3464b33b107dbade023d251569f2db2f0b0fa9ca221c6c71cc8e0abc8"
+            }
+          ],
+          "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+          "geometry": {
+            "width": 64,
+            "height": 35,
+            "splitY": 35,
+            "cellRow": 2,
+            "cellColumn": 2,
+            "cellIndex": 8,
+            "eyeRegions": [
+              {
+                "height": 17,
+                "width": 16,
+                "y": 15,
+                "x": 15
+              },
+              {
+                "height": 17,
+                "width": 17,
+                "y": 15,
+                "x": 34
+              }
+            ],
+            "halfLidRegions": {},
+            "halfLidOffset": 0,
+            "browLockEndY": 22,
+            "nearestNeighbor": true
+          },
+          "checks": {
+            "outsideMaskChangedPixels": 0,
+            "browLockPixels": 264,
+            "halfLidOverlayPixels": 0,
+            "closedEyePixels": 297,
+            "halfLidOffset": 0
+          }
+        }
+      }
+    }
+  ],
+  "source": {
+    "original": "original.png",
+    "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+    "referenceGrid": "thinking-reference-grid.png",
+    "referenceSha256": "f40aa448fc8e958a3615e54c27b84cdf496a6c7e1d9fc818d5a294353bbb2a6f",
+    "rawAtlas": "eyes/thinking/raw.png",
+    "rawAtlasSha256": "842c9d179525ab0db0ef0ee1d6a1578251456219db9475cd7d54e5c847b18ba4",
+    "referenceUpper": {
+      "file": "eyes/afraid/open.png",
+      "sha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1"
+    },
+    "browMaster": {
+      "file": "eyes/afraid/open.png",
+      "sha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1"
+    },
+    "halfLid": {
+      "file": "eyes/afraid/half.png",
+      "sha256": "ab92909e2b69ac61abe6c73dd6fdff8d6ececaf34f664f75e8a51ba539b23676"
+    },
+    "closedEye": {
+      "file": "eyes/afraid/closed.png",
+      "sha256": "a7f2d2f3464b33b107dbade023d251569f2db2f0b0fa9ca221c6c71cc8e0abc8"
+    }
+  },
+  "geometry": {
+    "width": 64,
+    "height": 64,
+    "splitY": 35,
+    "frameWidth": 64,
+    "frameHeight": 35,
+    "eyeRegions": [
+      {
+        "height": 17,
+        "width": 16,
+        "y": 15,
+        "x": 15
+      },
+      {
+        "height": 17,
+        "width": 17,
+        "y": 15,
+        "x": 34
+      }
+    ],
+    "halfLidRegions": [
+      {
+        "x": 15,
+        "y": 23,
+        "width": 16,
+        "height": 3
+      },
+      {
+        "x": 34,
+        "y": 23,
+        "width": 17,
+        "height": 3
+      }
+    ],
+    "halfLidOffsetsByGaze": {
+      "up-left": 0,
+      "up": 0,
+      "up-right": 0,
+      "left": 0,
+      "center": 0,
+      "right": 0,
+      "down-left": 0,
+      "down": 0,
+      "down-right": 0
+    },
+    "browLockEndY": 22,
+    "reference": {
+      "width": 1536,
+      "height": 840,
+      "scale": 8,
+      "cells": 9,
+      "exactSourceCells": true
+    },
+    "rawAspect": 1.8295577130528586,
+    "rawAspectTolerance": 0.01,
+    "cellOrder": [
+      "up-left",
+      "up",
+      "up-right",
+      "left",
+      "center",
+      "right",
+      "down-left",
+      "down",
+      "down-right"
+    ]
+  },
+  "inputHashes": [
+    {
+      "file": "layout.json",
+      "sha256": "2b54678470e2778b95bda1524b157cd89b3cf477d226da07ee0c203d9500adc5"
+    },
+    {
+      "file": "thinking-layout.json",
+      "sha256": "a2e3872291693844275e8a6074809f3160d7099b8b96065873c22f74d1fe2287"
+    },
+    {
+      "file": "setup-provenance.json",
+      "sha256": "9655c2b815b694ccffade3b877aec4b9a14d22a3a33df4e94653ddcd8565fe7d"
+    },
+    {
+      "file": "original.png",
+      "sha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125"
+    },
+    {
+      "file": "thinking-reference-grid.png",
+      "sha256": "f40aa448fc8e958a3615e54c27b84cdf496a6c7e1d9fc818d5a294353bbb2a6f"
+    },
+    {
+      "file": "eyes/thinking/raw.png",
+      "sha256": "842c9d179525ab0db0ef0ee1d6a1578251456219db9475cd7d54e5c847b18ba4"
+    },
+    {
+      "file": "eyes/afraid/open.png",
+      "sha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1"
+    },
+    {
+      "file": "eyes/afraid/half.png",
+      "sha256": "ab92909e2b69ac61abe6c73dd6fdff8d6ececaf34f664f75e8a51ba539b23676"
+    },
+    {
+      "file": "eyes/afraid/closed.png",
+      "sha256": "a7f2d2f3464b33b107dbade023d251569f2db2f0b0fa9ca221c6c71cc8e0abc8"
+    }
+  ],
+  "verification": {
+    "result": "pixel-invariants-pass-not-visual-acceptance",
+    "phaseCount": 27,
+    "expectedPhaseCount": 27,
+    "gazeSetCount": 9,
+    "expectedGazeSetCount": 9,
+    "sourceHashesUnchanged": true,
+    "referenceExact": true,
+    "outsideMaskChangedPixels": 0,
+    "noExistingOutputsOverwritten": true
+  },
+  "emotionId": "afraid"
+}

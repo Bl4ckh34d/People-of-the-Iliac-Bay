@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T10:09:51.6788690Z",
+    "portraitRecord":  73,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "afraid",
+    "prompt":  "Use case: stylized-concept\nAsset type: native pixel-art emotional speech-mouth atlas for an NPC portrait\nInput images: the single attached local mouth reference grid; it is the exact original lower-half face crop and identity reference.\n\nCreate one exact 3×3 atlas. Every cell is the same complete 64:29 lower-half crop, with no labels, borders, gutters, margins, text, extra panels or decorations. Row-major cells are A B C / D E F / G H X. Keep every cell aligned to the original face and pixel grid.\n\nExpression: NPC073 afraid. Keep the mouth restrained and tense, with a small worried set to the lips; fearful rather than screaming, sobbing, angry or smiling. Preserve the original lip scale, pink/terracotta hue, center, jaw, nose, chin, neck, side hair and background registration. Do not add lipstick-red color, broad skin patches, large cavities, shiny bright teeth, tooth gaps, or any face/hair/jaw changes.\n\nUse these exact Rhubarb mouth-shape definitions:\nA: pressured closed lips for P/B/M.\nB: narrow opening, teeth nearly together, for consonants and EE.\nC: medium unrounded opening for EH/AE.\nD: wide AA opening.\nE: slightly rounded AO/ER opening, no wider than C.\nF: puckered UW/OW/W lips.\nG: upper teeth touch the lower lip for F/V.\nH: tongue raised behind the upper teeth for L, with an opening between C and D.\nX: relaxed closed idle.\n\nFor the afraid emotion, closed A/X may show the restrained fearful tension while remaining clearly closed. Match the original muted pink lips and warm-brown palette. Any visible teeth should be muted neutral ivory/gray, visibly distinct from skin but not bright or glossy; cavity contrast should remain modest. Keep pixel clusters crisp at native resolution with no blur, smoothing, antialiasing, gradients or vector-like shapes.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-a6ae64d1-f6fe-40d5-8820-7e9907cbae22.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-a6ae64d1-f6fe-40d5-8820-7e9907cbae22.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "8505d9e9fde3c536cf08958e97076aba44aa5d60e2e76ba6fc3fdb1384b8d643",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "9de10294b0248c194428d55abb5ba8cd5db8e0fc0f5225856c816e765b076f52",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-a6ae64d1-f6fe-40d5-8820-7e9907cbae22.png",
+                      "sha256":  "3646b80b6cb66b236247ceb469c66e78c01763098a1367cb62102d731916abcb",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/afraid/raw.png",
+                "sha256":  "3646b80b6cb66b236247ceb469c66e78c01763098a1367cb62102d731916abcb",
+                "width":  1863,
+                "height":  844
+            }
+}

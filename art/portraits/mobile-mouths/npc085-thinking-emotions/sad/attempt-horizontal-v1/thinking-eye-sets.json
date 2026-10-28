@@ -1,0 +1,673 @@
+﻿{
+    "schemaVersion":  1,
+    "portraitRecord":  85,
+    "bank":  "TFAC00I0.RCI",
+    "thinkingEyeSets":  [
+                            {
+                                "id":  "left",
+                                "label":  "Left",
+                                "phases":  {
+                                               "open":  {
+                                                            "file":  "eyes/thinking/left/open.png",
+                                                            "sha256":  "3516861911014d81376fe089f2796b1813a172b0ca9a90a93dc6cd8bc121d9a0",
+                                                            "sourceFiles":  [
+                                                                                "eyes/thinking/raw.png",
+                                                                                "eyes/sad/open-brow-master-repaired.png"
+                                                                            ],
+                                                            "sourceHashes":  [
+                                                                                 {
+                                                                                     "file":  "original.png",
+                                                                                     "sha256":  "8381f07edb8751dd0dfa93e4049c5ae00563c75ba9b0bb1fb5dfa80ca2a001d4"
+                                                                                 },
+                                                                                 {
+                                                                                     "file":  "eyes/thinking/raw.png",
+                                                                                     "sha256":  "6209d23ee3a756d2a283dac34f5ca6e22e70d04e463fac4fd22cf18fc40d7434"
+                                                                                 },
+                                                                                 {
+                                                                                     "file":  "eyes/sad/open-brow-master-repaired.png",
+                                                                                     "sha256":  "ff054ef11d1f41bd838de6d607247d6932d375b6fbc3c82c96b91ef40096f111"
+                                                                                 }
+                                                                             ],
+                                                            "sourceSha256":  "8381f07edb8751dd0dfa93e4049c5ae00563c75ba9b0bb1fb5dfa80ca2a001d4",
+                                                            "geometry":  {
+                                                                             "width":  64,
+                                                                             "height":  35,
+                                                                             "splitY":  35,
+                                                                             "cellRow":  0,
+                                                                             "cellColumn":  0,
+                                                                             "cellIndex":  0,
+                                                                             "eyeRegions":  [
+                                                                                                {
+                                                                                                    "x":  14,
+                                                                                                    "y":  11,
+                                                                                                    "width":  17,
+                                                                                                    "height":  19
+                                                                                                },
+                                                                                                {
+                                                                                                    "x":  33,
+                                                                                                    "y":  11,
+                                                                                                    "width":  18,
+                                                                                                    "height":  19
+                                                                                                }
+                                                                                            ],
+                                                                             "originalLockRegions":  [
+
+                                                                                                     ],
+                                                                             "halfLidRegions":  {
+
+                                                                                                },
+                                                                             "halfLidOffset":  0,
+                                                                             "browLockEndY":  16,
+                                                                             "nearestNeighbor":  true,
+                                                                             "browBoundaryPixels":  [
+                                                                                                        {
+                                                                                                            "x":  13,
+                                                                                                            "y":  15,
+                                                                                                            "expectedOriginalRgb":  [
+                                                                                                                                        99,
+                                                                                                                                        63,
+                                                                                                                                        31
+                                                                                                                                    ],
+                                                                                                            "expectedBrowRgb":  [
+                                                                                                                                    126,
+                                                                                                                                    78,
+                                                                                                                                    44
+                                                                                                                                ]
+                                                                                                        }
+                                                                                                    ],
+                                                                             "browBoundarySource":  {
+                                                                                                        "file":  "eyes/sad/open-brow-master-repaired.png",
+                                                                                                        "sha256":  "ff054ef11d1f41bd838de6d607247d6932d375b6fbc3c82c96b91ef40096f111"
+                                                                                                    }
+                                                                         },
+                                                            "checks":  {
+                                                                           "outsideMaskChangedPixels":  1,
+                                                                           "browLockPixels":  210,
+                                                                           "originalLockPixels":  0,
+                                                                           "halfLidOverlayPixels":  0,
+                                                                           "closedEyePixels":  0,
+                                                                           "halfLidOffset":  0,
+                                                                           "browBoundaryPixelComparisons":  1,
+                                                                           "declaredOutsideMaskChangedPixels":  1
+                                                                       }
+                                                        },
+                                               "half":  {
+                                                            "file":  "eyes/thinking/left/half.png",
+                                                            "sha256":  "30b90eec9f0cc2eb2890fdf7fbf24cf894e42dc9ead8f52b7daa8136de37fefd",
+                                                            "sourceFiles":  [
+                                                                                "eyes/thinking/raw.png",
+                                                                                "eyes/sad/open-brow-master-repaired.png"
+                                                                            ],
+                                                            "sourceHashes":  [
+                                                                                 {
+                                                                                     "file":  "original.png",
+                                                                                     "sha256":  "8381f07edb8751dd0dfa93e4049c5ae00563c75ba9b0bb1fb5dfa80ca2a001d4"
+                                                                                 },
+                                                                                 {
+                                                                                     "file":  "eyes/thinking/raw.png",
+                                                                                     "sha256":  "6209d23ee3a756d2a283dac34f5ca6e22e70d04e463fac4fd22cf18fc40d7434"
+                                                                                 },
+                                                                                 {
+                                                                                     "file":  "eyes/sad/open-brow-master-repaired.png",
+                                                                                     "sha256":  "ff054ef11d1f41bd838de6d607247d6932d375b6fbc3c82c96b91ef40096f111"
+                                                                                 }
+                                                                             ],
+                                                            "sourceSha256":  "8381f07edb8751dd0dfa93e4049c5ae00563c75ba9b0bb1fb5dfa80ca2a001d4",
+                                                            "geometry":  {
+                                                                             "width":  64,
+                                                                             "height":  35,
+                                                                             "splitY":  35,
+                                                                             "cellRow":  1,
+                                                                             "cellColumn":  0,
+                                                                             "cellIndex":  2,
+                                                                             "eyeRegions":  [
+                                                                                                {
+                                                                                                    "x":  14,
+                                                                                                    "y":  11,
+                                                                                                    "width":  17,
+                                                                                                    "height":  19
+                                                                                                },
+                                                                                                {
+                                                                                                    "x":  33,
+                                                                                                    "y":  11,
+                                                                                                    "width":  18,
+                                                                                                    "height":  19
+                                                                                                }
+                                                                                            ],
+                                                                             "originalLockRegions":  [
+
+                                                                                                     ],
+                                                                             "halfLidRegions":  {
+
+                                                                                                },
+                                                                             "halfLidOffset":  0,
+                                                                             "browLockEndY":  16,
+                                                                             "nearestNeighbor":  true,
+                                                                             "browBoundaryPixels":  [
+                                                                                                        {
+                                                                                                            "x":  13,
+                                                                                                            "y":  15,
+                                                                                                            "expectedOriginalRgb":  [
+                                                                                                                                        99,
+                                                                                                                                        63,
+                                                                                                                                        31
+                                                                                                                                    ],
+                                                                                                            "expectedBrowRgb":  [
+                                                                                                                                    126,
+                                                                                                                                    78,
+                                                                                                                                    44
+                                                                                                                                ]
+                                                                                                        }
+                                                                                                    ],
+                                                                             "browBoundarySource":  {
+                                                                                                        "file":  "eyes/sad/open-brow-master-repaired.png",
+                                                                                                        "sha256":  "ff054ef11d1f41bd838de6d607247d6932d375b6fbc3c82c96b91ef40096f111"
+                                                                                                    }
+                                                                         },
+                                                            "checks":  {
+                                                                           "outsideMaskChangedPixels":  1,
+                                                                           "browLockPixels":  210,
+                                                                           "originalLockPixels":  0,
+                                                                           "halfLidOverlayPixels":  0,
+                                                                           "closedEyePixels":  0,
+                                                                           "halfLidOffset":  0,
+                                                                           "browBoundaryPixelComparisons":  1,
+                                                                           "declaredOutsideMaskChangedPixels":  1
+                                                                       }
+                                                        },
+                                               "closed":  {
+                                                              "file":  "eyes/thinking/left/closed.png",
+                                                              "sha256":  "c0ba6a5472fc004b05f14d6f2439061bba4eac43cdea558d830e4e011fcdbb5e",
+                                                              "sourceFiles":  [
+                                                                                  "eyes/sad/closed.png",
+                                                                                  "eyes/sad/open-brow-master-repaired.png"
+                                                                              ],
+                                                              "sourceHashes":  [
+                                                                                   {
+                                                                                       "file":  "original.png",
+                                                                                       "sha256":  "8381f07edb8751dd0dfa93e4049c5ae00563c75ba9b0bb1fb5dfa80ca2a001d4"
+                                                                                   },
+                                                                                   {
+                                                                                       "file":  "eyes/sad/open-brow-master-repaired.png",
+                                                                                       "sha256":  "ff054ef11d1f41bd838de6d607247d6932d375b6fbc3c82c96b91ef40096f111"
+                                                                                   },
+                                                                                   {
+                                                                                       "file":  "eyes/sad/closed.png",
+                                                                                       "sha256":  "e5c6f22fb76015ec077c1d3c83c46085f5cc03e4a733f73dbfcfae64d8143d04"
+                                                                                   }
+                                                                               ],
+                                                              "sourceSha256":  "8381f07edb8751dd0dfa93e4049c5ae00563c75ba9b0bb1fb5dfa80ca2a001d4",
+                                                              "geometry":  {
+                                                                               "width":  64,
+                                                                               "height":  35,
+                                                                               "splitY":  35,
+                                                                               "cellRow":  null,
+                                                                               "cellColumn":  null,
+                                                                               "cellIndex":  -1,
+                                                                               "eyeRegions":  [
+                                                                                                  {
+                                                                                                      "x":  14,
+                                                                                                      "y":  11,
+                                                                                                      "width":  17,
+                                                                                                      "height":  19
+                                                                                                  },
+                                                                                                  {
+                                                                                                      "x":  33,
+                                                                                                      "y":  11,
+                                                                                                      "width":  18,
+                                                                                                      "height":  19
+                                                                                                  }
+                                                                                              ],
+                                                                               "originalLockRegions":  [
+
+                                                                                                       ],
+                                                                               "halfLidRegions":  {
+
+                                                                                                  },
+                                                                               "halfLidOffset":  0,
+                                                                               "browLockEndY":  16,
+                                                                               "nearestNeighbor":  true,
+                                                                               "browBoundaryPixels":  [
+                                                                                                          {
+                                                                                                              "x":  13,
+                                                                                                              "y":  15,
+                                                                                                              "expectedOriginalRgb":  [
+                                                                                                                                          99,
+                                                                                                                                          63,
+                                                                                                                                          31
+                                                                                                                                      ],
+                                                                                                              "expectedBrowRgb":  [
+                                                                                                                                      126,
+                                                                                                                                      78,
+                                                                                                                                      44
+                                                                                                                                  ]
+                                                                                                          }
+                                                                                                      ],
+                                                                               "browBoundarySource":  {
+                                                                                                          "file":  "eyes/sad/open-brow-master-repaired.png",
+                                                                                                          "sha256":  "ff054ef11d1f41bd838de6d607247d6932d375b6fbc3c82c96b91ef40096f111"
+                                                                                                      }
+                                                                           },
+                                                              "checks":  {
+                                                                             "outsideMaskChangedPixels":  1,
+                                                                             "browLockPixels":  210,
+                                                                             "originalLockPixels":  0,
+                                                                             "halfLidOverlayPixels":  0,
+                                                                             "closedEyePixels":  455,
+                                                                             "halfLidOffset":  0,
+                                                                             "browBoundaryPixelComparisons":  1,
+                                                                             "declaredOutsideMaskChangedPixels":  1
+                                                                         }
+                                                          }
+                                           }
+                            },
+                            {
+                                "id":  "right",
+                                "label":  "Right",
+                                "phases":  {
+                                               "open":  {
+                                                            "file":  "eyes/thinking/right/open.png",
+                                                            "sha256":  "5322ae84e08c207f1b464b5a855b725c7b196d5901887efa468756491b5dd281",
+                                                            "sourceFiles":  [
+                                                                                "eyes/thinking/raw.png",
+                                                                                "eyes/sad/open-brow-master-repaired.png"
+                                                                            ],
+                                                            "sourceHashes":  [
+                                                                                 {
+                                                                                     "file":  "original.png",
+                                                                                     "sha256":  "8381f07edb8751dd0dfa93e4049c5ae00563c75ba9b0bb1fb5dfa80ca2a001d4"
+                                                                                 },
+                                                                                 {
+                                                                                     "file":  "eyes/thinking/raw.png",
+                                                                                     "sha256":  "6209d23ee3a756d2a283dac34f5ca6e22e70d04e463fac4fd22cf18fc40d7434"
+                                                                                 },
+                                                                                 {
+                                                                                     "file":  "eyes/sad/open-brow-master-repaired.png",
+                                                                                     "sha256":  "ff054ef11d1f41bd838de6d607247d6932d375b6fbc3c82c96b91ef40096f111"
+                                                                                 }
+                                                                             ],
+                                                            "sourceSha256":  "8381f07edb8751dd0dfa93e4049c5ae00563c75ba9b0bb1fb5dfa80ca2a001d4",
+                                                            "geometry":  {
+                                                                             "width":  64,
+                                                                             "height":  35,
+                                                                             "splitY":  35,
+                                                                             "cellRow":  0,
+                                                                             "cellColumn":  1,
+                                                                             "cellIndex":  1,
+                                                                             "eyeRegions":  [
+                                                                                                {
+                                                                                                    "x":  14,
+                                                                                                    "y":  11,
+                                                                                                    "width":  17,
+                                                                                                    "height":  19
+                                                                                                },
+                                                                                                {
+                                                                                                    "x":  33,
+                                                                                                    "y":  11,
+                                                                                                    "width":  18,
+                                                                                                    "height":  19
+                                                                                                }
+                                                                                            ],
+                                                                             "originalLockRegions":  [
+
+                                                                                                     ],
+                                                                             "halfLidRegions":  {
+
+                                                                                                },
+                                                                             "halfLidOffset":  0,
+                                                                             "browLockEndY":  16,
+                                                                             "nearestNeighbor":  true,
+                                                                             "browBoundaryPixels":  [
+                                                                                                        {
+                                                                                                            "x":  13,
+                                                                                                            "y":  15,
+                                                                                                            "expectedOriginalRgb":  [
+                                                                                                                                        99,
+                                                                                                                                        63,
+                                                                                                                                        31
+                                                                                                                                    ],
+                                                                                                            "expectedBrowRgb":  [
+                                                                                                                                    126,
+                                                                                                                                    78,
+                                                                                                                                    44
+                                                                                                                                ]
+                                                                                                        }
+                                                                                                    ],
+                                                                             "browBoundarySource":  {
+                                                                                                        "file":  "eyes/sad/open-brow-master-repaired.png",
+                                                                                                        "sha256":  "ff054ef11d1f41bd838de6d607247d6932d375b6fbc3c82c96b91ef40096f111"
+                                                                                                    }
+                                                                         },
+                                                            "checks":  {
+                                                                           "outsideMaskChangedPixels":  1,
+                                                                           "browLockPixels":  210,
+                                                                           "originalLockPixels":  0,
+                                                                           "halfLidOverlayPixels":  0,
+                                                                           "closedEyePixels":  0,
+                                                                           "halfLidOffset":  0,
+                                                                           "browBoundaryPixelComparisons":  1,
+                                                                           "declaredOutsideMaskChangedPixels":  1
+                                                                       }
+                                                        },
+                                               "half":  {
+                                                            "file":  "eyes/thinking/right/half.png",
+                                                            "sha256":  "bbbbd169f91d08bdd2f82e6004871b1e3f7e1d0768a335bddf537838fa8eea1a",
+                                                            "sourceFiles":  [
+                                                                                "eyes/thinking/raw.png",
+                                                                                "eyes/sad/open-brow-master-repaired.png"
+                                                                            ],
+                                                            "sourceHashes":  [
+                                                                                 {
+                                                                                     "file":  "original.png",
+                                                                                     "sha256":  "8381f07edb8751dd0dfa93e4049c5ae00563c75ba9b0bb1fb5dfa80ca2a001d4"
+                                                                                 },
+                                                                                 {
+                                                                                     "file":  "eyes/thinking/raw.png",
+                                                                                     "sha256":  "6209d23ee3a756d2a283dac34f5ca6e22e70d04e463fac4fd22cf18fc40d7434"
+                                                                                 },
+                                                                                 {
+                                                                                     "file":  "eyes/sad/open-brow-master-repaired.png",
+                                                                                     "sha256":  "ff054ef11d1f41bd838de6d607247d6932d375b6fbc3c82c96b91ef40096f111"
+                                                                                 }
+                                                                             ],
+                                                            "sourceSha256":  "8381f07edb8751dd0dfa93e4049c5ae00563c75ba9b0bb1fb5dfa80ca2a001d4",
+                                                            "geometry":  {
+                                                                             "width":  64,
+                                                                             "height":  35,
+                                                                             "splitY":  35,
+                                                                             "cellRow":  1,
+                                                                             "cellColumn":  1,
+                                                                             "cellIndex":  3,
+                                                                             "eyeRegions":  [
+                                                                                                {
+                                                                                                    "x":  14,
+                                                                                                    "y":  11,
+                                                                                                    "width":  17,
+                                                                                                    "height":  19
+                                                                                                },
+                                                                                                {
+                                                                                                    "x":  33,
+                                                                                                    "y":  11,
+                                                                                                    "width":  18,
+                                                                                                    "height":  19
+                                                                                                }
+                                                                                            ],
+                                                                             "originalLockRegions":  [
+
+                                                                                                     ],
+                                                                             "halfLidRegions":  {
+
+                                                                                                },
+                                                                             "halfLidOffset":  0,
+                                                                             "browLockEndY":  16,
+                                                                             "nearestNeighbor":  true,
+                                                                             "browBoundaryPixels":  [
+                                                                                                        {
+                                                                                                            "x":  13,
+                                                                                                            "y":  15,
+                                                                                                            "expectedOriginalRgb":  [
+                                                                                                                                        99,
+                                                                                                                                        63,
+                                                                                                                                        31
+                                                                                                                                    ],
+                                                                                                            "expectedBrowRgb":  [
+                                                                                                                                    126,
+                                                                                                                                    78,
+                                                                                                                                    44
+                                                                                                                                ]
+                                                                                                        }
+                                                                                                    ],
+                                                                             "browBoundarySource":  {
+                                                                                                        "file":  "eyes/sad/open-brow-master-repaired.png",
+                                                                                                        "sha256":  "ff054ef11d1f41bd838de6d607247d6932d375b6fbc3c82c96b91ef40096f111"
+                                                                                                    }
+                                                                         },
+                                                            "checks":  {
+                                                                           "outsideMaskChangedPixels":  1,
+                                                                           "browLockPixels":  210,
+                                                                           "originalLockPixels":  0,
+                                                                           "halfLidOverlayPixels":  0,
+                                                                           "closedEyePixels":  0,
+                                                                           "halfLidOffset":  0,
+                                                                           "browBoundaryPixelComparisons":  1,
+                                                                           "declaredOutsideMaskChangedPixels":  1
+                                                                       }
+                                                        },
+                                               "closed":  {
+                                                              "file":  "eyes/thinking/right/closed.png",
+                                                              "sha256":  "c0ba6a5472fc004b05f14d6f2439061bba4eac43cdea558d830e4e011fcdbb5e",
+                                                              "sourceFiles":  [
+                                                                                  "eyes/sad/closed.png",
+                                                                                  "eyes/sad/open-brow-master-repaired.png"
+                                                                              ],
+                                                              "sourceHashes":  [
+                                                                                   {
+                                                                                       "file":  "original.png",
+                                                                                       "sha256":  "8381f07edb8751dd0dfa93e4049c5ae00563c75ba9b0bb1fb5dfa80ca2a001d4"
+                                                                                   },
+                                                                                   {
+                                                                                       "file":  "eyes/sad/open-brow-master-repaired.png",
+                                                                                       "sha256":  "ff054ef11d1f41bd838de6d607247d6932d375b6fbc3c82c96b91ef40096f111"
+                                                                                   },
+                                                                                   {
+                                                                                       "file":  "eyes/sad/closed.png",
+                                                                                       "sha256":  "e5c6f22fb76015ec077c1d3c83c46085f5cc03e4a733f73dbfcfae64d8143d04"
+                                                                                   }
+                                                                               ],
+                                                              "sourceSha256":  "8381f07edb8751dd0dfa93e4049c5ae00563c75ba9b0bb1fb5dfa80ca2a001d4",
+                                                              "geometry":  {
+                                                                               "width":  64,
+                                                                               "height":  35,
+                                                                               "splitY":  35,
+                                                                               "cellRow":  null,
+                                                                               "cellColumn":  null,
+                                                                               "cellIndex":  -1,
+                                                                               "eyeRegions":  [
+                                                                                                  {
+                                                                                                      "x":  14,
+                                                                                                      "y":  11,
+                                                                                                      "width":  17,
+                                                                                                      "height":  19
+                                                                                                  },
+                                                                                                  {
+                                                                                                      "x":  33,
+                                                                                                      "y":  11,
+                                                                                                      "width":  18,
+                                                                                                      "height":  19
+                                                                                                  }
+                                                                                              ],
+                                                                               "originalLockRegions":  [
+
+                                                                                                       ],
+                                                                               "halfLidRegions":  {
+
+                                                                                                  },
+                                                                               "halfLidOffset":  0,
+                                                                               "browLockEndY":  16,
+                                                                               "nearestNeighbor":  true,
+                                                                               "browBoundaryPixels":  [
+                                                                                                          {
+                                                                                                              "x":  13,
+                                                                                                              "y":  15,
+                                                                                                              "expectedOriginalRgb":  [
+                                                                                                                                          99,
+                                                                                                                                          63,
+                                                                                                                                          31
+                                                                                                                                      ],
+                                                                                                              "expectedBrowRgb":  [
+                                                                                                                                      126,
+                                                                                                                                      78,
+                                                                                                                                      44
+                                                                                                                                  ]
+                                                                                                          }
+                                                                                                      ],
+                                                                               "browBoundarySource":  {
+                                                                                                          "file":  "eyes/sad/open-brow-master-repaired.png",
+                                                                                                          "sha256":  "ff054ef11d1f41bd838de6d607247d6932d375b6fbc3c82c96b91ef40096f111"
+                                                                                                      }
+                                                                           },
+                                                              "checks":  {
+                                                                             "outsideMaskChangedPixels":  1,
+                                                                             "browLockPixels":  210,
+                                                                             "originalLockPixels":  0,
+                                                                             "halfLidOverlayPixels":  0,
+                                                                             "closedEyePixels":  455,
+                                                                             "halfLidOffset":  0,
+                                                                             "browBoundaryPixelComparisons":  1,
+                                                                             "declaredOutsideMaskChangedPixels":  1
+                                                                         }
+                                                          }
+                                           }
+                            }
+                        ],
+    "source":  {
+                   "original":  "original.png",
+                   "sha256":  "8381f07edb8751dd0dfa93e4049c5ae00563c75ba9b0bb1fb5dfa80ca2a001d4",
+                   "referenceGrid":  "thinking-reference-grid.png",
+                   "referenceSha256":  "956f1e2721adb9fa7111d5574b37f8024fddf4ca51d5dc85060341878f19a95e",
+                   "rawAtlas":  "eyes/thinking/raw.png",
+                   "rawAtlasSha256":  "6209d23ee3a756d2a283dac34f5ca6e22e70d04e463fac4fd22cf18fc40d7434",
+                   "referenceUpper":  {
+                                          "file":  "eyes/sad/open.png",
+                                          "sha256":  "0798013733cf4f4212bfde4352a9c27a945967cd0808d17e6d0a267b318f887e"
+                                      },
+                   "browMaster":  {
+                                      "file":  "eyes/sad/open-brow-master-repaired.png",
+                                      "sha256":  "ff054ef11d1f41bd838de6d607247d6932d375b6fbc3c82c96b91ef40096f111"
+                                  },
+                   "halfLid":  {
+                                   "file":  "eyes/sad/half.png",
+                                   "sha256":  "41e8236f805a8c638fc14f9e6925b3871d74921ea120812bbe2db8b6762e8201"
+                               },
+                   "closedEye":  {
+                                     "file":  "eyes/sad/closed.png",
+                                     "sha256":  "e5c6f22fb76015ec077c1d3c83c46085f5cc03e4a733f73dbfcfae64d8143d04"
+                                 },
+                   "browBoundary":  {
+                                        "file":  "eyes/sad/open-brow-master-repaired.png",
+                                        "sha256":  "ff054ef11d1f41bd838de6d607247d6932d375b6fbc3c82c96b91ef40096f111"
+                                    }
+               },
+    "geometry":  {
+                     "width":  64,
+                     "height":  64,
+                     "splitY":  35,
+                     "frameWidth":  64,
+                     "frameHeight":  35,
+                     "eyeRegions":  [
+                                        {
+                                            "x":  14,
+                                            "y":  11,
+                                            "width":  17,
+                                            "height":  19
+                                        },
+                                        {
+                                            "x":  33,
+                                            "y":  11,
+                                            "width":  18,
+                                            "height":  19
+                                        }
+                                    ],
+                     "originalLockRegions":  [
+
+                                             ],
+                     "halfLidRegions":  [
+
+                                        ],
+                     "halfLidOffsetsByGaze":  {
+
+                                              },
+                     "browLockEndY":  16,
+                     "reference":  {
+                                       "width":  1024,
+                                       "height":  560,
+                                       "scale":  8,
+                                       "cells":  4,
+                                       "exactSourceCells":  true,
+                                       "columns":  2,
+                                       "rows":  2
+                                   },
+                     "rawAspect":  1.8265086206896552,
+                     "rawAspectTolerance":  0.01,
+                     "cellOrder":  [
+                                       "left",
+                                       "right"
+                                   ],
+                     "browBoundaryPixels":  [
+                                                {
+                                                    "x":  13,
+                                                    "y":  15,
+                                                    "expectedOriginalRgb":  [
+                                                                                99,
+                                                                                63,
+                                                                                31
+                                                                            ],
+                                                    "expectedBrowRgb":  [
+                                                                            126,
+                                                                            78,
+                                                                            44
+                                                                        ]
+                                                }
+                                            ],
+                     "atlasColumns":  2,
+                     "atlasRows":  2
+                 },
+    "inputHashes":  [
+                        {
+                            "file":  "layout.json",
+                            "sha256":  "c0a775c5adc1c4089029b4c402b8c3a519f9a4f680775a88e8892df9e6a6e373"
+                        },
+                        {
+                            "file":  "thinking-layout.json",
+                            "sha256":  "50033abbbc4fb422d165ca44e067cb3a29f796a220eaf5c75ecf1eb25dc73f72"
+                        },
+                        {
+                            "file":  "setup-provenance.json",
+                            "sha256":  "fdb9189db211b603c12404bb7cce440623975fa44d9707ea14a64d40e895a5cb"
+                        },
+                        {
+                            "file":  "original.png",
+                            "sha256":  "8381f07edb8751dd0dfa93e4049c5ae00563c75ba9b0bb1fb5dfa80ca2a001d4"
+                        },
+                        {
+                            "file":  "thinking-reference-grid.png",
+                            "sha256":  "956f1e2721adb9fa7111d5574b37f8024fddf4ca51d5dc85060341878f19a95e"
+                        },
+                        {
+                            "file":  "eyes/thinking/raw.png",
+                            "sha256":  "6209d23ee3a756d2a283dac34f5ca6e22e70d04e463fac4fd22cf18fc40d7434"
+                        },
+                        {
+                            "file":  "eyes/sad/open.png",
+                            "sha256":  "0798013733cf4f4212bfde4352a9c27a945967cd0808d17e6d0a267b318f887e"
+                        },
+                        {
+                            "file":  "eyes/sad/half.png",
+                            "sha256":  "41e8236f805a8c638fc14f9e6925b3871d74921ea120812bbe2db8b6762e8201"
+                        },
+                        {
+                            "file":  "eyes/sad/closed.png",
+                            "sha256":  "e5c6f22fb76015ec077c1d3c83c46085f5cc03e4a733f73dbfcfae64d8143d04"
+                        },
+                        {
+                            "file":  "eyes/sad/open-brow-master-repaired.png",
+                            "sha256":  "ff054ef11d1f41bd838de6d607247d6932d375b6fbc3c82c96b91ef40096f111"
+                        }
+                    ],
+    "verification":  {
+                         "result":  "pixel-invariants-pass-not-visual-acceptance",
+                         "phaseCount":  6,
+                         "expectedPhaseCount":  6,
+                         "gazeSetCount":  2,
+                         "expectedGazeSetCount":  2,
+                         "sourceHashesUnchanged":  true,
+                         "referenceExact":  true,
+                         "outsideMaskChangedPixels":  6,
+                         "noExistingOutputsOverwritten":  true,
+                         "declaredOutsideMaskChangedPixels":  6,
+                         "undeclaredOutsideMaskChangedPixels":  0,
+                         "pixelComparisons":  13440
+                     },
+    "emotionId":  "sad",
+    "gazeLayout":  "horizontal-pair"
+}

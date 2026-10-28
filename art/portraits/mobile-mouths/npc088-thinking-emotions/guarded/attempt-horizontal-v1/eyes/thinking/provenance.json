@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T08:59:29.2290365Z",
+    "portraitRecord":  88,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Create one clean pixel-art working atlas for NPC 088, guarded emotion, using the supplied reference grid as the exact visual source. Preserve exact face identity, palette, skin shading, dark eye shadow, both source upper- and lower-lid contours, compact aperture shape, compact stepped iris/pupil cluster and its actual muted gray-blue-lavender hue, and the fixed guarded eyebrow shape/expression. Keep all exterior pixels unchanged. Do not widen the eyes, expose more sclera, change the shadow, alter brows, or change the expression.\n\nCanvas: exact 64:35 aspect ratio; 2 columns × 2 rows, no gutters or labels. Top row: LEFT gaze open, RIGHT gaze open. Bottom row: LEFT gaze half-lidded, RIGHT gaze half-lidded. Repeat each phase consistently for both eyes. The only open-phase change from the reference is a very gentle lateral glance of about one native pixel: move existing compact pupils/irises left in left cells and right in right cells, staying within the exact source apertures. Keep the stepped iris cluster shape, size and muted hue unchanged. No broad white bands or extra glint flashes. Half-lids must preserve the exact source open/half aperture contours and lower naturally without adding eye geometry.\n\nKeep the image crisp, low-resolution pixel art with stepped native contours, no smoothing, no painterly detail, no text, no extra panels, and no face redesign.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-d41d64e6-0d44-4b71-a01b-cbc2d19fe514.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-d41d64e6-0d44-4b71-a01b-cbc2d19fe514.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "f2e18bec953ffba12224397a695b2f80ddda822519be1414696b593243bc864c",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "a2dc3d36b363c252bbbe22db272dd7b3e77c9c1957dee7e7d9c8da0ef7f8a712",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fb-3128-7272-a60b-28d0c0b8b9ab\\exec-d41d64e6-0d44-4b71-a01b-cbc2d19fe514.png",
+                      "sha256":  "eca7fc1fe4d2c4825f8d2db7ff7b240baa870bb41f7a6cfba13f56f2a13579d0",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "eca7fc1fe4d2c4825f8d2db7ff7b240baa870bb41f7a6cfba13f56f2a13579d0",
+                "width":  1695,
+                "height":  928
+            }
+}

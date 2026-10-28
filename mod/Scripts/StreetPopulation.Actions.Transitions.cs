@@ -66,8 +66,10 @@ namespace PeopleOfTheIliacBay.DFU
                 if(!actor || !actor.gameObject.activeInHierarchy || !ActionSpaceMatches(job.LastPosition))continue;
                 NpcServiceContract paidContract;
                 bool paidRoad=job.PaidTravelHandoff!=null && NpcPaidCompanionTravel.TryReadActiveTravel(worldStore,job,now,out paidContract);
+                var actionPlan=FindNpcActionPlan(job.ResidentId);
                 if(!entering && !leaving || !actor.Resident.IsAlive || QuestOwned(actor.Resident) || IsAlarmed(job.ResidentId) ||
-                    actor.Resident.IsQuestProtected || worldStore.IsResidentAway(job.ResidentId,now) && !paidRoad)
+                    actor.Resident.IsQuestProtected || worldStore.IsResidentAway(job.ResidentId,now,
+                        ObservedTravelerActionVisit(actionPlan,actor,job)) && !paidRoad && !PaidDoorOwnsTravel(actionPlan,job,now))
                 {EndAction(job,now,"Following ended at an unsupported transition or interruption.",true);continue;}
                 if(routeBudget--<=0)
                 {EndAction(job,now,"Too many followers need this doorway at once.",true);continue;}

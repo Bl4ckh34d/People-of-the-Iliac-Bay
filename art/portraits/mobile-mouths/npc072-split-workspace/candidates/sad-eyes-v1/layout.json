@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "portraitRecord": 72,
+  "bank": "TFAC00I0.RCI",
+  "width": 64,
+  "height": 64,
+  "splitY": 35,
+  "browLockEndY": 19,
+  "eyeRegions": [
+    {
+      "x": 15,
+      "y": 12,
+      "width": 16,
+      "height": 16
+    },
+    {
+      "x": 36,
+      "y": 12,
+      "width": 17,
+      "height": 16
+    }
+  ],
+  "mouthRegion": {
+    "x": 21,
+    "y": 35,
+    "width": 23,
+    "height": 13
+  },
+  "calibrationStatus": "parent-inspected-original; generated phases still require visual review",
+  "calibrationEvidence": "work/portrait072-full-afraid-v1/eye-native-rows.png",
+  "calibrationReason": "Builder-sampled afraid raw has inner brow pixels at native y13, x27-29 and x40-42. Top12 leaves that row opaque and blends only the extra forehead edge; bottom28 and all mouth geometry stay unchanged. Confirm original hair/palette around the expanded mask in composed review.",
+  "sourceSelections": {
+    "eyes": {
+      "guarded": {
+        "file": "candidates/guarded-eyes-v2/eyes/guarded/raw.png"
+      },
+      "sad": {
+        "file": "eyes/sad/raw.png"
+      }
+    }
+  }
+}

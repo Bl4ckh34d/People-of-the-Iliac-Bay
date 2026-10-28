@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "profileId": "common-148-voice-race-04",
+  "portraitId": "common-148",
+  "seed": 952406289,
+  "attributes": {
+    "pitch": "a distinctly high natural soprano register",
+    "timbre": "balanced, warm and clear, with balanced natural resonance",
+    "roughness": "distinctly gravelly but still natural",
+    "breathiness": "clear with little breathiness",
+    "vocalFry": "with minimal habitual creak",
+    "pace": "a slightly brisk conversational pace"
+  },
+  "latentZ": {
+    "pitch": 2.2062194186035646,
+    "brightness": 0.8226200829241663,
+    "resonance": -0.3532806632080819,
+    "roughness": 2.2112236535955687,
+    "breathiness": -1.063828842854019,
+    "vocalFry": 0.7722221907632448,
+    "pace": 1.2727269855812535
+  },
+  "raceCandidates": [
+    "Redguard"
+  ],
+  "accentLabel": "Kenyan English",
+  "accentEvidence": "tools/BreezeTtsTrial/accent_voice_corpus_v2.json",
+  "raceAssignment": "Redguard unambiguous",
+  "stableInstruction": "An adult woman speaking English with clearly recognizable Kenyan English pronunciation and cadence, East African English vowel shaping, even syllable rhythm and clean consonant release. Her individual voice has a distinctly high natural soprano register. Its timbre is balanced, warm and clear, with balanced natural resonance; it is distinctly gravelly but still natural, clear with little breathiness, with minimal habitual creak. Use a slightly brisk conversational pace. Maintain this individual vocal identity. Speak naturally without caricature, shouting, or added vocal events.",
+  "guidanceScale": 4.0,
+  "scope": "gallery voice review; no runtime assignment"
+}

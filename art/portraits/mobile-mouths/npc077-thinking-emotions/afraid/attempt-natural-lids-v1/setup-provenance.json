@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Current-byte emotional thinking input copy; no generated atlas or historical setup is claimed.",
+  "createdUtc": "2026-10-22T05:51:38.034701+00:00",
+  "preparationMethod": "copied approved current source files and manifest-selected emotion phases by bytes",
+  "portraitRecord": 77,
+  "bank": "TFAC00I0.RCI",
+  "sourceWorkspace": "art/portraits/mobile-mouths/split-mask-prototype",
+  "emotionId": "afraid",
+  "sourcePath": "original.png",
+  "sourceSha256": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+  "sourceWidth": 64,
+  "sourceHeight": 64,
+  "splitY": 35,
+  "browLockEndY": 22,
+  "parentComponentHashes": {
+    "open": {
+      "file": "eyes/afraid/open.png",
+      "sha256": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1"
+    },
+    "half": {
+      "file": "eyes/afraid/half.png",
+      "sha256": "ab92909e2b69ac61abe6c73dd6fdff8d6ececaf34f664f75e8a51ba539b23676"
+    },
+    "closed": {
+      "file": "eyes/afraid/closed.png",
+      "sha256": "a7f2d2f3464b33b107dbade023d251569f2db2f0b0fa9ca221c6c71cc8e0abc8"
+    }
+  },
+  "parentManifestSha256": "ac89fa4f794a139cb0d3c761db8181967091da308cc823cf845106b949b40364",
+  "copiedInputs": {
+    "original.png": "4bbb1c9f6bea7561d316fa6587a93fd0c9bcbfa3c9aa0992bb85b804aa213125",
+    "source-upper.png": "1ac0547d22fdefb5dda5874acd21aef2069bc8d55d05513b7724211ff9187db4",
+    "source-lower.png": "727ddb78360be5114c9c1296de4ceb023726055cf58b66d984bbe82061f30367",
+    "layout.json": "2b54678470e2778b95bda1524b157cd89b3cf477d226da07ee0c203d9500adc5",
+    "eyes/afraid/open.png": "a5559ef5791bf72332ff91e6993e260cecdc1d94ca676847f5d2258b936113e1",
+    "eyes/afraid/half.png": "ab92909e2b69ac61abe6c73dd6fdff8d6ececaf34f664f75e8a51ba539b23676",
+    "eyes/afraid/closed.png": "a7f2d2f3464b33b107dbade023d251569f2db2f0b0fa9ca221c6c71cc8e0abc8"
+  },
+  "note": "No generated raw atlas, reference grid, or staging provenance exists yet; the updated emotional-input helper will create and bind the new grid later."
+}

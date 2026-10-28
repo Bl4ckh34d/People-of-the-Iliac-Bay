@@ -37,14 +37,28 @@ namespace PeopleOfTheIliacBay.Tests
                 value=>value=="player" || value==residentId,value=>value=="home:100:10",
                 (value,category,revision)=>false,(value,revision,kind,start,end)=>false,out terms));
             var funding=NpcServiceTransferReceipt.Create("fund:dungeon-follow",id,NpcServiceTransferKind.Funding,
-                "player","contract:"+id+":escrow",120,100);
+                "player",residentId,120,100);
             var ticket=store.CaptureNpcServiceContractWriteTicket();NpcServiceContractLedger reserved;string reason;
             Check.True(NpcServiceContractLedger.TryReserve(ticket.SourceLedger,ticket.ExpectedLedgerRevision,terms,funding,out reserved));
-            Check.True(store.TryCommitNpcServiceContracts(ticket,reserved,new[]{funding},new NpcServiceRenewalAuthorization[0],out reason));
+            Check.True(NpcDailyPaymentFixture.Commit(store,ticket,reserved,funding,out reason));
             Check.True(store.TryBindPaidFollowAction(job.Id,job.Revision,id,out reason));job=store.ReadNpcAction(job.Id);return store;
         }
         public static void Add(List<(string Name,Action Body)> cases)
         {
+            cases.Add(("Dungeon Follow does not arrive across a short disconnected gap", () => {
+                Check.True(!NpcFollowArrival.CanHold(1.2, false, 0));
+            }));
+            cases.Add(("Dungeon Follow does not stop through a wall with a long walking detour", () => {
+                Check.True(!NpcFollowArrival.CanHold(1.2, true, 4.5));
+            }));
+            cases.Add(("Dungeon Follow holds after an actual short walking connection", () => {
+                Check.True(NpcFollowArrival.CanHold(1.2, true, 1.4));
+                Check.True(NpcFollowArrival.CanHold(1.8, true, 1.8));
+                Check.True(!NpcFollowArrival.CanHold(2, true, 2));
+                Check.True(!NpcFollowArrival.CanHold(1.2, true, double.NaN));
+                Check.True(!NpcFollowArrival.CanHold(double.NaN, true, 1.2));
+                Check.True(!NpcFollowArrival.CanHold(1.2, true, -1));
+            }));
             cases.Add(("FOLLOW dungeon paid expiry cannot resume its old exterior owner",()=>{
                 NpcActionJob job;var store=PaidFixture(out job);string contract=NpcPaidCompanionAction.ContractId(job);
                 Check.True(store.TryDeferPaidTravel(job.Id,job.Revision,105));job=store.ReadNpcAction(job.Id);

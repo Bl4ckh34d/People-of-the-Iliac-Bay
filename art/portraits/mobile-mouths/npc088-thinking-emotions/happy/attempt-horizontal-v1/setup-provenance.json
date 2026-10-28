@@ -1,0 +1,78 @@
+{
+  "kind": "current-copy-source-preparation",
+  "createdAtUtc": "2026-10-22T08:10:51.5845387Z",
+  "portraitRecord": 88,
+  "emotionId": "happy",
+  "sourceWorkspace": "art/portraits/mobile-mouths/npc088-split-workspace",
+  "sourceManifestSha256": "bf9d9c3db7f254f19d61b9093bbca8f3e23e974f22fecef39c364ca2b2a99719",
+  "claim": "Copied only immutable original/split and this moodâ€™s selected open/half/closed sources from the current split workspace. No generation, historical art provenance, or source editing is claimed.",
+  "sourceFile": "original.png",
+  "sourceSha256": "f2e18bec953ffba12224397a695b2f80ddda822519be1414696b593243bc864c",
+  "sourceWidth": 64,
+  "sourceHeight": 64,
+  "splitY": 35,
+  "sourceFiles": [
+    "original.png",
+    "source-upper.png",
+    "source-lower.png",
+    "eyes/happy/open.png",
+    "eyes/happy/half.png",
+    "eyes/happy/closed.png"
+  ],
+  "copiedFiles": {
+    "original.png": {
+      "source": "art/portraits/mobile-mouths/npc088-split-workspace/original.png",
+      "sha256": "f2e18bec953ffba12224397a695b2f80ddda822519be1414696b593243bc864c",
+      "sourceSha256": "f2e18bec953ffba12224397a695b2f80ddda822519be1414696b593243bc864c"
+    },
+    "source-upper.png": {
+      "source": "art/portraits/mobile-mouths/npc088-split-workspace/source-upper.png",
+      "sha256": "cad01c900440649ca1eeee2c1164d093f2ee1a58e989f79491f6885c98866f2e",
+      "sourceSha256": "cad01c900440649ca1eeee2c1164d093f2ee1a58e989f79491f6885c98866f2e"
+    },
+    "source-lower.png": {
+      "source": "art/portraits/mobile-mouths/npc088-split-workspace/source-lower.png",
+      "sha256": "88966c837aa4b2866c2cf9c8cb45b92042c5531f01c93cc246f8a000fe651fe3",
+      "sourceSha256": "88966c837aa4b2866c2cf9c8cb45b92042c5531f01c93cc246f8a000fe651fe3"
+    },
+    "layout.json": {
+      "source": "art/portraits/mobile-mouths/npc088-split-workspace/layout.json",
+      "sha256": "7f11fda12344421d7ac66de127f09d3c591572fb9d8cfa8ca759a4fe073113cf",
+      "sourceSha256": "0af7cc0bf528176fc94faae244fd9bdd44d9f04223f00f4cb4f480ac4ee9075f"
+    },
+    "eyes/happy/open.png": {
+      "source": "art/portraits/mobile-mouths/npc088-split-workspace/eyes/happy/open.png",
+      "sha256": "46840102af8927369feed344f245459121545328213bf728def1d3bf1f2b8d3a",
+      "sourceSha256": "46840102af8927369feed344f245459121545328213bf728def1d3bf1f2b8d3a"
+    },
+    "eyes/happy/half.png": {
+      "source": "art/portraits/mobile-mouths/npc088-split-workspace/eyes/happy/half.png",
+      "sha256": "07d781bb7a054c6a58007db69969cf30b3833154c7cd15bd36471c8c000b481a",
+      "sourceSha256": "07d781bb7a054c6a58007db69969cf30b3833154c7cd15bd36471c8c000b481a"
+    },
+    "eyes/happy/closed.png": {
+      "source": "art/portraits/mobile-mouths/npc088-split-workspace/eyes/happy/closed.png",
+      "sha256": "fe79c75d472d04f7457947fe21a095b43c513d5ca10a7cbcce9ba13655212719",
+      "sourceSha256": "fe79c75d472d04f7457947fe21a095b43c513d5ca10a7cbcce9ba13655212719"
+    }
+  },
+  "sourceLayoutSha256": "0af7cc0bf528176fc94faae244fd9bdd44d9f04223f00f4cb4f480ac4ee9075f",
+  "workspaceLayoutSha256": "7f11fda12344421d7ac66de127f09d3c591572fb9d8cfa8ca759a4fe073113cf",
+  "browLockEndY": 18,
+  "browInspection": "Native 64x35 phase crops inspected; preserve happy brow through row 18 inclusively, then candidate eye area. Provisional source-only setting for parent review.",
+  "referenceGrid": {
+    "file": "thinking-reference-grid.png",
+    "sha256": "40ad2e13b1cb8e2a1958001ec0f1b2571aae1f2316140ed5658e86700b1e80c4",
+    "width": 1024,
+    "height": 560,
+    "nearestNeighborScale": 8,
+    "cellOrder": [
+      "open-left",
+      "open-right",
+      "half-left",
+      "half-right"
+    ]
+  },
+  "candidateWorkspace": "art/portraits/mobile-mouths/npc088-thinking-emotions/happy/attempt-horizontal-v1",
+  "notCopied": "No current manifest or legacy thinking map was copied into this mood root; no mouth source or unrelated mood source was copied."
+}

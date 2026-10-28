@@ -314,31 +314,16 @@ namespace PeopleOfTheIliacBay.Core
         {
             var result = new List<NpcInnConsumptionCursor>();
             var buyerIds = new HashSet<string>(StringComparer.Ordinal);
-            if (source.Version >= 45)
             {
                 Require(source.NpcInnConsumptionCursors != null, "Missing NPC inn-consumption cursors.");
                 foreach (NpcInnConsumptionCursor cursor in source.NpcInnConsumptionCursors)
                 {
-                    Require(source.Version>=74 || cursor.SourceKind==null && !cursor.ServiceStartsAt.HasValue,
-                        "Old schema contains future projected Inn receipt provenance.");
-                    Require(source.Version>=70 || cursor.HouseholdDayId==null && cursor.HouseholdSourceFingerprint==null,
-                        "Old schema contains future shared Inn cursor fields.");
                     NpcInnConsumptionCursor copy = NpcInnConsumption.CopyCursor(cursor);
                     bool alive;
                     Require(buyerIds.Add(copy.BuyerId) && KnownNpcIdentity(validated, copy.BuyerId, out alive),
                         "Unknown or duplicate NPC inn-consumption buyer.");
                     result.Add(copy);
                 }
-            }
-            else
-            {
-                // Older saves only retain the receipt attached to the current visit.
-                foreach (ObservedVisit visit in validated.ObservedVisits)
-                    if (visit.InnConsumption != null)
-                    {
-                        result.Add(NpcInnConsumption.CreateCursor(visit, visit.InnConsumption));
-                        buyerIds.Add(visit.ResidentId);
-                    }
             }
             foreach (ObservedVisit visit in validated.ObservedVisits)
                 if (visit.InnConsumption != null)
@@ -413,7 +398,7 @@ namespace PeopleOfTheIliacBay.Core
             NpcInventoryState buyer = IndexedNpcInventory(buyerId);
             if (buyer == null) return false;
             var family=FundedHouseholdInn(visit.HouseholdDayId,buyerId);
-            string payerId=family?.JointInn.PayerId;
+            string payerId=family==null?null:HouseholdPayer(family);
             var payer=payerId==null?buyer:IndexedNpcInventory(payerId);
             bool payerAlive;
             if(payer==null || !KnownNpcIdentity(state,payer.PersonId,out payerAlive) || !payerAlive)return false;

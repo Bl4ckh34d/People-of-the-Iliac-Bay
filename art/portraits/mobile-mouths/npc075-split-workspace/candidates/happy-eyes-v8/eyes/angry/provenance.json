@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T11:00:35.5300624Z",
+    "portraitRecord":  75,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "angry",
+    "prompt":  "Create one exact 2x2 pixel-art eye atlas from the attached NPC075 eye reference grid. Each cell is a complete upper crop with the same 64x35 composition and original pixel scale. Cell order is OPEN / HALF CLOSED / FULLY CLOSED / OPEN REPEAT, row-major. Preserve this NPC\u0027s small warm-tan face, dark brown center fringe and side locks, compact amber-olive eyes, tiny pale eye highlights, original muted brown palette, narrow eye anatomy, and pixel clusters. Make the expression clearly angry through lowered inner brows angled slightly toward the nose bridge and subtle nose-bridge tension. Keep brows firm but not thick, black, or painted over. Keep brows and face placement consistent across all four phases. Keep the eyelids narrow and natural; do not enlarge eyes or irises, expose broad white sclera, or brighten highlights. Closed cells must close naturally while retaining the same angry brow shape. Do not alter hair, fringe, face shape, shading, framing, background, or add text, borders, or guides. No transparency.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-f1dbe4e3-accc-43a7-984e-4760221478c2.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-f1dbe4e3-accc-43a7-984e-4760221478c2.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "e2e7919bfc72eb52738873b46bffa3a1eb3ca2b503bd62101ac973e8f30cd8b3",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-f1dbe4e3-accc-43a7-984e-4760221478c2.png",
+                      "sha256":  "df149e0a0db4688e3f6409718862fb12baff3f58008aad5585c19f140a984431",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/angry/raw.png",
+                "sha256":  "df149e0a0db4688e3f6409718862fb12baff3f58008aad5585c19f140a984431",
+                "width":  1695,
+                "height":  928
+            }
+}

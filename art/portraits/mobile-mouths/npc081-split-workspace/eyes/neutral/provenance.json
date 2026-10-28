@@ -1,0 +1,32 @@
+{
+  "asset": "npc081 neutral eyes raw atlas",
+  "generatedWith": "built-in image_gen",
+  "prompt": "Use case: precise-object-edit\nAsset type: native 64x35 upper-half character sprite reference atlas for a Daggerfall Unity NPC portrait\nInput images: Image 1: edit target and style/layout reference; it is the inspected 2x2 eyes-reference-grid.png showing repeated crops of the exact original portrait upper half.\nPrimary request: Return the same 2x2 atlas, same full canvas and exact cell boundaries, with cells in row-major order: top-left OPEN, top-right HALF-CLOSED blink, bottom-left FULLY CLOSED blink, bottom-right repeat OPEN. This output is an eye/lid atlas only.\nStyle/medium: preserve the reference's original softly shaded, low-contrast native pixel-art look and palette. Keep the small native-size details legible without blur, oversharpening, thick outlines, or new contrast.\nConstraints: Keep the same woman, face identity, eye spacing, brows, hair, forehead, nose, skin, background, crop, scale, cell borders, and all non-eye pixels unchanged. Keep the neutral eyebrows at the same exact position and shape in all four cells. Keep both irises and pupils compact and at the same horizontal coordinates, width, and shape in every cell. The half and closed phases must cover the existing eyeballs vertically with the lids only; do not move or shrink the iris/pupil, do not expose a new white flash, and do not let an iris extend below a lid. The open cells should match the source appearance. No labels or added grid lines. No red or orange color shift, no more saturated skin, no thick near-black brows, no glowing eyes, no watermark.",
+  "reference": {
+    "path": "eyes-reference-grid.png",
+    "sha256": "ec8e562898b5c269e5484294666940fd3d06392155fc32134d53d585209636f5",
+    "dimensions": "1024x560"
+  },
+  "original": {
+    "path": "original.png",
+    "sha256": "eb0f7dcd1d390a6ff58d1bc0bba7a3855b5930ee824aa54e2f749211721e8ba0",
+    "dimensions": "64x64"
+  },
+  "output": {
+    "path": "raw.png",
+    "sha256": "c6ba7f0bd9a72bd754152f8726fc929a9565f07b98f2f1b91de0c9f65417281a",
+    "dimensions": "1695x928",
+    "copiedUnmodified": true
+  },
+  "cellOrder": [
+    "open",
+    "half",
+    "closed",
+    "open"
+  ],
+  "observedQualityLimits": [
+    "Generated canvas is 1695x928; it retains an approximate 2x2 grid aspect but is not native cell resolution.",
+    "Visual preview suggests the repeat-open bottom-right iris/pupil position may differ from top-left; verify alignment before assembly.",
+    "Raw atlas has not been cropped or composited."
+  ]
+}

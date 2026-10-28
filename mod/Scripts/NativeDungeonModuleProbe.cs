@@ -25,10 +25,11 @@ namespace PeopleOfTheIliacBay.DFU
         {
             var game=GameManager.Instance;
             if(Environment.GetEnvironmentVariable("POTIB_NAVMESH_MODULES_ONLY")!="1" || !game ||
-                game.PlayerEntity==null || !game.PlayerEntity.Name.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal))
+                game.PlayerEntity==null || !NativeProbeText.IsTestCharacter(game.PlayerEntity.Name))
                 throw new InvalidOperationException("Dungeon module probe requires forced modular loading and an owned native fixture.");
             yield return Enter();
             var dungeon=game.PlayerEnterExit.Dungeon;
+            VerifyStaticInputs(dungeon.transform);
             var names=new List<string>();foreach(var block in dungeon.Summary.LocationData.Dungeon.Blocks)names.Add(block.BlockName);
             if(!ExpectedBlockNames(names.ToArray()))throw new InvalidOperationException("Privateer's Hold does not contain the five intended native RDB modules.");
             float deadline=Time.realtimeSinceStartup+15;
@@ -91,6 +92,22 @@ namespace PeopleOfTheIliacBay.DFU
             return expected.Count==0;
         }
 
+        internal static void VerifyStaticInputs(Transform dungeon)
+        {
+            int triggers=0,sourceCount=0;
+            foreach(var collider in dungeon.GetComponentsInChildren<Collider>())
+                if(collider.enabled && collider.isTrigger)triggers++;
+            foreach(var block in dungeon.GetComponentsInChildren<DaggerfallRDBBlock>())
+                foreach(var source in NativeNavigationGeometry.Collect(block.transform))
+                {
+                    sourceCount++;
+                    var collider=source.component as Collider;
+                    if(collider && collider.isTrigger)
+                        throw new InvalidOperationException("Non-physical interaction trigger entered static RDB navigation input: "+collider.name);
+                }
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_NAVMESH_RDB_STATIC_INPUTS: sources="+sourceCount+"; observedTriggers="+triggers+"; capturedTriggers=0");
+        }
+
         private static void RequireWorld(NativeNavigationWorld world)
         {
             if(!world || world!=NativeNavigationWorld.Current || !world.Ready || world.Scene!=Scene || world.ModuleCount!=5 ||
@@ -98,7 +115,7 @@ namespace PeopleOfTheIliacBay.DFU
                 throw new InvalidOperationException("Forced five-module dungeon navigation is unavailable or changed during the probe.");
         }
 
-        private static IEnumerator Enter()
+        internal static IEnumerator Enter()
         {
             var game=GameManager.Instance;
             if(game.PlayerEnterExit.IsPlayerInsideDungeon && game.PlayerEnterExit.Dungeon && game.PlayerEnterExit.Dungeon.Summary.ID==MapId)yield break;

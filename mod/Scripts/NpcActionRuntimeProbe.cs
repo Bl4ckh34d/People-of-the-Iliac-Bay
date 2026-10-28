@@ -20,7 +20,7 @@ namespace PeopleOfTheIliacBay.DFU
         public static IEnumerator RunFixture(StreetPopulation streets,string expectedCharacter)
         {
             if(Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-action-probe")<0 ||
-                !expectedCharacter.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal))
+                !NativeProbeText.IsTestCharacter(expectedCharacter))
                 throw new InvalidOperationException("Action placement requires an explicitly owned fixture.");
             if(Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-lawful-loot-probe")>=0)
             {
@@ -502,12 +502,7 @@ namespace PeopleOfTheIliacBay.DFU
             var read=typeof(PeopleOfTheIliacBayMod).GetMethod("ReadConversationHistory",BindingFlags.Static|BindingFlags.NonPublic);
             if(!host || !(bool)typeof(PeopleOfTheIliacBayMod).GetField("localDialogueEnabled",Private).GetValue(host))
                 throw new InvalidOperationException("Chat action acceptance requires the real enabled local dialogue client.");
-            bool qwenWillingnessOptIn=HasQwenWillingnessOptIn();
-            if(qwenWillingnessOptIn &&
-                ((bool)typeof(PeopleOfTheIliacBayMod).GetField("decisionPlannerEnabled",Private).GetValue(host) ||
-                 typeof(PeopleOfTheIliacBayMod).GetField("decisionRoutingSession",Private).GetValue(host)!=null ||
-                 Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-goal-extraction")>=0))
-                throw new InvalidOperationException("Qwen willingness action-chat probe requires planner off, no D3 session, and goal extraction off to reach semantic consent callsites.");
+            bool dialogueWillingnessOptIn=HasQwenWillingnessOptIn();
             try
             {
                 game.TalkManager.TalkToMobileNPC(actor.Person);
@@ -595,8 +590,8 @@ namespace PeopleOfTheIliacBay.DFU
                 if((bool)busy.GetValue(host)) throw new InvalidOperationException("Fallback-control speaker greeting timed out.");
                 SetFriendlyChatFixtureBaseline(store,actor,host,window,"before-fallback-controls");
                 yield return VerifySingleFallbackControls(streets,store,actor,host,window);
-                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_ACTION_CHAT_PASS: native window; correct speaker; varied wording; wait held during chat and execution after close; reopened-history cancellation; historical negative creates no action/offer; natural follow proposal requires explicit assent; cancellation of proposal; qwenWillingnessOptIn="+
-                    qwenWillingnessOptIn.ToString().ToLowerInvariant()+"; typedCancellation=skipped-unverified.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_ACTION_CHAT_PASS: native window; correct speaker; varied wording; wait held during chat and execution after close; reopened-history cancellation; historical negative creates no action/offer; natural follow proposal requires explicit assent; cancellation of proposal; dialogueWillingnessOptIn="+
+                    dialogueWillingnessOptIn.ToString().ToLowerInvariant()+"; typedCancellation=skipped-unverified.");
             }
             finally {DaggerfallUI.Instance.PopToHUD();}
         }
@@ -753,16 +748,16 @@ namespace PeopleOfTheIliacBay.DFU
         private static QwenConsentCheckpoint CaptureQwenConsent(PeopleOfTheIliacBayMod host)
         {
             if(!HasQwenWillingnessOptIn())return null;
-            long dispatch=Convert.ToInt64(typeof(PeopleOfTheIliacBayMod).GetField("qwenWillingnessDispatchCount",Private).GetValue(host));
-            long completion=Convert.ToInt64(typeof(PeopleOfTheIliacBayMod).GetField("qwenWillingnessCompletionCount",Private).GetValue(host));
+            long dispatch=Convert.ToInt64(typeof(PeopleOfTheIliacBayMod).GetField("dialogueWillingnessDispatchCount",Private).GetValue(host));
+            long completion=Convert.ToInt64(typeof(PeopleOfTheIliacBayMod).GetField("dialogueWillingnessCompletionCount",Private).GetValue(host));
             return new QwenConsentCheckpoint(dispatch,completion);
         }
         private static void AssertQwenAcceptedOnce(PeopleOfTheIliacBayMod host,QwenConsentCheckpoint before,string stage)
         {
             if(before==null)return;
-            long dispatch=Convert.ToInt64(typeof(PeopleOfTheIliacBayMod).GetField("qwenWillingnessDispatchCount",Private).GetValue(host))-before.DispatchCount;
-            long completion=Convert.ToInt64(typeof(PeopleOfTheIliacBayMod).GetField("qwenWillingnessCompletionCount",Private).GetValue(host))-before.CompletionCount;
-            string choice=(string)typeof(PeopleOfTheIliacBayMod).GetField("qwenWillingnessLastChoice",Private).GetValue(host);
+            long dispatch=Convert.ToInt64(typeof(PeopleOfTheIliacBayMod).GetField("dialogueWillingnessDispatchCount",Private).GetValue(host))-before.DispatchCount;
+            long completion=Convert.ToInt64(typeof(PeopleOfTheIliacBayMod).GetField("dialogueWillingnessCompletionCount",Private).GetValue(host))-before.CompletionCount;
+            string choice=(string)typeof(PeopleOfTheIliacBayMod).GetField("dialogueWillingnessLastChoice",Private).GetValue(host);
             Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_ACTION_CHAT_QWEN_CONSENT: stage="+stage+"; dispatch="+dispatch+
                 "; completion="+completion+"; rawChoice="+(choice??"<null>")+".");
             if(dispatch!=1 || completion!=1 || !string.Equals(choice,"ACCEPT",StringComparison.Ordinal))

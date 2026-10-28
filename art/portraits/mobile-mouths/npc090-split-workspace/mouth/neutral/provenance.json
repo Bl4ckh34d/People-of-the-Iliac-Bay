@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T04:12:47.7768355Z",
+    "portraitRecord":  90,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "neutral",
+    "prompt":  "Use case: stylized-concept\nAsset type: constrained pixel-art speech mouth atlas for the same Daggerfall portrait.\nInput image: Image 1 only. It is the exact 3x3 atlas of nine repeated original lower64x29 portrait crops enlarged8x. Treat its crop, pixel positions, skin and background as locked.\nPrimary request: Edit only the tiny lips in each cell. Keep all other pixels, especially skin hue, jaw, nose, hair, neck and background, exactly like Image 1. Nine equal full lower-half crops in exact 3 columns by 3 rows, same aspect ratio and cell framing as Image 1. Preserve original mouth location, width and pixel scale. Row-major exact phoneme order:\nA top-left = closed pressured P/B/M; in this neutral atlas copy the original closed lips exactly.\nB top-middle = narrow slit opening with nearly touching teeth, consonants/EE.\nC top-right = medium open, unrounded EH/AE.\nD middle-left = widest open AA, clearly taller than C, dark brown cavity and subtle upper teeth.\nE middle-center = mildly rounded AO/ER, no wider than C and smaller than D.\nF middle-right = small rounded pucker for UW/OW/W.\nG bottom-left = upper teeth just touching the lower lip for F/V.\nH bottom-middle = tongue raised behind upper teeth for L, opening larger than C but smaller than D.\nX bottom-right = relaxed, closed idle; copy the original closed lips exactly.\nKeep every pose small and restrained, only within the original lip area. Distinct mouth openings need visible differences, not nine variants of the same teeth strip. Teeth should be only a few tiny muted-ivory pixels; cavity dark brown, tongue subdued dusty rose-brown, lips medium/dark brown. Keep the neutral source contour and subdued contrast.\nStyle/medium: original low-resolution 1990s game pixel portrait, hard nearest-neighbor pixel squares; no repaint, blur, interpolation or antialiasing.\nColor: preserve the exact existing tan-brown skin from the reference throughout each cell. Preserve dark brown lips. No new color in surrounding skin. No orange, pink, red, blue or bright white drift; no lipstick.\nConstraints: A and X are exact repeats of the source mouth. Do not recolor or alter any pixel outside the mouth. Do not change any nose, skin, jaw, head scale, hair, neck, clothes, shadows or background. No added full faces, no cropping, zooming, rescaling, padding, labels, grid lines, borders or extra cells. Avoid large cartoon openings, oversized teeth, black outlines or smile styling.\nRequired Rhubarb meanings: A closed pressured P/B/M; B narrow opening with nearly together teeth for consonants/EE; C medium unrounded EH/AE; D wide AA; E slightly rounded AO/ER no wider than C; F puckered UW/OW/W; G upper teeth touching lower lip F/V; H tongue raised behind upper teeth L, opening between C and D; X relaxed closed idle.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161cb-d05a-71b3-bff5-f291fb14256a as C:\\Users\\Daniel\\.codex\\generated_images\\01a161cb-d05a-71b3-bff5-f291fb14256a\\exec-cb03f932-3d3b-4d73-885a-0793456b2812.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161cb-d05a-71b3-bff5-f291fb14256a\\exec-cb03f932-3d3b-4d73-885a-0793456b2812.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "b8b0a0da8a68fea050774dbe95633fcb561aa0d4a4b316a787b9831b46247489",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "6d0e071a4214165c5ddd1c2776549d45f2ec9da101b32701771a203ab73c1de2",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161cb-d05a-71b3-bff5-f291fb14256a\\exec-cb03f932-3d3b-4d73-885a-0793456b2812.png",
+                      "sha256":  "57faf6739100f62f749252afe7d8ee2ffd8596057232be8285b95bc017b803dc",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/neutral/raw.png",
+                "sha256":  "57faf6739100f62f749252afe7d8ee2ffd8596057232be8285b95bc017b803dc",
+                "width":  1863,
+                "height":  844
+            }
+}

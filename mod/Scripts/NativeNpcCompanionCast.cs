@@ -163,7 +163,7 @@ namespace PeopleOfTheIliacBay.DFU
                     {
                         int skill=(int)effect.Properties.MagicSkill;
                         var learnedClock=DaggerfallWorkshop.DaggerfallUnity.Instance.WorldTime.Now;
-                        double learnedAt=learnedClock.ToSeconds()+learnedClock.Second-Math.Floor(learnedClock.Second);
+                        double learnedAt=learnedClock.ToSeconds()+(learnedClock.Second-Math.Floor(learnedClock.Second));
                         int skillGain;
                         if(NativeNpcCompanionExperience.TryAwardSuccessfulUse(store,resident.Resident.Id,skill,
                             learnedAt,out skillGain) && skillGain>0)
@@ -264,15 +264,7 @@ namespace PeopleOfTheIliacBay.DFU
                 return spec.EffectId==CurePoison.EffectKey?manager.PoisonCount:
                     spec.EffectId==CureDisease.EffectKey?manager.DiseaseCount:-1;
             if(spec.EffectKind!=NpcMagicEffectKind.TimedEffect || spec.EffectId!=Shield.EffectKey)return -1;
-            int rounds=0;
-            foreach(var bundle in manager.EffectBundles)
-            {
-                if(bundle==null || bundle.liveEffects==null)continue;
-                foreach(var effect in bundle.liveEffects)
-                    if(effect!=null && effect.GetType()==typeof(Shield) && !effect.HasEnded &&
-                        effect.RoundsRemaining>rounds)rounds=effect.RoundsRemaining;
-            }
-            return rounds;
+            return NativeNpcShieldState.ProtectionRounds(manager);
         }
 
         private static bool TouchesPlayer(DaggerfallEntityBehaviour caster,DaggerfallEntityBehaviour player)

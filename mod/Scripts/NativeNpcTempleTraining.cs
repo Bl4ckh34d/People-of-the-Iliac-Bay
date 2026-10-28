@@ -83,7 +83,8 @@ namespace PeopleOfTheIliacBay.DFU
             completed = false;
             reason = "The native temple training service is no longer available.";
             int skill;
-            if (store == null || job == null || !trainee || GameManager.IsGamePaused || trainee.IsConversing ||
+            if (store == null || job == null || !trainee || trainee.Resident == null ||
+                trainee.Resident.Id != job.ResidentId || GameManager.IsGamePaused || trainee.IsConversing ||
                 job.Phase != NpcActionPhase.Executing || job.Kind != NpcActionKind.Purchase || job.ServiceCode != ServiceCode ||
                 job.Target == null || job.Target.Kind != NpcActionTargetKind.IndoorPoint || job.Target.ContainerId != TargetContainerId ||
                 job.Target.Quantity != 1 || !int.TryParse(job.Target.ItemId, out skill) || skill < 0 || skill >= 35 ||

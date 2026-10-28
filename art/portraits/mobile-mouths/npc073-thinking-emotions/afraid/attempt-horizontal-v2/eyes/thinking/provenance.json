@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T11:32:00.5691403Z",
+    "portraitRecord":  73,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "neutral",
+    "prompt":  "Use case: stylized-concept\nAsset type: native pixel-art horizontal gaze atlas for a Daggerfall Unity NPC portrait animation\nInput image: the single provided local thinking-reference-grid.png is the exact selected NPC073 afraid open/half eye source, face, palette, framing, and pixel-art reference.\nPrimary request: Create one 2×2 horizontal gaze atlas with the same aspect ratio, crop size, registration, and panel arrangement as the reference. Top row LEFT OPEN, RIGHT OPEN. Bottom row LEFT HALF, RIGHT HALF. Each cell is a complete aligned 64:35 upper portrait crop. No labels, borders, gutters, extra panels, or text.\nExpression: Keep the selected afraid expression in every cell. Preserve the visibly raised, inward-pinched fearful brows and the same brow geometry across all four cells. Keep the upper-lid aperture and eye size from the corresponding open or half reference phase; HALF remains clearly half-closed with the selected upper lids covering part of each iris.\nGaze: Change only horizontal gaze. For LEFT, both compact amber/olive-brown irises and pupils glance together toward the viewer\u0027s left, remaining naturally centered within each eye opening. For RIGHT, both glance together toward the viewer\u0027s right. Make the lateral change readable at native pixel scale, around one native pixel if suitable, without changing pupil size or eye anatomy. Do not move gaze vertically.\nConstraints: Preserve the tiny muted glints, source eye spacing, warm skin, hair, blue wand, identity, crop, framing, soft native pixel clusters, and original palette. Keep pupils fully inside natural lids. No widened white bands, oversized or round/vector irises, bright specular flashes, changed brows, altered lids, eye enlargement, blur, smoothing, gradients, or facial redesign.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-ee7fa615-45b0-4797-9226-cf6a41e93703.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-ee7fa615-45b0-4797-9226-cf6a41e93703.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "8505d9e9fde3c536cf08958e97076aba44aa5d60e2e76ba6fc3fdb1384b8d643",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "2902041cacad5f8a77c7c6afbb131293454dca10ab310b55e333d88ee95fdca9",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-ee7fa615-45b0-4797-9226-cf6a41e93703.png",
+                      "sha256":  "fc4049169be4cb93babd0f7df530cb34680699980120b35cfc729869d7057a41",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/neutral/raw.png",
+                "sha256":  "fc4049169be4cb93babd0f7df530cb34680699980120b35cfc729869d7057a41",
+                "width":  1695,
+                "height":  928
+            }
+}

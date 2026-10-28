@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T12:45:00.4718272Z",
+    "portraitRecord":  75,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "angry",
+    "prompt":  "Create a pixel-art eye animation atlas for the same NPC shown in the supplied reference grid. Output one image exactly 128×70 pixels, arranged as four equal 64×35 cells in a 2-column by 2-row grid with no gaps or borders. Row-major phases: top-left OPEN, top-right HALF, bottom-left CLOSED, bottom-right OPEN REPEAT. Each cell is the same full upper-face crop and identity; only eyelid and eye contents change by phase.\n\nThe single correction is the NPC\u0027s viewer-right eyebrow, on the right side of the image. The reference shows an upper brow plus an unwanted detached dark secondary island/crease below it around local crop coordinates x43–47, y22–24. Remove that lower fragment completely. Redraw the viewer-right brow as ONE continuous, gently slanted, softly stepped brown eyebrow. Fill the former lower-island area with the adjacent ordinary eyelid/skin shading so it reads as normal skin, not as a dark line. Do not add another brow, crease, dark dash, or separated pixel cluster below the brow. Preserve a clear gap between this one brow and the actual upper eyelid. Preserve the angry frown: both brow inner ends remain lowered with slight nose-bridge tension. Do not neutralize the expression or make the brows symmetric if the source is asymmetrical.\n\nDo not change anything else in the face. Preserve exact character identity, hair and fringe, forehead, nose bridge, cheeks, skin palette, eye spacing, lower lids, and original pixel-art shading and scale. Keep both brows stable across all four phases. Keep each eye compact and narrow with small dark amber-brown iris/pupil clusters, muted shaded sclera, and tiny warm glints. No wide white bands, no large highlights, no round smooth irises, no new makeup or outlines.\n\nOPEN and OPEN REPEAT use the reference\u0027s narrow open aperture. HALF shows the upper lids descending over the top of the irises. CLOSED shows a natural thin closed-lid line; keep the brows identical. The upper lid should cover the iris within the eye area only. Preserve the stationary lower-lid row at local y28 and do not lift or puff cheeks or move lower lids. Do not redraw or delete the actual eye while removing the spurious brow fragment. No labels, text, extra objects, or decorative marks.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-569884af-0f5b-4e5e-a03f-afaa5c45bc77.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-569884af-0f5b-4e5e-a03f-afaa5c45bc77.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "71c61267d8a7bfe7f85252c8ee1a5b9580450ede36cbc09fe11f393956aafa98",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "166e07b5ff9eb88c8211da748261148975ea24330f5c39b8c1c6d2ea4a455a37",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-7d7a-72d2-ad87-738dd33a8c47\\exec-569884af-0f5b-4e5e-a03f-afaa5c45bc77.png",
+                      "sha256":  "4b3180061ad0ea8ac2bb1283a8d5afa67b4533d6ca6267b5883cf9237cd77552",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/angry/raw.png",
+                "sha256":  "4b3180061ad0ea8ac2bb1283a8d5afa67b4533d6ca6267b5883cf9237cd77552",
+                "width":  1695,
+                "height":  928
+            }
+}

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 namespace PeopleOfTheIliacBay.Core
 {
-    public enum RefugePhase { Approaching, Entering, Sheltered, Exiting, Returning, Complete }
+    public enum RefugePhase { Approaching, Entering, Sheltered, Exiting, Returning, Complete, WallApproaching, WallPosted, WallReturning }
     public struct RefugeSnapshot { public RefugePhase Phase; public GuardPoint3 Position; }
     [Serializable]
     public sealed class GuardRefugeJourney
@@ -10,13 +10,18 @@ namespace PeopleOfTheIliacBay.Core
         public int BuildingKey;
         public List<GuardPoint3> Exterior, Interior;
         public List<GuardPoint3> ReturnExterior;
+        public List<GuardPoint3> WallRoute;
+        public int LowerDoorIndex, UpperDoorIndex;
         public double StartsAt, SecondsPerMetre, TimeScale = 12;
         public double? ReleasedAt;
         public bool WallDuty;
+        public bool Resting;
+        public bool RestPending { get { return Resting && Interior==null; } }
+        public bool HauntingShelter;
         public int? RestBedRecord;
         public bool ConflictsWith(int buildingKey, int? bedRecord)
         {
-            return BuildingKey == buildingKey &&
+            return !RestPending && !(WallRoute != null && bedRecord.HasValue) && BuildingKey == buildingKey &&
                 (!RestBedRecord.HasValue || !bedRecord.HasValue || RestBedRecord == bedRecord);
         }
         public static GuardRefugeJourney Create(int building, IEnumerable<GuardPoint3> exterior,
@@ -24,7 +29,7 @@ namespace PeopleOfTheIliacBay.Core
         {
             Require(Finite(speed) && speed > 0 && Finite(timeScale) && timeScale > 0);
             return CopyValidated(new GuardRefugeJourney { BuildingKey=building, Exterior=CopyRoute(exterior),
-                Interior=CopyRoute(interior), StartsAt=now, SecondsPerMetre=timeScale/speed, TimeScale=timeScale });
+                Interior=interior==null ? null : CopyRoute(interior), WallDuty=interior==null, Resting=interior==null, StartsAt=now, SecondsPerMetre=timeScale/speed, TimeScale=timeScale });
         }
         public static GuardRefugeJourney CopyValidated(GuardRefugeJourney source)
         {
@@ -32,9 +37,16 @@ namespace PeopleOfTheIliacBay.Core
                 Finite(source.SecondsPerMetre) && source.SecondsPerMetre > 0 &&
                 Finite(source.TimeScale) && source.TimeScale >= 0);
             var copy = new GuardRefugeJourney { BuildingKey=source.BuildingKey, StartsAt=source.StartsAt,
-                SecondsPerMetre=source.SecondsPerMetre, TimeScale=source.TimeScale, ReleasedAt=source.ReleasedAt, WallDuty=source.WallDuty, RestBedRecord=source.RestBedRecord,
-                Exterior=CopyRoute(source.Exterior), Interior=CopyRoute(source.Interior),
+                SecondsPerMetre=source.SecondsPerMetre, TimeScale=source.TimeScale, ReleasedAt=source.ReleasedAt, WallDuty=source.WallDuty,
+                HauntingShelter=source.HauntingShelter, RestBedRecord=source.RestBedRecord, Resting=source.Resting,
+                Exterior=CopyRoute(source.Exterior), Interior=source.Interior==null ? null : CopyRoute(source.Interior),
+                WallRoute=source.WallRoute==null ? null : CopyRoute(source.WallRoute),
+                LowerDoorIndex=source.LowerDoorIndex, UpperDoorIndex=source.UpperDoorIndex,
                 ReturnExterior=source.ReturnExterior==null ? null : CopyRoute(source.ReturnExterior) };
+            Require(copy.Interior!=null || copy.Resting && copy.WallDuty && copy.WallRoute==null && !copy.RestBedRecord.HasValue);
+            Require(!copy.Resting || copy.WallDuty && copy.WallRoute==null);
+            Require(copy.WallRoute==null || copy.WallDuty && !copy.RestBedRecord.HasValue &&
+                copy.LowerDoorIndex>=0 && copy.UpperDoorIndex>=0 && copy.LowerDoorIndex!=copy.UpperDoorIndex);
             Require(copy.ReturnExterior==null || Distance(copy.ReturnExterior[0],copy.Exterior[copy.Exterior.Count-1])<0.05);
             Require(!copy.RestBedRecord.HasValue || copy.WallDuty && copy.RestBedRecord.Value>=0);
             Require(Time(copy.ShelteredAt));
@@ -43,24 +55,36 @@ namespace PeopleOfTheIliacBay.Core
                     Time(copy.ReleasedAt.Value + copy.ReturnSeconds));
             return copy;
         }
-        public void MigrateClockRate(double now, double previousRate, double currentRate)
+        /// <summary>Resolve an unobserved rest only after its quarters are loaded. Exterior approach remains physical.</summary>
+        /// <returns>False when the destination cannot preserve the existing return deadline; the coarse rest remains unchanged.</returns>
+        public bool MaterializeRest(IEnumerable<GuardPoint3> route,int? bedRecord,double now,double returnBy)
         {
-            if (TimeScale == currentRate) return;
-            Require(Time(now) && Finite(previousRate) && previousRate > 0 && Finite(currentRate) && currentRate > 0);
-            double oldShelteredAt = ShelteredAt;
-            double ratio = currentRate / previousRate;
-            if (now < StartsAt) { /* Future departure remains on its calendar schedule. */ }
-            else if (now < oldShelteredAt || WallDuty && !RestBedRecord.HasValue &&
-                (!ReleasedAt.HasValue || ReleasedAt.Value > now))
-                StartsAt = now - (now - StartsAt) * ratio;
-            if (ReleasedAt.HasValue && ReleasedAt.Value <= now)
-                ReleasedAt = now - (now - ReleasedAt.Value) * ratio;
-            SecondsPerMetre *= ratio;
-            TimeScale = currentRate;
+            Require(RestPending && Time(now) && (!bedRecord.HasValue || bedRecord.Value>=0));
+            var phase=Evaluate(now).Phase;
+            Require(phase==RefugePhase.Approaching || phase==RefugePhase.Sheltered);
+            var candidate=CopyValidated(this);
+            candidate.Interior=CopyRoute(route); candidate.RestBedRecord=bedRecord;
+            // A player entering after the guard is already inside sees its rest destination.
+            // A guard still outdoors keeps the original departure and walks the observed indoor route.
+            if(phase==RefugePhase.Sheltered) candidate.StartsAt=now-candidate.TravelSeconds;
+            if(!Time(candidate.StartsAt))return false;
+            candidate.ReleasedAt=null;
+            if(!candidate.HauntingShelter && !candidate.ReleaseToReturnBy(returnBy))return false;
+            candidate=CopyValidated(candidate);
+            Interior=candidate.Interior; RestBedRecord=candidate.RestBedRecord;
+            StartsAt=candidate.StartsAt; ReleasedAt=candidate.ReleasedAt;
+            return true;
         }
-        private double TravelSeconds { get { return (Length(Exterior)+Length(Interior))*SecondsPerMetre; } }
-        private double ReturnSeconds { get { return (Length(ReturnExterior ?? Exterior)+Length(Interior))*SecondsPerMetre; } }
+        private double TravelSeconds { get { return (Length(Exterior)+Length(Interior)+(WallRoute==null ? 0 : Length(WallRoute)))*SecondsPerMetre; } }
+        private double ReturnSeconds { get { return (Length(ReturnExterior ?? Exterior)+Length(Interior)+(WallRoute==null ? 0 : Length(WallRoute)))*SecondsPerMetre; } }
         private double ShelteredAt { get { return StartsAt+TravelSeconds; } }
+        public bool ReleaseToReturnBy(double arrival)
+        {
+            Require(Time(arrival));
+            if ((!Resting && !RestBedRecord.HasValue && WallRoute==null) || ReleasedAt.HasValue || arrival <= ShelteredAt + ReturnSeconds) return false;
+            Release(arrival - ReturnSeconds);
+            return true;
+        }
         public void Release(double now)
         {
             Require(Time(now));
@@ -68,7 +92,7 @@ namespace PeopleOfTheIliacBay.Core
             double release = Math.Max(now,ShelteredAt);
             // Finish the current indoor circuit before returning along the entry
             // route. This avoids a discontinuous jump from a patrol point at dawn.
-            if(WallDuty && !RestBedRecord.HasValue)
+            if(WallDuty && !Resting && !RestBedRecord.HasValue && WallRoute==null)
             {
                 double cycle=2*Math.Min(6,Length(Interior)*0.5)*SecondsPerMetre;
                 release=ShelteredAt+Math.Ceiling((release-ShelteredAt)/cycle)*cycle;
@@ -83,6 +107,12 @@ namespace PeopleOfTheIliacBay.Core
             if (ReleasedAt.HasValue && now >= ReleasedAt.Value)
             {
                 double travelled=(now-ReleasedAt.Value)/SecondsPerMetre;
+                if (WallRoute != null)
+                {
+                    double wall = Length(WallRoute);
+                    if (travelled < wall) return Snapshot(RefugePhase.WallReturning,WallRoute,wall-travelled);
+                    travelled -= wall;
+                }
                 if (travelled < inside) return Snapshot(RefugePhase.Exiting,Interior,inside-travelled);
                 if (ReturnExterior!=null)
                 {
@@ -96,13 +126,24 @@ namespace PeopleOfTheIliacBay.Core
             double along=Math.Max(0,now-StartsAt)/SecondsPerMetre;
             if (along < outside) return Snapshot(RefugePhase.Approaching,Exterior,along);
             if (along < outside+inside) return Snapshot(RefugePhase.Entering,Interior,along-outside);
-            if(WallDuty && !RestBedRecord.HasValue)
+            if (WallRoute != null)
+            {
+                double wall = Length(WallRoute);
+                return Snapshot(along < outside+inside+wall ? RefugePhase.WallApproaching : RefugePhase.WallPosted,
+                    WallRoute,Math.Min(wall,along-outside-inside));
+            }
+            if(WallDuty && !Resting && !RestBedRecord.HasValue)
             {
                 double span=Math.Min(6,inside*0.5);
                 double cycle=(along-outside-inside)%(2*span);
                 return Snapshot(RefugePhase.Sheltered,Interior,inside-(cycle<=span ? cycle : 2*span-cycle));
             }
-            return Snapshot(RefugePhase.Sheltered,Interior,inside);
+            return Interior==null ? new RefugeSnapshot {Phase=RefugePhase.Sheltered} : Snapshot(RefugePhase.Sheltered,Interior,inside);
+        }
+        public bool IsUpperExterior(double now)
+        {
+            var phase = Evaluate(now).Phase;
+            return phase == RefugePhase.WallApproaching || phase == RefugePhase.WallPosted || phase == RefugePhase.WallReturning;
         }
         // Exterior and interior coordinates deliberately use their own scene origins.
         // The phase change is the explicit doorway transition, never an interpolated gap.
@@ -131,7 +172,7 @@ namespace PeopleOfTheIliacBay.Core
         private static GuardPoint3 Point(GuardPoint3 p)
         { Require(p != null && Finite(p.X) && Finite(p.Y) && Finite(p.Z)); return new GuardPoint3 { X=p.X,Y=p.Y,Z=p.Z }; }
         private static double Length(List<GuardPoint3> route)
-        { double length=0; for(int i=1;i<route.Count;i++) length+=Distance(route[i-1],route[i]); return length; }
+        { if(route==null)return 0; double length=0; for(int i=1;i<route.Count;i++) length+=Distance(route[i-1],route[i]); return length; }
         private static double Distance(GuardPoint3 a,GuardPoint3 b)
         { double x=a.X-b.X,y=a.Y-b.Y,z=a.Z-b.Z; return Math.Sqrt(x*x+y*y+z*z); }
         private static bool Finite(double value) { return !double.IsNaN(value) && !double.IsInfinity(value); }

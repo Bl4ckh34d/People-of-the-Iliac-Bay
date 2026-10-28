@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-22T12:14:48.2844220Z",
+    "portraitRecord":  76,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "eyes",
+    "emotion":  "afraid",
+    "prompt":  "Generate a native pixel-art upper-eye animation atlas from the one provided local NPC076 eyes-reference grid. Output exactly a 2×2 grid, full 64×35 upper-half crop per cell, 64:35 aspect, row-major: top-left OPEN, top-right HALF CLOSED, bottom-left FULLY CLOSED, bottom-right OPEN REPEAT. This is the AFRAID expression. Preserve this same NPC identity, face proportions, hair, eye spacing, muted brown skin, shaded olive-brown/amber iris color, small dark pupils, and source texture. Make the expression clearly afraid, not neutral: both inner brows lift and pinch toward the center, with tense forehead folds; lids look alert but controlled. Keep brows coherent and soft, not stacked bars. Make eyes compact and anatomically aligned, not giant round surprise disks. Keep irises dark and compact inside each eyelid aperture with tiny warm muted glints; eye whites stay shaded and narrow, with no broad cream or bright white bands or flashes. Keep the same fearful brow/lid expression in all four phases. HALF CLOSED must visibly lower both upper lids over the top of the irises, leaving a narrow opening; it is not a duplicate of OPEN. FULLY CLOSED must cover all iris and sclera with natural closed lids. OPEN REPEAT returns to the same open afraid look. Preserve framing and all pixels outside the face/eye area; no labels, borders, added features, smoothing, or rescaling.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7 as C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-cdc4e9a1-85e5-415d-bc71-79eb24b8782f.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-cdc4e9a1-85e5-415d-bc71-79eb24b8782f.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "732830dbc9a0f5d46622b8b74db022f97b141cea462c81fcd0604b1a206590ae",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "eyes-reference-grid.png",
+                          "sha256":  "9eea146bb4cd7526a366d40466168eb9e309ff4ed6186b3ae3fbcef286f86d89",
+                          "width":  1024,
+                          "height":  560
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a161fa-a361-7903-81eb-1f0fe1827ac7\\exec-cdc4e9a1-85e5-415d-bc71-79eb24b8782f.png",
+                      "sha256":  "cca2f4d2b8a64e24b7b507c8a52afa9a7fdbb8e57aff5a99fc4728e8b800208a",
+                      "width":  1695,
+                      "height":  928
+                  },
+    "raw":  {
+                "path":  "eyes/afraid/raw.png",
+                "sha256":  "cca2f4d2b8a64e24b7b507c8a52afa9a7fdbb8e57aff5a99fc4728e8b800208a",
+                "width":  1695,
+                "height":  928
+            }
+}
